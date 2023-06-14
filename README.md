@@ -7,12 +7,19 @@ MPIR (Meta Programming Intermediate Representation) is an advanced metalanguage 
 
 #### Refinement Type System
 >MPIR incorporates a refinement type system that enhances the expressiveness and safety of the language. Refinement types provide stronger guarantees about the values that variables can hold, enabling more precise static analysis and catching errors at compile-time.
+<br>
 
 #### SMT-based Static Checking
 >MPIR leverages Satisfiability Modulo Theories (SMT) solving techniques to perform static analysis on code during compilation. This approach enables the compiler to validate program correctness, verify type safety, and ensure adherence to specified refinements, all before the code is executed.
+<br>
 
 #### Interpreted Runtime
 >MPIR allows developers to quickly compile to Python, allowing for fast testing of their codebase. Work with the agility and development speed of an interpreted environment, with the speed-benefits and optimization of LLVM Compiled Languages such as C/C++.
+<br>
 
 #### Performance & Agility
 >Compilation to C and C++: MPIR supports the compilation of code to efficient C and C++ code, allowing developers to harness the performance benefits of compiled languages. The resulting executable code can be deployed as standalone applications or integrated into existing projects.
+<br>
+
+#### Compiler Overview<br>
+![](Docbank/Imagebank/High%20Level%20Overview.png)
