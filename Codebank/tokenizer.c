@@ -1,34 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-  
-/// @brief      c
-int g = 0;
-  
-/// @brief      a
-/// @param      vargp 
-/// @return     a
-void *myThreadFun(void *vargp)
-{
-    int *myid = (int *)vargp;
-    static int s = 0;
-    ++s; ++g;
-    printf("Thread ID: %d, Static: %d, Global: %d\n", *myid, ++s, ++g);
-}
 
-/// @brief      a
-/// @return     a
-int main()
+FILE* read_file()
 {
-    int i;
-    pthread_t tid;
-  
-    for (i = 0; i < 3; i++)
+    // Read the file
+    FILE* ptr = fopen("test.txt", "r");
+ 
+    // Check that the file is not null.
+    if (NULL == ptr)
     {
-        pthread_create(&tid, NULL, myThreadFun, (void *)&tid);
+        printf("File could not be opened");
     }
 
-    pthread_exit(NULL);
+    // Return a pointer to the file
+    return ptr;
+}
+
+void print_file(FILE* ptr)
+{
+    // Initialise a character
+    char ch;
+    
+    // Printing what is written in file
+    // character by character using loop.
+    do {
+        ch = fgetc(ptr);
+        printf("%c", ch);
+ 
+        // Checking if character is not EOF.
+        // If it is EOF stop reading.
+    } while (ch != EOF);
+ 
+    // Closing the file
+    fclose(ptr);
+}
+
+int main()
+{
+    FILE* ptr = read_file();
+    print_file(ptr);
     return 0;
 }
