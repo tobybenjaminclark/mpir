@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+/// @brief 
+/// @return 
 FILE* read_file()
 {
     // Read the file
@@ -15,6 +17,8 @@ FILE* read_file()
     return ptr;
 }
 
+/// @brief 
+/// @param ptr 
 void print_file(FILE* ptr)
 {
     // Initialise a character
@@ -34,6 +38,8 @@ void print_file(FILE* ptr)
     fclose(ptr);
 }
 
+/// @brief 
+/// @return 
 int main()
 {
     FILE* ptr = read_file();
