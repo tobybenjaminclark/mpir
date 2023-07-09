@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-/// @brief 
+/// @brief Function to read a fiel
 /// @return 
 FILE* read_file()
 {
@@ -17,7 +17,7 @@ FILE* read_file()
     return ptr;
 }
 
-/// @brief 
+/// @brief Function to print the contents of a file
 /// @param ptr 
 void print_file(FILE* ptr)
 {
@@ -38,7 +38,7 @@ void print_file(FILE* ptr)
     fclose(ptr);
 }
 
-/// @brief 
+/// @brief Main function
 /// @return 
 int main()
 {
