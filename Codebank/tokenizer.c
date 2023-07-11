@@ -1,48 +1,41 @@
-#include <stdio.h>
+#include <gtk/gtk.h>
 
-/// @brief Function to read a fiel
-/// @return 
-FILE* read_file()
+static void
+print_hello (GtkWidget *widget,
+             gpointer   data)
 {
-    // Read the file
-    FILE* ptr = fopen("test.txt", "r");
- 
-    // Check that the file is not null.
-    if (NULL == ptr)
-    {
-        printf("File could not be opened");
-    }
-
-    // Return a pointer to the file
-    return ptr;
+  g_print ("Hello World\n");
 }
 
-/// @brief Function to print the contents of a file
-/// @param ptr 
-void print_file(FILE* ptr)
+static void
+activate (GtkApplication *app,
+          gpointer        user_data)
 {
-    // Initialise a character
-    char ch;
-    
-    // Printing what is written in file
-    // character by character using loop.
-    do {
-        ch = fgetc(ptr);
-        printf("%c", ch);
- 
-        // Checking if character is not EOF.
-        // If it is EOF stop reading.
-    } while (ch != EOF);
- 
-    // Closing the file
-    fclose(ptr);
+  GtkWidget *window;
+  GtkWidget *button;
+
+  window = gtk_application_window_new (app);
+  gtk_window_set_title (GTK_WINDOW (window), "Window");
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 200);
+
+  button = gtk_button_new_with_label ("Hello World");
+  g_signal_connect (button, "clicked", G_CALLBACK (print_hello), NULL);
+  gtk_window_set_child (GTK_WINDOW (window), button);
+
+  gtk_window_present (GTK_WINDOW (window));
 }
 
-/// @brief Main function
-/// @return 
-int main()
+int
+main (int    argc,
+      char **argv)
 {
-    FILE* ptr = read_file();
-    print_file(ptr);
-    return 0;
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new ("org.gtk.example", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
+  status = g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+
+  return status;
 }
