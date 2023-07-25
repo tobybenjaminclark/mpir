@@ -1,4 +1,4 @@
-![](docbank/imagebank/Logo.png)
+![](imagebank/mpir_logo.png)
 ### MPIR: Metalanguage with Refinement Types and SMT-based Static Checking
 
 MPIR (Meta Programming Intermediate Representation) is an **advanced metalanguage** designed to empower developers with the combined advantages of interpreted runtimes and compiled languages. With its unique features, including a refinement type system and `Satisfiability Modulo Theories (SMT)-based static checking`, MPIR facilitates the **creation of robust and high-performance software**. By abstracting away the language-specific details, MPIR enables programmers to **focus on the logic of their programs without being bound to a specific programming language.**
@@ -24,8 +24,8 @@ Compilation to C and C++: MPIR supports the compilation of code to efficient C a
 
 #### Compiler Overview<br>
 Here is an overview of how the Transpiler will process the given .mpir file into a encoded file in the target language. I intend to use Microsoft Z3 integration for static SMT analysis.<br>
-![](docbank/imagebank/High%20Level%20Overview.png)
+![](imagebank/mpir_high_level_overview.png)
 
 #### Language Syntax
 Here is an overview of the syntax of MPIR, compared against the structural syntax of current high-level languages, with advantages shown regarding workplace and educational integrations.<br>
-![](docbank/imagebank/Format%20Overview.png)
+![](imagebank/mpir_format_overview.png)
