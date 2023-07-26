@@ -18,3 +18,11 @@ function_call           ::= function_name '(' argument_list ')'
 argument_list           ::= expression | argument_list ',' expression
 number                  ::= digit | ( number digit )
 
+-- variable typing & declarations
+
+-- nat lang syntax
+-- variable_name as type
+-- variable_name is 1
+
+-- pythonic syntax
+-- x: int | x > 1 | x < 5
