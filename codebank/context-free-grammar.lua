@@ -26,3 +26,7 @@ number                  ::= digit | ( number digit )
 
 -- pythonic syntax
 -- x: int | x > 1 | x < 5
+
+-- quantum syntax
+-- x is in a superposition > 2 and < 3 but is not known until observed (read from memory)
+-- x: int | { x > 1 } | { x < 5 }
