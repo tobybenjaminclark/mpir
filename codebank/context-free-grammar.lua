@@ -31,4 +31,4 @@ number                  ::= digit | ( number digit )
 -- x is in a superposition > 2 and < 3 but is not known until observed (read from memory)
 -- x: int | { x > 1 } | { x < 5 }
 
--- 
+-- maybe use feta or other symbol to represent x?
