@@ -21,8 +21,8 @@ number                  ::= digit | ( number digit )
 -- variable typing & declarations
 
 -- nat lang syntax
--- variable_name as type
--- variable_name is 1
+-- variable_name as base-type
+-- variable_name is <rule>
 
 -- pythonic syntax
 -- x: int | x > 1 | x < 5
@@ -30,3 +30,5 @@ number                  ::= digit | ( number digit )
 -- quantum syntax
 -- x is in a superposition > 2 and < 3 but is not known until observed (read from memory)
 -- x: int | { x > 1 } | { x < 5 }
+
+-- 
