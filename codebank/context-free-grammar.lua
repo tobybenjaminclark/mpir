@@ -32,3 +32,14 @@ number                  ::= digit | ( number digit )
 -- x: int | { x > 1 } | { x < 5 }
 
 -- maybe use feta or other symbol to represent x?
+
+-- contextual type annotations
+-- Can extend types to add relevant stuff for that variable e.g.
+-- speed: int
+-- speed <- "Speed of the car in km/h"
+-- speed = 5
+
+-- pre & post conditions on functions
+-- function divide(a: int, b: int != 0): number where { number is integer } {
+--    // ... function implementation
+-- }
