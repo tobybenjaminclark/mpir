@@ -43,3 +43,5 @@ number                  ::= digit | ( number digit )
 -- function divide(a: int, b: int != 0): number where { number is integer } {
 --    // ... function implementation
 -- }
+--
+-- This is called contract programming
