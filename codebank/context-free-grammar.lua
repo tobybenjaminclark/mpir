@@ -43,6 +43,7 @@ number                  ::= digit | ( number digit )
 -- function divide(a: int, b: int != 0): number where { number is integer } {
 --    // ... function implementation
 -- }
+<<<<<<< HEAD
 
 -- json & normal syntax for declarations
 -- var x as 10
@@ -55,3 +56,7 @@ int x =
 }
 --
 -- This is called contract programming
+=======
+--
+-- This is called contract programming
+>>>>>>> 7c0d34d023586458bb971bcde21fe68f5829e60d
