@@ -10,7 +10,7 @@ digit                   ::= '0' | '1' | ... | '9'
 
 -- expression (works with function calls)
 -- supports stuff like 'int x = int y = int z = 5'
-expression              ::=  variable_declaration | arithmetic_expression
+expression              ::= variable_declaration | arithmetic_expression
 arithmetic_expression   ::= term | arithmetic_expression '+' term | arithmetic_expression '-' term
 term                    ::= factor | term '*' factor | term '/' factor
 factor                  ::= '(' expression ')' | number | identifier | function_call
@@ -43,3 +43,7 @@ number                  ::= digit | ( number digit )
 -- function divide(a: int, b: int != 0): number where { number is integer } {
 --    // ... function implementation
 -- }
+
+-- json & normal syntax for declarations
+-- var x as 10
+-- doc x as "Variable to store car data?"
