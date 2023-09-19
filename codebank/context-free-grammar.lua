@@ -47,3 +47,9 @@ number                  ::= digit | ( number digit )
 -- json & normal syntax for declarations
 -- var x as 10
 -- doc x as "Variable to store car data?"
+
+int x =
+{
+    var: 10
+    doc: "Variable to store car data"
+}
