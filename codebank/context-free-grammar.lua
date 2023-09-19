@@ -43,7 +43,6 @@ number                  ::= digit | ( number digit )
 -- function divide(a: int, b: int != 0): number where { number is integer } {
 --    // ... function implementation
 -- }
-<<<<<<< HEAD
 
 -- json & normal syntax for declarations
 -- var x as 10
@@ -54,9 +53,14 @@ int x =
     var: 10
     doc: "Variable to store car data"
 }
+
+doc x as 10
+set x as 5
+set x as x + 1
+-- not sure to use set/var here ^
+-- right side of x must be typed same as left side
+-- need to work this with refinements
+
+
 --
 -- This is called contract programming
-=======
---
--- This is called contract programming
->>>>>>> 7c0d34d023586458bb971bcde21fe68f5829e60d
