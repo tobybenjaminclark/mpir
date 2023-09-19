@@ -53,3 +53,5 @@ int x =
     var: 10
     doc: "Variable to store car data"
 }
+--
+-- This is called contract programming
