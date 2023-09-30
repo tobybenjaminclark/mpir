@@ -61,6 +61,22 @@ set x as x + 1
 -- right side of x must be typed same as left side
 -- need to work this with refinements
 
+-- local function add:
+--  | returns a + b + c;
+-- with
+--  | a as int
+--  | a as parameter 1
+--  | b as int
+--  | b as parameter 2
+--  | c as int
+--  | c as 5
+-- endfunction
+
+-- global type nat:
+--  | {x: Int | x > 0}
+-- with
+--  | doc x as "natural-number"
+-- endtype
 
 --
 -- This is called contract programming
