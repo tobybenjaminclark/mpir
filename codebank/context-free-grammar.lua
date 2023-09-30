@@ -78,5 +78,24 @@ set x as x + 1
 --  | doc x as "natural-number"
 -- endtype
 
+-- Pipe syntax slightly differnt
+
+-- local function add(a, b) -> Int
+--      | return a + b + c
+-- where:
+--      | type a: Int :: a > 0
+--      | type b: Int :: b > 0
+--      | type c: Int :: c > 0
+--      | set c as 10
+-- endfunction
+
+-- Pipe Syntax Type Decl. Differently
+
+-- global type nat(a):
+--      | a: Int :: a > 0
+-- where:
+--      | doc a as "natural-number"`
+-- endtype
+
 --
 -- This is called contract programming
