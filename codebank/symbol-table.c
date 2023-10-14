@@ -27,8 +27,21 @@ typedef struct mpir_symbol_table
 /// @param capacity Starting size of the symbol table that will be created.
 mpir_symbol_table create_symbol_table(int capacity)
 {
+    // Ensure capacity is valid.
+    if(capacity < 1)
+    {
+        printf("Invalid argument 'capacity'.\n");
+        exit(EXIT_FAILURE);
+    }
+
     mpir_symbol_table table;
     table.symbols = (mpir_symbol*)malloc(sizeof(mpir_symbol) * capacity);
+    if (table.symbols == NULL)
+    {
+        printf("Memory reallocation error.\n");
+        exit(EXIT_FAILURE);
+    }
+
     table.size = 0;
     table.capacity = capacity;
     return table;
