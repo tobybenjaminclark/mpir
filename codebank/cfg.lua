@@ -22,5 +22,8 @@ function_call               ::=         function_name '(' argument_list ')'
 argument_list               ::=         expression | argument_list ',' expression
 number                      ::=         digit | ( number digit )
 
-variable_definition         ::=         "let " identifier " as " identifier
-variable_declaration        ::=         "set " identifier " as " arithmetic_expression
+variable_identifier         ::=         ( letter | digit ) | ( variable_identifier letter | digit )
+type_identifier             ::=         ( letter | digit ) | ( type_identifier letter | digit)
+
+variable_definition         ::=         "let " variable_identifier " as " type_identifier
+variable_declaration        ::=         "set " variable_identifier " as " arithmetic_expression
