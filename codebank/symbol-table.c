@@ -15,6 +15,11 @@
 // symbol table can be seen as a collection of symbols.
 #include "symbol.c"
 
+// Reference for Symbol Table Implementation Design.
+// Engineering a Compiler 2nd Edition (Keith D Cooper, Linda Torczon), January 18th 2011
+// Page 253: Symbol Tables
+// https://www.r-5.org/files/books/computers/compilers/writing/Keith_Cooper_Linda_Torczon-Engineering_a_Compiler-EN.pdf
+
 /// @brief Defining a type for a dynamically allocated symbol table.
 typedef struct mpir_symbol_table
 {
@@ -112,3 +117,9 @@ int main()
 
     return 0;
 }
+
+// add_context (f: function) -> context_id
+// add_identifier (i: identifier, c: context) -> identifier_id
+// get_identifier (i: identifier, c: context) -> Symbol
+// get_identifier (id: identifier_id) -> Symbol
+// identifiers must be within context.
