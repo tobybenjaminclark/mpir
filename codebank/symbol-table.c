@@ -68,8 +68,7 @@ void print_symbol_table(const mpir_symbol_table* table)
 {
     int i = 0;
 
-    printf("Symbol Table:\n");
-    printf("Name\t\tType\n");
+    printf("Symbol Table:\nName\t\tType\n");
     for (i = 0; i < table->size; ++i)
     {
         printf("%s\t\t%s\n", table->symbols[i].identifier, table->symbols[i].type);
@@ -80,7 +79,10 @@ void print_symbol_table(const mpir_symbol_table* table)
 /// @param table Symbol table to free from memory.
 void free_symbol_table(mpir_symbol_table* table)
 {
+    // Free all symbols within
     free(table->symbols);
+
+    // Set table size & capacity to zero.
     table->size = 0;
     table->capacity = 0;
 }
