@@ -14,7 +14,7 @@ mpir_symbol_variable* create_variable_symbol(int identifier)
     // Check memory-allocation was successful.
     if (variable_symbol == NULL)
     {
-        printf("failed to allocate memory for context symbol");
+        printf("mpir_compiler: failed to allocate memory");
         exit(1);
     }
 
