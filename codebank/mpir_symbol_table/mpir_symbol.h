@@ -37,5 +37,3 @@ typedef struct
     mpir_internal_symbol* symbol;
     
 } mpir_symbol;
-
-mpir_symbol* retrieve_global_context();
