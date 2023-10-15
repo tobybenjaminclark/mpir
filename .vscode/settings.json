@@ -4,6 +4,9 @@
         "mpir_symbol.h": "c",
         "mpir_symbol_variable.h": "c",
         "mpir_symbol_type.h": "c",
-        "mpir_hashmap.h": "c"
+        "mpir_hashmap.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c",
+        "stdbool.h": "c"
     }
 }
