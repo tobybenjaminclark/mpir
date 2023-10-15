@@ -6,9 +6,10 @@
 typedef struct
 {
     char* identifier;
+    mpir_symbol_context* lexical_context;
 
 } mpir_symbol_variable;
 
-mpir_symbol_variable* initialize_variable_symbol(mpir_symbol_variable* variable_symbol, int _identifier);
-mpir_symbol_variable* create_variable_symbol(int identifier);
+mpir_symbol_variable* initialize_variable_symbol(mpir_symbol_variable* variable_symbol, mpir_symbol_context* context, int _identifier);
+mpir_symbol_variable* create_variable_symbol(mpir_symbol_context* context, int identifier);
 void free_variable_symbol(mpir_symbol_variable* context_symbol);
