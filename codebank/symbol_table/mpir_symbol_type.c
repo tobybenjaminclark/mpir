@@ -14,8 +14,7 @@ mpir_symbol_type* create_symbol_type(int identifier)
     // Check memory-allocation was successful.
     if (type_symbol == NULL)
     {
-        printf("failed to allocate memory for context symbol");
-        exit(1);
+        mpir_fatal("No Remaining Free Memory (Failed to allocate memory for type symbol).");
     }
 
     // Initialize context symbol

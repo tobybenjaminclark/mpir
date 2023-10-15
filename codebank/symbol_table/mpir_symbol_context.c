@@ -14,8 +14,7 @@ mpir_symbol_context* create_context_symbol(int identifier)
     // Check memory-allocation was successful.
     if (context_symbol == NULL)
     {
-        printf("failed to allocate memory for context symbol");
-        exit(1);
+        mpir_fatal("No Remaining Free Memory (Failed to allocate memory for context symbol).");
     }
 
     // Initialize context symbol

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../mpir_logging/mpir_warnings.h"
 
 typedef struct
 {
