@@ -1,12 +1,28 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+/// @brief Prefix for warning messages in MPIR_Compiler.
 #define WARNING_PREFIX "MPIR_Compiler -> Warning :: "
+
+/// @brief Prefix for error messages in MPIR_Compiler.
 #define ERROR_PREFIX "MPIR_Compiler -> Error   :: "
+
+/// @brief Prefix for fatal error messages in MPIR_Compiler.
 #define FATAL_PREFIX "MPIR_Compiler -> Fatal   :: "
+
+/// @brief Prefix for informational messages in MPIR_Compiler.
 #define INFO_PREFIX "MPIR_Compiler -> Info    :: "
 
+/// @brief Error message displayed when the message size exceeds the allocated buffer size.
+///
+/// This error message is displayed when an attempt to show a message fails due to the message size
+/// exceeding the allocated buffer size.
 #define MESSAGE_BUFFER_OVERFLOW "%sFailed to show message (message size exceeded allocated buffer size).\n", ERROR_PREFIX
+
+/// @brief Error message displayed when there is an internal error formatting the message.
+///
+/// This error message is displayed when an attempt to format a message fails due to an internal error
+/// in the formatting process.
 #define MESSAGE_FORMATTING_FAILURE "%sFailed to show message (internal error formatting message).\n", ERROR_PREFIX
 
 /// @brief Displays a formatted message to the specified output stream with the given prefix.
