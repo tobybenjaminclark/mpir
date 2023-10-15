@@ -1,4 +1,4 @@
-#include "mpir_symbol_type.h"
+#include "../mpir_symbol_table/mpir_symbol_type.h"
 
 mpir_symbol_type* initialize_symbol_type(mpir_symbol_type* type_symbol, int _identifier)
 {
