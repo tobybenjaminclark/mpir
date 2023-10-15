@@ -26,7 +26,7 @@ typedef struct
     unsigned int line_declared;
     char* lexical_identifier;
 
-    // stores the lexical context of the variable, i.e. is it global of local to function, if so what?
+    // stores the lexical context of the variable, i.e. is it global of local to function, if so what?  
     mpir_symbol_context lexical_context;
 
     // stores info about the variable
@@ -37,3 +37,5 @@ typedef struct
     mpir_internal_symbol* symbol;
     
 } mpir_symbol;
+
+mpir_symbol* retrieve_global_context();
