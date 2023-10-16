@@ -1,8 +1,5 @@
 {
     "files.associations": {
-        "mpir_symbol_variable.h": "c",
-        "mpir_symbol_type.h": "c",
-        "mpir_symbol_context.h": "c",
-        "mpir_warnings.h": "c"
+        "stdio.h": "c"
     }
 }
