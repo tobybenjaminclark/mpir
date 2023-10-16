@@ -1,4 +1,4 @@
-#include "../mpir_symbol_table/mpir_symbol_variable.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_variable.h"
 
 mpir_symbol_variable* initialize_variable_symbol(mpir_symbol_variable* variable_symbol, mpir_symbol_context* context, int _identifier)
 {

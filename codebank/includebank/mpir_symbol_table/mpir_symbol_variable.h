@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../mpir_logging/mpir_warnings.h"
-#include "../mpir_symbol_table/mpir_symbol_context.h"
+#include "../../includebank/mpir_logging/mpir_warnings.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_context.h"
 
 typedef struct
 {

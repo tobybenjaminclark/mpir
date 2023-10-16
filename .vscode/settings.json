@@ -1,12 +1,8 @@
 {
     "files.associations": {
-        "mpir_symbol_context.h": "c",
-        "mpir_symbol.h": "c",
         "mpir_symbol_variable.h": "c",
         "mpir_symbol_type.h": "c",
-        "mpir_hashmap.h": "c",
-        "stdlib.h": "c",
-        "string.h": "c",
-        "stdbool.h": "c"
+        "mpir_symbol_context.h": "c",
+        "mpir_warnings.h": "c"
     }
 }

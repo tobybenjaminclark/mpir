@@ -1,4 +1,4 @@
-#include "../mpir_symbol_table/mpir_symbol_context.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_context.h"
 
 mpir_symbol_context* initialize_context_symbol(mpir_symbol_context* context_symbol, int _identifier)
 {

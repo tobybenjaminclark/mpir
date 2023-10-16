@@ -1,6 +1,6 @@
-#include "../mpir_symbol_table/mpir_symbol_context.h"
-#include "../mpir_symbol_table/mpir_symbol_variable.h"
-#include "../mpir_symbol_table/mpir_symbol_type.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_context.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_variable.h"
+#include "../../includebank/mpir_symbol_table/mpir_symbol_type.h"
 
 /// @brief stores the symbol types
 typedef enum
