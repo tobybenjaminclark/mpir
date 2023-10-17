@@ -22,6 +22,11 @@
 .vscode
 .vscode/*
 
-codebank/buildbank/*
-!codebank/buildbank/BUILD_README.md
+./.idea
+./.idea/*
+
+./buildbank
+./buildbank/*
+
+!buildbank/BUILD_README.md
 

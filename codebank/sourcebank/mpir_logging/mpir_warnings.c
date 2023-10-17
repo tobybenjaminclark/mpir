@@ -1,5 +1,9 @@
+//
+// Created by Toby Benjamin Clark on 16/10/2023.
+//
+
 // Import header file.
-#include "../../includebank/mpir_logging/mpir_warnings.h"
+#include "../../headerbank/mpir_logging/mpir_warnings.h"
 
 /// @brief Displays a formatted message to the specified output stream with the given prefix.
 ///
@@ -16,7 +20,7 @@ void display_message(FILE* stream, const char* prefix, const char* format, va_li
 {
     // Declaring a buffer to store the displayed message within. After this, the message is
     // formatted within the buffer, and checked to ensure no buffer overflow.
-    char buffer[4096]; 
+    char buffer[4096];
     if (vsnprintf(buffer, sizeof(buffer), format, args) >= 0)
     {
         // Print the formatted message to the output stream with the specified prefix
@@ -24,13 +28,13 @@ void display_message(FILE* stream, const char* prefix, const char* format, va_li
         if (fprintf(stream, "%s%s\n", prefix, buffer) < 0)
         {
             // Display an error message indicating a buffer overflow.
-            fprintf(stderr, MESSAGE_BUFFER_OVERFLOW); 
+            fprintf(stderr, MESSAGE_BUFFER_OVERFLOW);
         }
     }
     else
     {
         // Display an error message indicating a message formatting failure.
-        fprintf(stderr, MESSAGE_FORMATTING_FAILURE); 
+        fprintf(stderr, MESSAGE_FORMATTING_FAILURE);
     }
 }
 
@@ -46,13 +50,13 @@ void mpir_info(const char *format, ...)
 {
     // va_list is an argument list of variable length, allowing for string formatting. It
     // is initialized with the last named parameter (format)
-    va_list args; 
-    va_start(args, format); 
-    
+    va_list args;
+    va_start(args, format);
+
     // Call the display_message function to format with the information prefix, and output
     // to the stdout stream.
     display_message(stdout, INFO_PREFIX, format, args);
-    va_end(args); 
+    va_end(args);
 }
 
 /// @brief Prints a warning message to the standard output stream.
@@ -114,18 +118,7 @@ void mpir_fatal(const char *format, ...)
     va_start(args, format);
 
     // Call the display_message function to format with the information prefix, and output
-    // to the stderr stream, indicating it is an erroneous message. 
+    // to the stderr stream, indicating it is an erroneous message.
     display_message(stderr, FATAL_PREFIX, format, args);
     va_end(args);
-}
-
-/// @brief Demonstration of the error logging capability of the MPIR Compiler, displays mock-messages
-/// @return Always returns 0.
-int main() 
-{
-    mpir_info("This is an information log, use to convey information to the user.");
-    mpir_warn("This is a warning log, used to warn the user about problems.");
-    mpir_error("This is an error log, used to present errors.");
-    mpir_fatal("This is a fatal log, used to show serious errors.");
-    return 0;
 }

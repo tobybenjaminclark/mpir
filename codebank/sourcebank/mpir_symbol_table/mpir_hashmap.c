@@ -1,6 +1,4 @@
-#include "../../includebank/mpir_symbol_table/mpir_hashmap.h"
-
-
+#include "../../headerbank/mpir_symbol_table/mpir_hashmap.h"
 
 /// @brief Hashes a string key to an index within the specified capacity using a simple hash function.
 ///
@@ -75,7 +73,7 @@ mpir_hashmap* mpir_hashmap_create()
 /// @return Returns true if the resizing is successful; otherwise, it returns false, indicating a memory allocation failure.
 bool mpir_hashmap_resize(mpir_hashmap* map)
 {
-    // Calculate & Allocate new hashmap size. 
+    // Calculate & Allocate new hashmap size.
     int calculated_capacity = map -> capacity * 2;
     mpir_hashnode* new_nodes = (mpir_hashnode*)calloc(calculated_capacity, sizeof(mpir_hashnode));
 
@@ -98,7 +96,7 @@ bool mpir_hashmap_resize(mpir_hashmap* map)
         // If key/value pair, rehash, re-linear-probe and re-insert into the new
         // position.
         unsigned int index = mpir_hash(map->nodes[i].key, calculated_capacity);
-        while (new_nodes[index].key != NULL) 
+        while (new_nodes[index].key != NULL)
         {
             index = (index + 1) % calculated_capacity;
         }
@@ -131,7 +129,7 @@ bool mpir_hashmap_resize(mpir_hashmap* map)
 /// @note The function uses linear probing for collision resolution while searching for the appropriate position to insert the key.
 /// @note The hashmap is resized if necessary to maintain a load factor below a predefined threshold (LOAD_FACTOR).
 bool mpir_hashmap_put_value(mpir_hashmap* map, const char* key, const char* value)
-{ 
+{
     // Check to see if the hashmap needs resizing.
     if ((float)(map->size + 1) / map->capacity > LOAD_FACTOR)
     {
@@ -177,13 +175,13 @@ bool mpir_hashmap_put_value(mpir_hashmap* map, const char* key, const char* valu
 /// @note The function uses linear probing for collision resolution while searching for the appropriate position to insert the key.
 /// @note The hashmap is resized if necessary to maintain a load factor below a predefined threshold (LOAD_FACTOR).
 bool mpir_hashmap_put_map(mpir_hashmap* map, const char* key)
-{  
+{
     // Check to see if the hashmap needs resizing.
     if ((float)(map->size + 1) / map->capacity > LOAD_FACTOR)
     {
         mpir_hashmap_resize(map);
     }
-    
+
     // Calculate the index to insert at from the hash function.
     unsigned int index = mpir_hash(key, map->capacity);
 
@@ -246,8 +244,8 @@ const char* mpir_hashmap_get_value(mpir_hashmap* map, const char* key)
             mpir_warn("Failure in attempting to retrieve value, key: %s as value, value is mpir_hashmap.", key);
             return NULL;
         }
-        
-        // If it's a value, return it and exit the function.
+
+            // If it's a value, return it and exit the function.
         else
         {
             return map -> nodes[index].data.value;
@@ -290,13 +288,13 @@ void mpir_hashmap_free(mpir_hashmap* map)
             (void)mpir_hashmap_free(map->nodes[i].data.map);
         }
 
-        // Base case (value is data)
+            // Base case (value is data)
         else
         {
             (void)free(map->nodes[i].data.value);
         }
     }
-    
+
     // Free the array, then the struct itself.
     free(map->nodes);
     free(map);
@@ -344,7 +342,7 @@ void mpir_hashmap_display_internal(mpir_hashmap* map, int indentation)
             printf("}\n");
         }
 
-        // If the map is a value, display it (base-case).
+            // If the map is a value, display it (base-case).
         else if(!(map -> nodes[i].is_map))
         {
             printf("\"%s\"\n", map->nodes[i].data.value);
@@ -368,24 +366,3 @@ void mpir_hashmap_display(mpir_hashmap* map)
     mpir_hashmap_display_internal(map, 0);
 }
 
-
-
-int main()
-{
-    mpir_hashmap* map = mpir_hashmap_create();
-
-    (void)mpir_hashmap_put_value(map, "key1", "value1");
-    (void)mpir_hashmap_put_value(map, "key2", "value2");
-
-    mpir_hashmap* nestedMap = mpir_hashmap_put_map(map, "nested_map");
-    (void)mpir_hashmap_put_value(nestedMap, "nested_key", "nested_value");
-
-    printf("Value for key1: %s\n", mpir_hashmap_get(map, "key1")); // Output: value1
-    printf("Value for key2: %s\n", mpir_hashmap_get(map, "key2")); // Output: value2
-    printf("Value for nested_map: %s\n", mpir_hashmap_get(map, "nested_map")); // Output: Nested mpir_hashmap (not printable)
-    printf("Value for nested_key in nested_map: %s\n", mpir_hashmap_get(nestedMap, "nested_key")); // Output: nested_value
-
-    (void)mpir_hashmap_display(map);
-    (void)mpir_hashmap_free(map);
-    return 0;
-}
