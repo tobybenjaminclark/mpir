@@ -34,7 +34,12 @@ void mpir_display_logo()
 
 void mpir_enter_help_kernel()
 {
+    // Show the logo.
     (void)mpir_display_logo();
 
+    // Display some info.
+    printf("Displaying MPIR Compilation System Flags.\n");
+    printf("\t\t-h/--help\t\t-\t Interactive Help Kernel for the MPIR Compilation System.\n");
+    printf("\t\t-v/--verbose\t-\t Runs the MPIR Compilation System in Verbose Mode.\n");
     return;
 }
