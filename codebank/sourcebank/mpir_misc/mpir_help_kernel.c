@@ -1,28 +1,39 @@
 #include "../../headerbank/mpir_misc/mpir_help_kernel.h"
 
-
-char* mpir_center_strings(const char* str1, const char* str2, const char* str3)
+/// @brief Center Strings and Generate Formatted Output
+///
+/// This file contains the declaration of the mpir_center_strings function, which takes
+/// three input strings and centers them within a fixed-width output string. It calculates
+/// the required spacing to center the input strings, concatenates them with even spacing,
+/// and returns the resulting centered string. It's used in displaying the help kernel options.
+///
+/// @param string_one The first input string.
+/// @param string_two The second input string.
+/// @param string_three The third input string.
+/// @return A pointer to a statically allocated centered string.
+char* mpir_center_strings(const char* string_one, const char* string_two, const char* string_three)
 {
-    // Static array to store the centered string
+    // Static array to store the centered string_three
     static char result[121];
-    int totalLength = 120;
-    int str1Length = strlen(str1);
-    int str2Length = strlen(str2);
-    int str3Length = strlen(str3);
+    int total_length = 120;
 
-    int totalChars = str1Length + str2Length + str3Length;
-    int spacing = (totalLength - totalChars) / 2;
+    int string_one_length = strlen(string_one);
+    int string_two_length = strlen(string_two);
+    int string_three_length = strlen(string_three);
 
-    // Fill the result string with spaces
-    memset(result, ' ', totalLength);
+    int accumulative_string_length = string_one_length + string_two_length + string_three_length;
+    int spacing = (total_length - accumulative_string_length) / 2;
 
-    // Copy the input strings into the result string with even spacing
-    strncpy(result + spacing, str1, str1Length);
-    strncpy(result + spacing + str1Length, str2, str2Length);
-    strncpy(result + spacing + str1Length + str2Length, str3, str3Length);
+    // Fill the result string_three with spaces
+    memset(result, ' ', total_length);
 
-    // Null-terminate the string
-    result[totalLength] = '\0';
+    // Copy the input strings into the result string_three with even spacing
+    strncpy(result + spacing, string_one, string_one_length);
+    strncpy(result + spacing + string_one_length, string_two, string_two_length);
+    strncpy(result + spacing + string_one_length + string_two_length, string_three, string_three_length);
+
+    // Null-terminate the string_three
+    result[total_length] = '\n';
 
     return result;
 }
@@ -66,6 +77,7 @@ void mpir_enter_help_kernel()
     (void)mpir_display_logo();
 
     // Display some info.
-    printf(mpir_center_strings(HELP_OPTION_1, HELP_OPTION_2, HELP_OPTION_3));
+    printf("%s", mpir_center_strings("", "Welcome to MPIR Kernel, Your digital assistant in compilation! :)", ""));
+    printf("%s", mpir_center_strings(HELP_OPTION_1, HELP_OPTION_2, HELP_OPTION_3));
     return;
 }

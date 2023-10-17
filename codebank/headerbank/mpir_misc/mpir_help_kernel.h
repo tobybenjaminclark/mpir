@@ -8,9 +8,22 @@
 #include <string.h>
 
 #define MPIR_LOGO_FILENAME "ascii.txt"
-#define HELP_OPTION_1 "[ Information ]     "
-#define HELP_OPTION_2 "[ Help ]     "
-#define HELP_OPTION_3 "[ Exit ]"
+#define HELP_OPTION_1 "[ '1' Project Information ]     "
+#define HELP_OPTION_2 "[ '2' I need help ]     "
+#define HELP_OPTION_3 "[ '3' Exit Kernel ]"
+
+/// @brief Center Strings and Generate Formatted Output
+///
+/// This file contains the declaration of the mpir_center_strings function, which takes
+/// three input strings and centers them within a fixed-width output string. It calculates
+/// the required spacing to center the input strings, concatenates them with even spacing,
+/// and returns the resulting centered string. It's used in displaying the help kernel options.
+///
+/// @param string_one The first input string.
+/// @param string_two The second input string.
+/// @param string_three The third input string.
+/// @return A pointer to a statically allocated centered string.
+char* mpir_center_strings(const char* string_one, const char* string_two, const char* string_three)
 
 /// @brief Displays the MPIR Logo in ASCII
 ///
