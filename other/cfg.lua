@@ -1,4 +1,13 @@
 
+-- Keywords
+"where:"
+"suchthat:"
+"func"
+"let"
+"set"
+"as"
+
+
 -- widely-used declarations
 letter                      ::=         'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
 digit                       ::=         '0' | '1' | ... | '9'
@@ -12,7 +21,7 @@ function_definition         ::=         "func " function_identifier parameter_li
 parameter                   ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol)
 parameter_list              ::=         parameter | (parameter ", " parameter_list) 
 
-where_section               ::=         ("where:" | "such that:") "\n" doc_definitions "endwhere" "\n"
+where_section               ::=         ("where:" | "suchthat:") "\n" doc_definitions "endwhere;" "\n"
 doc_definitions             ::=         "|" identifier (identifier | None) " as " string/whatever? "\n" recursive more     -- do doc definitions more
 
 arithmetic_expression       ::=         term | arithmetic_expression '+' term | arithmetic_expression '-' term

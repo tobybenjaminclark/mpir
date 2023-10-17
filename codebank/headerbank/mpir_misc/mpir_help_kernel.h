@@ -4,8 +4,13 @@
 
 #include "mpir_warnings.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MPIR_LOGO_FILENAME "ascii.txt"
+#define HELP_OPTION_1 "[ Information ]     "
+#define HELP_OPTION_2 "[ Help ]     "
+#define HELP_OPTION_3 "[ Exit ]"
 
 /// @brief Displays the MPIR Logo in ASCII
 ///
