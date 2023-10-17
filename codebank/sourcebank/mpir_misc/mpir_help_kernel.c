@@ -31,6 +31,7 @@ void mpir_display_logo()
     return;
 }
 
+
 void mpir_enter_help_kernel()
 {
     (void)mpir_display_logo();
