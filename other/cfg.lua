@@ -6,7 +6,8 @@
 "let"
 "set"
 "as"
-
+"->"
+"→"
 
 -- widely-used declarations
 letter                      ::=         'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
