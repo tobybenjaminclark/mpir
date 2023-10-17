@@ -2,7 +2,7 @@
 #ifndef MPIR_COMPILER_MPIR_HELP_KERNEL_H
 #define MPIR_COMPILER_MPIR_HELP_KERNEL_H
 
-#include "../../headerbank//mpir_logging/mpir_warnings.h"
+#include "mpir_warnings.h"
 #include <stdio.h>
 
 #define MPIR_LOGO_FILENAME "ascii.txt"

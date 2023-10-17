@@ -11,7 +11,7 @@ add_compile_options(-ansi)
 add_executable(mpir codebank/sourcebank/main.c
         codebank/sourcebank/mpir_symbol_table/mpir_hashmap.c
         codebank/headerbank/mpir_symbol_table/mpir_hashmap.h
-        codebank/sourcebank/mpir_logging/mpir_warnings.c
-        codebank/headerbank/mpir_logging/mpir_warnings.h
+        codebank/sourcebank/mpir_misc/mpir_warnings.c
+        codebank/headerbank/mpir_misc/mpir_warnings.h
         codebank/sourcebank/mpir_misc/mpir_help_kernel.c
         codebank/headerbank/mpir_misc/mpir_help_kernel.h)

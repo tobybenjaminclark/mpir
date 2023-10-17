@@ -3,7 +3,7 @@
 //
 
 // Import header file.
-#include "../../headerbank/mpir_logging/mpir_warnings.h"
+#include "../../headerbank/mpir_misc/mpir_warnings.h"
 
 /// @brief Displays a formatted message to the specified output stream with the given prefix.
 ///

@@ -5,7 +5,7 @@
 #ifndef UNTITLED_MPIR_HASHMAP_H
 #define UNTITLED_MPIR_HASHMAP_H
 
-#include "../mpir_logging/mpir_warnings.h"
+#include "../mpir_misc/mpir_warnings.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
