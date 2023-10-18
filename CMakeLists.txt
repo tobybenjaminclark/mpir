@@ -14,4 +14,6 @@ add_executable(mpir codebank/sourcebank/main.c
         codebank/sourcebank/mpir_misc/mpir_warnings.c
         codebank/headerbank/mpir_misc/mpir_warnings.h
         codebank/sourcebank/mpir_misc/mpir_help_kernel.c
-        codebank/headerbank/mpir_misc/mpir_help_kernel.h)
+        codebank/headerbank/mpir_misc/mpir_help_kernel.h
+        codebank/sourcebank/mpir_lexer/mpir_token.c
+        codebank/headerbank/mpir_lexer/mpir_token.h)
