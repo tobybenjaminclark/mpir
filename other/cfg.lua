@@ -40,13 +40,14 @@ type_identifier             ::=         ( letter | digit ) | ( type_identifier l
 variable_definition         ::=         "let " variable_identifier " as " type_identifier
 variable_declaration        ::=         "set " variable_identifier " as " arithmetic_expression
 
+-- example (potentially) recursive definition list a: Int, b:listInt = [a, [b, NULL]]
 type_declaration            ::=         "typedef " type_identifier type_parameters "::" base_type_identifier
 type_parameter_declaration  ::=         "typedef " parameter ":" type_identifier optional_refinement
-optional_refinement         ::=         ("|" refinement) | None
+optional_refinement         ::=         ("|" "{" refinement "}" "\n") | "\n"
 refinement                  ::=         formula
 
 -- This 100% needs testing.
-formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier formula)
+formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier " : " formula)
 primitive_formula           ::=         ( predicate '(' terms ')' ) | ( term comparator term )
 comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
 terms                       ::=         (term) | (terms term)
