@@ -10,7 +10,7 @@
 /// @param string_one The first input string.
 /// @param string_two The second input string.
 /// @param string_three The third input string.
-/// @return A pointer to a statically allocated centered string.
+/// @return A pointer to a statically allocated centered string. (No need to free!)
 char* mpir_center_strings(const char* string_one, const char* string_two, const char* string_three)
 {
     // Static array to store the centered string_three

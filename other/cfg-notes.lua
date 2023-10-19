@@ -143,6 +143,10 @@ set x as x + 1
 --  | author as "github.com/tobybenjaminclark
 -- end add
 
+-- trycast <identifier>:Type into <identifier>:Type
+-- on success -> do x
+-- on failure -> do y
+
 -- func functionname :: Type -> Type -> Type ...
 -- func functionname parameters = result
 -- where
