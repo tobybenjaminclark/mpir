@@ -159,3 +159,13 @@ set x as x + 1
 --  | flag param as value
 --  | flag as value
 -- end functionname
+
+-- all data types can be derived as a refinement of float
+-- e.g. int is float | float is a whole number
+-- e.g. bool is an int | bool is 1 or bool is 2int
+-- e.g. char is an int | int is in the ascii range
+
+-- lists should be defined recursively
+-- the only reald data-types should be tuple and float
+-- everything else can be derived (i think?)
+-- nullable data types too :) (saves union types!)

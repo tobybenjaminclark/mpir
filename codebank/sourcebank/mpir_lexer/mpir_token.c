@@ -8,6 +8,3 @@ mpir_token* mpir_create_token(mpir_token_type type, char lexeme[50], int line)
     return_token->line = line;
     return return_token;
 }
-
-int x;
-x = 5;
