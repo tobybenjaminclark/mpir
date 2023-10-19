@@ -91,6 +91,12 @@ set x as x + 1
 
 -- Pipe Syntax Type Decl. Differently
 
+-- global type int_list(a, b)
+--      | a: Int
+--      | b: IntList | NULL
+-- where:
+--      | doc as "Integer List (x:xs) format."
+
 -- global type nat(a):
 --      | a: Int :: a > 0
 -- where:
