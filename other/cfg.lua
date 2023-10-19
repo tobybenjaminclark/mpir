@@ -59,7 +59,7 @@ refinement                  ::=         formula
 formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier " : " formula)
 primitive_formula           ::=         ( predicate '(' terms ')' ) | ( term comparator term )
 comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
-terms                       ::=         (term) | (terms term)
+terms                       ::=         (terms term) | term
 term                        ::=         constant | variable
 connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
 quantifier                  ::=         '∀' | '∃'
