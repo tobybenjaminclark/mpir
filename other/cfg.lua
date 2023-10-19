@@ -24,8 +24,13 @@ function_definition         ::=         "func " function_identifier parameter_li
 parameter                   ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol)
 parameter_list              ::=         parameter | (parameter ", " parameter_list) 
 
+-- CFG Defines the syntax for declaring tag-associated documentatio section, starts with where:/suchthat:
+-- Followed by n statements of 'tag' 'identifier' as 'docstring', which can be formulated into documentation.
 where_section               ::=         ("where:" | "suchthat:") "\n" doc_definitions "endwhere;" "\n"
-doc_definitions             ::=         "|" identifier (identifier | None) " as " string/whatever? "\n" recursive more     -- do doc definitions more
+doc_definition              ::=         ("|" identifier (identifier | None) " as " docstring "\n")
+doc_definitions             ::=         doc_definition | doc_definitions doc_definition
+letters                     ::=         letter | letters letter
+docstring                   ::=         '`' letters '`'
 
 arithmetic_expression       ::=         term | arithmetic_expression '+' term | arithmetic_expression '-' term
 term                        ::=         factor | term '*' factor | term '/' factor
@@ -53,5 +58,5 @@ comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
 terms                       ::=         (term) | (terms term)
 term                        ::=         constant | variable
 connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
-quantifier                  ::=         ∀ | ∃
+quantifier                  ::=         '∀' | '∃'
 constant                    ::=         literal
