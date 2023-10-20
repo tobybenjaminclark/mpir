@@ -1,7 +1,7 @@
-
-
 #ifndef MPIR_COMPILER_MPIR_TOKEN_H
 #define MPIR_COMPILER_MPIR_TOKEN_H
+
+#include <string.h>
 
 typedef enum
 {

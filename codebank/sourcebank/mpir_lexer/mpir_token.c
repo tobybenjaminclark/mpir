@@ -13,7 +13,9 @@ mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int l
 
     // Copy the lexeme to the token structure (assuming lexeme is a C-style string)
     strncpy(return_token->lexeme, lexeme, sizeof(return_token->lexeme) - 1);
-    return_token->lexeme[sizeof(return_token->lexeme) - 1] = '\0'; // Null-terminate the lexeme
+
+    // Null-terminate the lexeme
+    return_token->lexeme[sizeof(return_token->lexeme) - 1] = '\0';
 
     // Assign values to the token structure
     return_token->type = type;
