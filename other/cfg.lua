@@ -18,6 +18,17 @@ digit                       ::=         '0' | '1' | ... | '9'
 type_identifier
 flag_identifier
 
+-- highest level non-terminal, everything 'stems' from here.
+line_of_code                ::=         import_directive
+                                        | function_declaration
+                                        | function_declaration
+                                        | where_section
+                                        | type_declaration
+                                        | type_parameter_declaration
+lines_of_code               ::=         line_of_code | (line_of_code lines_of_code)
+
+import_directive            ::=         "using " "'" relative_file_path "'" "\n"
+
 -- function
 --                                      KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
 function_declaration        ::=         "func " function_identifier "::" function_io '\n'

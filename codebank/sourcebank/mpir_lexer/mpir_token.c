@@ -1,5 +1,7 @@
 #include "../../headerbank/mpir_lexer/mpir_token.h"
 
+
+
 /// @brief Create, allocate & return a new token structure.
 ///
 /// This function allocates memory for a new token structure, initializes its attributes, and returns
@@ -36,6 +38,8 @@ mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int l
 
     return return_token;
 }
+
+
 
 /// @brief Frees the allocated memory for a token structure, releasing system resources.
 ///
