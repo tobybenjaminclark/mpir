@@ -19,9 +19,11 @@ type_identifier
 flag_identifier
 
 -- function
-function_declaration        ::=         "func " function_identifier "::" function_curry '\n'
+--                                      KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
+function_declaration        ::=         "func " function_identifier "::" function_io '\n'
 function_identifier         ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol) '\n'
-function_curry              ::=         ( type_identifier ("->"|"→") type_identifier | function_curry)
+function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )
+type_identifiers            ::=         None | type_identifier | type_identifiers ", " type_identifier
 
 function_definition         ::=         "func " function_identifier parameter_list 
 parameter                   ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol)

@@ -18,4 +18,6 @@ add_executable(mpir codebank/sourcebank/main.c
         codebank/sourcebank/mpir_lexer/mpir_token.c
         codebank/headerbank/mpir_lexer/mpir_token.h
         codebank/sourcebank/mpir_lexer/mpir_lexer.c
-        codebank/sourcebank/mpir_lexer/mpir_lexer.h)
+        codebank/headerbank/mpir_lexer/mpir_lexer.h
+        codebank/sourcebank/mpir_lexer/mpir_tokenize_function_declaration.c
+        codebank/headerbank/mpir_lexer/mpir_tokenize_function_declaration.h)
