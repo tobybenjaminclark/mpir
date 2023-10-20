@@ -2,6 +2,8 @@
 #define MPIR_COMPILER_MPIR_TOKEN_H
 
 #include <string.h>
+#include <stdlib.h>
+
 
 typedef enum
 {
@@ -10,6 +12,8 @@ typedef enum
     IDENTIFIER,
     KEYWORD
 } mpir_token_type;
+
+
 
 typedef struct
 {
@@ -23,6 +27,8 @@ typedef struct
     int line;
 
 } mpir_token;
+
+
 
 /// @brief Create, allocate & return a new token structure.
 ///
@@ -43,6 +49,8 @@ typedef struct
 /// @warning It is the caller's responsibility to free the allocated memory for the token structure.
 ///
 mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int line);
+
+
 
 /// @brief Frees the allocated memory for a token structure, releasing system resources.
 ///
