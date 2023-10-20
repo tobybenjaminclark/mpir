@@ -3,6 +3,7 @@
 #ifndef MPIR_COMPILER_MPIR_LEXER_H
 #define MPIR_COMPILER_MPIR_LEXER_H
 
+#include <stdio.h>
 #include "../../headerbank/mpir_lexer/mpir_token.h"
 
 typedef struct
