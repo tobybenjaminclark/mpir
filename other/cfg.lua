@@ -15,8 +15,8 @@
 letter                      ::=         'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
 digit                       ::=         '0' | '1' | ... | '9'
 
-type_identifier
-flag_identifier
+type_identifier             ::=         normal_identifier
+flag_identifier             ::=         normal_identifier
 
 -- highest level non-terminal, everything 'stems' from here.
 line_of_code                ::=         import_directive
