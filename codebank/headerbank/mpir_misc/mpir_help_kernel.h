@@ -23,7 +23,7 @@
 /// @param string_two The second input string.
 /// @param string_three The third input string.
 /// @return A pointer to a statically allocated centered string.
-char* mpir_center_strings(const char* string_one, const char* string_two, const char* string_three)
+char* mpir_center_strings(const char* string_one, const char* string_two, const char* string_three);
 
 /// @brief Displays the MPIR Logo in ASCII
 ///

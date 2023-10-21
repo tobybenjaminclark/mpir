@@ -34,7 +34,7 @@ mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int l
 
     // Assign values to the token structure
     return_token->type = type;
-    return_token->line = line;
+    return_token->line_index = line;
 
     return return_token;
 }

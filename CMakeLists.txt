@@ -5,6 +5,8 @@ set(CMAKE_C_STANDARD 23)
 
 configure_file(codebank/databank/ascii.txt
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(codebank/databank/test.mpir
+        ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 add_compile_options(-ansi)
 
@@ -19,5 +21,4 @@ add_executable(mpir codebank/sourcebank/main.c
         codebank/headerbank/mpir_lexer/mpir_token.h
         codebank/sourcebank/mpir_lexer/mpir_lexer.c
         codebank/headerbank/mpir_lexer/mpir_lexer.h
-        codebank/sourcebank/mpir_lexer/mpir_tokenize_function_declaration.c
         codebank/headerbank/mpir_lexer/mpir_tokenize_function_declaration.h)

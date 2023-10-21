@@ -1,17 +1,12 @@
 #include "../headerbank/mpir_misc/mpir_help_kernel.h"
+#include "../headerbank/mpir_lexer/mpir_lexer.h"
 #include <string.h>
 
 int main(int argc, char** argv)
 {
-    // Iterate through command line arguments
-    for (int i = 1; i < argc; i++) {
-        // Compare the current argument with the flag you are looking for (e.g., "-h")
-        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
-            // If the flag is found, print a help message and exit the program
-            mpir_enter_help_kernel();
-            return 0;
-        }
-    }
+    mpir_lexer* lexer = mpir_lexer_create("test.mpir");
+    mpir_lexer_tokenize(lexer);
+    mpir_lexer_free(lexer);
 
     return 0;
 }

@@ -8,6 +8,7 @@
 typedef enum
 {
     NUMERICAL_LITERAL,
+    STRING_LITERAL,
     OPERATOR,
     IDENTIFIER,
     KEYWORD
@@ -21,10 +22,11 @@ typedef struct
     mpir_token_type type;
 
     // Lexeme of the token (actual value as a string)
-    char lexeme[50];
+    char lexeme[128];
 
     // Line number in the source code where the token appears
-    int line;
+    unsigned long int line_index;
+    unsigned long int column_index;
 
 } mpir_token;
 

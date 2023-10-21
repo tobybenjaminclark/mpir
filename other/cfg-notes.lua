@@ -153,7 +153,7 @@ set x as x + 1
 -- on success -> do x
 -- on failure -> do y
 
--- func functionname :: Type -> Type -> Type ...
+-- func functionname :: Type -> Type
 -- func functionname parameters = result
 -- where
 --  | flag param as value
