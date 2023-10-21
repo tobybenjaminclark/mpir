@@ -70,6 +70,4 @@ void mpir_lexer_free(mpir_lexer *lexer);
 
 
 
-int mpir_lexer_tokenize(mpir_lexer *lexer);
-
 #endif //MPIR_COMPILER_MPIR_LEXER_H
