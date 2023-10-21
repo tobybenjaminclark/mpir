@@ -1,1 +1,1 @@
-func functionname :: Type -> Type
+func functionname :: Type -> Type "Literal"

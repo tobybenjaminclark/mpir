@@ -16,17 +16,40 @@ int mpir_lexer_is_keyword(char* lexeme)
     return 0;
 }
 
-int mpir_lexer_process_lexemme(char* lexemme)
+int mpir_lexer_is_string_literal(char* lexeme)
 {
-
-    if (mpir_lexer_is_keyword(lexemme))
+    if (strlen(lexeme) > 0)
     {
-        printf("Keyword! %s\n", lexemme);
+        char first = lexeme[0];
+        char last = lexeme[strlen(lexeme) - 1];
+        if (first == last && (first == '"' || first == "'"))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int mpir_lexer_process_lexemme(char* lexeme)
+{
+    if (lexeme == NULL || lexeme == "\0" || lexeme == " ")
+    {
+        printf("Null lexeme\n");
+    }
+
+    else if (mpir_lexer_is_keyword(lexeme))
+    {
+        printf("Keyword! %s\n", lexeme);
+    }
+
+    else if (mpir_lexer_is_string_literal(lexeme))
+    {
+        printf("StrLiteral %s\n", lexeme);
     }
 
     else
     {
-        printf("%s\n", lexemme);
+        printf("Other: %s\n", lexeme);
     }
 
     return 0;

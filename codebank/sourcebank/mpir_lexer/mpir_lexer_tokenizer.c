@@ -7,11 +7,34 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
 
     while (current_character != EOF)
     {
+        char inside_string_literal;
+
         if (current_character == ' ')
         {
             // Print the token and reset the buffer
             lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
             mpir_lexer_process_lexemme(lexer->buffer);
+            memset(lexer->buffer, 0, 80);
+            buffer_index = 0;
+        }
+        else if (current_character == '"' || current_character == "'")
+        {
+            // Print the token and reset the buffer
+            lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+            memset(lexer->buffer, 0, 80);
+            buffer_index = 0;
+
+            lexer->buffer[buffer_index++] = current_character;
+            inside_string_literal = fgetc(lexer->source_file);
+            while(inside_string_literal != current_character)
+            {
+                lexer->buffer[buffer_index++] = inside_string_literal;
+                inside_string_literal = fgetc(lexer->source_file);
+            }
+            lexer->buffer[buffer_index++] = inside_string_literal;
+            mpir_lexer_process_lexemme(lexer->buffer);
+
+            memset(lexer->buffer, 0, 80);
             buffer_index = 0;
         }
         else if (buffer_index < BUFFER_SIZE)
