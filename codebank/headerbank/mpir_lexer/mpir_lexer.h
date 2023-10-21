@@ -14,7 +14,13 @@
 
 #define MPIR_KEYWORDS {"::","func"}
 
-
+/// @brief Struct representing a lexer for tokenizing source code.
+///
+/// The `mpir_lexer` struct is responsible for maintaining the state of lexical analysis
+/// of a source code file. It tracks the current position in the file, the size of the buffer,
+/// the number of tokens processed, the current line and column numbers, and other relevant
+/// information for tokenization.
+///
 typedef struct
 {
     unsigned long int current_index;    // Current character index
