@@ -26,6 +26,7 @@ mpir_lexer* mpir_lexer_create(const char *filepath)
     }
 
     // Initialize lexer properties to their appropriate values.
+    // If, at some point, MPIR is converted to C99, use a struct initializer.
     lexer->current_index = 0;
     lexer->buffer_size = 0;
     lexer->token_count = 0;
@@ -48,25 +49,44 @@ mpir_lexer* mpir_lexer_create(const char *filepath)
     return lexer;
 }
 
+/// @brief Frees the memory allocated for the given mpir_lexer structure and its associated resources.
+///
+/// This function deallocates memory used by the provided mpir_lexer structure. It closes the source file,
+/// frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
+/// structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
+///
+/// @param lexer A pointer to the mpir_lexer structure to be deallocated.
+///
+/// @remark Ensure that the provided mpir_lexer structure is no longer used after calling this function, as
+/// accessing the structure or any of its members after deallocation results in undefined behavior, as the
+/// structure no longer exists.
+///
 void mpir_lexer_free(mpir_lexer *lexer)
 {
-    // Free the buffer used for constructing token lexemes
-    fclose(lexer->source_file);
+    // Ensure mpir_lexer structure is non-Null.
+    if(lexer == NULL)
+    {
+        mpir_warn("Attempted to free a NULL lexer structure.");
+        return;
+    }
 
-    // Free each token in the list
+    // Free the buffer used for constructing token lexemes
+    if(lexer->source_file != NULL){fclose(lexer->source_file);}
+    else
+    {
+        mpir_warn("Attempted to close a NULL file.");
+        return;
+    }
+
+    // Free each Token in the lexer, and then free and null the token array.
     for (unsigned long int i = 0; i < lexer->token_count; ++i)
     {
         free(lexer->tokens[i]);
     }
-
-    // Free the list of tokens
     free(lexer->tokens);
     lexer->tokens = NULL;
 
-    // Close the source file
-    fclose(lexer->source_file);
-
-    // Free the lexer structure itself
+    // Free the lexer structure itself.
     free(lexer);
 }
 

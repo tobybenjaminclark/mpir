@@ -29,6 +29,8 @@ typedef struct
     char buffer[BUFFER_SIZE];           // Buffer for constructing token lexemes dynamically
 } mpir_lexer;
 
+
+
 /// @brief Attempts to create a MPIR lexer for tokenizing an .mpir input file.
 ///
 /// This function initializes an MPIR lexer structure used for tokenizing a source file in the MPIR compiler.
@@ -46,6 +48,18 @@ mpir_lexer* mpir_lexer_create(const char *filepath);
 
 
 
+/// @brief Frees the memory allocated for the given mpir_lexer structure and its associated resources.
+///
+/// This function deallocates memory used by the provided mpir_lexer structure. It closes the source file,
+/// frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
+/// structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
+///
+/// @param lexer A pointer to the mpir_lexer structure to be deallocated.
+///
+/// @remark Ensure that the provided mpir_lexer structure is no longer used after calling this function, as
+/// accessing the structure or any of its members after deallocation results in undefined behavior, as the
+/// structure no longer exists.
+///
 void mpir_lexer_free(mpir_lexer *lexer);
 
 
