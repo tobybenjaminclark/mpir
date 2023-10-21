@@ -53,6 +53,39 @@ void mpir_lexer_free(mpir_lexer *lexer)
     free(lexer);
 }
 
+int mpir_lexer_is_keyword(char* lexeme)
+{
+    char * x [] = MPIR_KEYWORDS;
+    int len = sizeof(x)/sizeof(x[0]);
+    int i;
+
+    for(i = 0; i < len; ++i)
+    {
+        if(!strcmp(x[i], lexeme))
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int mpir_lexer_process_lexemme(mpir_lexer* lexer)
+{
+    char* lexemme = lexer->buffer;
+
+    if (mpir_lexer_is_keyword(lexemme))
+    {
+        printf("Keyword! %s\n", lexemme);
+    }
+
+    else
+    {
+        printf("%s\n", lexemme);
+    }
+
+    return 0;
+}
+
 int mpir_lexer_tokenize(mpir_lexer *lexer)
 {
     char current_character = fgetc(lexer->source_file);
@@ -64,7 +97,7 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         {
             // Print the token and reset the buffer
             lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
-            printf("token: %s\n", lexer->buffer);
+            mpir_lexer_process_lexemme(lexer);
             buffer_index = 0;
         }
         else if (buffer_index < BUFFER_SIZE)
@@ -74,8 +107,8 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         }
         else
         {
+            mpir_error("Lexer has failed to tokenize '%c', as current token length exceeds allocated buffer (128 characters).");
             fprintf(stderr, "Token too long: %s\n", lexer->buffer);
-            return 1;
         }
 
         // Read the next character
@@ -86,7 +119,7 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
     if (buffer_index > 0)
     {
         lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
-        printf("token: %s\n", lexer->buffer);
+        mpir_lexer_process_lexemme(lexer);
     }
 
     return 0;
