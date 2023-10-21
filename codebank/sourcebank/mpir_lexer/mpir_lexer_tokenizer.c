@@ -29,6 +29,41 @@ void mpir_tokenize_divide(mpir_lexer *lexer, int *buffer_index_pointer, char cur
     return;
 }
 
+void mpir_tokenize_numerical_literal(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+    int floating_point_processed = 0;
+
+    char second_character;
+    second_character = fgetc(lexer->source_file);
+    lexer->buffer[buffer_index++] = current_character;
+
+    while(isnumber(second_character) || (floating_point_processed == 0 && second_character == '.'))
+    {
+        if(second_character == '.')
+        {
+            floating_point_processed = 1;
+        }
+
+        lexer->buffer[buffer_index++] = second_character;
+        second_character = fgetc(lexer -> source_file);
+    }
+    if(!isnumber(second_character))
+    {
+        ungetc(second_character, lexer->source_file);
+    }
+    lexer->buffer[buffer_index] = '\0';
+
+    mpir_lexer_process_lexemme(lexer->buffer);
+
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+
 void mpir_tokenize_equals(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
@@ -61,12 +96,30 @@ void mpir_tokenize_subtract(mpir_lexer *lexer, int *buffer_index_pointer, char c
     int buffer_index = *buffer_index_pointer;
 
     char second_character;
+    int floating_point_processed = 0;
+    int is_unary_for_a_numerical_literal = 0;
     second_character = fgetc(lexer->source_file);
     lexer->buffer[buffer_index++] = current_character;
-    if(second_character == '>')
+    while(isnumber(second_character) || (floating_point_processed == 0 && second_character == '.'))
+    {
+        is_unary_for_a_numerical_literal = 1;
+        if(second_character == '.')
+        {
+            floating_point_processed = 1;
+        }
+
+        lexer->buffer[buffer_index++] = second_character;
+        second_character = fgetc(lexer -> source_file);
+    }
+    if(second_character == '>' && is_unary_for_a_numerical_literal == 0)
     {
         lexer->buffer[buffer_index++] = second_character;
     }
+    else
+    {
+        ungetc(second_character, lexer->source_file);
+    }
+
     lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer);
 
@@ -253,6 +306,10 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         else if(current_character == '\n')
         {
             mpir_tokenize_eol(lexer, &buffer_index, current_character);
+        }
+        else if(isnumber(current_character))
+        {
+            mpir_tokenize_numerical_literal(lexer, &buffer_index, current_character);
         }
         else if (current_character == '*' || current_character == '+' || current_character == '/' || current_character == '-' || current_character == '='
         || current_character == '^')

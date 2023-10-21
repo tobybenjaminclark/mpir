@@ -10,4 +10,4 @@ end
 
 typedef NewInt a :: Int
 typedef a : Int {all x : x == 1}
-typedef a : Int {exists x : x >=3}
+typedef a : Int {exists x : x >= -35.0}
