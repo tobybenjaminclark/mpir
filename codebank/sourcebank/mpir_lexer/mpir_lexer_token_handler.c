@@ -15,10 +15,70 @@ int mpir_lexer_has_newline(const char* lexeme) {
     return 0;
 }
 
+int mpir_lexer_has_comma(const char* lexeme) {
+    // Iterate through the string
+    for (int i = 0; lexeme[i] != '\0'; ++i)
+    {
+        // Check if the current character is a newline character
+        if (lexeme[i] == ',')
+        {
+            // If found, return 1 to indicate presence of newline character
+            return 1;
+        }
+    }
+    // If no newline character is found, return 0
+    return 0;
+}
+
+int mpir_lexer_is_colon(char* lexeme)
+{
+    // Iterate through the string
+    for (int i = 0; lexeme[i] != '\0'; ++i)
+    {
+        // Check if the current character is a newline character
+        if (lexeme[i] == ':')
+        {
+            // If found, return 1 to indicate presence of newline character
+            return 1;
+        }
+    }
+    // If no newline character is found, return 0
+    return 0;
+}
+
+int mpir_lexer_is_pipe(char* lexeme)
+{
+    // Iterate through the string
+    for (int i = 0; lexeme[i] != '\0'; ++i)
+    {
+        // Check if the current character is a newline character
+        if (lexeme[i] == '|')
+        {
+            // If found, return 1 to indicate presence of newline character
+            return 1;
+        }
+    }
+    // If no newline character is found, return 0
+    return 0;
+}
+
+int mpir_lexer_is_comment(char* lexeme)
+{
+    int size = sizeof(lexeme) / sizeof(lexeme[0]);
+    if(size > 2)
+    {
+        if (lexeme[0] == lexeme[1] && lexeme[0] == '/')
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int mpir_lexer_is_operator(char* lexeme)
 {
     // List of operators to check against
-    const char* operators[] = {"+", "-", "*", "/", "%", "&", "|", "^", ">", "<", "=", "!", "~"};
+    const char* operators[] = {"+", "-", "*", "/", "%", "=="};
     int numOperators = sizeof(operators) / sizeof(operators[0]);
 
     for (int i = 0; i < numOperators; ++i)
@@ -71,30 +131,41 @@ int mpir_lexer_process_lexemme(char* lexeme)
     {
         return 0;
     }
-
     else if (mpir_lexer_is_operator(lexeme))
     {
-        printf("Operator! %s\n", lexeme);
+        printf("TOKEN_OPER\t\t%s\n", lexeme);
     }
-
     else if (mpir_lexer_is_keyword(lexeme))
     {
-        printf("Keyword! %s\n", lexeme);
+        printf("TOKEN_KW\t\t%s\n", lexeme);
     }
-
     else if (mpir_lexer_is_string_literal(lexeme))
     {
-        printf("StrLiteral %s\n", lexeme);
+        printf("TOKEN_STRLIT\t%s\n", lexeme);
     }
-
     else if(mpir_lexer_has_newline(lexeme))
     {
-        printf("EOL\n");
+        printf("TOKEN_EOL\t\t\\n\n");
     }
-
+    else if(mpir_lexer_is_comment(lexeme))
+    {
+        printf("TOKEN_CMNT\t\t%s\n", lexeme);
+    }
+    else if(mpir_lexer_has_comma(lexeme))
+    {
+        printf("TOKEN_CMMA\t\t%s\n", lexeme);
+    }
+    else if(mpir_lexer_is_pipe(lexeme))
+    {
+        printf("TOKEN_PIPE\t\t%s\n", lexeme);
+    }
+    else if(mpir_lexer_is_colon(lexeme))
+    {
+        printf("TOKEN_COLN\t\t%s\n", lexeme);
+    }
     else if(lexeme != " " || lexeme != "\0")
     {
-        printf("Other: %s\n", lexeme);
+        printf("TOKEN_IDENT: \t%s\n", lexeme);
     }
 
     return 0;

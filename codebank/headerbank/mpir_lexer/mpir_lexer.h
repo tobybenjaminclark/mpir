@@ -10,9 +10,7 @@
 #define BUFFER_SIZE 127
 #include "mpir_token.h"
 #include "../../headerbank/mpir_misc/mpir_warnings.h"
-#include "../../headerbank/mpir_lexer/mpir_lexer_token_handler.h"
 
-#define MPIR_KEYWORDS {"::","func"}
 
 /// @brief Struct representing a lexer for tokenizing source code.
 ///

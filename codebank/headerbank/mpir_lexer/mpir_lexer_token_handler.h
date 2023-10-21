@@ -3,8 +3,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 
-#define MPIR_KEYWORDS {"::","func","->"}
+#define MPIR_KEYWORDS {"->", "::", "using", "fundef", "typedef", "let", "set", "in", "as", "→", "where:", "suchthat:", "end", "{", "}", "all"};
 
 int mpir_lexer_is_keyword(char* lexeme);
 int mpir_lexer_process_lexemme(char* lexeme);

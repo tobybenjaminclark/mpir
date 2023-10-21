@@ -2,5 +2,8 @@
 #define MPIR_COMPILER_MPIR_LEXER_TOKENIZER_H
 
 #include "../../headerbank/mpir_lexer/mpir_lexer.h"
+#include "../../headerbank/mpir_lexer/mpir_lexer_token_handler.h"
+
 int mpir_lexer_tokenize(mpir_lexer *lexer);
+
 #endif //MPIR_COMPILER_MPIR_LEXER_TOKENIZER_H

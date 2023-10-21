@@ -1,6 +1,62 @@
 #include "../../headerbank/mpir_lexer/mpir_lexer_tokenizer.h"
 
-void mpir_lexer_proccess_subtract(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+void mpir_tokenize_divide(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    char second_character;
+    char comment_character;
+    second_character = fgetc(lexer->source_file);
+    lexer->buffer[buffer_index++] = current_character;
+    if(second_character == '/')
+    {
+        lexer->buffer[buffer_index++] = second_character;
+        comment_character = fgetc(lexer->source_file);
+        while(comment_character != '\n')
+        {
+            lexer->buffer[buffer_index++] = comment_character;
+            comment_character = fgetc(lexer->source_file);
+        }
+    }
+    lexer->buffer[buffer_index] = '\0';
+    mpir_lexer_process_lexemme(lexer->buffer);
+
+    lexer->buffer[buffer_index] = '\0';
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+
+void mpir_tokenize_equals(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    char second_character;
+    second_character = fgetc(lexer->source_file);
+    lexer->buffer[buffer_index++] = current_character;
+    if(second_character == '=')
+    {
+        lexer->buffer[buffer_index++] = second_character;
+    }
+    else
+    {
+        ungetc(second_character, lexer->source_file);
+    }
+    lexer->buffer[buffer_index] = '\0';
+
+    mpir_lexer_process_lexemme(lexer->buffer);
+
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+
+void mpir_tokenize_subtract(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
 
@@ -22,7 +78,93 @@ void mpir_lexer_proccess_subtract(mpir_lexer *lexer, int *buffer_index_pointer, 
     return;
 }
 
-void mpir_lexer_proccess_eol(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+void mpir_tokenize_brace(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    // Process before the comma
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    // Process the comma!
+    lexer->buffer[buffer_index++] = current_character;
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+    return;
+}
+
+void mpir_tokenize_colon(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    char second_character;
+    second_character = fgetc(lexer->source_file);
+    lexer->buffer[buffer_index++] = current_character;
+    if(second_character == ':')
+    {
+        lexer->buffer[buffer_index++] = second_character;
+    }
+    else
+    {
+        ungetc(second_character, lexer->source_file);
+    }
+    lexer->buffer[buffer_index] = '\0';
+
+    mpir_lexer_process_lexemme(lexer->buffer);
+
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+
+void mpir_tokenize_pipe(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    // Process before the comma
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    // Process the comma!
+    lexer->buffer[buffer_index++] = current_character;
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+    return;
+}
+
+
+void mpir_tokenize_comma(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+
+    // Process before the comma
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    // Process the comma!
+    lexer->buffer[buffer_index++] = current_character;
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+    return;
+}
+
+
+void mpir_tokenize_eol(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
     lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
@@ -40,7 +182,8 @@ void mpir_lexer_proccess_eol(mpir_lexer *lexer, int *buffer_index_pointer, char 
     *buffer_index_pointer = buffer_index;
     return;
 }
-void mpir_lexer_proccess_operator(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+
+void mpir_tokenize_operator(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
     lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
@@ -56,7 +199,7 @@ void mpir_lexer_proccess_operator(mpir_lexer *lexer, int *buffer_index_pointer, 
     return;
 }
 
-void mpir_lexer_process_string_literal(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+void mpir_tokenize_string_literal(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
     char inside_string_literal;
@@ -83,7 +226,7 @@ void mpir_lexer_process_string_literal(mpir_lexer *lexer, int *buffer_index_poin
     return;
 }
 
-void mpir_lexer_process_space(mpir_lexer* lexer, int *buffer_index_pointer, char current_character)
+void mpir_tokenize_space(mpir_lexer* lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
     // Print the token and reset the buffer
@@ -105,23 +248,51 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
     {
         if (current_character == ' ')
         {
-            mpir_lexer_process_space(lexer, &buffer_index, current_character);
+            mpir_tokenize_space(lexer, &buffer_index, current_character);
         }
         else if(current_character == '\n')
         {
-            mpir_lexer_proccess_eol(lexer, &buffer_index, current_character);
+            mpir_tokenize_eol(lexer, &buffer_index, current_character);
         }
-        else if (current_character == '*' || current_character == '+' || current_character == '/')
+        else if (current_character == '*' || current_character == '+' || current_character == '/' || current_character == '-' || current_character == '='
+        || current_character == '^')
         {
-            mpir_lexer_proccess_operator(lexer, &buffer_index, current_character);
-        }
-        else if (current_character == '-')
-        {
-            mpir_lexer_proccess_subtract(lexer, &buffer_index, current_character);
+            if (current_character == '=')
+            {
+                mpir_tokenize_equals(lexer, &buffer_index, current_character);
+            }
+            else if (current_character == '-')
+            {
+                mpir_tokenize_subtract(lexer, &buffer_index, current_character);
+            }
+            else if(current_character == '/')
+            {
+                mpir_tokenize_divide(lexer, &buffer_index, current_character);
+            }
+            else
+            {
+                mpir_tokenize_operator(lexer, &buffer_index, current_character);
+            }
         }
         else if (current_character == '"' || current_character == "'")
         {
-            mpir_lexer_process_string_literal(lexer, &buffer_index, current_character);
+            mpir_tokenize_string_literal(lexer, &buffer_index, current_character);
+        }
+        else if (current_character == ',')
+        {
+            mpir_tokenize_comma(lexer, &buffer_index, current_character);
+        }
+        else if(current_character == ':')
+        {
+            mpir_tokenize_colon(lexer, &buffer_index, current_character);
+        }
+        else if(current_character == '{' || current_character == '}')
+        {
+            mpir_tokenize_brace(lexer, &buffer_index, current_character);
+        }
+        else if (current_character == '|')
+        {
+            mpir_tokenize_pipe(lexer, &buffer_index, current_character);
         }
         else if (buffer_index < BUFFER_SIZE)
         {

@@ -10,6 +10,7 @@
 "as"
 "->"
 "→"
+"end"
 
 -- widely-used declarations
 letter                      ::=         'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
@@ -69,7 +70,7 @@ refinement                  ::=         formula
 
 -- CFG to define propositional & predicate logic to be used to define explicit type
 -- refinements. E.g. x:Int | x > 5 ^ x < 10 (range of integers from 5 to 10)
-formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier " : " formula)
+formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier ":" formula)
 primitive_formula           ::=         ( predicate '(' terms ')' ) | ( term comparator term )
 comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
 terms                       ::=         (terms term) | term

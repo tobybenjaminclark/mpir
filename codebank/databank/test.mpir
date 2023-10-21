@@ -1,3 +1,13 @@
-func divide :: TypeInt -> TypeInt
-"Literal" + "King "
+using "anothertest.mpir"
 
+funcdef divide :: TypeInt, TypeInt -> TypeInt
+funcdef divide x, y = x / y
+suchthat:
+    |   doc x as "First Integer"
+    |   doc y as "Second Integer"
+    |   doc as "Function to divide 2 numbers"
+end
+
+typedef NewInt a :: Int
+typedef a : Int {all x : x == 1}
+typedef a : Int {exists x : x >=3}
