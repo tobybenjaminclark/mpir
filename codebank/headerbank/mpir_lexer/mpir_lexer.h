@@ -10,6 +10,7 @@
 #define BUFFER_SIZE 127
 #include "mpir_token.h"
 #include "../../headerbank/mpir_misc/mpir_warnings.h"
+#include "../../headerbank/mpir_lexer/mpir_lexer_token_typer.h"
 
 #define MPIR_KEYWORDS {"::","func"}
 

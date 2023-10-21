@@ -53,21 +53,7 @@ void mpir_lexer_free(mpir_lexer *lexer)
     free(lexer);
 }
 
-int mpir_lexer_is_keyword(char* lexeme)
-{
-    char * x [] = MPIR_KEYWORDS;
-    int len = sizeof(x)/sizeof(x[0]);
-    int i;
 
-    for(i = 0; i < len; ++i)
-    {
-        if(!strcmp(x[i], lexeme))
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
 
 int mpir_lexer_process_lexemme(mpir_lexer* lexer)
 {
