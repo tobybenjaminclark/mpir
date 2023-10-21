@@ -1,5 +1,39 @@
 #include "../../headerbank/mpir_lexer/mpir_lexer_tokenizer.h"
 
+void mpir_lexer_proccess_eol(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    mpir_lexer_process_lexemme(lexer->buffer);
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    lexer->buffer[buffer_index++] = current_character;
+    mpir_lexer_process_lexemme(lexer->buffer);
+
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+void mpir_lexer_proccess_operator(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
+{
+    int buffer_index = *buffer_index_pointer;
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+    lexer->buffer[buffer_index++] = current_character;
+    mpir_lexer_process_lexemme(lexer->buffer);
+    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    memset(lexer->buffer, 0, 80);
+    buffer_index = 0;
+
+    *buffer_index_pointer = buffer_index;
+    return;
+}
+
 void mpir_lexer_process_string_literal(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
@@ -51,9 +85,17 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         {
             mpir_lexer_process_space(lexer, &buffer_index, current_character);
         }
+        else if(current_character == '\n')
+        {
+            mpir_lexer_proccess_eol(lexer, &buffer_index, current_character);
+        }
+        else if (current_character == '*' || current_character == '+' || current_character == '-' || current_character == '/')
+        {
+            mpir_lexer_proccess_operator(lexer, &buffer_index, current_character);
+        }
         else if (current_character == '"' || current_character == "'")
         {
-            mpir_lexer_process_string_literal(lexer, buffer_index, current_character);
+            mpir_lexer_process_string_literal(lexer, &buffer_index, current_character);
         }
         else if (buffer_index < BUFFER_SIZE)
         {

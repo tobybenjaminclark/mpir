@@ -1,1 +1,3 @@
-func functionname :: Type -> Type "Literal"
+func divide :: TypeInt -> TypeInt
+"Literal" + "King "
+
