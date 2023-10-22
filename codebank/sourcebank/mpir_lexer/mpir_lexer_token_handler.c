@@ -1,4 +1,4 @@
-#include "../../headerbank/mpir_lexer/mpir_lexer_token_handler.h"
+#include "../../headerbank/mpir_lexication/mpir_lexer_token_handler.h"
 
 int mpir_lexer_has_newline(const char* lexeme) {
     // Iterate through the string

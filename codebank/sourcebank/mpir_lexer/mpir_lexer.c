@@ -1,4 +1,4 @@
-#include "../../headerbank/mpir_lexer/mpir_lexer.h"
+#include "../../headerbank/mpir_lexication/mpir_lexer.h"
 
 /// @brief Attempts to create a MPIR lexer for tokenizing an .mpir input file.
 ///
@@ -49,21 +49,21 @@ mpir_lexer* mpir_lexer_create(const char *filepath)
     return lexer;
 }
 
-/// @brief Frees the memory allocated for the given mpir_lexer structure and its associated resources.
+/// @brief Frees the memory allocated for the given mpir_lexication structure and its associated resources.
 ///
-/// This function deallocates memory used by the provided mpir_lexer structure. It closes the source file,
+/// This function deallocates memory used by the provided mpir_lexication structure. It closes the source file,
 /// frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
 /// structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
 ///
-/// @param lexer A pointer to the mpir_lexer structure to be deallocated.
+/// @param lexer A pointer to the mpir_lexication structure to be deallocated.
 ///
-/// @remark Ensure that the provided mpir_lexer structure is no longer used after calling this function, as
+/// @remark Ensure that the provided mpir_lexication structure is no longer used after calling this function, as
 /// accessing the structure or any of its members after deallocation results in undefined behavior, as the
 /// structure no longer exists.
 ///
 void mpir_lexer_free(mpir_lexer *lexer)
 {
-    // Ensure mpir_lexer structure is non-Null.
+    // Ensure mpir_lexication structure is non-Null.
     if(lexer == NULL)
     {
         mpir_warn("Attempted to free a NULL lexer structure.");
