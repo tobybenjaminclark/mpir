@@ -297,6 +297,12 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
     char current_character = fgetc(lexer->source_file);
     int buffer_index = 0;
 
+    /*
+     * Need to differentiate between variable names like 1abc and abc1, as variable names
+     * must begin with a literal. This whole file should be re-organized, streamlined and made
+     * to be more maintainble.
+     */
+
     while (current_character != EOF)
     {
         if (current_character == ' ')
