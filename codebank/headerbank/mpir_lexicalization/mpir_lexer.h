@@ -14,7 +14,7 @@
 
 /// @brief Struct representing a lexer for tokenizing source code.
 ///
-/// The `mpir_lexication` struct is responsible for maintaining the state of lexical analysis
+/// The `mpir_lexicalization` struct is responsible for maintaining the state of lexical analysis
 /// of a source code file. It tracks the current position in the file, the size of the buffer,
 /// the number of tokens processed, the current line and column numbers, and other relevant
 /// information for tokenization.
@@ -52,15 +52,15 @@ mpir_lexer* mpir_lexer_create(const char *filepath);
 
 
 
-/// @brief Frees the memory allocated for the given mpir_lexication structure and its associated resources.
+/// @brief Frees the memory allocated for the given mpir_lexicalization structure and its associated resources.
 ///
-/// This function deallocates memory used by the provided mpir_lexication structure. It closes the source file,
+/// This function deallocates memory used by the provided mpir_lexicalization structure. It closes the source file,
 /// frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
 /// structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
 ///
-/// @param lexer A pointer to the mpir_lexication structure to be deallocated.
+/// @param lexer A pointer to the mpir_lexicalization structure to be deallocated.
 ///
-/// @remark Ensure that the provided mpir_lexication structure is no longer used after calling this function, as
+/// @remark Ensure that the provided mpir_lexicalization structure is no longer used after calling this function, as
 /// accessing the structure or any of its members after deallocation results in undefined behavior, as the
 /// structure no longer exists.
 ///

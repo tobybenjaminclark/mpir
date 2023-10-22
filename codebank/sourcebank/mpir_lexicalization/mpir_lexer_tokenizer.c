@@ -1,4 +1,4 @@
-#include "../../headerbank/mpir_lexication/mpir_lexer_tokenizer.h"
+#include "../../headerbank/mpir_lexicalization/mpir_lexer_tokenizer.h"
 
 void mpir_tokenize_divide(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {

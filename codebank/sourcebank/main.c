@@ -1,5 +1,5 @@
-#include "../headerbank/mpir_lexication/mpir_lexer.h"
-#include "../headerbank/mpir_lexication/mpir_lexer_tokenizer.h"
+#include "../headerbank/mpir_lexicalization/mpir_lexer.h"
+#include "../headerbank/mpir_lexicalization/mpir_lexer_tokenizer.h"
 
 int main(int argc, char** argv)
 {
