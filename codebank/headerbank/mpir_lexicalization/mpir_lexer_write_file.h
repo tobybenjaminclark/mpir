@@ -3,14 +3,9 @@
 // This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
 // License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
 
-#include "../headerbank/mpir_lexicalization/mpir_lexer.h"
-#include "../headerbank/mpir_lexicalization/mpir_lexer_tokenizer.h"
+#ifndef MPIR_COMPILER_MPIR_LEXER_WRITE_FILE_H
+#define MPIR_COMPILER_MPIR_LEXER_WRITE_FILE_H
 
-int main(int argc, char** argv)
-{
-    mpir_lexer* lexer = mpir_lexer_create("test.mpir");
-    mpir_lexer_tokenize(lexer);
-    mpir_lexer_free(lexer);
 
-    return 0;
-}
+
+#endif //MPIR_COMPILER_MPIR_LEXER_WRITE_FILE_H

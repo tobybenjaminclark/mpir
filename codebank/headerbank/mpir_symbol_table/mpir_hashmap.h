@@ -1,6 +1,7 @@
-//
-// Created by Toby Benjamin Clark on 16/10/2023.
-//
+
+// GPL v3 - MPIR Compiler :: Copyright (C) 2023 Toby Benjamin Clark
+// This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+// License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
 
 #ifndef UNTITLED_MPIR_HASHMAP_H
 #define UNTITLED_MPIR_HASHMAP_H
