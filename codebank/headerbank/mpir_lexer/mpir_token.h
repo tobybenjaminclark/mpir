@@ -2,7 +2,9 @@
 #define MPIR_COMPILER_MPIR_TOKEN_H
 
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include "../../headerbank/mpir_misc/mpir_warnings.h"
 
 
 typedef enum

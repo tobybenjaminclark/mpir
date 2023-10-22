@@ -54,3 +54,25 @@ void mpir_free_token(mpir_token* token)
     if (token != NULL){free(token);}
     else {return;}
 }
+
+
+
+void mpir_write_token(mpir_token* token, FILE* file)
+{
+    // *file must already be open
+
+    if(file == NULL)
+    {
+        mpir_error("MPIR Tokenizer unable to append token to .mpirtok file.");
+        return;
+    }
+
+    char data[] = "Test.\n"; // data to be appended to the file
+
+
+    // Write data to the file
+    fprintf(file, "%s", data);
+
+
+    return;
+}
