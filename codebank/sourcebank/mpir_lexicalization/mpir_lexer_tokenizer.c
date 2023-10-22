@@ -337,7 +337,7 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
                 mpir_tokenize_operator(lexer, &buffer_index, current_character);
             }
         }
-        else if (current_character == '"' || current_character == "'")
+        else if (current_character == SPEECH_MARK || current_character == QUOTE_MARK)
         {
             mpir_tokenize_string_literal(lexer, &buffer_index, current_character);
         }
