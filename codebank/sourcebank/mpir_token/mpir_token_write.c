@@ -1,36 +1,4 @@
-#ifndef MPIR_COMPILER_MPIR_TOKEN_H
-#define MPIR_COMPILER_MPIR_TOKEN_H
-
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "../mpir_misc/mpir_warnings.h"
-
-
-typedef enum
-{
-    NUMERICAL_LITERAL,
-    STRING_LITERAL,
-    OPERATOR,
-    IDENTIFIER,
-    KEYWORD
-} mpir_token_type;
-
-
-
-typedef struct
-{
-    // Type of the token (e.g., number, operator, identifier, etc.)
-    mpir_token_type type;
-
-    // Lexeme of the token (actual value as a string)
-    char lexeme[128];
-
-    // Line number in the source code where the token appears
-    unsigned long int line_index;
-    unsigned long int column_index;
-
-} mpir_token;
+#include "../../headerbank/mpir_token/mpir_token_write.h"
 
 /// @brief Writes an MPIR token to a specified file.
 ///
@@ -49,10 +17,30 @@ typedef struct
 /// @param file A pointer to the FILE structure representing the file where the token data will be written.
 /// @return Returns 0 upon successful writing of the token. If the file is not open (file == NULL), an error message is printed, and the function returns 1.
 ///
-int mpir_write_token(mpir_token* token, FILE* file);
+int mpir_write_token(mpir_token* token, FILE* file)
+{
+    // The file must already be open.
+    if(file == NULL)
+    {
+        mpir_error("MPIR Tokenizer unable to append token to .mpirtok file.");
+        return 1;
+    }
 
+    fprintf(file, "\nTOKEN_START\n");
 
+    // Write data to the file
+    switch (token->type)
+    {
+        case NUMERICAL_LITERAL: fprintf(file, "NUMERICAL_LITERAL\n");
+        case STRING_LITERAL: fprintf(file, "STRING_LITERAL\n");
+        case OPERATOR: fprintf(file, "OPERATOR\n");
+        case IDENTIFIER: fprintf(file, "IDENTIFIER\n");
+        case KEYWORD: fprintf(file, "KEYWORD\n");
+    }
+    fprintf(file, "%s\n", token->lexeme);
+    fprintf(file, "%d\n", token->line_index);
+    fprintf(file, "%d\n", token->column_index);
+    fprintf(file, "TOKEN_END");
 
-
-
-#endif //MPIR_COMPILER_MPIR_TOKEN_H
+    return 0;
+}
