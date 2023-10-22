@@ -8,7 +8,7 @@
 #include <string.h>
 
 #define BUFFER_SIZE 127
-#include "mpir_token.h"
+#include "../mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_misc/mpir_warnings.h"
 
 

@@ -1,7 +1,5 @@
-#include "../headerbank/mpir_misc/mpir_help_kernel.h"
 #include "../headerbank/mpir_lexer/mpir_lexer.h"
 #include "../headerbank/mpir_lexer/mpir_lexer_tokenizer.h"
-#include <string.h>
 
 int main(int argc, char** argv)
 {
