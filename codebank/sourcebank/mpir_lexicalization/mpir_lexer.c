@@ -91,7 +91,8 @@ void mpir_lexer_free(mpir_lexer *lexer)
     }
 
     /* Free each Token in the lexer, and then free and null the token array */
-    for (unsigned long int i = 0; i < lexer->token_count; ++i)
+    unsigned long int i = 0;
+    for (i = 0; i < lexer->token_count; ++i)
     {
         free(lexer->tokens[i]);
     }

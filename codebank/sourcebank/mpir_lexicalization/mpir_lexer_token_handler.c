@@ -6,8 +6,10 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
 
-int mpir_lexer_has_newline(const char* lexeme) {
-    for (int i = 0; lexeme[i] != '\0'; ++i)
+int mpir_lexer_has_newline(const char* lexeme)
+{
+    int i = 0;
+    for (i = 0; lexeme[i] != '\0'; ++i)
     {
         if (lexeme[i] == '\n')
         {
@@ -17,8 +19,10 @@ int mpir_lexer_has_newline(const char* lexeme) {
     return 0;
 }
 
-int mpir_lexer_has_comma(const char* lexeme) {
-    for (int i = 0; lexeme[i] != '\0'; ++i)
+int mpir_lexer_has_comma(const char* lexeme)
+{
+    int i = 0;
+    for (i = 0; lexeme[i] != '\0'; ++i)
     {
         if (lexeme[i] == ',')
         {
@@ -30,7 +34,8 @@ int mpir_lexer_has_comma(const char* lexeme) {
 
 int mpir_lexer_is_colon(char* lexeme)
 {
-    for (int i = 0; lexeme[i] != '\0'; ++i)
+    int i = 0;
+    for (i = 0; lexeme[i] != '\0'; ++i)
     {
         if (lexeme[i] == ':')
         {
@@ -42,7 +47,8 @@ int mpir_lexer_is_colon(char* lexeme)
 
 int mpir_lexer_is_pipe(char* lexeme)
 {
-    for (int i = 0; lexeme[i] != '\0'; ++i)
+    int i = 0;
+    for (i = 0; lexeme[i] != '\0'; ++i)
     {
         if (lexeme[i] == '|')
         {
@@ -70,9 +76,10 @@ int mpir_lexer_is_operator(char* lexeme)
     const char* operators[] = {"+", "-", "*", "/", "%", "=="};
     int numOperators = sizeof(operators) / sizeof(operators[0]);
 
-    for (int i = 0; i < numOperators; ++i)
+    int operator_index = 0;
+    for (operator_index = 0; operator_index < numOperators; ++operator_index)
     {
-        if (strcmp(lexeme, operators[i]) == 0)
+        if (strcmp(lexeme, operators[operator_index]) == 0)
         {
             return 1;
         }
@@ -113,7 +120,7 @@ int mpir_lexer_is_string_literal(char* lexeme)
 
 int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer)
 {
-    if (lexeme == NULL || lexeme == "\0" || lexeme == " " || strlen(lexeme) == 0)
+    if (lexeme == NULL || strcmp(lexeme, "\0") == 0 || strcmp(lexeme, " ") == 0 || strlen(lexeme) == 0)
     {
         return 0;
     }
@@ -149,7 +156,7 @@ int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer)
     {
         printf("TOKEN_COLN\t\t%s\n", lexeme);
     }
-    else if(lexeme != " " || lexeme != "\0")
+    else if(strcmp(lexeme, " ") != 0 && strcmp(lexeme, "\0") != 0)
     {
         printf("TOKEN_IDENT: \t%s\n", lexeme);
         mpir_token* tok = mpir_create_token(IDENTIFIER, lexeme, 0);
