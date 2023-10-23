@@ -3,12 +3,17 @@
 // This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
 // License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
 
-int test_case_1()
-{
-    return 0;
-}
+#include <stdlib.h>
 
-int main()
+int main(int argc, char *argv[])
 {
-    return test_case_1();
+    if (argc < 2) {
+        // Check if there are enough arguments
+        return 1;
+    }
+
+    // Convert the first command-line argument to an integer
+    int number = atoi(argv[1]);
+
+    return number;
 }

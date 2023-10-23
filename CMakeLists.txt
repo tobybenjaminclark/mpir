@@ -8,7 +8,8 @@ configure_file(codebank/databank/ascii.txt
 configure_file(codebank/databank/test.mpir
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
-add_executable(mpir codebank/sourcebank/main.c
+set(SOURCE_FILES
+        codebank/sourcebank/main.c
         codebank/sourcebank/mpir_symbol_table/mpir_hashmap.c
         codebank/headerbank/mpir_symbol_table/mpir_hashmap.h
         codebank/sourcebank/mpir_misc/mpir_warnings.c
@@ -33,12 +34,13 @@ add_executable(mpir codebank/sourcebank/main.c
         codebank/headerbank/mpir_lexicalization/mpir_lexer_write_file.h
         codebank/sourcebank/mpir_lexicalization/mpir_lexer_add_token.c
         codebank/headerbank/mpir_lexicalization/mpir_lexer_add_token.h
-        codebank/testbank/test_example.c
 )
 
+# Create the main executable
+
+add_executable(mpir ${SOURCE_FILES})
 
 enable_testing()
-
-# List all your test source files
-add_executable(mpir_test_one codebank/testbank/test_example.c)
-add_test(mpir_test_1 mpir_test_one)
+add_executable(mpir_test codebank/testbank/test_example.c)
+add_test(NAME mpir_example_1 COMMAND mpir_test 0)
+add_test(NAME mpir_example_2 COMMAND mpir_test 0)
