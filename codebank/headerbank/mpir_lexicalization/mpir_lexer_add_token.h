@@ -12,8 +12,6 @@
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
 
-#define BUFFER_SIZE 256
-
 void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token);
 
 #endif //MPIR_COMPILER_MPIR_LEXER_ADD_TOKEN_H
