@@ -3,6 +3,8 @@ project(MPIR_Compiler C)
 
 set(CMAKE_C_STANDARD 23)
 
+add_compile_options(-ansi)
+
 configure_file(codebank/databank/ascii.txt
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(codebank/databank/test.mpir
