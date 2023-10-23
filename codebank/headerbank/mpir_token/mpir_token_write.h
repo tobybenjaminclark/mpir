@@ -30,4 +30,4 @@
  */
 int mpir_write_token(mpir_token* token, FILE* file);
 
-#endif //MPIR_COMPILER_MPIR_TOKEN_WRITE_H
+#endif

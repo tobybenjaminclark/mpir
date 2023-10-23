@@ -58,8 +58,4 @@ typedef struct
  */
 int mpir_write_token(mpir_token* token, FILE* file);
 
-
-
-
-
 #endif

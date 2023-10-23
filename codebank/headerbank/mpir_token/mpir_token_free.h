@@ -19,4 +19,4 @@
  */
 void mpir_free_token(mpir_token* token);
 
-#endif //MPIR_COMPILER_MPIR_TOKEN_FREE_H
+#endif
