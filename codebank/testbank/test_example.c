@@ -7,3 +7,8 @@ int test_case_1()
 {
     return 0;
 }
+
+int main()
+{
+    return test_case_1();
+}
