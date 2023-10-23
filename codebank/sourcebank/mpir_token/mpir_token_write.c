@@ -54,7 +54,7 @@ int mpir_write_token(mpir_token* token, FILE* file)
             fprintf(file, "KEYWORD\n");
             break;
         default:
-            fprintf(file, "UNKNOWN\n"); // Handle unknown token types
+            fprintf(file, "UNKNOWN\n");
             break;
     }
 
