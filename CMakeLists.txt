@@ -8,7 +8,6 @@ configure_file(codebank/databank/ascii.txt
 configure_file(codebank/databank/test.mpir
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
-add_compile_options(-ansi)
 
 add_executable(mpir codebank/sourcebank/main.c
         codebank/sourcebank/mpir_symbol_table/mpir_hashmap.c
