@@ -43,7 +43,7 @@ void mpir_tokenize_numerical_literal(mpir_lexer *lexer, int *buffer_index_pointe
     second_character = fgetc(lexer->source_file);
     lexer->buffer[buffer_index++] = current_character;
 
-    while(isnumber(second_character) || (floating_point_processed == 0 && second_character == '.'))
+    while(isdigit(second_character) || (floating_point_processed == 0 && second_character == '.'))
     {
         if(second_character == '.')
         {
@@ -53,7 +53,7 @@ void mpir_tokenize_numerical_literal(mpir_lexer *lexer, int *buffer_index_pointe
         lexer->buffer[buffer_index++] = second_character;
         second_character = fgetc(lexer -> source_file);
     }
-    if(!isnumber(second_character))
+    if(!isdigit(second_character))
     {
         ungetc(second_character, lexer->source_file);
     }
@@ -105,7 +105,7 @@ void mpir_tokenize_subtract(mpir_lexer *lexer, int *buffer_index_pointer, char c
     int is_unary_for_a_numerical_literal = 0;
     second_character = fgetc(lexer->source_file);
     lexer->buffer[buffer_index++] = current_character;
-    while(isnumber(second_character) || (floating_point_processed == 0 && second_character == '.'))
+    while(isdigit(second_character) || (floating_point_processed == 0 && second_character == '.'))
     {
         is_unary_for_a_numerical_literal = 1;
         if(second_character == '.')
@@ -318,7 +318,7 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         {
             mpir_tokenize_eol(lexer, &buffer_index, current_character);
         }
-        else if(isnumber(current_character))
+        else if(isdigit(current_character))
         {
             mpir_tokenize_numerical_literal(lexer, &buffer_index, current_character);
         }

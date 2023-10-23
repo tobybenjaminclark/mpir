@@ -8,6 +8,8 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
+#include <ctype.h>
+
 #define QUOTE_MARK 39
 #define SPEECH_MARK 34
 
