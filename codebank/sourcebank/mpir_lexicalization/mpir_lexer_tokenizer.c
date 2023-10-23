@@ -322,7 +322,9 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         {
             mpir_tokenize_numerical_literal(lexer, &buffer_index, current_character);
         }
-        else if (current_character == '*' || current_character == '+' || current_character == '/' || current_character == '-' || current_character == '='
+        else if (current_character == '*' || current_character == '+' || current_character == '/' ||
+        current_character == '-' ||
+        current_character == '='
         || current_character == '^')
         {
             if (current_character == '=')
