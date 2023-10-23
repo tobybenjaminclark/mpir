@@ -60,7 +60,12 @@ int mpir_lexer_is_pipe(char* lexeme)
 
 int mpir_lexer_is_comment(char* lexeme)
 {
-    int size = sizeof(lexeme) / sizeof(lexeme[0]);
+    int size = 0;
+    while (lexeme[size] != '\0')
+    {
+        size++;
+    }
+
     if(size > 2)
     {
         if (lexeme[0] == lexeme[1] && lexeme[0] == '/')

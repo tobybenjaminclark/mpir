@@ -23,7 +23,7 @@ void display_message(FILE* stream, const char* prefix, const char* format, va_li
      * formatted within the buffer, and checked to ensure no buffer overflow.
      */
     char buffer[4096];
-    if (vsnprintf(buffer, sizeof(buffer), format, args) >= 0)
+    if (sprintf(buffer, format, args) >= 0)
     {
         /* Print the formatted message to the output stream with the specified prefix
          * Check if fprintf was successful, if not, print an error message to stderr
