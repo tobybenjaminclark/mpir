@@ -12,8 +12,6 @@ configure_file(codebank/databank/test.mpir
 
 set(SOURCE_FILES
         codebank/sourcebank/main.c
-        codebank/sourcebank/mpir_symbol_table/mpir_hashmap.c
-        codebank/headerbank/mpir_symbol_table/mpir_hashmap.h
         codebank/sourcebank/mpir_misc/mpir_warnings.c
         codebank/headerbank/mpir_misc/mpir_warnings.h
         codebank/sourcebank/mpir_misc/mpir_help_kernel.c
