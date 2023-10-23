@@ -10,7 +10,7 @@
 int main(int argc, char** argv)
 {
     mpir_lexer* lexer = mpir_lexer_create("test.mpir");
-    mpir_lexer_tokenize(lexer);
+    (void)mpir_lexer_tokenize(lexer);
     (void)mpir_lexer_write_file(lexer, "output.mpirtok");
 
     (void)mpir_lexer_free(lexer);
