@@ -62,7 +62,7 @@ void mpir_tokenize_numerical_literal(mpir_lexer *lexer, int *buffer_index_pointe
 
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
 
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -89,7 +89,7 @@ void mpir_tokenize_equals(mpir_lexer *lexer, int *buffer_index_pointer, char cur
 
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
 
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -129,7 +129,7 @@ void mpir_tokenize_subtract(mpir_lexer *lexer, int *buffer_index_pointer, char c
     lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
 
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -141,15 +141,13 @@ void mpir_tokenize_brace(mpir_lexer *lexer, int *buffer_index_pointer, char curr
 {
     int buffer_index = *buffer_index_pointer;
 
-    // Process before the comma
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
-    // Process the comma!
     lexer->buffer[buffer_index++] = current_character;
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
@@ -175,7 +173,7 @@ void mpir_tokenize_colon(mpir_lexer *lexer, int *buffer_index_pointer, char curr
 
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
 
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -187,15 +185,13 @@ void mpir_tokenize_pipe(mpir_lexer *lexer, int *buffer_index_pointer, char curre
 {
     int buffer_index = *buffer_index_pointer;
 
-    // Process before the comma
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
-    // Process the comma!
     lexer->buffer[buffer_index++] = current_character;
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
@@ -207,15 +203,13 @@ void mpir_tokenize_comma(mpir_lexer *lexer, int *buffer_index_pointer, char curr
 {
     int buffer_index = *buffer_index_pointer;
 
-    // Process before the comma
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
-    // Process the comma!
     lexer->buffer[buffer_index++] = current_character;
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
@@ -226,7 +220,7 @@ void mpir_tokenize_comma(mpir_lexer *lexer, int *buffer_index_pointer, char curr
 void mpir_tokenize_eol(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
@@ -234,7 +228,7 @@ void mpir_tokenize_eol(mpir_lexer *lexer, int *buffer_index_pointer, char curren
     lexer->buffer[buffer_index++] = current_character;
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
 
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -245,12 +239,12 @@ void mpir_tokenize_eol(mpir_lexer *lexer, int *buffer_index_pointer, char curren
 void mpir_tokenize_operator(mpir_lexer *lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
     lexer->buffer[buffer_index++] = current_character;
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -263,8 +257,7 @@ void mpir_tokenize_string_literal(mpir_lexer *lexer, int *buffer_index_pointer, 
     int buffer_index = *buffer_index_pointer;
     char inside_string_literal;
 
-    // Print the token and reset the buffer
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
 
@@ -288,8 +281,7 @@ void mpir_tokenize_string_literal(mpir_lexer *lexer, int *buffer_index_pointer, 
 void mpir_tokenize_space(mpir_lexer* lexer, int *buffer_index_pointer, char current_character)
 {
     int buffer_index = *buffer_index_pointer;
-    // Print the token and reset the buffer
-    lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+    lexer->buffer[buffer_index] = '\0';
     mpir_lexer_process_lexemme(lexer->buffer, lexer);
     memset(lexer->buffer, 0, 80);
     buffer_index = 0;
@@ -367,7 +359,6 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
         }
         else if (buffer_index < BUFFER_SIZE)
         {
-            // Append the current character to the buffer
             lexer->buffer[buffer_index++] = current_character;
         }
         else
@@ -376,14 +367,12 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
             fprintf(stderr, "Token too long: %s\n", lexer->buffer);
         }
 
-        // Read the next character
         current_character = fgetc(lexer->source_file);
     }
 
-    // Print the last token in the buffer if any
     if (buffer_index > 0)
     {
-        lexer->buffer[buffer_index] = '\0'; // Null-terminate the buffer
+        lexer->buffer[buffer_index] = '\0';
         mpir_lexer_process_lexemme(lexer->buffer, lexer);
     }
 

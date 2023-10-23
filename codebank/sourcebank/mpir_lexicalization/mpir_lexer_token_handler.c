@@ -7,64 +7,48 @@
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
 
 int mpir_lexer_has_newline(const char* lexeme) {
-    // Iterate through the string
     for (int i = 0; lexeme[i] != '\0'; ++i)
     {
-        // Check if the current character is a newline character
         if (lexeme[i] == '\n')
         {
-            // If found, return 1 to indicate presence of newline character
             return 1;
         }
     }
-    // If no newline character is found, return 0
     return 0;
 }
 
 int mpir_lexer_has_comma(const char* lexeme) {
-    // Iterate through the string
     for (int i = 0; lexeme[i] != '\0'; ++i)
     {
-        // Check if the current character is a newline character
         if (lexeme[i] == ',')
         {
-            // If found, return 1 to indicate presence of newline character
             return 1;
         }
     }
-    // If no newline character is found, return 0
     return 0;
 }
 
 int mpir_lexer_is_colon(char* lexeme)
 {
-    // Iterate through the string
     for (int i = 0; lexeme[i] != '\0'; ++i)
     {
-        // Check if the current character is a newline character
         if (lexeme[i] == ':')
         {
-            // If found, return 1 to indicate presence of newline character
             return 1;
         }
     }
-    // If no newline character is found, return 0
     return 0;
 }
 
 int mpir_lexer_is_pipe(char* lexeme)
 {
-    // Iterate through the string
     for (int i = 0; lexeme[i] != '\0'; ++i)
     {
-        // Check if the current character is a newline character
         if (lexeme[i] == '|')
         {
-            // If found, return 1 to indicate presence of newline character
             return 1;
         }
     }
-    // If no newline character is found, return 0
     return 0;
 }
 
@@ -83,7 +67,6 @@ int mpir_lexer_is_comment(char* lexeme)
 
 int mpir_lexer_is_operator(char* lexeme)
 {
-    // List of operators to check against
     const char* operators[] = {"+", "-", "*", "/", "%", "=="};
     int numOperators = sizeof(operators) / sizeof(operators[0]);
 
@@ -91,12 +74,10 @@ int mpir_lexer_is_operator(char* lexeme)
     {
         if (strcmp(lexeme, operators[i]) == 0)
         {
-            // If the input string matches any operator, return true
             return 1;
         }
     }
 
-    // If no match found, return false
     return 0;
 }
 
@@ -132,7 +113,6 @@ int mpir_lexer_is_string_literal(char* lexeme)
 
 int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer)
 {
-    //printf("Processing Lexeme [%s]\n", lexeme);
     if (lexeme == NULL || lexeme == "\0" || lexeme == " " || strlen(lexeme) == 0)
     {
         return 0;

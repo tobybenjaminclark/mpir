@@ -9,7 +9,7 @@
 void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token)
 {
 
-    // Check if the token array needs to be resized
+    /* Check if the token array needs to be resized */
     if (lexer->token_count % BUFFER_SIZE == 0)
     {
         lexer->tokens = (mpir_token **)realloc(lexer->tokens, (lexer->token_count + BUFFER_SIZE) * sizeof(mpir_token*));
@@ -20,7 +20,7 @@ void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token)
         }
     }
 
-    // Add the token to the array
+    /* Add the token to the array */
     lexer->tokens[lexer->token_count] = token;
     lexer->token_count++;
 }

@@ -20,4 +20,4 @@
 int mpir_lexer_is_keyword(char* lexeme);
 int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer);
 
-#endif //MPIR_COMPILER_MPIR_LEXER_TOKEN_HANDLER_H
+#endif

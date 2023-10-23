@@ -16,4 +16,4 @@
 
 int mpir_lexer_tokenize(mpir_lexer *lexer);
 
-#endif //MPIR_COMPILER_MPIR_LEXER_TOKENIZER_H
+#endif
