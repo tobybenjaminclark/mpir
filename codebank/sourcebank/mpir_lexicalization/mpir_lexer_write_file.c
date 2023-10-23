@@ -35,7 +35,6 @@ int mpir_lexer_write_file(mpir_lexer* lexer, const char* file_path)
 
     for(token_index = 0; token_index < lexer->token_count; token_index++)
     {
-        printf("Writing to file! Token %d of %d\n", token_index, lexer->token_count);
         writing_failed = mpir_write_token(lexer -> tokens[token_index], token_file);
         if(writing_failed){return 1;}
     }

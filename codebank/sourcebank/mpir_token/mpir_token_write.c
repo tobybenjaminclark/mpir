@@ -56,9 +56,9 @@ int mpir_write_token(mpir_token* token, FILE* file)
             break;
     }
 
-    fprintf(file, "%s\n", token->lexeme);
-    fprintf(file, "%d\n", token->line_index);
-    fprintf(file, "%d\n", token->column_index);
+    fprintf(file, "\t%s\n", token->lexeme);
+    fprintf(file, "\t%lu\n", token->line_index);
+    fprintf(file, "\t%lu\n", token->column_index);
     fprintf(file, "TOKEN_END");
 
     return 0;
