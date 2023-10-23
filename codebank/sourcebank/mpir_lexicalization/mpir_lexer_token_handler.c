@@ -121,7 +121,7 @@ int mpir_lexer_is_string_literal(char* lexeme)
     {
         char first = lexeme[0];
         char last = lexeme[strlen(lexeme) - 1];
-        if (first == last && (first == '"' || first == "'"))
+        if (first == last && (first == 34 || first == 39))
         {
             return 1;
         }
