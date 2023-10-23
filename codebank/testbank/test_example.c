@@ -8,12 +8,11 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2) {
-        // Check if there are enough arguments
+    if (argc < 2)
+    {
         return 1;
     }
 
-    // Convert the first command-line argument to an integer
     int number = atoi(argv[1]);
 
     return number;
