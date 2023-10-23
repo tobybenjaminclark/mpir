@@ -40,13 +40,5 @@ add_executable(mpir codebank/sourcebank/main.c
 enable_testing()
 
 # List all your test source files
-set(TEST_SOURCES
-        codebank/testbank/test_example.c
-)
-
-# Create an executable for each test file
-foreach(TEST_SOURCE ${TEST_SOURCES})
-    get_filename_component(TEST_NAME ${TEST_SOURCE} NAME_WE)
-    add_executable(${TEST_NAME} ${TEST_SOURCE})
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
-endforeach()
+add_executable(mpir_test_one codebank/testbank/test_example.c)
+add_test(mpir_test_1 mpir_test_one)
