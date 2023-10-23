@@ -5,8 +5,9 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_add_token.h"
 
-void mpir_add_token_to_lexer(mpir_lexer *lexer, mpir_token *token)
+void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token)
 {
+
     // Check if the token array needs to be resized
     if (lexer->token_count % BUFFER_SIZE == 0)
     {

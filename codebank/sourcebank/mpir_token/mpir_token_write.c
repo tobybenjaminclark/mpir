@@ -36,12 +36,26 @@ int mpir_write_token(mpir_token* token, FILE* file)
     // Write data to the file
     switch (token->type)
     {
-        case NUMERICAL_LITERAL: fprintf(file, "NUMERICAL_LITERAL\n");
-        case STRING_LITERAL: fprintf(file, "STRING_LITERAL\n");
-        case OPERATOR: fprintf(file, "OPERATOR\n");
-        case IDENTIFIER: fprintf(file, "IDENTIFIER\n");
-        case KEYWORD: fprintf(file, "KEYWORD\n");
+        case NUMERICAL_LITERAL:
+            fprintf(file, "NUMERICAL_LITERAL\n");
+            break;
+        case STRING_LITERAL:
+            fprintf(file, "STRING_LITERAL\n");
+            break;
+        case OPERATOR:
+            fprintf(file, "OPERATOR\n");
+            break;
+        case IDENTIFIER:
+            fprintf(file, "IDENTIFIER\n");
+            break;
+        case KEYWORD:
+            fprintf(file, "KEYWORD\n");
+            break;
+        default:
+            fprintf(file, "UNKNOWN\n"); // Handle unknown token types
+            break;
     }
+
     fprintf(file, "%s\n", token->lexeme);
     fprintf(file, "%d\n", token->line_index);
     fprintf(file, "%d\n", token->column_index);

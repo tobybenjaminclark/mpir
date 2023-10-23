@@ -10,9 +10,13 @@
 #include <string.h>
 #include <wchar.h>
 
+#include "../../headerbank/mpir_token/mpir_token.h"
+#include "../../headerbank/mpir_token/mpir_token_create.h"
+#include "../../headerbank/mpir_lexicalization/mpir_lexer_add_token.h"
+
 #define MPIR_KEYWORDS {"->", "::", "using", "fundef", "typedef", "let", "set", "in", "as", "→", "where:", "suchthat:", "end", "{", "}", "all"};
 
 int mpir_lexer_is_keyword(char* lexeme);
-int mpir_lexer_process_lexemme(char* lexeme);
+int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer);
 
 #endif //MPIR_COMPILER_MPIR_LEXER_TOKEN_HANDLER_H

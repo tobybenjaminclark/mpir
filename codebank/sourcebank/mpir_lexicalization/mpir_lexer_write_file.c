@@ -31,12 +31,13 @@ int mpir_lexer_write_file(mpir_lexer* lexer, const char* file_path)
 
     size_t token_count = sizeof(lexer -> tokens) / sizeof(lexer -> tokens[0]);
     int token_index;
-    int success;
+    int writing_failed;
 
-    for(token_index = 0; token_index < (int)token_count; token_index++)
+    for(token_index = 0; token_index < lexer->token_count; token_index++)
     {
-        success = mpir_write_token(lexer -> tokens[token_index], token_file);
-        if(!success){return 1;}
+        printf("Writing to file! Token %d of %d\n", token_index, lexer->token_count);
+        writing_failed = mpir_write_token(lexer -> tokens[token_index], token_file);
+        if(writing_failed){return 1;}
     }
 
     fclose(token_file);

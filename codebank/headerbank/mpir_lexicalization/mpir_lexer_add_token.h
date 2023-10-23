@@ -14,4 +14,6 @@
 
 #define BUFFER_SIZE 256
 
+void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token);
+
 #endif //MPIR_COMPILER_MPIR_LEXER_ADD_TOKEN_H

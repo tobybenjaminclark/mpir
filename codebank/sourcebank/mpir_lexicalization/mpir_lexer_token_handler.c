@@ -129,7 +129,7 @@ int mpir_lexer_is_string_literal(char* lexeme)
     return 0;
 }
 
-int mpir_lexer_process_lexemme(char* lexeme)
+int mpir_lexer_process_lexemme(char* lexeme, mpir_lexer* lexer)
 {
     //printf("Processing Lexeme [%s]\n", lexeme);
     if (lexeme == NULL || lexeme == "\0" || lexeme == " " || strlen(lexeme) == 0)
@@ -171,6 +171,8 @@ int mpir_lexer_process_lexemme(char* lexeme)
     else if(lexeme != " " || lexeme != "\0")
     {
         printf("TOKEN_IDENT: \t%s\n", lexeme);
+        mpir_token* tok = mpir_create_token(IDENTIFIER, lexeme, 0);
+        mpir_lexer_append_token(lexer, tok);
     }
 
     return 0;

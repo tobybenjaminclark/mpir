@@ -12,7 +12,9 @@ int main(int argc, char** argv)
     mpir_lexer* lexer = mpir_lexer_create("test.mpir");
     mpir_lexer_tokenize(lexer);
 
-    mpir_lexer_write_file(lexer, "output.mpirtok");
+    int a;
+    a = mpir_lexer_write_file(lexer, "output.mpirtok");
+    printf("%d\n",a);
 
     mpir_lexer_free(lexer);
 
