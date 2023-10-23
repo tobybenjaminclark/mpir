@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     mpir_lexer_tokenize(lexer);
     (void)mpir_lexer_write_file(lexer, "output.mpirtok");
 
-    mpir_lexer_free(lexer);
+    (void)mpir_lexer_free(lexer);
 
     return 0;
 }
