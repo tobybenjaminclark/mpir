@@ -4,19 +4,8 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include <stdlib.h>
-#include "../testbank/mpir_test_tokenisation.h"
-
-int main(int argc, char *argv[])
+int mpir_test_tokenisation()
 {
-    if (argc < 2)
-    {
-        return 1;
-    }
-
-    int number = atoi(argv[1]);
-
-    if(number == 1){return mpir_test_tokenisation();}
-
-    return number;
+    /* Implement here! */
+    return 0;
 }

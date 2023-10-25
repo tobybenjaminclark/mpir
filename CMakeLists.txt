@@ -41,6 +41,8 @@ set(SOURCE_FILES
 add_executable(mpir ${SOURCE_FILES})
 
 enable_testing()
-add_executable(mpir_test codebank/testbank/test_example.c)
+add_executable(mpir_test codebank/testbank/test_example.c
+        codebank/testbank/mpir_test_tokenisation.c
+        codebank/testbank/mpir_test_tokenisation.h)
 add_test(NAME mpir_example_1 COMMAND mpir_test 0)
-add_test(NAME mpir_example_2 COMMAND mpir_test 0)
+add_test(NAME tokenisation_test COMMAND mpir_test 1)
