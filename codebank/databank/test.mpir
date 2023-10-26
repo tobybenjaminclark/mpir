@@ -1,7 +1,7 @@
 using "anothertest.mpir"
 
 funcdef divide :: TypeInt, TypeInt → TypeInt
-funcdef divide x, y = x / y
+funcdef divide 🔥, y = 🔥 / y
 suchthat:
     |   doc x as "First Integer"
     |   doc y as "Second Integer"

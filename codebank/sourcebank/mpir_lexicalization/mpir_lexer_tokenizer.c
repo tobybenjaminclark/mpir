@@ -384,14 +384,17 @@ int mpir_lexer_tokenise_unicode()
 {
     FILE *input;
     wchar_t buf[1000];
+    wint_t wideChar;
 
-    setlocale(LC_CTYPE,"it_IT.UTF-8");   // put your locale here
+    setlocale(LC_CTYPE,"C");   /* put your locale here */
 
     if ((input = fopen("test.mpir","r")) == NULL)
         return 1;
 
-    while (fgetws(buf, 1000, input) != NULL)
-        wprintf(L"%ls", buf);
+    while ((wideChar = fgetwc(input)) != WEOF)
+    {
+        wprintf(L"%lc", wideChar); /* Print one wide character at a time */
+    }
 
     fclose(input);
 }
