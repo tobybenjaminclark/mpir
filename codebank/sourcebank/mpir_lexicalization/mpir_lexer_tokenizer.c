@@ -378,3 +378,20 @@ int mpir_lexer_tokenize(mpir_lexer *lexer)
 
     return 0;
 }
+
+
+int mpir_lexer_tokenise_unicode()
+{
+    FILE *input;
+    wchar_t buf[1000];
+
+    setlocale(LC_CTYPE,"it_IT.UTF-8");   // put your locale here
+
+    if ((input = fopen("test.mpir","r")) == NULL)
+        return 1;
+
+    while (fgetws(buf, 1000, input) != NULL)
+        wprintf(L"%ls", buf);
+
+    fclose(input);
+}
