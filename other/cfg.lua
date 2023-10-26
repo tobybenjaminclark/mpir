@@ -1,5 +1,6 @@
 
 -- Keywords
+"using"
 "where:"
 "suchthat:"
 "funcdef"
