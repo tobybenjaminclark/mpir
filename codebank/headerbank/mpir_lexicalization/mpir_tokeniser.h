@@ -10,11 +10,13 @@
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
 #include <ctype.h>
-
+#include <wchar.h>
+#include <stdbool.h>
+#include <stdarg.h>
 
 #define QUOTE_MARK 39
 #define SPEECH_MARK 34
 
-int mpir_tokenise(mpir_lexer* lexer);
+mpir_lexer* mpir_tokenise(const char* file_path);
 
 #endif
