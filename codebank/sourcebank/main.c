@@ -5,18 +5,29 @@
  */
 
 #include "../headerbank/mpir_lexicalization/mpir_lexer.h"
-#include "../headerbank/mpir_lexicalization/mpir_lexer_tokenizer.h"
-#include "../headerbank/mpir_lexicalization/mpir_lexer_write_file.h"
+#include "../headerbank/mpir_lexicalization/mpir_tokeniser.h"
+#include "../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
 
 int main(int argc, char** argv)
 {
-    /*mpir_lexer* lexer = mpir_lexer_create("test.mpir");
-    (void)mpir_lexer_tokenize(lexer);
-    (void)mpir_lexer_write_file(lexer, "output.mpirtok");
+    mpir_lexer* lex = mpir_lexer_create("test.mpir");
+    if (lex == NULL)
+    {
+        return 1;
+    }
+    wchar_t a;
+    a = lex->get(lex);
+    printf(L"%lc", a);
 
-    (void)mpir_lexer_free(lexer);*/
-
-    mpir_lexer_tokenise_unicode();
+    while (a != WEOF)
+    {
+        wprintf(L"%lc", a);
+        a = lex->get(lex);
+    }
+    if(a == WEOF)
+    {
+        wprintf("End of file!");
+    }
 
     return 0;
 }

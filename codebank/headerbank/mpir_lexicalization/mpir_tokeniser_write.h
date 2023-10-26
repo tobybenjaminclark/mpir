@@ -4,8 +4,8 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#ifndef MPIR_COMPILER_MPIR_LEXER_WRITE_FILE_H
-#define MPIR_COMPILER_MPIR_LEXER_WRITE_FILE_H
+#ifndef MPIR_COMPILER_MPIR_TOKENISER_WRITE_H
+#define MPIR_COMPILER_MPIR_TOKENISER_WRITE_H
 
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_misc/mpir_warnings.h"

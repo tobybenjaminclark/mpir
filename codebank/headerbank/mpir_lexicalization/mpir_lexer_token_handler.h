@@ -13,7 +13,7 @@
 
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_token/mpir_token_create.h"
-#include "../../headerbank/mpir_lexicalization/mpir_lexer_add_token.h"
+#include "../../headerbank/mpir_lexicalization/mpir_tokeniser_append.h"
 
 #define MPIR_KEYWORDS {"->", "::", "using", "fundef", "typedef", "let", "set", "in", "as", "→", "where:", "suchthat:", "end", "{", "}", "all"};
 

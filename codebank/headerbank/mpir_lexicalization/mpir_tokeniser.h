@@ -4,15 +4,17 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#ifndef MPIR_COMPILER_MPIR_LEXER_ADD_TOKEN_H
-#define MPIR_COMPILER_MPIR_LEXER_ADD_TOKEN_H
+#ifndef MPIR_COMPILER_MPIR_TOKENISER_H
+#define MPIR_COMPILER_MPIR_TOKENISER_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
-#include "../../headerbank/mpir_token/mpir_token.h"
+#include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
+#include <ctype.h>
 
-void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token);
+
+#define QUOTE_MARK 39
+#define SPEECH_MARK 34
+
+int mpir_tokenise(mpir_lexer* lexer);
 
 #endif
