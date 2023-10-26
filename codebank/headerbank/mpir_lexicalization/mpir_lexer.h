@@ -21,6 +21,8 @@
 /* Forward Declaration (for use in struct declaration) */
 struct mpir_lexer;
 
+
+
 /**
  * @brief Struct representing a lexer for tokenizing source code.
  *
@@ -42,7 +44,7 @@ typedef struct
     wchar_t current_character;
     wchar_t buffer[BUFFER_SIZE];
 
-    // Function pointers
+    /* Function Pointers */
     wchar_t (*get)(struct mpir_lexer* lexer);
     wchar_t (*peek)(struct mpir_lexer* lexer);
 } mpir_lexer;

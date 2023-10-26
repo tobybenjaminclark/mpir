@@ -16,17 +16,9 @@ int main(int argc, char** argv)
         return 1;
     }
     wchar_t a;
-    a = lex->get(lex);
-    printf(L"%lc", a);
-
-    while (a != WEOF)
+    while ((a = lex->get(lex)) != WEOF)
     {
         wprintf(L"%lc", a);
-        a = lex->get(lex);
-    }
-    if(a == WEOF)
-    {
-        wprintf("End of file!");
     }
 
     return 0;
