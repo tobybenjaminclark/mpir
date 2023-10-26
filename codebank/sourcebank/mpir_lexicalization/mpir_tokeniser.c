@@ -8,6 +8,6 @@
 
 int mpir_tokenise(mpir_lexer* lexer)
 {
-    // Uses an FSM to tokenise the file.
+    /* Uses an FSM to tokenise the file. */
     return 0;
 }

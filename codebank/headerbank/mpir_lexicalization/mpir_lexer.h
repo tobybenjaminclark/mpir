@@ -31,7 +31,7 @@ struct mpir_lexer;
  * the number of tokens processed, the current line and column numbers, and other relevant
  * information for tokenization.
  */
-typedef struct
+struct mpir_lexer
 {
     unsigned long int current_index;
     unsigned long int buffer_size;
@@ -45,11 +45,11 @@ typedef struct
     wchar_t buffer[BUFFER_SIZE];
 
     /* Function Pointers */
-    wchar_t (*get)(struct mpir_lexer* lexer);
-    wchar_t (*peek)(struct mpir_lexer* lexer);
-} mpir_lexer;
+    wchar_t (*get)(struct mpir_lexer *lexer);
+    wchar_t (*peek)(struct mpir_lexer *lexer);
+} ;
 
-
+typedef struct mpir_lexer mpir_lexer;
 
 /**
  * @brief Reads the next wide character from the input file of the lexer.
@@ -62,7 +62,7 @@ typedef struct
  * @param lexer Pointer to the mpir_lexer structure.
  * @return Next wide character, or WEOF on end of file or error.
  */
-wchar_t mpir_lexer_get(mpir_lexer* lexer);
+wchar_t mpir_lexer_get(mpir_lexer *lexer);
 
 
 
@@ -76,7 +76,7 @@ wchar_t mpir_lexer_get(mpir_lexer* lexer);
  * @param lexer Pointer to the mpir_lexer structure.
  * @return Next wide character, or WEOF on end of file or error.
  */
-wchar_t mpir_lexer_peek(mpir_lexer* lexer);
+wchar_t mpir_lexer_peek(mpir_lexer *lexer);
 
 
 

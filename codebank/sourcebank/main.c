@@ -10,7 +10,7 @@
 
 int main(int argc, char** argv)
 {
-    mpir_lexer* lex = mpir_lexer_create("test.mpir");
+    struct mpir_lexer* lex = mpir_lexer_create("test.mpir");
     if (lex == NULL)
     {
         return 1;
