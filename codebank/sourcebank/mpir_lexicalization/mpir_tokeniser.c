@@ -8,11 +8,12 @@
 
 bool mpir_wchar_in_list(wchar_t target, const wchar_t *list)
 {
-    size_t list_size = wcslen(list);
-    size_t i;
-    for (i = 0; i < list_size; ++i)
+    size_t list_size = wcslen(list);    /* ← Calculate the size of the list uses wchar.h function. */
+    size_t list_index;                  /* ← Stores the index of the current list item for loop.   */
+
+    for (list_index = 0; list_index < list_size; ++list_index)
     {
-        if (target == list[i])
+        if (target == list[list_index])
         {
             return true;
         }
@@ -22,6 +23,7 @@ bool mpir_wchar_in_list(wchar_t target, const wchar_t *list)
 
 int mpir_tokenise_process_buffer(mpir_lexer *lexer)
 {
+    /* Clear the buffer, and submit to token processing! */
     return 0;
 }
 

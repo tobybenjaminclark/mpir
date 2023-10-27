@@ -11,3 +11,6 @@ end
 typedef NewInt a :: Int
 typedef a : Int {∀x : x == 1}
 typedef a : Int {∃x : x>=-35.0}
+
+exists
+forall
