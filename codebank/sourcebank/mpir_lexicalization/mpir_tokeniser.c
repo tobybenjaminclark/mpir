@@ -27,11 +27,44 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer)
     return 0;
 }
 
-int tokenise_character(mpir_lexer* lexer, wchar_t current_character)
+/**
+ * @brief Consumes a character from the source file and appends it to the lexer's buffer.
+ *
+ * This function verifies if the next character in the input stream matches the expected character. If it does, the
+ * function appends the character to the lexer's buffer and increments the current index. If the expected character is
+ * not found, an error message is generated and an error code is returned. Additionally, it checks for buffer overflow
+ * and handles it by returning an error code if the buffer is full.
+ *
+ * @param lexer A pointer to the MPIR lexer structure.
+ * @param expected_character The character expected to be consumed from the input stream.
+ * @return 0 on success, or an error code (ERROR_UNEXPECTED_CHARACTER or ERROR_BUFFER_OVERFLOW) on failure.
+ */
+int consume_character(mpir_lexer* lexer, wchar_t expected_character)
 {
-    wprintf(L"%lc", current_character);
+    /* Ensure the expected character is equal to the actual character */
+    if ( expected_character != lexer->peek(lexer) )
+    {
+        mpir_error("mpir_tokeniser: failed to consume character");
+        return ERROR_UNEXPECTED_CHARACTER;
+    }
+
+    wprintf(L"%lc", expected_character);
+
+    /* Check if buffer is full, if so, handle accordingly (e.g., resize or process the buffer) */
+    if (lexer->current_index >= BUFFER_SIZE - 1)
+    {
+        /* Handle buffer overflow (if it happens). */
+        fprintf(stderr, "Error: Buffer overflow\n");
+        return ERROR_BUFFER_OVERFLOW;
+    }
+
+    /* Append the character to the buffer & increment the current index */
+    lexer->buffer[lexer->current_index] = lexer->get(lexer);
+    lexer->current_index++;
+
     return 0;
 }
+
 
 mpir_lexer* mpir_tokenise(const char* file_path)
 {
@@ -45,7 +78,7 @@ mpir_lexer* mpir_tokenise(const char* file_path)
     /* Get the next character & process it through the tokenisation algorithm. */
     while((current_character = lexer->get(lexer)) != WEOF)
     {
-        tokenise_character(lexer, current_character);
+        consume_character(lexer, lexer->peek(lexer));
     }
 
     return lexer;

@@ -17,6 +17,23 @@
 #define QUOTE_MARK 39
 #define SPEECH_MARK 34
 
+#define ERROR_BUFFER_OVERFLOW 1
+#define ERROR_UNEXPECTED_CHARACTER 2
+
 mpir_lexer* mpir_tokenise(const char* file_path);
+
+/**
+ * @brief Consumes a character from the source file and appends it to the lexer's buffer.
+ *
+ * This function verifies if the next character in the input stream matches the expected character. If it does, the
+ * function appends the character to the lexer's buffer and increments the current index. If the expected character is
+ * not found, an error message is generated and an error code is returned. Additionally, it checks for buffer overflow
+ * and handles it by returning an error code if the buffer is full.
+ *
+ * @param lexer A pointer to the MPIR lexer structure.
+ * @param expected_character The character expected to be consumed from the input stream.
+ * @return 0 on success, or an error code (ERROR_UNEXPECTED_CHARACTER or ERROR_BUFFER_OVERFLOW) on failure.
+ */
+int consume_character(mpir_lexer* lexer, wchar_t current_character);
 
 #endif
