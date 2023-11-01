@@ -44,7 +44,6 @@ int consume_character(mpir_lexer* lexer, wchar_t expected_character)
     /* Ensure the expected character is equal to the actual character */
     if ( expected_character != lexer->peek(lexer) && expected_character != NULL)
     {
-        mpir_error("mpir_tokeniser: failed to consume character");
         return ERROR_UNEXPECTED_CHARACTER;
     }
 
@@ -101,7 +100,7 @@ mpir_lexer* mpir_tokenise(const char* file_path)
 }
 
 
-int mpir_tokenise_base_state(mpir_lexer* lxr)
+int mpir_tokenise_Qc(mpir_lexer* lxr)
 {
     /* Handling Comments */
     if(consume_character(lxr, '/'))
@@ -110,15 +109,82 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
         {
             while(lxr->peek(lxr) != '\n' && lxr->peek(lxr) != WEOF)
             {
-                consume_character_any(lxr);
+                if (consume_character_any(lxr)) continue; else return ERROR_UNEXPECTED_CHARACTER;
             }
             /* Process comment */
-            mpir_tokenise_process_buffer(lxr, COMMENT);
+            if (consume_character(lxr, '\n')) NULL; else return ERROR_UNEXPECTED_CHARACTER;
+            return mpir_tokenise_process_buffer(lxr, COMMENT);
         }
-        else
-        {
-            /* Process operator */
-            mpir_tokenise_process_buffer(lxr, OPERATOR);
-        }
+        /* Process operator */
+        else return mpir_tokenise_process_buffer(lxr, OPERATOR);
     }
+    return 1;
+}
+
+
+
+int mpir_tokenise_Qstr(mpir_lexer* lxr)
+{
+    /* Discover the string literal terminator */
+    wchar_t string_literal_terminator = (wchar_t) NULL;
+    if (consume_character(lxr, SPEECH_MARK)) string_literal_terminator = SPEECH_MARK;
+    else if (consume_character(lxr, QUOTE_MARK)) string_literal_terminator = QUOTE_MARK;
+    else ERROR_UNEXPECTED_CHARACTER;
+
+    /* Consume the string literal and produce the token */
+    while(lxr -> peek(lxr) != string_literal_terminator && lxr -> peek(lxr) != WEOF)
+    {
+        if (consume_character_any(lxr)) continue; else return 1;
+    }
+    if (consume_character(lxr, string_literal_terminator)) NULL; else return 1;
+    return mpir_tokenise_process_buffer(lxr, STRING_LITERAL);
+}
+
+
+
+int mpir_tokenise_Qco(mpir_lexer* lxr)
+{
+    if(consume_character(lxr, ':'))
+    {
+        if(consume_character(lxr, ':')) mpir_tokenise_process_buffer(lxr, KEYWORD);
+        else mpir_tokenise_process_buffer(lxr, KEYWORD);
+    }
+}
+
+
+int mpir_tokenise_Qeq(mpir_lexer* lxr)
+{
+    if(consume_character(lxr, '='))
+    {
+        if(consume_character(lxr, '=')) mpir_tokenise_process_buffer(lxr, OPERATOR);
+        else mpir_tokenise_process_buffer(lxr, OPERATOR);
+    }
+}
+
+int mpir_tokenise_Qcmp(mpir_lexer* lxr)
+{
+    bool first_char_is_cmp = false;
+    if(consume_character(lxr, '>')) first_char_is_cmp = true;
+    else if (consume_character(lxr, '>')) first_char_is_cmp = true;
+    else return ERROR_UNEXPECTED_CHARACTER;
+
+    if (consume_character(lxr, '=')) return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    else return mpir_tokenise_process_buffer(lxr, OPERATOR);
+}
+
+
+int mpir_tokenise_Qneg(mpir_lexer* lxr)
+{
+    bool first_char_is_negation = false;
+    if(consume_character(lxr, L'¬')) first_char_is_negation = true;
+    else if (consume_character(lxr, '!')) first_char_is_negation = true;
+    else return ERROR_UNEXPECTED_CHARACTER;
+
+    if (consume_character(lxr, '=')) return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    else return mpir_tokenise_process_buffer(lxr, OPERATOR);
+}
+
+int mpir_tokenise_base_state(mpir_lexer* lxr)
+{
+    return 0;
 }
