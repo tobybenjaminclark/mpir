@@ -6,3 +6,5 @@ MPIR, akin to many other languages, aims to provide an **easy-to-use, syntactica
 [![Multiplatform CMake/CTest](https://github.com/tobybenjaminclark/mpir/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/tobybenjaminclark/mpir/actions/workflows/cmake-multi-platform.yml)
 ![Total Size](https://img.shields.io/github/repo-size/tobybenjaminclark/mpir)
 [![](https://tokei.rs/b1/github/tobybenjaminclark/mpir?category=code)](https://github.com/tobybenjaminclark/mpir)
+
+Designed to be modular, MPIR follows a maintainable structure. In combination with a strong compilation flag system, this allows for a strong configuration. This focus on design allows for expandable software. This promotes open source use in accordance with the GPL license.
