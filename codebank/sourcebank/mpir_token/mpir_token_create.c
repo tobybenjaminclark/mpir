@@ -4,6 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
+#include <wchar.h>
 #include "../../headerbank/mpir_token/mpir_token_create.h"
 
 /**
@@ -25,17 +26,15 @@
  *
  * @warning It is the caller's responsibility to free the allocated memory for the token structure.
  */
-mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int line)
+mpir_token* mpir_create_token(mpir_token_type type, const wchar_t lexeme[50], int line)
 {
+
     /* Allocate memory for the token structure & NULL check this (in case of allocation error) */
     mpir_token* return_token = (mpir_token*)malloc(sizeof(mpir_token));
     if (return_token == NULL) {return NULL;}
 
     /* Copy the lexeme to the token structure (assuming lexeme is a C-style string) */
-    strncpy(return_token->lexeme, lexeme, sizeof(return_token->lexeme) - 1);
-
-    /* Null-terminate the lexeme */
-    return_token->lexeme[sizeof(return_token->lexeme) - 1] = '\0';
+    wcscpy(return_token->lexeme, lexeme);
 
     /* Assign values to the token structure */
     return_token->type = type;

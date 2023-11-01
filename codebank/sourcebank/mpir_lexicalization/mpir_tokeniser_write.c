@@ -7,7 +7,7 @@
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
 
 
-int mpir_lexer_write_file(mpir_lexer* lexer, const char* file_path)
+int mpir_tokeniser_write(mpir_lexer* lexer, const char* file_path)
 {
     FILE *token_file;
 

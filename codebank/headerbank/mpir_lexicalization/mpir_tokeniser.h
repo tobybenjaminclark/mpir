@@ -10,31 +10,63 @@
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
+#include "../../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
 #include <ctype.h>
 #include <wchar.h>
 #include <stdbool.h>
 #include <stdarg.h>
 
-#define QUOTE_MARK 39
-#define SPEECH_MARK 34
+#define QUOTE_MARK L'\''
+#define SPEECH_MARK L'"'
 
 #define ERROR_BUFFER_OVERFLOW 1
 #define ERROR_UNEXPECTED_CHARACTER 2
 
+#define DISALLOWED_IDENTIFIER_CHARACTERS { L'!', L'@', 0x00A3, L'$', L'%', '^', '&', '*', '(', ')','-', '=', '+', \
+0x00B1, 0x00A7, '~', '`', '<', '>', ',', '.', '/', '?', ';', ':', '\\', '|', ']', '[', '{', '}', L'"', L'\'', L'\n', \
+L'\t', L' ', L'→', L'↔', L'∀', L'∃'}
+
+#define KEYWORD_LIST { L"suchthat", L"where", L"using", L"funcdef", L"typedef", L"let", L"set", L"in", L"as", L"end"}
+
+bool mpir_wchar_in_list(wchar_t target, const wchar_t *list);
+
+int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype);
+
+bool consume_character(mpir_lexer* lexer, wchar_t expected_character);
+
+bool is_identifiable_character(wchar_t target);
+
+int is_keyword(const wchar_t* target);
+
+bool consume_character_any(mpir_lexer* lexer);
+
 mpir_lexer* mpir_tokenise(const char* file_path);
 
-/**
- * @brief Consumes a character from the source file and appends it to the lexer's buffer.
- *
- * This function verifies if the next character in the input stream matches the expected character. If it does, the
- * function appends the character to the lexer's buffer and increments the current index. If the expected character is
- * not found, an error message is generated and an error code is returned. Additionally, it checks for buffer overflow
- * and handles it by returning an error code if the buffer is full.
- *
- * @param lexer A pointer to the MPIR lexer structure.
- * @param expected_character The character expected to be consumed from the input stream.
- * @return 0 on success, or an error code (ERROR_UNEXPECTED_CHARACTER or ERROR_BUFFER_OVERFLOW) on failure.
- */
-int consume_character(mpir_lexer* lexer, wchar_t current_character);
+/* Tokenises division and comments ( / and //str ) */
+int mpir_tokenise_Qc(mpir_lexer* lxr);
+
+/* Tokenises string literals ("str" and 'str') */
+int mpir_tokenise_Qstr(mpir_lexer* lxr);
+
+/* Tokenises colon stuff (: and ::) */
+int mpir_tokenise_Qco(mpir_lexer* lxr);
+
+/* Tokenises equality (= and ==) */
+int mpir_tokenise_Qeq(mpir_lexer* lxr);
+
+/* Tokenises comparison > and < and >= and <= */
+int mpir_tokenise_Qcmp(mpir_lexer* lxr);
+
+/* Tokenises negation (!, !=, ¬ and ¬=) */
+int mpir_tokenise_Qneg(mpir_lexer* lxr);
+
+/* Handles numericals */
+int mpir_tokenise_Qn(mpir_lexer* lxr);
+
+int mpir_tokenise_Qnn(mpir_lexer* lxr);
+
+int mpir_tokenise_Qi(mpir_lexer* lxr);
+
+int mpir_tokenise_base_state(mpir_lexer* lxr);
 
 #endif

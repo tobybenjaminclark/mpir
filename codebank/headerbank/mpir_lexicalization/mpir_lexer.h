@@ -27,7 +27,7 @@ struct mpir_lexer;
  * @brief Struct representing a lexer for tokenizing source code.
  *
  * The `mpir_lexer` struct is responsible for maintaining the state of lexical analysis
- * of a source code file. It tracks the current position in the file, the size of the buffer,
+ * of a source code file. It tracks the current position in the file, the size of the lexeme,
  * the number of tokens processed, the current line and column numbers, and other relevant
  * information for tokenization.
  */
@@ -42,7 +42,7 @@ struct mpir_lexer
     FILE *source_file;
     mpir_token **tokens;
     wchar_t current_character;
-    wchar_t buffer[BUFFER_SIZE];
+    wchar_t lexeme[BUFFER_SIZE];
 
     /* Function Pointers */
     wchar_t (*get)(struct mpir_lexer *lexer);
@@ -117,7 +117,7 @@ mpir_lexer* mpir_lexer_create(const char *filepath);
  * @brief Frees the memory allocated for the given MPIR lexer structure and its associated resources.
  *
  * This function deallocates memory used by the provided MPIR lexer structure. It closes the source file,
- * frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
+ * frees the lexeme used for constructing token lexemes, and releases memory occupied by individual Token
  * structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
  *
  * @param lexer A pointer to the MPIR lexer structure to be deallocated.

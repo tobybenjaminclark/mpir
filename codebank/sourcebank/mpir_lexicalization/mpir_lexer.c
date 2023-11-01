@@ -47,7 +47,7 @@ wchar_t mpir_lexer_peek(mpir_lexer* lexer)
 
 
 /**
- * @brief Opens and initializes a file with POSIX encoding.
+ * @brief Opens and initializes a file with UTF-8 encoding.
  *
  * This function attempts to open the specified file in read mode. If the file opening operation fails, it displays an
  * error message using the mpir_error function and returns NULL. If successful, it sets the locale to the 'C' Locale
@@ -67,7 +67,7 @@ FILE* mpir_lexer_open_file(const char* file_name)
      * POSIX is a superset of the default ASCII character set, allowing for special characters beyond this range, such
      * as special symbols (∀/∃), & emojis. This requires the use of wide character handling using the wchar_t datatype.
      */
-    (void)setlocale(LC_CTYPE,"C");
+    (void)setlocale(LC_ALL, "en_US.UTF-8");
 
     /*
      * Attempt to open file in readmode. In the event of an error, display the error using the mpir_error function, then
@@ -145,7 +145,7 @@ mpir_lexer* mpir_lexer_create(const char *filepath)
  * @brief Frees the memory allocated for the given MPIR lexer structure and its associated resources.
  *
  * This function deallocates memory used by the provided MPIR lexer structure. It closes the source file,
- * frees the buffer used for constructing token lexemes, and releases memory occupied by individual Token
+ * frees the lexeme used for constructing token lexemes, and releases memory occupied by individual Token
  * structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
  *
  * @param lexer A pointer to the MPIR lexer structure to be deallocated.
@@ -163,7 +163,7 @@ void mpir_lexer_free(mpir_lexer *lexer)
         return;
     }
 
-    /* Free the buffer used for constructing token lexemes */
+    /* Free the lexeme used for constructing token lexemes */
     if (lexer->source_file != NULL)
     {
         fclose(lexer->source_file);

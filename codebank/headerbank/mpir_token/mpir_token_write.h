@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include "mpir_token.h"
+#include <wchar.h>
 
 /**
  * @brief Writes an MPIR token to a specified file.

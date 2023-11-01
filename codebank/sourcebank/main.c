@@ -10,16 +10,6 @@
 
 int main(int argc, char** argv)
 {
-    struct mpir_lexer* lex = mpir_lexer_create("test.mpir");
-    if (lex == NULL)
-    {
-        return 1;
-    }
-    wchar_t a;
-    while ((a = lex->get(lex)) != WEOF)
-    {
-        wprintf(L"%lc", a);
-    }
-
-    return 0;
+    mpir_lexer* lxr;
+    lxr = mpir_tokenise("test.mpir");
 }

@@ -53,12 +53,15 @@ int mpir_write_token(mpir_token* token, FILE* file)
         case KEYWORD:
             fprintf(file, "KEYWORD\n");
             break;
+        case NEWLINE:
+            fprintf(file, "NEWLINE\n");
+            break;
         default:
             fprintf(file, "UNKNOWN\n");
             break;
     }
 
-    fprintf(file, "\t%s\n", token->lexeme);
+    if(token->type != NEWLINE) fwprintf(file, L"\t %ls \n", token->lexeme); else fwprintf(file, L"\n");
     fprintf(file, "\t%lu\n", token->line_index);
     fprintf(file, "\t%lu\n", token->column_index);
     fprintf(file, "TOKEN_END");

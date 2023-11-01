@@ -10,7 +10,7 @@
  *
  * This function formats the input message with the provided format string and arguments, adds
  * the specified prefix, and prints the resulting message to the specified output stream.
- * It ensures that there is no buffer overflow and handles error cases appropriately.
+ * It ensures that there is no lexeme overflow and handles error cases appropriately.
  *
  * @param stream The output stream where the message will be printed.
  * @param prefix The prefix to be added to the formatted message.
@@ -19,8 +19,8 @@
  */
 void display_message(FILE* stream, const char* prefix, const char* format, va_list args)
 {
-    /* Declaring a buffer to store the displayed message within. After this, the message is
-     * formatted within the buffer, and checked to ensure no buffer overflow.
+    /* Declaring a lexeme to store the displayed message within. After this, the message is
+     * formatted within the lexeme, and checked to ensure no lexeme overflow.
      */
     char buffer[4096];
     if (sprintf(buffer, format, args) >= 0)
@@ -30,7 +30,7 @@ void display_message(FILE* stream, const char* prefix, const char* format, va_li
          */
         if (fprintf(stream, "%s%s\n", prefix, buffer) < 0)
         {
-            /* Display an error message indicating a buffer overflow. */
+            /* Display an error message indicating a lexeme overflow. */
             fprintf(stderr, MESSAGE_BUFFER_OVERFLOW);
         }
     }

@@ -41,7 +41,7 @@ char* mpir_center_strings(const char* string_one, const char* string_two, const 
  *
  *  This function is responsible for displaying the logo stored in a file specified
  *  by the constant MPIR_LOGO_FILENAME. The logo file is opened and read line by line
- *  using a buffer, ensuring that no line in the file exceeds 255 characters.
+ *  using a lexeme, ensuring that no line in the file exceeds 255 characters.
  */
 void mpir_display_logo();
 

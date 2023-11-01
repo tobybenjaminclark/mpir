@@ -28,6 +28,6 @@
  *
  * @warning It is the caller's responsibility to free the allocated memory for the token structure.
  */
-mpir_token* mpir_create_token(mpir_token_type type, const char lexeme[50], int line);
+mpir_token* mpir_create_token(mpir_token_type type, const wchar_t lexeme[50], int line);
 
 #endif

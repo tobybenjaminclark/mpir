@@ -22,12 +22,12 @@
 /** @brief Prefix for informational messages in MPIR_Compiler. */
 #define INFO_PREFIX "MPIR_Compiler -> Info    :: "
 
-/** @brief Error message displayed when the message size exceeds the allocated buffer size.
+/** @brief Error message displayed when the message size exceeds the allocated lexeme size.
  *
  *  This error message is displayed when an attempt to show a message fails due to the message size
- *  exceeding the allocated buffer size.
+ *  exceeding the allocated lexeme size.
  */
-#define MESSAGE_BUFFER_OVERFLOW "%sFailed to show message (message size exceeded allocated buffer size).\n", ERROR_PREFIX
+#define MESSAGE_BUFFER_OVERFLOW "%sFailed to show message (message size exceeded allocated lexeme size).\n", ERROR_PREFIX
 
 /** @brief Error message displayed when there is an internal error formatting the message.
  *
@@ -40,7 +40,7 @@
  *
  *  This function formats the input message with the provided format string and arguments, adds
  *  the specified prefix, and prints the resulting message to the specified output stream.
- *  It ensures that there is no buffer overflow and handles error cases appropriately.
+ *  It ensures that there is no lexeme overflow and handles error cases appropriately.
  *
  *  @param stream The output stream where the message will be printed.
  *  @param prefix The prefix to be added to the formatted message.
