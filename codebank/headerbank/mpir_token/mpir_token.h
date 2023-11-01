@@ -15,6 +15,7 @@
 
 typedef enum
 {
+    COMMENT,
     NUMERICAL_LITERAL,
     STRING_LITERAL,
     OPERATOR,

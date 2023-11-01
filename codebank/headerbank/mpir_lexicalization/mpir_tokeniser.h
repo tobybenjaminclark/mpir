@@ -9,6 +9,7 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
+#include "../../headerbank/mpir_token/mpir_token.h"
 #include <ctype.h>
 #include <wchar.h>
 #include <stdbool.h>

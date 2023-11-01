@@ -21,7 +21,7 @@ bool mpir_wchar_in_list(wchar_t target, const wchar_t *list)
     return false;
 }
 
-int mpir_tokenise_process_buffer(mpir_lexer *lexer)
+int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
 {
     /* Clear the buffer, and submit to token processing! */
     return 0;
@@ -42,7 +42,7 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer)
 int consume_character(mpir_lexer* lexer, wchar_t expected_character)
 {
     /* Ensure the expected character is equal to the actual character */
-    if ( expected_character != lexer->peek(lexer) )
+    if ( expected_character != lexer->peek(lexer) && expected_character != NULL)
     {
         mpir_error("mpir_tokeniser: failed to consume character");
         return ERROR_UNEXPECTED_CHARACTER;
@@ -65,6 +65,22 @@ int consume_character(mpir_lexer* lexer, wchar_t expected_character)
     return 0;
 }
 
+int consume_character_any(mpir_lexer* lexer)
+{
+    /* Check if buffer is full, if so, handle accordingly (e.g., resize or process the buffer) */
+    if (lexer->current_index >= BUFFER_SIZE - 1)
+    {
+        /* Handle buffer overflow (if it happens). */
+        fprintf(stderr, "Error: Buffer overflow\n");
+        return ERROR_BUFFER_OVERFLOW;
+    }
+
+    /* Append the character to the buffer & increment the current index */
+    lexer->buffer[lexer->current_index] = lexer->get(lexer);
+    lexer->current_index++;
+
+    return 0;
+}
 
 mpir_lexer* mpir_tokenise(const char* file_path)
 {
@@ -82,4 +98,27 @@ mpir_lexer* mpir_tokenise(const char* file_path)
     }
 
     return lexer;
+}
+
+
+int mpir_tokenise_base_state(mpir_lexer* lxr)
+{
+    /* Handling Comments */
+    if(consume_character(lxr, '/'))
+    {
+        if (consume_character(lxr, '/'))
+        {
+            while(lxr->peek(lxr) != '\n' && lxr->peek(lxr) != WEOF)
+            {
+                consume_character_any(lxr);
+            }
+            /* Process comment */
+            mpir_tokenise_process_buffer(lxr, COMMENT);
+        }
+        else
+        {
+            /* Process operator */
+            mpir_tokenise_process_buffer(lxr, OPERATOR);
+        }
+    }
 }
