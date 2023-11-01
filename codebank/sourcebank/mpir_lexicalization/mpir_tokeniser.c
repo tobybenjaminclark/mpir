@@ -99,7 +99,7 @@ mpir_lexer* mpir_tokenise(const char* file_path)
     return lexer;
 }
 
-
+/* Tokenises division and comments ( / and //str ) */
 int mpir_tokenise_Qc(mpir_lexer* lxr)
 {
     /* Handling Comments */
@@ -122,7 +122,7 @@ int mpir_tokenise_Qc(mpir_lexer* lxr)
 }
 
 
-
+/* Tokenises string literals ("str" and 'str') */
 int mpir_tokenise_Qstr(mpir_lexer* lxr)
 {
     /* Discover the string literal terminator */
@@ -141,7 +141,7 @@ int mpir_tokenise_Qstr(mpir_lexer* lxr)
 }
 
 
-
+/* Tokenises colon stuff (: and ::) */
 int mpir_tokenise_Qco(mpir_lexer* lxr)
 {
     if(consume_character(lxr, ':'))
@@ -152,6 +152,7 @@ int mpir_tokenise_Qco(mpir_lexer* lxr)
 }
 
 
+/* Tokenises equality (= and ==) */
 int mpir_tokenise_Qeq(mpir_lexer* lxr)
 {
     if(consume_character(lxr, '='))
@@ -161,6 +162,8 @@ int mpir_tokenise_Qeq(mpir_lexer* lxr)
     }
 }
 
+
+/* Tokenises comparison > and < and >= and <= */
 int mpir_tokenise_Qcmp(mpir_lexer* lxr)
 {
     bool first_char_is_cmp = false;
@@ -172,7 +175,7 @@ int mpir_tokenise_Qcmp(mpir_lexer* lxr)
     else return mpir_tokenise_process_buffer(lxr, OPERATOR);
 }
 
-
+/* Tokenises negation (!, !=, ¬ and ¬=) */
 int mpir_tokenise_Qneg(mpir_lexer* lxr)
 {
     bool first_char_is_negation = false;
@@ -183,6 +186,9 @@ int mpir_tokenise_Qneg(mpir_lexer* lxr)
     if (consume_character(lxr, '=')) return mpir_tokenise_process_buffer(lxr, OPERATOR);
     else return mpir_tokenise_process_buffer(lxr, OPERATOR);
 }
+
+
+
 
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
