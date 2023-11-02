@@ -24,7 +24,7 @@ int mpir_tokeniser_write(mpir_lexer* lexer, const char* file_path)
 
     for(token_index = 0; token_index < lexer->token_count; token_index++)
     {
-        writing_failed = mpir_write_token(lexer -> tokens[token_index], token_file);
+        writing_failed = mpir_write_token(lexer -> tokens[token_index], token_file, 1);
         if(writing_failed){return 1;}
     }
 

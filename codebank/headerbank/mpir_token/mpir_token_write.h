@@ -27,8 +27,9 @@
  *
  * @param token A pointer to the MPIR token structure containing information about the token to be written.
  * @param file A pointer to the FILE structure representing the file where the token data will be written.
+ * @param indentation Integer representing the amount of indentation to output with.
  * @return Returns 0 upon successful writing of the token. If the file is not open (file == NULL), an error message is printed, and the function returns 1.
  */
-int mpir_write_token(mpir_token* token, FILE* file);
+int mpir_write_token(mpir_token* token, FILE* file, int indentation);
 
 #endif

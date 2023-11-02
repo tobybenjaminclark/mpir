@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include "../mpir_misc/mpir_warnings.h"
 
+#define TOKEN_NAME_MAP \
+    "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 typedef enum
 {
@@ -23,8 +25,6 @@ typedef enum
     KEYWORD,
     NEWLINE
 } mpir_token_type;
-
-
 
 typedef struct
 {
@@ -39,25 +39,5 @@ typedef struct
     unsigned long int column_index;
 
 } mpir_token;
-
-/**
- * @brief Writes an MPIR token to a specified file.
- *
- * This function writes the given MPIR token to the provided file stream in a specific format. The token type, lexeme,
- * line index, and column index are written to the file in the following order:
- * - Token type (e.g., NUMERICAL_LITERAL, STRING_LITERAL, OPERATOR, IDENTIFIER, KEYWORD)
- * - Token lexeme (string representation of the token)
- * - Token line index (line number in the source file where the token is located)
- * - Token column index (column number in the source file where the token starts)
- *
- * The file must be opened in an appropriate mode before calling this function. It is the caller's responsibility to
- * manage file opening and closing. The function also performs basic error checking, ensuring that the file is already
- * open before writing the token data. Token end and start points are symbolized by START_TOK & END_TOK
- *
- * @param token A pointer to the MPIR token structure containing information about the token to be written.
- * @param file A pointer to the FILE structure representing the file where the token data will be written.
- * @return 0 indicating success, or 1 indicating failure.
- */
-int mpir_write_token(mpir_token* token, FILE* file);
 
 #endif

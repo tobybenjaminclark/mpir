@@ -7,6 +7,14 @@
 #include "../../headerbank/mpir_token/mpir_token_write.h"
 
 /**
+ * @brief Stores the mapping between the token ID's and names.
+ *
+ * See mpir_token.h for more information regarding the implementation and actual names of this. It can be used similarly
+ * to a dictionary/hash-map to retrieve the values.
+ */
+const char* token_names[] = { TOKEN_NAME_MAP };
+
+/**
  * @brief Writes an MPIR token to a specified file.
  *
  * This function writes the given MPIR token to the provided file stream in a specific format.
@@ -24,47 +32,26 @@
  * @param file A pointer to the FILE structure representing the file where the token data will be written.
  * @return Returns 0 upon successful writing of the token. If the file is not open (file == NULL), an error message is printed, and the function returns 1.
  */
-int mpir_write_token(mpir_token* token, FILE* file)
+int mpir_write_token(mpir_token* token, FILE* file, int indentation)
 {
+
+
     /* The file must already be open. */
     if(file == NULL)
     {
-        mpir_error("MPIR Tokenizer unable to append token to .mpirtok file.");
+        fprintf(stderr, "Error: Unable to write token to file.\n");
         return 1;
     }
 
     fprintf(file, "\nTOKEN_START\n");
 
-    /* Write data to the file */
-    switch (token->type)
-    {
-        case NUMERICAL_LITERAL:
-            fprintf(file, "NUMERICAL_LITERAL\n");
-            break;
-        case STRING_LITERAL:
-            fprintf(file, "STRING_LITERAL\n");
-            break;
-        case OPERATOR:
-            fprintf(file, "OPERATOR\n");
-            break;
-        case IDENTIFIER:
-            fprintf(file, "IDENTIFIER\n");
-            break;
-        case KEYWORD:
-            fprintf(file, "KEYWORD\n");
-            break;
-        case NEWLINE:
-            fprintf(file, "NEWLINE\n");
-            break;
-        default:
-            fprintf(file, "UNKNOWN\n");
-            break;
-    }
-
-    if(token->type != NEWLINE) fwprintf(file, L"\t %ls \n", token->lexeme); else fwprintf(file, L"\n");
-    fprintf(file, "\t%lu\n", token->line_index);
-    fprintf(file, "\t%lu\n", token->column_index);
-    fprintf(file, "TOKEN_END");
+    /* Write data to the file in JSON-like format with specified indentation */
+    fprintf(file, "%*s{\n", indentation, "");
+    fprintf(file, "%*s\"type\": %s,\n", indentation + 2, "", token_names[token->type]);
+    fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", indentation + 2, "", token->lexeme);
+    fprintf(file, "%*s\"line_index\": %lu,\n", indentation + 2, "", token->line_index);
+    fprintf(file, "%*s\"column_index\": %lu\n", indentation + 2, "", token->column_index);
+    fprintf(file, "%*s}%s\n", indentation, "", (indentation > 0) ? "," : "");
 
     return 0;
 }
