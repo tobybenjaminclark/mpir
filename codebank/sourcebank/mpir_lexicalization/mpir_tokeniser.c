@@ -199,19 +199,38 @@ int mpir_tokenise_Qcmp(mpir_lexer* lxr)
     return mpir_tokenise_process_buffer(lxr, OPERATOR);
 }
 
-/* Tokenises negation (!, !=, ¬ and ¬=) */
-int mpir_tokenise_Qneg(mpir_lexer* lxr)
+/**
+ * @brief Attempts to tokenise negation operators ('!','!=','¬' and '¬=') in the input stream.
+ *
+ * This function tokenizes negation operators such as '!', '!=', '¬', and '¬=' in the input stream. It verifies the
+ * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_negation(mpir_lexer* lexer)
 {
-    /* Guard Clause */
-    if (lxr->peek(lxr) == L'!' || lxr->peek(lxr) == L'¬') NULL;
+    /* Guard Clause to reject if the next character is not a negation. */
+    if (lexer->peek(lexer) == L'!' || lexer->peek(lexer) == L'¬') NULL;
     else return 0;
 
-    (void)consume_character(lxr, '=');
-    return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    /* If the next character is an equal sign, then consume it, tokenise as operator regardless. */
+    (void)consume_character(lexer, '=');
+    return mpir_tokenise_process_buffer(lexer, OPERATOR);
 }
 
-/* Handles numericals */
-int mpir_tokenise_Qn(mpir_lexer* lexer)
+/**
+ * @brief Attempts to tokenise numerical literals e.g. (5, 32.1) in the input stream.
+ *
+ * This function processes the input stream as a numerical literal, recognizing both integers and decimals.
+ * It checks for a sequence of digits representing the integral part, followed by an optional decimal point ('.' or '·'),
+ * and then scans for digits representing the fractional part.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ *
+ * @return 1 on success, 0 or an error on failure.
+ */
+int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
 {
     /* Guard clause ensuring the next character is a digit, if not then it's not a numerical literal. */
     if(!(iswdigit(lexer->peek(lexer)))) return ERROR_UNEXPECTED_CHARACTER; else NULL;
@@ -234,7 +253,7 @@ int mpir_tokenise_Qn(mpir_lexer* lexer)
 
 
 /**
- * @brief Tokenizes expressions starting with '-' symbol, handling arrow (->) and negative numerical literals.
+ * @brief Attempts to tokenise negative numerical literals and arrow symbols (->) in the input stream.
  *
  * This function checks if the next character in the input stream after '-' represents an arrow symbol or a negative
  * numerical literal. If the next character is '>', it tokenizes "->" as a keyword. If it is a digit, it tokenizes it as
@@ -255,7 +274,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
     }
 
     /* If the next character is a digit, then we know it's a negative numerical literal */
-    else if(iswdigit(lexer->peek(lexer))) return mpir_tokenise_Qn(lexer);
+    else if(iswdigit(lexer->peek(lexer))) return mpir_tokenise_numerical_literal(lexer);
 
     /* If it's not a digit or a '>', then it's a syntactic error */
     else return ERROR_UNEXPECTED_CHARACTER;
@@ -264,7 +283,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 
 
 /**
- * @brief Attempts to tokenise a keyword/identifier from the lexers source code.
+ * @brief Attempts to tokenise a keyword/identifier from the input stream.
  *
  * This function examines the characters in the input stream starting from the current position
  * and processes them as an identifier or a keyword until a non-identifiable character is encountered.
@@ -301,7 +320,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
         else if(mpir_tokenise_Qco(lxr)) NULL;
         else if(mpir_tokenise_Qeq(lxr)) NULL;
         else if(mpir_tokenise_Qcmp(lxr)) NULL;
-        else if(mpir_tokenise_Qneg(lxr)) NULL;
+        else if(mpir_tokenise_negation(lxr)) NULL;
         else if(mpir_tokenise_negative_numerical_or_arrow(lxr)) NULL;
         else if(lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
         else if(lxr->peek(lxr) == L'\n')

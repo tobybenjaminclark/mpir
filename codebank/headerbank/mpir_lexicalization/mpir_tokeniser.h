@@ -60,10 +60,10 @@ int mpir_tokenise_Qeq(mpir_lexer* lxr);
 int mpir_tokenise_Qcmp(mpir_lexer* lxr);
 
 /* Tokenises negation (!, !=, ¬ and ¬=) */
-int mpir_tokenise_Qneg(mpir_lexer* lxr);
+int mpir_tokenise_negation(mpir_lexer* lexer);
 
 /* Handles numericals */
-int mpir_tokenise_Qn(mpir_lexer* lexer);
+int mpir_tokenise_numerical_literal(mpir_lexer* lexer);
 
 int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer);
 
