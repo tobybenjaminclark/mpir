@@ -6,21 +6,6 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser.h"
 
-bool mpir_wchar_in_list(wchar_t target, const wchar_t *list)
-{
-    size_t list_size = wcslen(list);    /* ← Calculate the size of the list uses wchar.h function. */
-    size_t list_index;                  /* ← Stores the index of the current list item for loop.   */
-
-    for (list_index = 0; list_index < list_size; ++list_index)
-    {
-        if (target == list[list_index])
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 wchar_t* null_terminate_wstring(const wchar_t* input)
 {
     /* Get the length of the input string */
@@ -189,8 +174,12 @@ int mpir_tokenise_Qco(mpir_lexer* lxr)
 {
     if(consume_character(lxr, L':'))
     {
-        if(consume_character(lxr, L':')) mpir_tokenise_process_buffer(lxr, KEYWORD);
-        else mpir_tokenise_process_buffer(lxr, KEYWORD);
+        if(lxr->peek(lxr) == L':')
+        {
+            consume_character(lxr, L':');
+            return mpir_tokenise_process_buffer(lxr, KEYWORD);
+        }
+        else return mpir_tokenise_process_buffer(lxr, KEYWORD);
     }
     else return 0;
 }
@@ -198,42 +187,41 @@ int mpir_tokenise_Qco(mpir_lexer* lxr)
 /* Tokenises equality (= and ==) */
 int mpir_tokenise_Qeq(mpir_lexer* lxr)
 {
-    if(consume_character(lxr, L'='))
-    {
-        if(consume_character(lxr, L'=')) mpir_tokenise_process_buffer(lxr, OPERATOR);
-        else mpir_tokenise_process_buffer(lxr, OPERATOR);
-    }
+    if(lxr->peek(lxr) == L'=') NULL;
     else return 0;
+
+    (void)consume_character(lxr, L'=');
+    if(lxr->peek(lxr) == L'=')
+    {
+        consume_character(lxr, L'=');
+        return mpir_tokenise_process_buffer(lxr, KEYWORD);
+    }
+    else return mpir_tokenise_process_buffer(lxr, KEYWORD);
 }
 
 /* Tokenises comparison > and < and >= and <= */
 int mpir_tokenise_Qcmp(mpir_lexer* lxr)
 {
     /* Guard Clause */
-    if (lxr->peek(lxr) != L'>' && lxr->peek(lxr) != L'<') return 0;
+    if (lxr->peek(lxr) == L'>' || lxr->peek(lxr) == L'<') NULL;
+    else return 0;
 
-    bool first_char_is_cmp = false;
-    if(consume_character(lxr, '>')) first_char_is_cmp = true;
-    else if (consume_character(lxr, '>')) first_char_is_cmp = true;
-    else return ERROR_UNEXPECTED_CHARACTER;
+    /* Consume boolean comparator */
+    consume_character_any(lxr);
 
-    if (consume_character(lxr, '=')) return mpir_tokenise_process_buffer(lxr, OPERATOR);
-    else return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    (void)consume_character(lxr, '=');
+    return mpir_tokenise_process_buffer(lxr, OPERATOR);
 }
 
 /* Tokenises negation (!, !=, ¬ and ¬=) */
 int mpir_tokenise_Qneg(mpir_lexer* lxr)
 {
     /* Guard Clause */
-    if (lxr->peek(lxr) != L'!' && lxr->peek(lxr) != L'¬') return 0;
+    if (lxr->peek(lxr) == L'!' || lxr->peek(lxr) == L'¬') NULL;
+    else return 0;
 
-    bool first_char_is_negation = false;
-    if(consume_character(lxr, L'¬')) first_char_is_negation = true;
-    else if (consume_character(lxr, L'!')) first_char_is_negation = true;
-    else return ERROR_UNEXPECTED_CHARACTER;
-
-    if (consume_character(lxr, '=')) return mpir_tokenise_process_buffer(lxr, OPERATOR);
-    else return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    (void)consume_character(lxr, '=');
+    return mpir_tokenise_process_buffer(lxr, OPERATOR);
 }
 
 /* Handles numericals */
@@ -260,12 +248,13 @@ int mpir_tokenise_Qnn(mpir_lexer* lxr)
     if (lxr->peek(lxr) != L'-') return 0;
 
     /* Negation */
-    if (consume_character(lxr, L'-'))
+    else if (consume_character(lxr, L'-'))
     {
         if (consume_character(lxr, L'>')) return mpir_tokenise_process_buffer(lxr, KEYWORD);
         else if(iswdigit(lxr->peek(lxr))) return mpir_tokenise_Qn(lxr);
         else return ERROR_UNEXPECTED_CHARACTER;
     }
+    return ERROR_UNEXPECTED_CHARACTER;
 }
 
 int mpir_tokenise_Qi(mpir_lexer* lxr)
@@ -286,9 +275,9 @@ int mpir_tokenise_Qi(mpir_lexer* lxr)
 
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
-    wchar_t current_character;
     while(lxr->peek(lxr) != WEOF)
     {
+        wprintf(L"Current character is: ' %lc ' \n", lxr->peek(lxr));
         if(mpir_tokenise_Qc(lxr)) NULL;
         else if(mpir_tokenise_Qstr(lxr)) NULL;
         else if(mpir_tokenise_Qco(lxr)) NULL;
@@ -308,14 +297,13 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
             mpir_tokenise_process_buffer(lxr, KEYWORD);
         }
         else if(mpir_tokenise_Qi(lxr)) NULL;
-
-        else return 0;
+        else return 1;
     }
+    return 0;
 }
 
 mpir_lexer* mpir_tokenise(const char* file_path)
 {
-    wchar_t current_character;  /* ← Current Character in file (wchar_t to support POSIX unicode.) */
     mpir_lexer *lexer;          /* ← Instance of the lexer we're using, stores all associated data */
 
     /* Instantiate a lexer instance, and instruct it to read from the filepath. */
