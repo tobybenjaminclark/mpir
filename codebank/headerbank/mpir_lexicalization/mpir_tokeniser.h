@@ -36,11 +36,11 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype);
 
 bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character);
 
-bool is_identifiable_character(wchar_t target);
+bool mpir_is_identifiable_char(wchar_t target);
 
-int is_keyword(const wchar_t* target);
+int mpir_is_keyword(const wchar_t* target);
 
-bool consume_character_any(mpir_lexer* lexer);
+bool mpir_lexer_consume(mpir_lexer* lexer);
 
 mpir_lexer* mpir_tokenise(const char* file_path);
 

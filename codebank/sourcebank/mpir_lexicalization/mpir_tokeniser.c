@@ -6,7 +6,20 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser.h"
 
-wchar_t* null_terminate_wstring(wchar_t* input)
+
+/**
+ * @brief Null-terminates a wide-character string (the lexeme in this use case)
+ *
+ * This function takes a wide character string as input and adds a null terminator at the end of the string to ensure it
+ * is properly null-terminated. The input string must be allocated with enough memory to accommodate a null terminator.
+ *
+ * @param input A pointer to the wide character string to be null-terminated.
+ * @return A pointer to the null-terminated wide character string.
+ *
+ * @warning The input string must have enough allocated memory to accommodate the null terminator. Otherwise, this
+ * function may result in undefined behavior by writing beyond the allocated memory.
+ */
+wchar_t* mpir_terminate_lexeme(wchar_t* input)
 {
     /* Get the length of the input string */
     size_t length = wcslen(input);
@@ -16,44 +29,58 @@ wchar_t* null_terminate_wstring(wchar_t* input)
     return input;
 }
 
+
+
+/**
+ * @brief Processes & resets the current lexeme buffer and creates a token of the specified type.
+ *
+ * This function creates a token of the given type using the content of the current lexeme buffer. The lexeme buffer is
+ * null-terminated, and the token is created with the null-terminated string. The created token is then appended to the
+ * lexer's token list, and the lexeme buffer is reset for the next token.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream and lexeme buffer.
+ * @param toktype The type of the token to be created from the lexeme buffer.
+ *
+ * @return 1 on success, 0 on failure.
+ */
 int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
 {
-    mpir_token* token = mpir_create_token(toktype, null_terminate_wstring(lexer->lexeme), 0);
-    mpir_lexer_append_token(lexer, token);
+    /* Create a token using the current type and lexeme, note the user must free this after use. */
+    mpir_token* token = mpir_create_token(toktype, mpir_terminate_lexeme(lexer->lexeme), 0);
+    (void)mpir_lexer_append_token(lexer, token);
 
-    memset(lexer->lexeme, 0, sizeof(wchar_t) * BUFFER_SIZE);
+    /* Reset the lexeme and it's associated attributes */
+    (void)memset(lexer->lexeme, 0, sizeof(wchar_t) * BUFFER_SIZE);
     lexer->buffer_size = 0;
     lexer->current_index = 0;
 
     return 1;
 }
 
+
+
 /**
- * @brief Consumes a character from the source file and appends it to the lexer's lexeme.
+ * @brief Attempts to consume the expected character from the input stream.
  *
- * This function verifies if the next character in the input stream matches the expected character. If it does, the
- * function appends the character to the lexer's lexeme and increments the current index. If the expected character is
- * not found, an error message is generated and an error code is returned. Additionally, it checks for lexeme overflow
- * and handles it by returning an error code if the lexeme is full.
+ * This function checks if the next character in the input stream matches the expected character. If the characters
+ * match, it consumes the character, appends it to the lexeme, and increments the current index. If the next character
+ * does not match the expected character, the function returns false. If the buffer is full, shows a fatal error.
  *
- * @param lexer A pointer to the MPIR lexer structure.
- * @param expected_character The character expected to be consumed from the input stream.
- * @return 0 on success, or an error code (ERROR_UNEXPECTED_CHARACTER or ERROR_BUFFER_OVERFLOW) on failure.
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @param expected_character The character expected to be present in the input stream.
+ *
+ * @return True on success, False on failure.
  */
 bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
 {
-
-    /* Ensure the expected character is equal to the actual character */
-    if (expected_character != lexer->peek(lexer))
-    {
-        return false;
-    }
+    /* Guard Clause ensures the next character is equal to the passed, expected character */
+    if (expected_character != lexer->peek(lexer)) return false; else NULL;
 
     /* Check if lexeme is full, if so, handle accordingly (e.g., resize or process the lexeme) */
     if (lexer->current_index >= BUFFER_SIZE - 1)
     {
         /* Handle lexeme overflow (if it happens). */
-        fprintf(stderr, "Error: Buffer overflow, index is %ld\n", lexer->current_index);
+        mpir_fatal("mpir_tokeniser: buffer overflow at index (%d)", lexer->current_index);
         return false;
     }
 
@@ -64,40 +91,76 @@ bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
     return true;
 }
 
-bool is_identifiable_character(wchar_t target)
+
+
+/**
+ * @brief Checks if a given character is an identifiable symbol for creating identifiers.
+ *
+ * This function compares the input character with a list of non-identifiable symbols to determine if it is an
+ * identifiable symbol using a basic implementation of linear search.
+ *
+ * @param target The character to be checked for identifiability.
+ * @return Returns true if the input character is identifiable, false if it is a non-identifiable symbol.
+ */
+bool mpir_is_identifiable_char(wchar_t target)
 {
+    size_t nic_count;     /* ← Stores the total number of non-identifiable symbols.     */
+    size_t current_index; /* ← Stores the current index of the non-identifiable symbol. */
+
+    /* Set the NIC list and calculate the length (to iterate over) */
     wchar_t non_identifier_chars[] = DISALLOWED_IDENTIFIER_CHARACTERS;
-    size_t nic_count = sizeof(non_identifier_chars) / sizeof(wchar_t);
-    size_t current_index;
+    nic_count = sizeof(non_identifier_chars) / sizeof(wchar_t);
+
+    /* Iterate through the list, if the target is in the list, return false else return true */
     for (current_index = 0; current_index < nic_count; ++current_index)
     {
-        if (non_identifier_chars[current_index] == target)
-        {
-            /* Target in list! */
-            return false;
-        }
+        if (non_identifier_chars[current_index] == target) return false;
     }
-    /* Target isn't in the list */
     return true;
 }
 
-int is_keyword(const wchar_t* target)
+
+
+/**
+ * @brief Checks if a given string matches any keyword in the keyword list.
+ *
+ * This function compares the input string with a list of predefined keywords, defined as a macro in the header file.
+ * Implements a basic linear search algorithm.
+ *
+ * @param target The string to be checked against the keyword list.
+ * @return Returns true if the input string is a keyword, false otherwise.
+ */
+int mpir_is_keyword(const wchar_t* target)
 {
+    size_t keyword_count; /* ← Stores the total number of keywords */
+    size_t keyword_index; /* ← Stores the current keyword index    */
+
+    /* Set the keyword list and then calculate the size */
     const wchar_t* keyword_list[] = KEYWORD_LIST;
-    size_t keyword_count = sizeof(keyword_list) / sizeof(keyword_list[0]);
-    size_t keyword_index;
+    keyword_count = sizeof(keyword_list) / sizeof(keyword_list[0]);
+
+    /* Iterate through all keywords, return true if found, false if not. */
     for (keyword_index = 0; keyword_index < keyword_count; ++keyword_index)
     {
-        if (wcscmp(target, keyword_list[keyword_index]) == 0)
-        {
-            return true;
-        }
+        if (wcscmp(target, keyword_list[keyword_index]) == 0) return true;
     }
     return false;
 }
 
-bool consume_character_any(mpir_lexer* lexer)
+
+
+/**
+ * @brief Consumes the next character in the input stream of the lexer and appends it to the buffer.
+ *
+ * This function consumes the next character in the input stream and proxies the call to mpir_lexer_tryconsume function,
+ * anticipating the next character using the lexer->peek(lexer) function.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return true on successful consumption, false on failure.
+ */
+bool mpir_lexer_consume(mpir_lexer* lexer)
 {
+    /* Consumes any character, proxys to the mpir_lexer_tryconsume function */
     return mpir_lexer_tryconsume(lexer, lexer->peek(lexer));
 }
 
@@ -127,7 +190,7 @@ int mpir_tokenise_comment_and_division(mpir_lexer* lexer)
     /* If it is a code comment, continue consuming characters until the end of the file or a new line character. */
     while(lexer->peek(lexer) != L'\n' && lexer->peek(lexer) != WEOF)
     {
-        if (consume_character_any(lexer)) continue; else return ERROR_UNEXPECTED_CHARACTER;
+        if (mpir_lexer_consume(lexer)) continue; else return ERROR_UNEXPECTED_CHARACTER;
     }
 
     /* Process/Tokenise the buffer as a code comment */
@@ -157,7 +220,7 @@ int mpir_tokenise_string_literal(mpir_lexer* lexer)
     /* Consume characters while the consumed character is not the string literal termination symbol */
     while(lexer -> peek(lexer) != string_literal_terminator && lexer -> peek(lexer) != WEOF)
     {
-        if (consume_character_any(lexer)) continue; else return 0;
+        if (mpir_lexer_consume(lexer)) continue; else return 0;
     }
 
     /* Consume the string literal terminator ("/'), and process the buffer */
@@ -231,7 +294,7 @@ int mpir_tokenise_comparator(mpir_lexer* lexer)
     else return 0;
 
     /* Consume the boolean comparator operator */
-    consume_character_any(lexer);
+    mpir_lexer_consume(lexer);
 
     /* If the next character is equals consume it, regardless tokenise the buffer */
     (void) mpir_lexer_tryconsume(lexer, '=');
@@ -279,7 +342,7 @@ int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
     if(!(iswdigit(lexer->peek(lexer)))) return ERROR_UNEXPECTED_CHARACTER; else NULL;
 
     /* Scan and consume the integer values (digits left of decimal point). */
-    while (iswdigit(lexer->peek(lexer))) consume_character_any(lexer);
+    while (iswdigit(lexer->peek(lexer))) mpir_lexer_consume(lexer);
 
     /* Handle decimal point, if no decimal point then return (./·). */
     if (lexer->peek(lexer) == L'.' || lexer->peek(lexer) == L'·')
@@ -289,7 +352,7 @@ int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
     else return mpir_tokenise_process_buffer(lexer, NUMERICAL_LITERAL);
 
     /* Scan and consume fractional values (digits right of the decimal point). */
-    while (iswdigit(lexer->peek(lexer))) consume_character_any(lexer);
+    while (iswdigit(lexer->peek(lexer))) mpir_lexer_consume(lexer);
     return mpir_tokenise_process_buffer(lexer, NUMERICAL_LITERAL);
 }
 
@@ -330,7 +393,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
  *
  * This function examines the characters in the input stream starting from the current position
  * and processes them as an identifier or a keyword until a non-identifiable character is encountered.
- * Identifiable characters are determined using the is_identifiable_character() function.
+ * Identifiable characters are determined using the mpir_is_identifiable_char() function.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
  * @return 0 on failure to tokenise, 1 in the event of a token being successfully created.
@@ -338,16 +401,16 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 {
     /* Verify the initial character's identity; if non-identifiable, exclude it from consideration. */
-    if(is_identifiable_character(lexer->peek(lexer))) NULL; else return 0;
+    if(mpir_is_identifiable_char(lexer->peek(lexer))) NULL; else return 0;
 
     /* Proceed to scan and consume characters until a non-identifier character is encountered. */
-    while(is_identifiable_character(lexer->peek(lexer)))
+    while(mpir_is_identifiable_char(lexer->peek(lexer)))
     {
-        consume_character_any(lexer);
+        mpir_lexer_consume(lexer);
     }
 
     /* Determine the token type based on whether the lexeme matches to a keyword or not. */
-    if(is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, KEYWORD);
+    if(mpir_is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, KEYWORD);
     else return mpir_tokenise_process_buffer(lexer, IDENTIFIER);
 }
 
@@ -371,9 +434,9 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
             mpir_lexer_tryconsume(lxr, L'\n');
             mpir_tokenise_process_buffer(lxr, NEWLINE);
         }
-        else if(!is_identifiable_character(lxr->peek(lxr)))
+        else if(!mpir_is_identifiable_char(lxr->peek(lxr)))
         {
-            consume_character_any(lxr);
+            mpir_lexer_consume(lxr);
             mpir_tokenise_process_buffer(lxr, KEYWORD);
         }
         else if(mpir_tokenise_identifiers_and_keywords(lxr)) NULL;
