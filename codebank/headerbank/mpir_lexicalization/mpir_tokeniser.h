@@ -11,7 +11,9 @@
 #include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
+
 #include <ctype.h>
+#include <wctype.h>
 #include <wchar.h>
 #include <stdbool.h>
 #include <stdarg.h>

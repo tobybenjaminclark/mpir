@@ -10,6 +10,5 @@
 
 int main(int argc, char** argv)
 {
-    mpir_lexer* lxr;
-    lxr = mpir_tokenise("test.mpir");
+    (void)mpir_tokenise("test.mpir");
 }

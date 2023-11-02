@@ -9,4 +9,4 @@
 
 int mpir_test_tokenisation();
 
-#endif //MPIR_COMPILER_MPIR_TEST_TOKENISATION_H
+#endif
