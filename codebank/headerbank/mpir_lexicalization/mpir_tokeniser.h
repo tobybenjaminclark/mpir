@@ -45,7 +45,7 @@ bool consume_character_any(mpir_lexer* lexer);
 mpir_lexer* mpir_tokenise(const char* file_path);
 
 /* Tokenises division and comments ( / and //str ) */
-int mpir_tokenise_Qc(mpir_lexer* lxr);
+int mpir_tokenise_comment_and_division(mpir_lexer* lexer);
 
 /* Tokenises string literals ("str" and 'str') */
 int mpir_tokenise_string_literal(mpir_lexer* lexer);

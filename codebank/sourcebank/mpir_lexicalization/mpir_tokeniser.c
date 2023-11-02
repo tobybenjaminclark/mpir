@@ -101,31 +101,51 @@ bool consume_character_any(mpir_lexer* lexer)
     return mpir_lexer_tryconsume(lexer, lexer->peek(lexer));
 }
 
-/* Tokenises division and comments ( / and //str ) */
-int mpir_tokenise_Qc(mpir_lexer* lxr)
-{
-    /* Handling Comments */
-    if (lxr->peek(lxr) != L'/') return 0;
 
-    if(mpir_lexer_tryconsume(lxr, '/'))
-    {
-        if (mpir_lexer_tryconsume(lxr, '/'))
-        {
-            while(lxr->peek(lxr) != L'\n' && lxr->peek(lxr) != WEOF)
-            {
-                if (consume_character_any(lxr)) continue; else return ERROR_UNEXPECTED_CHARACTER;
-            }
-            /* Process comment */
-            if (mpir_lexer_tryconsume(lxr, '\n')) NULL; else return ERROR_UNEXPECTED_CHARACTER;
-            return mpir_tokenise_process_buffer(lxr, COMMENT);
-        }
-        /* Process operator */
-        else return mpir_tokenise_process_buffer(lxr, OPERATOR);
-    }
+
+/**
+ * @brief Tokenizes division operator ('/') and code comments ('//') in the input stream.
+ *
+ * This function tokenizes the division operator ('/') and code comments ('//') in the input stream. It checks for the
+ * presence of a '/', and if the next character is also '/', it consumes characters until the end of the line or end of
+ * file, treating them as a code comment. If the next character is not '/', it tokenizes as division operator.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ *
+ * @return 1 on success, 0 on failure
+ */
+int mpir_tokenise_comment_and_division(mpir_lexer* lexer)
+{
+    /*  Guard clause ensures the next character is a '/', if not then reject */
+    if (mpir_lexer_tryconsume(lexer, '/')) NULL;
     else return 0;
+
+    /* If the next character is '/', continue, if not then tokenise as the '/' operator. */
+    if (mpir_lexer_tryconsume(lexer, '/')) NULL;
+    else return mpir_tokenise_process_buffer(lexer, OPERATOR);
+
+    /* If it is a code comment, continue consuming characters until the end of the file or a new line character. */
+    while(lexer->peek(lexer) != L'\n' && lexer->peek(lexer) != WEOF)
+    {
+        if (consume_character_any(lexer)) continue; else return ERROR_UNEXPECTED_CHARACTER;
+    }
+
+    /* Process/Tokenise the buffer as a code comment */
+    return mpir_tokenise_process_buffer(lexer, COMMENT);
 }
 
-/* Tokenises string literals ("str" and 'str') */
+
+
+/**
+ * @brief Attempts to tokenise string literals ("str" and 'str') from the input stream.
+ *
+ * This function tokenizes string literals enclosed in double quotes ("str") or single quotes ('str') in the input
+ * stream. It identifies the opening quote character, consumes characters until a matching closing quote is found.
+ * The characters within the quotes are tokenized as a string literal.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on error.
+ */
 int mpir_tokenise_string_literal(mpir_lexer* lexer)
 {
     /* Guard Clause, try to consume ' and ", remembering if successfully consumed. Else reject */
@@ -338,7 +358,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     while(lxr->peek(lxr) != WEOF)
     {
         wprintf(L"Current character is: ' %lc ' \n", lxr->peek(lxr));
-        if(mpir_tokenise_Qc(lxr)) NULL;
+        if(mpir_tokenise_comment_and_division(lxr)) NULL;
         else if(mpir_tokenise_string_literal(lxr)) NULL;
         else if(mpir_tokenise_colon(lxr)) NULL;
         else if(mpir_tokenise_equality(lxr)) NULL;
