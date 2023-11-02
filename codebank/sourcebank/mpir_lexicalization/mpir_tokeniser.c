@@ -6,28 +6,14 @@
 
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser.h"
 
-wchar_t* null_terminate_wstring(const wchar_t* input)
+wchar_t* null_terminate_wstring(wchar_t* input)
 {
     /* Get the length of the input string */
     size_t length = wcslen(input);
 
-    /* Allocate memory for the new wide character string, including space for the null wide character */
-    wchar_t* terminated_string = malloc((length + 1) * sizeof(wchar_t));
-
-    /* Check if memory allocation was successful */
-    if (terminated_string == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    /* Copy the input string to the new memory location */
-    wcscpy(terminated_string, input);
-
-    /* Null-terminate the new wide character string */
-    terminated_string[length] = L'\0';
-
-    /* Return the null-terminated wide character string */
-    return terminated_string;
+    /* Null-terminate the input wide character string */
+    input[length] = L'\0';
+    return input;
 }
 
 int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
