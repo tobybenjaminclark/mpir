@@ -34,7 +34,7 @@ bool mpir_wchar_in_list(wchar_t target, const wchar_t *list);
 
 int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype);
 
-bool consume_character(mpir_lexer* lexer, wchar_t expected_character);
+bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character);
 
 bool is_identifiable_character(wchar_t target);
 
@@ -48,16 +48,16 @@ mpir_lexer* mpir_tokenise(const char* file_path);
 int mpir_tokenise_Qc(mpir_lexer* lxr);
 
 /* Tokenises string literals ("str" and 'str') */
-int mpir_tokenise_Qstr(mpir_lexer* lxr);
+int mpir_tokenise_string_literal(mpir_lexer* lexer);
 
 /* Tokenises colon stuff (: and ::) */
-int mpir_tokenise_Qco(mpir_lexer* lxr);
+int mpir_tokenise_colon(mpir_lexer* lexer);
 
 /* Tokenises equality (= and ==) */
-int mpir_tokenise_Qeq(mpir_lexer* lxr);
+int mpir_tokenise_equality(mpir_lexer* lexer);
 
 /* Tokenises comparison > and < and >= and <= */
-int mpir_tokenise_Qcmp(mpir_lexer* lxr);
+int mpir_tokenise_comparator(mpir_lexer* lexer);
 
 /* Tokenises negation (!, !=, ¬ and ¬=) */
 int mpir_tokenise_negation(mpir_lexer* lexer);

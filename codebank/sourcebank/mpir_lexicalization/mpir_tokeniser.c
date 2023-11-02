@@ -40,7 +40,7 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
  * @param expected_character The character expected to be consumed from the input stream.
  * @return 0 on success, or an error code (ERROR_UNEXPECTED_CHARACTER or ERROR_BUFFER_OVERFLOW) on failure.
  */
-bool consume_character(mpir_lexer* lexer, wchar_t expected_character)
+bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
 {
 
     /* Ensure the expected character is equal to the actual character */
@@ -98,7 +98,7 @@ int is_keyword(const wchar_t* target)
 
 bool consume_character_any(mpir_lexer* lexer)
 {
-    return consume_character(lexer, lexer->peek(lexer));
+    return mpir_lexer_tryconsume(lexer, lexer->peek(lexer));
 }
 
 /* Tokenises division and comments ( / and //str ) */
@@ -107,16 +107,16 @@ int mpir_tokenise_Qc(mpir_lexer* lxr)
     /* Handling Comments */
     if (lxr->peek(lxr) != L'/') return 0;
 
-    if(consume_character(lxr, '/'))
+    if(mpir_lexer_tryconsume(lxr, '/'))
     {
-        if (consume_character(lxr, '/'))
+        if (mpir_lexer_tryconsume(lxr, '/'))
         {
             while(lxr->peek(lxr) != L'\n' && lxr->peek(lxr) != WEOF)
             {
                 if (consume_character_any(lxr)) continue; else return ERROR_UNEXPECTED_CHARACTER;
             }
             /* Process comment */
-            if (consume_character(lxr, '\n')) NULL; else return ERROR_UNEXPECTED_CHARACTER;
+            if (mpir_lexer_tryconsume(lxr, '\n')) NULL; else return ERROR_UNEXPECTED_CHARACTER;
             return mpir_tokenise_process_buffer(lxr, COMMENT);
         }
         /* Process operator */
@@ -126,78 +126,99 @@ int mpir_tokenise_Qc(mpir_lexer* lxr)
 }
 
 /* Tokenises string literals ("str" and 'str') */
-int mpir_tokenise_Qstr(mpir_lexer* lxr)
+int mpir_tokenise_string_literal(mpir_lexer* lexer)
 {
-    /* Guard clause */
-    if (lxr->peek(lxr) != L'"' && lxr->peek(lxr) != L'\'') return 0;
-
-    /* Discover the string literal terminator */
+    /* Guard Clause, try to consume ' and ", remembering if successfully consumed. Else reject */
     wchar_t string_literal_terminator;
-    if(lxr->peek(lxr) == L'\'') string_literal_terminator = L'\'';
-    else if(lxr->peek(lxr) == L'"') string_literal_terminator = L'"';
-    else return ERROR_UNEXPECTED_CHARACTER;
-
-    /* Consume the speech/quote mark! */
-    (void) consume_character_any(lxr);
-
-    /* Consume the string literal and produce the token */
-    while(lxr -> peek(lxr) != string_literal_terminator && lxr -> peek(lxr) != WEOF)
-    {
-        if (consume_character_any(lxr)) continue; else return 0;
-    }
-
-    if (lxr->peek(lxr) == string_literal_terminator)
-    {
-        consume_character(lxr, string_literal_terminator);
-        return mpir_tokenise_process_buffer(lxr, STRING_LITERAL);
-    }
+    if(mpir_lexer_tryconsume(lexer,  L'\'')) string_literal_terminator = L'\'';
+    else if(mpir_lexer_tryconsume(lexer,  L'"')) string_literal_terminator = L'"';
     else return 0;
 
+    /* Consume characters while the consumed character is not the string literal termination symbol */
+    while(lexer -> peek(lexer) != string_literal_terminator && lexer -> peek(lexer) != WEOF)
+    {
+        if (consume_character_any(lexer)) continue; else return 0;
+    }
+
+    /* Consume the string literal terminator ("/'), and process the buffer */
+    if (mpir_lexer_tryconsume(lexer, string_literal_terminator))
+    {
+        return mpir_tokenise_process_buffer(lexer, STRING_LITERAL);
+    }
+    else return ERROR_UNEXPECTED_CHARACTER; /* ← If the string literal is not closed before end of file */
 }
 
-/* Tokenises colon stuff (: and ::) */
-int mpir_tokenise_Qco(mpir_lexer* lxr)
+
+
+/**
+ * @brief Attempts to tokenise colon operators (':' and '::') in the input stream.
+ *
+ * This function tokenizes the colon operator ':' and the double colon operator '::' in the input stream. It verifies
+ * the presence of the operator and consumes the appropriate characters. If there are two consecutive colons, they are
+ * both consumed and tokenized as a keyword.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_colon(mpir_lexer* lexer)
 {
-    if(consume_character(lxr, L':'))
-    {
-        if(lxr->peek(lxr) == L':')
-        {
-            consume_character(lxr, L':');
-            return mpir_tokenise_process_buffer(lxr, KEYWORD);
-        }
-        else return mpir_tokenise_process_buffer(lxr, KEYWORD);
-    }
-    else return 0;
+    /* Guard clause rejects if the next character is not ':' */
+    if(mpir_lexer_tryconsume(lexer, L':')) NULL; else return 0;
+
+    /* If there is another colon, consume it, then tokenise regardless */
+    (void) mpir_lexer_tryconsume(lexer, L':');
+    return mpir_tokenise_process_buffer(lexer, KEYWORD);
 }
 
-/* Tokenises equality (= and ==) */
-int mpir_tokenise_Qeq(mpir_lexer* lxr)
+
+
+/**
+ * @brief Attempts to tokenise equality operators ('==' and '=' ) in the input stream.
+ *
+ * This function tokenizes the equality operators '=='/'=' in the input stream. It verifies the presence of the operator
+ * and consumes the appropriate characters. The equality operator is then tokenized as a keyword.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_equality(mpir_lexer* lexer)
 {
-    if(lxr->peek(lxr) == L'=') NULL;
+    /* Guard Clause to reject if the next character is not '=' */
+    if(mpir_lexer_tryconsume(lexer, L'=')) NULL;
     else return 0;
 
-    (void)consume_character(lxr, L'=');
-    if(lxr->peek(lxr) == L'=')
-    {
-        consume_character(lxr, L'=');
-        return mpir_tokenise_process_buffer(lxr, KEYWORD);
-    }
-    else return mpir_tokenise_process_buffer(lxr, KEYWORD);
+    /* If the next character is equals, consume it, tokenise regardless */
+    (void) mpir_lexer_tryconsume(lexer, L'=');
+    return mpir_tokenise_process_buffer(lexer, KEYWORD);
 }
 
-/* Tokenises comparison > and < and >= and <= */
-int mpir_tokenise_Qcmp(mpir_lexer* lxr)
+
+
+/**
+ * @brief Attempst to tokenise boolean comparator operators ('>', '<', '>=', and '<=') in the input stream.
+ *
+ * This function tokenizes boolean comparators such as '>', '<', '>=', and '<=' in the input stream. It verifies the
+ * presence of these operators and consumes the appropriate characters. If the next character is '=', it is also
+ * consumed and the operator is tokenized. The comparator operators are then tokenized as operators.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_comparator(mpir_lexer* lexer)
 {
-    /* Guard Clause */
-    if (lxr->peek(lxr) == L'>' || lxr->peek(lxr) == L'<') NULL;
+    /* Guard Clause rejects if the next character is not '>' or '<' */
+    if (lexer->peek(lexer) == L'>' || lexer->peek(lexer) == L'<') NULL;
     else return 0;
 
-    /* Consume boolean comparator */
-    consume_character_any(lxr);
+    /* Consume the boolean comparator operator */
+    consume_character_any(lexer);
 
-    (void)consume_character(lxr, '=');
-    return mpir_tokenise_process_buffer(lxr, OPERATOR);
+    /* If the next character is equals consume it, regardless tokenise the buffer */
+    (void) mpir_lexer_tryconsume(lexer, '=');
+    return mpir_tokenise_process_buffer(lexer, OPERATOR);
 }
+
+
 
 /**
  * @brief Attempts to tokenise negation operators ('!','!=','¬' and '¬=') in the input stream.
@@ -215,9 +236,11 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
     else return 0;
 
     /* If the next character is an equal sign, then consume it, tokenise as operator regardless. */
-    (void)consume_character(lexer, '=');
+    (void) mpir_lexer_tryconsume(lexer, '=');
     return mpir_tokenise_process_buffer(lexer, OPERATOR);
 }
+
+
 
 /**
  * @brief Attempts to tokenise numerical literals e.g. (5, 32.1) in the input stream.
@@ -241,7 +264,7 @@ int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
     /* Handle decimal point, if no decimal point then return (./·). */
     if (lexer->peek(lexer) == L'.' || lexer->peek(lexer) == L'·')
     {
-        consume_character(lexer, L'.');
+        mpir_lexer_tryconsume(lexer, L'.');
     }
     else return mpir_tokenise_process_buffer(lexer, NUMERICAL_LITERAL);
 
@@ -265,10 +288,10 @@ int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
 int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 {
     /* Guard clause to ensure the next character is a subtract symbol */
-    if (consume_character(lexer, L'-')) NULL; else return 0;
+    if (mpir_lexer_tryconsume(lexer, L'-')) NULL; else return 0;
 
     /* If the next character is a '>', then the symbol is an arrow ( -> ) */
-    if (consume_character(lexer, L'>'))
+    if (mpir_lexer_tryconsume(lexer, L'>'))
     {
         return mpir_tokenise_process_buffer(lexer, KEYWORD);
     }
@@ -316,16 +339,16 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     {
         wprintf(L"Current character is: ' %lc ' \n", lxr->peek(lxr));
         if(mpir_tokenise_Qc(lxr)) NULL;
-        else if(mpir_tokenise_Qstr(lxr)) NULL;
-        else if(mpir_tokenise_Qco(lxr)) NULL;
-        else if(mpir_tokenise_Qeq(lxr)) NULL;
-        else if(mpir_tokenise_Qcmp(lxr)) NULL;
+        else if(mpir_tokenise_string_literal(lxr)) NULL;
+        else if(mpir_tokenise_colon(lxr)) NULL;
+        else if(mpir_tokenise_equality(lxr)) NULL;
+        else if(mpir_tokenise_comparator(lxr)) NULL;
         else if(mpir_tokenise_negation(lxr)) NULL;
         else if(mpir_tokenise_negative_numerical_or_arrow(lxr)) NULL;
         else if(lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
         else if(lxr->peek(lxr) == L'\n')
         {
-            consume_character(lxr, L'\n');
+            mpir_lexer_tryconsume(lxr, L'\n');
             mpir_tokenise_process_buffer(lxr, NEWLINE);
         }
         else if(!is_identifiable_character(lxr->peek(lxr)))
