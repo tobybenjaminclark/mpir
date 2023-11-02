@@ -7,6 +7,7 @@
 #include "../../headerbank/mpir_lexicalization/mpir_tokeniser.h"
 
 
+
 /**
  * @brief Null-terminates a wide-character string (the lexeme in this use case)
  *
@@ -418,33 +419,41 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
-    while(lxr->peek(lxr) != WEOF)
-    {
-        wprintf(L"Current character is: ' %lc ' \n", lxr->peek(lxr));
-        if(mpir_tokenise_comment_and_division(lxr)) NULL;
-        else if(mpir_tokenise_string_literal(lxr)) NULL;
-        else if(mpir_tokenise_colon(lxr)) NULL;
-        else if(mpir_tokenise_equality(lxr)) NULL;
-        else if(mpir_tokenise_comparator(lxr)) NULL;
-        else if(mpir_tokenise_negation(lxr)) NULL;
-        else if(mpir_tokenise_negative_numerical_or_arrow(lxr)) NULL;
-        else if(lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
-        else if(lxr->peek(lxr) == L'\n')
-        {
-            mpir_lexer_tryconsume(lxr, L'\n');
-            mpir_tokenise_process_buffer(lxr, NEWLINE);
-        }
-        else if(!mpir_is_identifiable_char(lxr->peek(lxr)))
-        {
-            mpir_lexer_consume(lxr);
-            mpir_tokenise_process_buffer(lxr, KEYWORD);
-        }
-        else if(mpir_tokenise_identifiers_and_keywords(lxr)) NULL;
-        else return 1;
-    }
-    return 0;
-}
+    /* If a space is detected, void/ignore it */
+    if (lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
 
+    /* If a newline character \n is detected, tokenise it */
+    else if (lxr->peek(lxr) == L'\n')
+    {
+        mpir_lexer_tryconsume(lxr, L'\n');
+        mpir_tokenise_process_buffer(lxr, NEWLINE);
+    }
+
+    /* Handle more complex tokenisation states (Token creation is handled in the functions, so do nothing) */
+    else if
+    (
+         mpir_tokenise_comment_and_division(lxr) ||             /* ← Tokenises '//str' & '/'                */
+         mpir_tokenise_string_literal(lxr) ||                   /* ← Tokenises 'str' & "str" literals       */
+         mpir_tokenise_colon(lxr) ||                            /* ← Tokenises colon operators ':'/'::'     */
+         mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
+         mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
+         mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
+         mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
+         mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */
+    ) NULL;
+
+    /* Handle special symbols */
+    else if (!mpir_is_identifiable_char(lxr->peek(lxr)))
+    {
+        /* Consume character and tokenize as keyword */
+        mpir_lexer_consume(lxr);
+        mpir_tokenise_process_buffer(lxr, KEYWORD);
+    }
+
+    /* Error case, return 0 (Failure), else return 1 (success) */
+    else return 0;
+    return 1;
+}
 mpir_lexer* mpir_tokenise(const char* file_path)
 {
     mpir_lexer *lexer;          /* ← Instance of the lexer we're using, stores all associated data */
@@ -453,8 +462,10 @@ mpir_lexer* mpir_tokenise(const char* file_path)
     lexer = mpir_lexer_create(file_path);
     if(lexer == NULL){return NULL;}
 
-    mpir_tokenise_base_state(lexer);
-    mpir_tokeniser_write(lexer, "output.txt");
+    /* Tokenise until WEOF is met! */
+    while (lexer->peek(lexer) != WEOF) mpir_tokenise_base_state(lexer);
 
+    /* Write to the file & return */
+    (void)mpir_tokeniser_write(lexer, "output.txt");
     return lexer;
 }
