@@ -30,6 +30,6 @@
  * @param indentation Integer representing the amount of indentation to output with.
  * @return Returns 0 upon successful writing of the token. If the file is not open (file == NULL), an error message is printed, and the function returns 1.
  */
-int mpir_write_token(mpir_token* token, FILE* file, int indentation);
+int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short int add_comma);
 
 #endif

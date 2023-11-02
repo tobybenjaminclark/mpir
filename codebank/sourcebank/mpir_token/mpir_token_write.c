@@ -32,10 +32,8 @@ const char* token_names[] = { TOKEN_NAME_MAP };
  * @param file A pointer to the FILE structure representing the file where the token data will be written.
  * @return Returns 0 upon successful writing of the token. If the file is not open (file == NULL), an error message is printed, and the function returns 1.
  */
-int mpir_write_token(mpir_token* token, FILE* file, int indentation)
+int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short int add_comma)
 {
-
-
     /* The file must already be open. */
     if(file == NULL)
     {
@@ -43,15 +41,13 @@ int mpir_write_token(mpir_token* token, FILE* file, int indentation)
         return 1;
     }
 
-    fprintf(file, "\nTOKEN_START\n");
-
     /* Write data to the file in JSON-like format with specified indentation */
-    fprintf(file, "%*s{\n", indentation, "");
-    fprintf(file, "%*s\"type\": %s,\n", indentation + 2, "", token_names[token->type]);
-    fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", indentation + 2, "", token->lexeme);
-    fprintf(file, "%*s\"line_index\": %lu,\n", indentation + 2, "", token->line_index);
-    fprintf(file, "%*s\"column_index\": %lu\n", indentation + 2, "", token->column_index);
-    fprintf(file, "%*s}%s\n", indentation, "", (indentation > 0) ? "," : "");
+    fprintf(file, "%*s{\n", (indentation*4), "");
+    fprintf(file, "%*s\"type\": %s,\n", (indentation*4) + 4, "", token_names[token->type]);
+    fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", (indentation*4) + 4, "", token->lexeme);
+    fprintf(file, "%*s\"line_index\": %lu,\n", (indentation*4) + 4, "", token->line_index);
+    fprintf(file, "%*s\"column_index\": %lu\n", (indentation*4) + 4, "", token->column_index);
+    fprintf(file, "%*s}%s\n", (indentation*4), "", (add_comma) ? "," : "");
 
     return 0;
 }

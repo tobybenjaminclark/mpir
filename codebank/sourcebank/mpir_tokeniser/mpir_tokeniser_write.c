@@ -9,25 +9,36 @@
 
 int mpir_tokeniser_write(mpir_lexer* lexer, const char* file_path)
 {
-    FILE *token_file;
+    FILE *file;                     /* ← Pointer to the (not yet initialized) .mpirtok output file.   */
+    mpir_token* current_token;      /* ← Pointer to the (currently NULL), current token struct        */
+    short int add_comma;            /* ← Integer representing True/False on whether to add a comma    */
+    int token_index;                /* ← Integer representing the index of the current token.         */
+    int writing_failed;             /* ← Integer representing whether the file can be written         */
 
-    token_file = fopen(file_path, "w");
-
-    if (token_file == NULL)
+    /* Attempt to open the file in write mode */
+    file = fopen(file_path, "w");
+    if (file == NULL)
     {
         mpir_error("Tokenizer unable to write .mpirtok data, file could not be opened.");
         return 1;
     }
 
-    int token_index;
-    int writing_failed;
-
-    for(token_index = 0; token_index < lexer->token_count; token_index++)
+    /* Write the contents of the file in JSON-style notation */
+    fprintf(file, "%*stokens : {\n", (0), "");
+    fprintf(file, "%*s\"token_count\": %ld,\n", (1 * 4) + 4, "", lexer->token_count);
+    fprintf(file, "%*s\"token_list\": [\n", (1 * 4) + 4, "");
+    for(token_index = 0; token_index < lexer -> token_count; token_index++)
     {
-        writing_failed = mpir_write_token(lexer -> tokens[token_index], token_file, 1);
+        /* Write the current token to the file, if this fails, exit with a failure code */
+        current_token = lexer->tokens[token_index];
+        add_comma = token_index == (lexer->token_count - 1) ? 0 : 1;
+        writing_failed = mpir_write_token(current_token, file, 4, add_comma);
         if(writing_failed){return 1;}
     }
+    fprintf(file, "%*s]\n", (1 * 4) + 4, "");
+    fprintf(file, "%*s}\n", (0), "");
 
-    fclose(token_file);
+    /* Close the file & return */
+    fclose(file);
     return 0;
 }
