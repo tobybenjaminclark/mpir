@@ -21,8 +21,8 @@
 #define QUOTE_MARK L'\''
 #define SPEECH_MARK L'"'
 
-#define ERROR_BUFFER_OVERFLOW 1
-#define ERROR_UNEXPECTED_CHARACTER 2
+#define ERROR_BUFFER_OVERFLOW 0
+#define ERROR_UNEXPECTED_CHARACTER 0
 
 #define DISALLOWED_IDENTIFIER_CHARACTERS { L'!', L'@', 0x00A3, L'$', L'%', '^', '&', '*', '(', ')','-', '=', '+', \
 0x00B1, 0x00A7, '~', '`', '<', '>', ',', '.', '/', '?', ';', ':', '\\', '|', ']', '[', '{', '}', L'"', L'\'', L'\n', \
@@ -63,11 +63,11 @@ int mpir_tokenise_Qcmp(mpir_lexer* lxr);
 int mpir_tokenise_Qneg(mpir_lexer* lxr);
 
 /* Handles numericals */
-int mpir_tokenise_Qn(mpir_lexer* lxr);
+int mpir_tokenise_Qn(mpir_lexer* lexer);
 
-int mpir_tokenise_Qnn(mpir_lexer* lxr);
+int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer);
 
-int mpir_tokenise_Qi(mpir_lexer* lxr);
+int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer);
 
 int mpir_tokenise_base_state(mpir_lexer* lxr);
 

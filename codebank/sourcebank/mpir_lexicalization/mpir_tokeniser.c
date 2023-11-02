@@ -211,53 +211,85 @@ int mpir_tokenise_Qneg(mpir_lexer* lxr)
 }
 
 /* Handles numericals */
-int mpir_tokenise_Qn(mpir_lexer* lxr)
+int mpir_tokenise_Qn(mpir_lexer* lexer)
 {
-    /* Discover and consume digits left of a decimal point */
-    if(!(iswdigit(lxr->peek(lxr)))) return ERROR_UNEXPECTED_CHARACTER;
-    while (iswdigit(lxr->peek(lxr))) consume_character_any(lxr);
+    /* Guard clause ensuring the next character is a digit, if not then it's not a numerical literal. */
+    if(!(iswdigit(lexer->peek(lexer)))) return ERROR_UNEXPECTED_CHARACTER; else NULL;
 
-    /* Handle decimal point, if no decimal point then return (./·) */
-    if (lxr->peek(lxr) == L'.' || lxr->peek(lxr) == L'·')
+    /* Scan and consume the integer values (digits left of decimal point). */
+    while (iswdigit(lexer->peek(lexer))) consume_character_any(lexer);
+
+    /* Handle decimal point, if no decimal point then return (./·). */
+    if (lexer->peek(lexer) == L'.' || lexer->peek(lexer) == L'·')
     {
-        consume_character(lxr, L'.');
+        consume_character(lexer, L'.');
     }
-    else return mpir_tokenise_process_buffer(lxr, NUMERICAL_LITERAL);
+    else return mpir_tokenise_process_buffer(lexer, NUMERICAL_LITERAL);
 
-    /* Handle fractional values (digits right of the decimal point */
-    while (iswdigit(lxr->peek(lxr))) consume_character_any(lxr);
-    return mpir_tokenise_process_buffer(lxr, NUMERICAL_LITERAL);
+    /* Scan and consume fractional values (digits right of the decimal point). */
+    while (iswdigit(lexer->peek(lexer))) consume_character_any(lexer);
+    return mpir_tokenise_process_buffer(lexer, NUMERICAL_LITERAL);
 }
 
-int mpir_tokenise_Qnn(mpir_lexer* lxr)
+
+
+/**
+ * @brief Tokenizes expressions starting with '-' symbol, handling arrow (->) and negative numerical literals.
+ *
+ * This function checks if the next character in the input stream after '-' represents an arrow symbol or a negative
+ * numerical literal. If the next character is '>', it tokenizes "->" as a keyword. If it is a digit, it tokenizes it as
+ * a negative numerical literal. If the next character is neither '>', nor a digit, it returns an error.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 0 on success, 1 if a token was not successfully created.
+ */
+int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 {
-    if (lxr->peek(lxr) != L'-') return 0;
+    /* Guard clause to ensure the next character is a subtract symbol */
+    if (consume_character(lexer, L'-')) NULL; else return 0;
 
-    /* Negation */
-    else if (consume_character(lxr, L'-'))
+    /* If the next character is a '>', then the symbol is an arrow ( -> ) */
+    if (consume_character(lexer, L'>'))
     {
-        if (consume_character(lxr, L'>')) return mpir_tokenise_process_buffer(lxr, KEYWORD);
-        else if(iswdigit(lxr->peek(lxr))) return mpir_tokenise_Qn(lxr);
-        else return ERROR_UNEXPECTED_CHARACTER;
-    }
-    return ERROR_UNEXPECTED_CHARACTER;
-}
-
-int mpir_tokenise_Qi(mpir_lexer* lxr)
-{
-    /* Consume characters */
-    if(is_identifiable_character(lxr->peek(lxr))) NULL;
-    else return 0;
-
-    while(is_identifiable_character(lxr->peek(lxr)))
-    {
-        consume_character_any(lxr);
+        return mpir_tokenise_process_buffer(lexer, KEYWORD);
     }
 
-    /* Match keywords, if not keyword tokenise as identifier */
-    if(is_keyword(lxr->lexeme)) return mpir_tokenise_process_buffer(lxr, KEYWORD);
-    else return mpir_tokenise_process_buffer(lxr, IDENTIFIER);
+    /* If the next character is a digit, then we know it's a negative numerical literal */
+    else if(iswdigit(lexer->peek(lexer))) return mpir_tokenise_Qn(lexer);
+
+    /* If it's not a digit or a '>', then it's a syntactic error */
+    else return ERROR_UNEXPECTED_CHARACTER;
 }
+
+
+
+/**
+ * @brief Attempts to tokenise a keyword/identifier from the lexers source code.
+ *
+ * This function examines the characters in the input stream starting from the current position
+ * and processes them as an identifier or a keyword until a non-identifiable character is encountered.
+ * Identifiable characters are determined using the is_identifiable_character() function.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 0 on failure to tokenise, 1 in the event of a token being successfully created.
+ */
+int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
+{
+    /* Verify the initial character's identity; if non-identifiable, exclude it from consideration. */
+    if(is_identifiable_character(lexer->peek(lexer))) NULL; else return 0;
+
+    /* Proceed to scan and consume characters until a non-identifier character is encountered. */
+    while(is_identifiable_character(lexer->peek(lexer)))
+    {
+        consume_character_any(lexer);
+    }
+
+    /* Determine the token type based on whether the lexeme matches to a keyword or not. */
+    if(is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, KEYWORD);
+    else return mpir_tokenise_process_buffer(lexer, IDENTIFIER);
+}
+
+
 
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
@@ -270,7 +302,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
         else if(mpir_tokenise_Qeq(lxr)) NULL;
         else if(mpir_tokenise_Qcmp(lxr)) NULL;
         else if(mpir_tokenise_Qneg(lxr)) NULL;
-        else if(mpir_tokenise_Qnn(lxr)) NULL;
+        else if(mpir_tokenise_negative_numerical_or_arrow(lxr)) NULL;
         else if(lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
         else if(lxr->peek(lxr) == L'\n')
         {
@@ -282,7 +314,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
             consume_character_any(lxr);
             mpir_tokenise_process_buffer(lxr, KEYWORD);
         }
-        else if(mpir_tokenise_Qi(lxr)) NULL;
+        else if(mpir_tokenise_identifiers_and_keywords(lxr)) NULL;
         else return 1;
     }
     return 0;
