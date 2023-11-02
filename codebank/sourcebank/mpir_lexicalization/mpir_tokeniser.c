@@ -482,7 +482,7 @@ int mpir_tokenise(const char* file_path)
     if(lexer == NULL){return 0;}
 
     /* Tokenise until WEOF is met, then write the tokens to the file if it didn't fail. */
-    while (lexer->peek(lexer) != WEOF) if((lexification_fail = mpir_tokenise_base_state(lexer))) NULL; else break;
+    while (lexer->peek(lexer) != WEOF) if((lexification_fail = !mpir_tokenise_base_state(lexer))) break; else NULL;
     if(!lexification_fail) (void)mpir_tokeniser_write(lexer, "output.txt");
 
     /* Free the lexer regardless, then return whether the tokenisation worked */
