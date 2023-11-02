@@ -475,7 +475,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
 int mpir_tokenise(const char* file_path)
 {
     mpir_lexer *lexer;           /* ← Instance of the lexer we're using, stores all associated data */
-    short int lexification_fail; /* ← Becomes 1 if the lexer fails to tokenise something            */
+    int lexification_fail; /* ← Becomes 1 if the lexer fails to tokenise something            */
 
     /* Instantiate a lexer instance, and instruct it to read from the filepath. */
     lexer = mpir_lexer_create(file_path);
