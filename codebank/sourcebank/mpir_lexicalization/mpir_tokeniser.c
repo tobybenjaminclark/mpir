@@ -417,6 +417,20 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 
 
 
+/**
+ * @brief Attempts to tokenise MPIR source code from a lexer input stream.
+ *
+ * This function tokenizes characters from the given lexer `lxr` based on various rules and states. It handles spaces,
+ * newline characters, complex tokenization states for comments, string literals, operators, identifiers, and specials.
+ *
+ * If a space is detected, it is voided/ignored. If a newline character '\n' is detected, it is tokenized as a newline.
+ * Complex tokenization states such ascomments, string literals, operators, and identifiers are handled using specific
+ * functions. Unidentifiable characters are tokenized as keywords. If an error occurs during tokenization, the function
+ * returns 0 (Failure). Otherwise, it returns 1 (Success).
+ *
+ * @param lxr Pointer to the lexer structure containing the input stream.
+ * @return 1 on success, 0 on failure.
+ */
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
     /* If a space is detected, void/ignore it */
@@ -454,6 +468,10 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     else return 0;
     return 1;
 }
+
+
+
+/* Needs better integration with compiler flags, doxygen not written yet. */
 mpir_lexer* mpir_tokenise(const char* file_path)
 {
     mpir_lexer *lexer;          /* ← Instance of the lexer we're using, stores all associated data */
