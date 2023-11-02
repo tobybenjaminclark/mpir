@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_lexicalization/mpir_tokeniser.h"
+#include "../../headerbank/mpir_tokeniser/mpir_tokeniser.h"
 
 
 

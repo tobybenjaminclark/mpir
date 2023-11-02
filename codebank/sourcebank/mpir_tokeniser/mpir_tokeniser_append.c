@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_lexicalization/mpir_tokeniser_append.h"
+#include "../../headerbank/mpir_tokeniser/mpir_tokeniser_append.h"
 
 void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token)
 {

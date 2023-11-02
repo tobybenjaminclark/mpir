@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
+#include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
 
 void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token);

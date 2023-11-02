@@ -7,10 +7,10 @@
 #ifndef MPIR_COMPILER_MPIR_TOKENISER_H
 #define MPIR_COMPILER_MPIR_TOKENISER_H
 
-#include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
-#include "../../headerbank/mpir_lexicalization/mpir_lexer_token_handler.h"
+#include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
+#include "../../headerbank/mpir_tokeniser/mpir_lexer_token_handler.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
-#include "../../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
+#include "../../headerbank/mpir_tokeniser/mpir_tokeniser_write.h"
 
 #include <ctype.h>
 #include <wctype.h>

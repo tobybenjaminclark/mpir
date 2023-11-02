@@ -18,21 +18,21 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_misc/mpir_help_kernel.h
         codebank/sourcebank/mpir_token/mpir_token.c
         codebank/headerbank/mpir_token/mpir_token.h
-        codebank/sourcebank/mpir_lexicalization/mpir_lexer.c
-        codebank/headerbank/mpir_lexicalization/mpir_lexer.h
-        codebank/headerbank/mpir_lexicalization/mpir_lexer_token_handler.h
-        codebank/sourcebank/mpir_lexicalization/mpir_tokeniser.c
-        codebank/headerbank/mpir_lexicalization/mpir_tokeniser.h
+        codebank/sourcebank/mpir_tokeniser/mpir_lexer.c
+        codebank/headerbank/mpir_tokeniser/mpir_lexer.h
+        codebank/headerbank/mpir_tokeniser/mpir_lexer_token_handler.h
+        codebank/sourcebank/mpir_tokeniser/mpir_tokeniser.c
+        codebank/headerbank/mpir_tokeniser/mpir_tokeniser.h
         codebank/sourcebank/mpir_token/mpir_token_create.c
         codebank/headerbank/mpir_token/mpir_token_create.h
         codebank/sourcebank/mpir_token/mpir_token_free.c
         codebank/headerbank/mpir_token/mpir_token_free.h
         codebank/sourcebank/mpir_token/mpir_token_write.c
         codebank/headerbank/mpir_token/mpir_token_write.h
-        codebank/sourcebank/mpir_lexicalization/mpir_tokeniser_write.c
-        codebank/headerbank/mpir_lexicalization/mpir_tokeniser_write.h
-        codebank/sourcebank/mpir_lexicalization/mpir_tokeniser_append.c
-        codebank/headerbank/mpir_lexicalization/mpir_tokeniser_append.h
+        codebank/sourcebank/mpir_tokeniser/mpir_tokeniser_write.c
+        codebank/headerbank/mpir_tokeniser/mpir_tokeniser_write.h
+        codebank/sourcebank/mpir_tokeniser/mpir_tokeniser_append.c
+        codebank/headerbank/mpir_tokeniser/mpir_tokeniser_append.h
 )
 
 # Create the main executable

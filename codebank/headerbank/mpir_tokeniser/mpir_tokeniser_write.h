@@ -7,7 +7,7 @@
 #ifndef MPIR_COMPILER_MPIR_TOKENISER_WRITE_H
 #define MPIR_COMPILER_MPIR_TOKENISER_WRITE_H
 
-#include "../../headerbank/mpir_lexicalization/mpir_lexer.h"
+#include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
 #include "../../headerbank/mpir_misc/mpir_warnings.h"
 #include "../../headerbank/mpir_token/mpir_token_write.h"
 

@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_lexicalization/mpir_tokeniser_write.h"
+#include "../../headerbank/mpir_tokeniser/mpir_tokeniser_write.h"
 
 
 int mpir_tokeniser_write(mpir_lexer* lexer, const char* file_path)
