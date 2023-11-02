@@ -42,7 +42,7 @@ int mpir_is_keyword(const wchar_t* target);
 
 bool mpir_lexer_consume(mpir_lexer* lexer);
 
-mpir_lexer* mpir_tokenise(const char* file_path);
+int mpir_tokenise(const char* file_path);
 
 /* Tokenises division and comments ( / and //str ) */
 int mpir_tokenise_comment_and_division(mpir_lexer* lexer);
