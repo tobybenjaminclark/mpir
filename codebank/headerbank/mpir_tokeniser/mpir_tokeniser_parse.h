@@ -10,6 +10,13 @@
 #include <wchar.h>
 #include "../../headerbank/mpir_token/mpir_token.h"
 
+#define STATE_ANTICIPATING_TOKEN 1
+#define STATE_PROCESSING_TOKEN_COUNT 2
+#define STATE_PROCESSING_TYPE 3
+#define STATE_PROCESSING_LEXEME 4
+#define STATE_PROCESSING_LINE_INDEX 5
+#define STATE_PROCESSING_COLUMN_INDEX 6
+
 mpir_token** parse_tokens_from_json(FILE* json);
 mpir_token** parse_tokens_from_json_file(const char* filename);
 

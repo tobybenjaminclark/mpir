@@ -6,6 +6,8 @@
 
 #include "../../headerbank/mpir_tokeniser/mpir_tokeniser_parse.h"
 
+
+
 mpir_token** parse_tokens_from_json(FILE* json) {
 
     wchar_t* buffer[256];
@@ -15,19 +17,40 @@ mpir_token** parse_tokens_from_json(FILE* json) {
     int token_count = 0;
 
     tokens = NULL;
+    state = STATE_PROCESSING_TOKEN_COUNT;
 
+    /*
+     * Pre Token
+     * Token Count
+     * In token
+     * Key
+     * Value
+     */
     /* Clear the buffer */
     (void)wmemset(buffer, L'\0', sizeof(buffer) / sizeof(wchar_t));
 
-    while((current = fgetwc(json)) != WEOF)
-    {
-        if(current != L'"')
-        {
-            continue;
-        }
-        else
-        {
-            wprintf(L"%lc \n", current);
+    const wchar_t* target_string = L"oken count";
+
+    while ((current = fgetwc(json)) != WEOF) {
+        switch (state) {
+            case (STATE_PROCESSING_TOKEN_COUNT):
+                wprintf(L"%lc \n", current);
+                if (current == L'o') {
+                    const wchar_t* found = wcsstr(target_string, L"oken count\" :");
+                    if (found != NULL) {
+                        // Match found, do something
+                        printf("Match found!\n");
+                        state = 3;
+                        continue;
+                    }
+                }
+                break;
+
+            case(3):
+                wprintf(L"%lc \n", current);
+                break;
+            case(4):
+                break;
         }
     }
 }
