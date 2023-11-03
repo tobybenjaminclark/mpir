@@ -10,7 +10,7 @@
 #include <wchar.h>
 #include "../../headerbank/mpir_token/mpir_token.h"
 
-mpir_token** parse_tokens_from_json(const char* json);
+mpir_token** parse_tokens_from_json(FILE* json);
 mpir_token** parse_tokens_from_json_file(const char* filename);
 
 #endif

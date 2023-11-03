@@ -444,6 +444,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     }
 
     /* Handle more complex tokenisation states (Token creation is handled in the functions, so do nothing) */
+    /* Similar style to alternative parsing, could potentially, add peek() commands here                   */
     else if
     (
          mpir_tokenise_comment_and_division(lxr) ||             /* ← Tokenises '//str' & '/'                */
