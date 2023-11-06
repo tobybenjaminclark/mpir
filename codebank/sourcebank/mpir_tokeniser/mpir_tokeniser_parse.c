@@ -38,7 +38,6 @@ mpir_token** parse_tokens_from_json(FILE* json) {
                 if (current == L'o') {
                     const wchar_t* found = wcsstr(target_string, L"oken count\" :");
                     if (found != NULL) {
-                        // Match found, do something
                         printf("Match found!\n");
                         state = 3;
                         continue;
