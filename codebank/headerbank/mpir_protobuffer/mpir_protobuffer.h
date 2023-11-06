@@ -14,9 +14,9 @@
 
 /* Macro to initialize a specific field within a struct instance */
 #define INIT_FIELD(struct_instance, field_name, value) \
-    do { \
+    ({ \
         (struct_instance)->field_name = value; \
-    } while (0)
+    })
 
 /* Macro to create a struct instance */
 #define CREATE_STRUCT(struct_type) \
