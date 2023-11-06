@@ -6,23 +6,23 @@
 
 #include "../../headerbank/mpir_protobuffer/mpir_protobuffer.h"
 
-int test() {
+void test() {
     /* Creating the mpir_token structure */
-    mpir_token* token = CREATE_STRUCT(mpir_token);
+    CREATE_STRUCT(mpir_token, tok);
 
     /* Setting example identifier */
     mpir_token_type typ = IDENTIFIER;
 
     /* Initializing field */
-    INIT_FIELD(token, type, typ);
+    INIT_FIELD(tok, type, typ);
 
     /* Test Print */
-    if (token != NULL) {
-        printf("type: %d\n", token->type);
-        free(token);
+    if (tok != NULL) {
+        printf("type: %d\n", tok->type);
+        free(tok);
     } else {
         printf("Failed to allocate memory for struct.\n");
     }
 
-    return 0;
+    return;
 }

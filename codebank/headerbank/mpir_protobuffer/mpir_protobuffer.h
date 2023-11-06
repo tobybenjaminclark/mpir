@@ -14,16 +14,11 @@
 
 /* Macro to initialize a specific field within a struct instance */
 #define INIT_FIELD(struct_instance, field_name, value) \
-    ({ \
         (struct_instance)->field_name = value; \
-    })
 
 /* Macro to create a struct instance */
-#define CREATE_STRUCT(struct_type) \
-    ({ \
-        struct_type* instance = (struct_type*)malloc(sizeof(struct_type)); \
-        instance; \
-    })
+#define CREATE_STRUCT(struct_type, instance_name) \
+        struct_type* instance_name = (struct_type*)malloc(sizeof(struct_type)); \
 
 /* Macro to create a struct instance and initialize a specific field */
 #define CREATE_AND_INIT_STRUCT(struct_type, field_name, value) \
@@ -35,6 +30,6 @@
         instance; \
     })
 
-int test();
+void test();
 
-#endif //MPIR_COMPILER_MPIR_PROTOBUFFER_H
+#endif
