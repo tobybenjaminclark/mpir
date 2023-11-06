@@ -8,12 +8,14 @@
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser.h"
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_write.h"
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_parse.h"
+#include "../headerbank/mpir_protobuffer/mpir_protobuffer.h"
 
 int main(int argc, char** argv)
 {
-    int a;
+    /*int a;
     a = mpir_tokenise("test.mpir");
 
-    (void)parse_tokens_from_json_file("output.txt");
+    (void)parse_tokens_from_json_file("output.txt");~*/
+    test();
     return 0;
 }
