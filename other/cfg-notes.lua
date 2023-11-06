@@ -169,3 +169,6 @@ set x as x + 1
 -- the only reald data-types should be tuple and float
 -- everything else can be derived (i think?)
 -- nullable data types too :) (saves union types!)
+
+-- Type rules
+-- if in a context x has type T then in that context, x has type T
