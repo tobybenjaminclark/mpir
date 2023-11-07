@@ -9,6 +9,8 @@ configure_file(codebank/databank/ascii.txt
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(codebank/databank/test.mpir
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(codebank/databank/protobuffer_templates/example.protobuf
+        ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 set(SOURCE_FILES
         codebank/sourcebank/main.c
