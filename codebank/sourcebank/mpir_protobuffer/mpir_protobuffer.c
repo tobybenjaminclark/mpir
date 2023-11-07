@@ -73,56 +73,56 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
     /* Allocate memory for template */
     (void)malloc(number_of_templates * sizeof(struct mpir_protobuffer_template));
 
-    while (!parsing_complete) {
-        switch (state) {
-            case AWAITING_STRUCTURE:
-                if((current_char = fgetwc(file)) != L's')break;
-                else if(current_char == WEOF) {mpir_fatal("mpir_protobuffer: couldnt parse file"); return 0;}
-                else state = PARSING_STRUCTURE;
+    while (!parsing_complete) { switch (state) {
+    case AWAITING_STRUCTURE:
+        wprintf(L"AWAITING STRUCTRURE!, currenht char is '%lc' \n", current_char);
+        current_char = fgetwc(file);
+        if(current_char != L's' && current_char != WEOF) break;
+        else if(current_char == WEOF){return 0;}
+        else state = PARSING_STRUCTURE;
 
-            case PARSING_STRUCTURE:
-                if(fgetwc(file) == L't' && fgetwc(file) == L'r' && fgetwc(file) == L'u' && fgetwc(file) == L'c'
-                && fgetwc(file) == L't' && fgetwc(file) == L'u' && fgetwc(file) == L'r' && fgetwc(file) == L'e')
+    case PARSING_STRUCTURE:
+        if(fgetwc(file) == L't' && fgetwc(file) == L'r' && fgetwc(file) == L'u' && fgetwc(file) == L'c'
+        && fgetwc(file) == L't' && fgetwc(file) == L'u' && fgetwc(file) == L'r' && fgetwc(file) == L'e')
+        {
+            current_char = fgetwc(file);
+            while(current_char == L' ' || current_char == L'\t') current_char = fgetwc(file);
+            while(iswalpha(current_char))
+            {
+                wprintf(L"Current character is %lc , Buffer is '%ls' \n", current_char, buffer);
+                if(buffer_index >= PB_BUFFER_SIZE - 1)
                 {
-                    current_char = fgetwc(file);
-                    while(current_char == L' ' || current_char == L'\t') current_char = fgetwc(file);
-                    while(iswalpha(current_char))
-                    {
-                        wprintf(L"Current character is %lc , Buffer is '%ls' \n", current_char, buffer);
-                        if(buffer_index >= PB_BUFFER_SIZE - 1)
-                        {
-                            mpir_fatal("mpir_protobuffer: exceeded buffer limit");
-                            return 0;
-                        }
-                        else
-                        {
-                            buffer[buffer_index] = current_char;
-                            (void)buffer_index++;
-                            buffer[buffer_index] = L'\0';
-                        }
-                        current_char = fgetwc(file);
-                    }
-                    identifier_count = 0;
-                    mpir_protobuffer_allocate_new_template(&templates, &number_of_templates);
-                    /* Check if memory allocation was successful before copying */
-                    if (templates[number_of_templates-1]->template_name != NULL)
-                    {
-                        buffer_index = 0;
-                        wprintf(L"type is %ls \n", buffer);
-                        wcscpy(templates[number_of_templates-1]->template_name, buffer);
-                        state = AWAITING_TYPE;
-                        break;
-                    } else {
-                        mpir_fatal("mpir_protocolbuffer: failed to copy structure name into struct.");
-                        return 0;
-                    }
+                    mpir_fatal("mpir_protobuffer: exceeded buffer limit");
+                    return 0;
                 }
                 else
                 {
-                    mpir_fatal("mpir_protocbuffer : failed to parse 'structure'");
-                    return 0;
+                    buffer[buffer_index] = current_char;
+                    (void)buffer_index++;
+                    buffer[buffer_index] = L'\0';
                 }
+                current_char = fgetwc(file);
+            }
+            identifier_count = 0;
+            mpir_protobuffer_allocate_new_template(&templates, &number_of_templates);
+            /* Check if memory allocation was successful before copying */
+            if (templates[number_of_templates-1]->template_name != NULL)
+            {
+                buffer_index = 0;
+                wprintf(L"type is %ls \n", buffer);
+                wcscpy(templates[number_of_templates-1]->template_name, buffer);
+                state = AWAITING_TYPE;
                 break;
+            } else {
+                mpir_fatal("mpir_protocolbuffer: failed to copy structure name into struct.");
+                return 0;
+            }
+        }
+        else
+        {
+            mpir_fatal("mpir_protocbuffer : failed to parse 'structure'");
+            return 0;
+        }
         case AWAITING_TYPE:
             current_char = fgetwc(file);
             while(!iswalpha(current_char)) current_char = fgetwc(file);
