@@ -188,7 +188,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 // Check if memory allocation was successful before copying
                 wprintf(L"identifier is %ls \n", buffer);
                 wcscpy(templates[number_of_templates-1]->identifiers[identifier_count], buffer);\
-                identifier_count++:
+                identifier_count++;
                 buffer_index = 0;
                 state = DETECT_IF_END;
                 return 1;
