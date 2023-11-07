@@ -42,8 +42,8 @@
 struct mpir_protobuffer_template
 {
     wchar_t template_name[128];
-    wchar_t* types[128];
-    wchar_t* identifiers[128];
+    wchar_t types[128][128];
+    wchar_t  identifiers[128][128];
 };
 
 typedef enum
