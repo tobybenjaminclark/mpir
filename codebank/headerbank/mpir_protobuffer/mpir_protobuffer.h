@@ -7,14 +7,14 @@
 #ifndef MPIR_COMPILER_MPIR_PROTOBUFFER_H
 #define MPIR_COMPILER_MPIR_PROTOBUFFER_H
 
+#include "../../headerbank/mpir_misc/mpir_warnings.h"
+#include "../../headerbank/mpir_token/mpir_token.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include <wchar.h>
 #include <stdbool.h>
-
-#include "../../headerbank/mpir_misc/mpir_warnings.h"
-#include "../../headerbank/mpir_token/mpir_token.h"
 
 /* Macro for protobuffer file not found error message */
 #define MPIR_PB_FNF "mpir_protobuffer: failed to open file %s"
