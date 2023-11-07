@@ -79,6 +79,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 if((current_char = fgetwc(file)) != L's')break;
                 else if(current_char == WEOF) {mpir_fatal("mpir_protobuffer: couldnt parse file"); return 0;}
                 else state = PARSING_STRUCTURE;
+
             case PARSING_STRUCTURE:
                 if(fgetwc(file) == L't' && fgetwc(file) == L'r' && fgetwc(file) == L'u' && fgetwc(file) == L'c'
                 && fgetwc(file) == L't' && fgetwc(file) == L'u' && fgetwc(file) == L'r' && fgetwc(file) == L'e')
@@ -216,6 +217,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
             mpir_error("mpir_protobuffer: parser in unexpected state");
             break;
     }; }
+    return 0;
 }
 
 void test() {
@@ -237,6 +239,6 @@ void test() {
     }
 
     mpir_parse_protobuffer_template("example.protobuf");
-
+    printf("done!");
     return;
 }
