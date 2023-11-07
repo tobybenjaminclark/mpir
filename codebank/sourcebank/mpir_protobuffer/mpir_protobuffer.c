@@ -31,14 +31,14 @@ int mpir_protobuffer_allocate_new_template(struct mpir_protobuffer_template*** t
 {
     /* Allocate memory for a new template */
     struct mpir_protobuffer_template* new_template = (struct mpir_protobuffer_template*)malloc(sizeof(struct mpir_protobuffer_template));
-
+    int template_count_index = 0;
     if (new_template != NULL)
     {
         /* Initialize the new template's members, if necessary */
         memset(new_template->template_name, L'\0', sizeof(new_template->template_name));
-        for (int i = 0; i < 128; ++i) {
-            memset(new_template->types[i], L'\0', sizeof(new_template->types[i]));
-            memset(new_template->identifiers[i], L'\0', sizeof(new_template->identifiers[i]));
+        for (template_count_index = 0; template_count_index < 128; ++template_count_index) {
+            memset(new_template->types[template_count_index], L'\0', sizeof(new_template->types[template_count_index]));
+            memset(new_template->identifiers[template_count_index], L'\0', sizeof(new_template->identifiers[template_count_index]));
         }
 
         /* Reallocate memory for the templates array to accommodate the new template */
@@ -210,6 +210,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 }
             }
             break;
+
 
         default:
             mpir_error("mpir_protobuffer: parser in unexpected state");
