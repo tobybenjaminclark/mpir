@@ -13,6 +13,7 @@
 #include <wchar.h>
 #include <stdbool.h>
 
+#include "../../headerbank/mpir_misc/mpir_warnings.h"
 #include "../../headerbank/mpir_token/mpir_token.h"
 
 /* Macro for protobuffer file not found error message */
