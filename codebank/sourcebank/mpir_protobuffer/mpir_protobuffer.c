@@ -123,6 +123,8 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
             mpir_fatal("mpir_protocbuffer : failed to parse 'structure'");
             return 0;
         }
+
+        /* Parser is awaiting type (<type> <identifier syntax) */
         case AWAITING_TYPE:
             current_char = fgetwc(file);
             while(!iswalpha(current_char)) current_char = fgetwc(file);
@@ -134,6 +136,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 return 0;
             }
 
+        /* Parser is parsing type (<type> <identifier syntax) */
         case PARSING_MEMBER_TYPE:
             while(iswalpha(current_char))
             {
@@ -159,6 +162,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
             state = AWAITING_IDENTIFIER;
             break;
 
+        /* Parser is awaiting identifier (<type> <identifier syntax) */
         case AWAITING_IDENTIFIER:
             current_char = fgetwc(file);
             while(!iswalpha(current_char) && !iswdigit(current_char) && current_char != L'_') current_char = fgetwc(file);
@@ -170,6 +174,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 return 0;
             }
 
+        /* Parser is parsing identifier (<type> <identifier syntax) */
         case PARSING_MEMBER_IDENTIFIER:
             while(iswalpha(current_char) || iswdigit(current_char) || current_char == L'_')
             {
