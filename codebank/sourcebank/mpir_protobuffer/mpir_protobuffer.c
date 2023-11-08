@@ -157,10 +157,11 @@ struct mpir_protobuffer_template** mpir_parse_protobuffer_template(const wchar_t
 
             /* Check if memory allocation was successful before copying */
             wprintf(L"type is %ls \n", buffer);
-            wcscpy(templates[number_of_templates-1]->types[0], buffer);
+            wcscpy(templates[number_of_templates-1]->types[identifier_count], buffer);
             buffer_index = 0;
             state = AWAITING_IDENTIFIER;
             break;
+
 
         /* Parser is awaiting identifier (<type> <identifier syntax) */
         case AWAITING_IDENTIFIER:
@@ -240,7 +241,6 @@ void display_protobuffer_templates(struct mpir_protobuffer_template** templates)
                 wprintf(L"  %ls     %ls \n", templates[template_index]->types[identifier_type_index], templates[template_index]->identifiers[identifier_type_index]);
             }
         }
-        wprintf(L"--------------------------------\n");
     }
 }
 
