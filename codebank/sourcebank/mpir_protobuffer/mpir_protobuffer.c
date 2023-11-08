@@ -58,7 +58,7 @@ int mpir_protobuffer_allocate_new_template(struct mpir_protobuffer_template*** t
     }
 }
 
-int mpir_parse_protobuffer_template(const wchar_t* file_path)
+struct mpir_protobuffer_template** mpir_parse_protobuffer_template(const wchar_t* file_path)
 {
     struct mpir_protobuffer_template** templates;
     mpir_protobuffer_template_parser_state state = AWAITING_STRUCTURE;  /* ← Current state of the template parser. */
@@ -78,7 +78,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
         wprintf(L"AWAITING STRUCTRURE!, currenht char is '%lc' \n", current_char);
         current_char = fgetwc(file);
         if(current_char != L's' && current_char != WEOF) break;
-        else if(current_char == WEOF){return 0;}
+        else if(current_char == WEOF){return templates;}
         else state = PARSING_STRUCTURE;
 
     case PARSING_STRUCTURE:
@@ -115,13 +115,13 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 break;
             } else {
                 mpir_fatal("mpir_protocolbuffer: failed to copy structure name into struct.");
-                return 0;
+                return NULL;
             }
         }
         else
         {
             mpir_fatal("mpir_protocbuffer : failed to parse 'structure'");
-            return 0;
+            return NULL;
         }
 
         /* Parser is awaiting type (<type> <identifier syntax) */
@@ -133,7 +133,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
             {
                 wprintf(L"CHARACTER WAS %lc \n", current_char);
                 mpir_fatal("mpir_protocolbuffer: error parsing member type");
-                return 0;
+                return NULL;
             }
 
         /* Parser is parsing type (<type> <identifier syntax) */
@@ -182,7 +182,7 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
                 if(buffer_index >= PB_BUFFER_SIZE - 1)
                 {
                     mpir_fatal("mpir_protobuffer: exceeded buffer limit");
-                    return 0;
+                    return NULL;
                 }
                 else
                 {
@@ -222,8 +222,27 @@ int mpir_parse_protobuffer_template(const wchar_t* file_path)
             mpir_error("mpir_protobuffer: parser in unexpected state");
             break;
     }; }
-    return 0;
 }
+
+void display_protobuffer_templates(struct mpir_protobuffer_template** templates)
+{
+    int num_templates = sizeof(templates) / sizeof(templates[0]);
+    int identifier_type_index = 0;
+    for (int i = 0; i < num_templates; ++i)
+    {
+        wprintf(L"Template Name: %ls\n", templates[i]->template_name);
+        identifier_type_index = 0;
+        for(identifier_type_index = 0; identifier_type_index < 128; identifier_type_index++)
+        {
+            if (wcslen(templates[i]->types[identifier_type_index]) > 0)
+            {
+                wprintf(L"  %ls     %ls \n", templates[i]->types[identifier_type_index], templates[i]->identifiers[identifier_type_index]);
+            }
+        }
+        wprintf(L"--------------------------------\n");
+    }
+}
+
 
 void test() {
     /* Creating the mpir_token structure */
@@ -243,7 +262,9 @@ void test() {
         printf("Failed to allocate memory for struct.\n");
     }
 
-    mpir_parse_protobuffer_template("example.protobuf");
+    struct mpir_protobuffer_template** templates;
+    templates = mpir_parse_protobuffer_template("example.protobuf");
+    display_protobuffer_templates(templates);
     printf("done!");
     return;
 }

@@ -57,9 +57,12 @@ typedef enum
     DETECT_IF_END
 } mpir_protobuffer_template_parser_state;
 
+
+
+void display_protobuffer_templates(struct mpir_protobuffer_template** templates);
 int mpir_protobuffer_allocate_new_template(struct mpir_protobuffer_template*** templates, int* number_of_templates);
 FILE* mpir_protobuffer_open_file(const char* file_path);
-int mpir_parse_protobuffer_template(const wchar_t* file_path);
+struct mpir_protobuffer_template** mpir_parse_protobuffer_template(const wchar_t* file_path);
 void test();
 
 #endif
