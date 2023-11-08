@@ -228,15 +228,16 @@ void display_protobuffer_templates(struct mpir_protobuffer_template** templates)
 {
     int num_templates = sizeof(templates) / sizeof(templates[0]);
     int identifier_type_index = 0;
-    for (int i = 0; i < num_templates; ++i)
+    int template_index = 0;
+    for (template_index = 0; template_index < num_templates; ++template_index)
     {
-        wprintf(L"Template Name: %ls\n", templates[i]->template_name);
+        wprintf(L"Template Name: %ls\n", templates[template_index]->template_name);
         identifier_type_index = 0;
         for(identifier_type_index = 0; identifier_type_index < 128; identifier_type_index++)
         {
-            if (wcslen(templates[i]->types[identifier_type_index]) > 0)
+            if (wcslen(templates[template_index]->types[identifier_type_index]) > 0)
             {
-                wprintf(L"  %ls     %ls \n", templates[i]->types[identifier_type_index], templates[i]->identifiers[identifier_type_index]);
+                wprintf(L"  %ls     %ls \n", templates[template_index]->types[identifier_type_index], templates[template_index]->identifiers[identifier_type_index]);
             }
         }
         wprintf(L"--------------------------------\n");
