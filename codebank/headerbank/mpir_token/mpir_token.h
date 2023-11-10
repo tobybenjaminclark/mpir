@@ -17,6 +17,14 @@
 
 typedef enum
 {
+    /* Operators */
+    operator_multiply,
+    operator_divide,
+    operator_sum,
+    operator_subtract,
+    operator_power,
+    open_bracket,
+    close_bracket,
     COMMENT,
     NUMERICAL_LITERAL,
     STRING_LITERAL,

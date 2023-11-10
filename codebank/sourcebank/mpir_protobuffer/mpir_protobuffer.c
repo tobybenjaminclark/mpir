@@ -82,7 +82,11 @@ struct mpir_protobuffer_template** mpir_parse_protobuffer_template(const wchar_t
         {
             return templates;
         }
-        else if(current_char == L's') state = PARSING_STRUCTURE;
+        else if(current_char == L's')
+        {
+            state = PARSING_STRUCTURE;
+            break;
+        }
         else break;
 
     case PARSING_STRUCTURE:
@@ -250,21 +254,21 @@ void display_protobuffer_templates(struct mpir_protobuffer_template** templates)
 
 void test() {
     /* Creating the mpir_token structure */
-    //CREATE_STRUCT(mpir_token, tok);
+    CREATE_STRUCT(mpir_token, tok);
 
     /* Setting example identifier */
-    //mpir_token_type typ = IDENTIFIER;
+    mpir_token_type typ = IDENTIFIER;
 
     /* Initializing field */
-    //INIT_FIELD(tok, type, typ);
+    INIT_FIELD(tok, type, typ);
 
-    /* Test Print
+    /* Test Print  */
     if (tok != NULL) {
         printf("type: %d\n", tok->type);
         free(tok);
     } else {
         printf("Failed to allocate memory for struct.\n");
-    }*/
+    }
 
     struct mpir_protobuffer_template** templates;
     templates = mpir_parse_protobuffer_template("example.protobuf");

@@ -50,10 +50,10 @@ doc_definitions             ::=         doc_definition | doc_definitions doc_def
 letters                     ::=         letter | letters letter
 docstring                   ::=         '`' letters '`'
 
-arithmetic_expression       ::=         term | arithmetic_expression '+' term | arithmetic_expression '-' term
-term                        ::=         factor | term '*' factor | term '/' factor
-factor                      ::=         '(' expression ')' | number | identifier | function_call
-function_call               ::=         function_name '(' argument_list ')'
+arithmetic_expression       ::=         term | arithmetic_expression operator_sum term | arithmetic_expression operator_subtract term
+term                        ::=         factor | term operator_multiply factor | term operator_divide factor
+factor                      ::=         open_bracket expression close_bracket | number | identifier | function_call
+function_call               ::=         function_name open_bracket argument_list close_bracket
 argument_list               ::=         expression | argument_list ',' expression
 number                      ::=         digit | ( number digit )
 
@@ -66,7 +66,7 @@ variable_declaration        ::=         "set " variable_identifier " as " arithm
 -- example (potentially) recursive definition list a: Int, b:listInt = [a, [b, NULL]]
 type_declaration            ::=         "typedef " type_identifier type_parameters "::" base_type_identifier
 type_parameter_declaration  ::=         "typedef " parameter ":" type_identifier optional_refinement
-optional_refinement         ::=         ("|" "{" refinement "}" "\n") | "\n"
+optional_refinement         ::=         ("|" open_brace refinement close_brace "\n") | "\n"
 refinement                  ::=         formula
 
 -- CFG to define propositional & predicate logic to be used to define explicit type
@@ -79,3 +79,14 @@ term                        ::=         constant | variable
 connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
 quantifier                  ::=         '∀' | '∃'
 constant                    ::=         literal
+
+-- Operators (These are tokens)
+operator_multiply           ::=         '*'
+operator_divide             ::=         '/'
+operator_sum                ::=         '+'
+operator_subtract           ::=         '-'
+operator_power              ::=         '^'
+open_bracket                ::=         '('
+close_bracket               ::=         ')'
+open_brace                  ::=         '{'
+close_brace                 ::=         '}'

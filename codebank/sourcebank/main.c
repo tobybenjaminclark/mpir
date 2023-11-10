@@ -12,10 +12,9 @@
 
 int main(int argc, char** argv)
 {
-    /*int a;
+    int a;
     a = mpir_tokenise("test.mpir");
 
-    (void)parse_tokens_from_json_file("output.txt");~*/
-    test();
+    (void)parse_tokens_from_json_file("output.txt");
     return 0;
 }
