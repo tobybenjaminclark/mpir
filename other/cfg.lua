@@ -72,7 +72,7 @@ refinement                  ::=         formula
 -- CFG to define propositional & predicate logic to be used to define explicit type
 -- refinements. E.g. x:Int | x > 5 ^ x < 10 (range of integers from 5 to 10)
 formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier ":" formula)
-primitive_formula           ::=         ( predicate '(' terms ')' ) | ( term comparator term )
+primitive_formula           ::=         ( predicate open_bracket terms close_bracket ) | ( term comparator term )
 comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
 terms                       ::=         (terms term) | term
 term                        ::=         constant | variable

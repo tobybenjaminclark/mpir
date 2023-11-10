@@ -30,7 +30,7 @@ L'\t', L' ', L'→', L'↔', L'∀', L'∃'}
 
 #define KEYWORD_LIST { L"suchthat", L"where", L"using", L"funcdef", L"typedef", L"let", L"set", L"in", L"as", L"end"}
 
-bool mpir_wchar_in_list(wchar_t target, const wchar_t *list);
+int mpir_wchar_in_list(wchar_t item, const wchar_t* list);
 
 int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype);
 

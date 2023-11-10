@@ -93,6 +93,26 @@ bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
 }
 
 
+/**
+ * @brief Check if a wchar_t is in a list.
+ *
+ * @param item The wchar_t to search for.
+ * @param list Pointer to the array of wchar_t.
+ * @param list_size Number of elements in the list.
+ * @return 1 if the item is found, 0 otherwise.
+ */
+int mpir_wchar_in_list(wchar_t item, const wchar_t* list)
+{
+    while (*list != L'\0')
+    {
+        if (item == *list) return 1;
+        ++list;
+    }
+    return 0;
+}
+
+
+
 
 /**
  * @brief Checks if a given character is an identifiable symbol for creating identifiers.
@@ -327,6 +347,45 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
 
 
 /**
+ * @brief Attempts to tokenise operators (+ - * / ^) from the input stream.
+ *
+ * This function tokenizes operators such as '+' '/' '-' '*' and '^' in the input stream. It verifies the
+ * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_operators(mpir_lexer* lexer)
+{
+    /* Guard Clause to reject if the next character is not a negation. */
+    if (mpir_wchar_in_list(lexer->peek(lexer), L"+/*-^")) NULL;
+    else return 0;
+
+    switch(lexer -> peek(lexer))
+    {
+        case(L'+'):
+            (void) mpir_lexer_tryconsume(lexer, '+');
+            return mpir_tokenise_process_buffer(lexer, operator_sum);
+        case(L'-'):
+            (void) mpir_lexer_tryconsume(lexer, '-');
+            return mpir_tokenise_process_buffer(lexer, operator_subtract);
+        case(L'/'):
+            (void) mpir_lexer_tryconsume(lexer, '/');
+            return mpir_tokenise_process_buffer(lexer, operator_divide);
+        case(L'*'):
+            (void) mpir_lexer_tryconsume(lexer, '*');
+            return mpir_tokenise_process_buffer(lexer, operator_multiply);
+        case(L'^'):
+            (void) mpir_lexer_tryconsume(lexer, '^');
+            return mpir_tokenise_process_buffer(lexer, operator_power);
+        default:
+            return 0;
+    }
+}
+
+
+
+/**
  * @brief Attempts to tokenise numerical literals e.g. (5, 32.1) in the input stream.
  *
  * This function processes the input stream as a numerical literal, recognizing both integers and decimals.
@@ -454,6 +513,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
          mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
          mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
          mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
+         mpir_tokenise_operators(lxr) ||                              /* ← Tokenises + - * / ^ operators          */
          mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */
     ) NULL;
 
