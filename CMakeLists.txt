@@ -39,6 +39,8 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_tokeniser/mpir_tokeniser_parse.h
         codebank/sourcebank/mpir_protobuffer/mpir_protobuffer.c
         codebank/headerbank/mpir_protobuffer/mpir_protobuffer.h
+        codebank/sourcebank/mpir_parser/mpir_parser.c
+        codebank/headerbank/mpir_parser/mpir_parser.h
 )
 
 # Create the main executable

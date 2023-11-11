@@ -33,12 +33,12 @@ import_directive            ::=         "using " "'" relative_file_path "'" "\n"
 
 -- function
 --                                      KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
-function_declaration        ::=         "func " function_identifier "::" function_io '\n'
+function_declaration        ::=         "funcdef" function_identifier "::" function_io '\n'
 function_identifier         ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol) '\n'
 function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )
 type_identifiers            ::=         None | type_identifier | type_identifiers ", " type_identifier
 
-function_definition         ::=         "func " function_identifier parameter_list 
+function_definition         ::=         "funcdef" function_identifier parameter_list
 parameter                   ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol)
 parameter_list              ::=         parameter | (parameter ", " parameter_list) 
 
@@ -64,8 +64,8 @@ variable_definition         ::=         "let " variable_identifier " as " type_i
 variable_declaration        ::=         "set " variable_identifier " as " arithmetic_expression
 
 -- example (potentially) recursive definition list a: Int, b:listInt = [a, [b, NULL]]
-type_declaration            ::=         "typedef " type_identifier type_parameters "::" base_type_identifier
-type_parameter_declaration  ::=         "typedef " parameter ":" type_identifier optional_refinement
+type_declaration            ::=         "typedef" type_identifier type_parameters "::" base_type_identifier
+type_parameter_declaration  ::=         "typedef" parameter ":" type_identifier optional_refinement
 optional_refinement         ::=         ("|" open_brace refinement close_brace "\n") | "\n"
 refinement                  ::=         formula
 
