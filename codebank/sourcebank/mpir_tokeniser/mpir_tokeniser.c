@@ -319,7 +319,11 @@ int mpir_tokenise_comparator(mpir_lexer* lexer)
 
     /* If the next character is equals consume it, regardless tokenise the buffer */
     (void) mpir_lexer_tryconsume(lexer, '=');
-    return mpir_tokenise_process_buffer(lexer, OPERATOR);
+    wprintf(L"COMPARATOR -> '%ls' \t", lexer->lexeme);
+    if(wcscmp(lexer->lexeme, L">") == 0) return mpir_tokenise_process_buffer(lexer, operator_gt);
+    if(wcscmp(lexer->lexeme, L">=") == 0) return mpir_tokenise_process_buffer(lexer, operator_gteq);
+    if(wcscmp(lexer->lexeme, L"<") == 0) return mpir_tokenise_process_buffer(lexer, operator_lt);
+    if(wcscmp(lexer->lexeme, L"<=") == 0) return mpir_tokenise_process_buffer(lexer, operator_lteq);
 }
 
 
@@ -347,7 +351,7 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
 
 
 /**
- * @brief Attempts to tokenise operators (+ - * / ^) from the input stream.
+ * @brief Attempts to tokenise operators (+ - * / ^ ∃ ∀) from the input stream.
  *
  * This function tokenizes operators such as '+' '/' '-' '*' and '^' in the input stream. It verifies the
  * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
@@ -378,6 +382,12 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
         case(L'^'):
             (void) mpir_lexer_tryconsume(lexer, '^');
             return mpir_tokenise_process_buffer(lexer, operator_power);
+        case(L'∃'):
+            (void) mpir_lexer_tryconsume(lexer, L'∃');
+            return mpir_tokenise_process_buffer(lexer, quantifier_existential);
+        case(L'∀'):
+            (void) mpir_lexer_tryconsume(lexer, L'∀');
+            return mpir_tokenise_process_buffer(lexer, quantifier_universal);
         default:
             return 0;
     }
@@ -550,7 +560,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
          mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
          mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
          mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
-         mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ operators          */
+         mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */
          mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */
     ) NULL;
 

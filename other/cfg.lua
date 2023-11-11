@@ -73,14 +73,20 @@ refinement                  ::=         formula
 -- refinements. E.g. x:Int | x > 5 ^ x < 10 (range of integers from 5 to 10)
 formula                     ::=         primitive_formula | ('¬' formula) | (formula connective formula) | (quantifier variable_identifier ":" formula)
 primitive_formula           ::=         ( predicate open_bracket terms close_bracket ) | ( term comparator term )
-comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
+comparator                  ::=         ( operator_gt | operator_lt | operator_lteq | operator_gteq | operator_eq )
 terms                       ::=         (terms term) | term
 term                        ::=         constant | variable
 connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
 quantifier                  ::=         universal_quantifier | existential_quantifier
-universal_quantifier        ::=         '∀'
-existential_quantifier      ::=         '∃'
 constant                    ::=         literal
+
+-- Boolean Comparator Operators
+operator_eq                 ::=         '==' | 'is'
+operator_gt                 ::=         '> '
+operator_lt                 ::=         '<'
+operator_gteq               ::=         '>='
+operator_lteq               ::=         '<='
+
 
 -- Operators (These are tokens)
 operator_multiply           ::=         '*'
@@ -88,6 +94,10 @@ operator_divide             ::=         '/'
 operator_sum                ::=         '+'
 operator_subtract           ::=         '-'
 operator_power              ::=         '^'
+universal_quantifier        ::=         '∀'
+existential_quantifier      ::=         '∃'
+
+-- Brackets
 open_bracket                ::=         '('
 close_bracket               ::=         ')'
 open_brace                  ::=         '{'
