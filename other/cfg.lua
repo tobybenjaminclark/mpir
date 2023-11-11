@@ -1,6 +1,7 @@
 
 -- Keywords
 "using"
+"return"
 "where:"
 "suchthat:"
 "funcdef"
@@ -38,9 +39,20 @@ function_identifier         ::=         ( letter | digit | symbol ) | ( identifi
 function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )
 type_identifiers            ::=         None | type_identifier | type_identifiers ", " type_identifier
 
-function_definition         ::=         "funcdef" function_identifier parameter_list
-parameter                   ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol)
-parameter_list              ::=         parameter | (parameter ", " parameter_list) 
+-- Function Definition (body)
+function_definition_header  ::=         function_identifier parameter_list ':' '\n'
+indentation                 ::=         ('\t' | '\t' indentation)
+function_definition_body    ::=         indentation line_of_code
+let_assignment              ::=         indentation 'let' identifier 'as' type_identifier '\n'
+set_assignment              ::=         indentation 'set' identifier 'as' expression '\n'
+function_call_line          ::=         indentation function_call '\n'
+trycast_line                ::=         indentation 'trycast' identifier 'into' identifier '\n'
+on_line                     ::=         indentation 'on' literal '->' 'do' STUFF
+
+-- Pattern Matching Syntax
+pattern_match               ::=         function_identifier parameter_list '=' expression
+pattern_parameter           ::=         (( letter | digit | symbol ) | (parameter letter | digit | symbol)) | literal
+pattern_parameter_list      ::=         pattern_parameter | (pattern_parameter ", " pattern_parameter_list)
 
 -- CFG Defines the syntax for declaring tag-associated documentatio section, starts with where:/suchthat:
 -- Followed by n statements of 'tag' 'identifier' as 'docstring', which can be formulated into documentation.
