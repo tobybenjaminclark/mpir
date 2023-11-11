@@ -13,7 +13,7 @@
 #include "../mpir_misc/mpir_warnings.h"
 
 #define TOKEN_NAME_MAP \
-    "OP_MULTIPLY", "OP_DIVIDE", "OP_SUM", "OP_SUBTRACT", "OP_POWER", "OPEN_BRACKET", "CLOSED_BRACKET", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
+    "OP_MULTIPLY", "OP_DIVIDE", "OP_SUM", "OP_SUBTRACT", "OP_POWER", "OPEN_BRACKET", "CLOSED_BRACKET", "OPEN_BRACE", "CLOSE_BRACE", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 typedef enum
 {
@@ -23,8 +23,14 @@ typedef enum
     operator_sum,
     operator_subtract,
     operator_power,
+
+    /* Brackets */
     open_bracket,
     close_bracket,
+    open_brace,
+    close_brace,
+
+
     COMMENT,
     NUMERICAL_LITERAL,
     STRING_LITERAL,

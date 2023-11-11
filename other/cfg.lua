@@ -77,7 +77,9 @@ comparator                  ::=         ( '>' | '<' | '<=' | '>=' | '==' | 'is')
 terms                       ::=         (terms term) | term
 term                        ::=         constant | variable
 connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
-quantifier                  ::=         '∀' | '∃'
+quantifier                  ::=         universal_quantifier | existential_quantifier
+universal_quantifier        ::=         '∀'
+existential_quantifier      ::=         '∃'
 constant                    ::=         literal
 
 -- Operators (These are tokens)
