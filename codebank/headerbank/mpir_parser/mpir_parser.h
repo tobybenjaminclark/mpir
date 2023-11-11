@@ -9,6 +9,10 @@
 
 #include "../../headerbank/mpir_token/mpir_token.h"
 
+typedef struct {
+    unsigned long int current_index;
+} mpir_parser;
+
 void mpir_parse(mpir_token** list_of_tokens);
 
 #endif
