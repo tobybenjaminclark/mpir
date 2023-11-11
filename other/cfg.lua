@@ -76,9 +76,16 @@ primitive_formula           ::=         ( predicate open_bracket terms close_bra
 comparator                  ::=         ( operator_gt | operator_lt | operator_lteq | operator_gteq | operator_eq )
 terms                       ::=         (terms term) | term
 term                        ::=         constant | variable
-connective                  ::=         ("->" | "→") | ∧ | ∨ | ("↔" | '<->')
+connective                  ::=         arrow | operator_and | operator_or | bidirectional_arrow
 quantifier                  ::=         universal_quantifier | existential_quantifier
 constant                    ::=         literal
+
+-- Connectives
+operator_arrow              ::=         "->" | "→"
+operator_bi_arrow           ::=         "↔" | '<->'
+operator_and                ::=         '^'
+operator_or                 ::=         '∨'
+
 
 -- Boolean Comparator Operators
 operator_eq                 ::=         '==' | 'is'

@@ -13,8 +13,8 @@
 #include "../mpir_misc/mpir_warnings.h"
 
 #define TOKEN_NAME_MAP \
-    "OP_MULTIPLY", "OP_DIVIDE", "OP_SUM", "OP_SUBTRACT", "OP_POWER", "OPEN_BRACKET", "CLOSED_BRACKET", "OPEN_BRACE", "CLOSE_BRACE", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", \
-    "OPERATOR_EQ", "OPERATOR_GT", "OPERATOR_LT", "OPERATOR_GTEQ", "OPERATOR_LTEQ", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
+    "OP_MULTIPLY", "OP_DIVIDE", "OP_SUM", "OP_SUBTRACT", "OP_POWER", "OP_EQUALS", "OPEN_BRACKET", "CLOSED_BRACKET", "OPEN_BRACE", "CLOSE_BRACE", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", \
+    "OPERATOR_EQ", "OPERATOR_GT", "OPERATOR_LT", "OPERATOR_GTEQ", "OPERATOR_LTEQ", "OPERATOR_ARROW", "OPERATOR_BI_ARROW", "OPERATOR_AND", "OPERATOR_OR", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 typedef enum
 {
@@ -24,6 +24,7 @@ typedef enum
     operator_sum,
     operator_subtract,
     operator_power,
+    operator_equals,
 
     /* Brackets */
     open_bracket,
@@ -41,6 +42,12 @@ typedef enum
     operator_lt,
     operator_gteq,
     operator_lteq,
+
+    /* Connective Operators */
+    operator_arrow,
+    operator_bi_arrow,
+    operator_and,
+    operator_or,
 
     COMMENT,
     NUMERICAL_LITERAL,

@@ -293,7 +293,8 @@ int mpir_tokenise_equality(mpir_lexer* lexer)
 
     /* If the next character is equals, consume it, tokenise regardless */
     (void) mpir_lexer_tryconsume(lexer, L'=');
-    return mpir_tokenise_process_buffer(lexer, KEYWORD);
+    if(wcscmp(lexer->lexeme, L"=") == 0) return mpir_tokenise_process_buffer(lexer, operator_equals);
+    if(wcscmp(lexer->lexeme, L"==") == 0) return mpir_tokenise_process_buffer(lexer, operator_eq);
 }
 
 
@@ -397,7 +398,7 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
 
 /**
  * @brief Attempts to tokenise brackets/braces ( ) { } from the input stream.
- *∂
+ *
  * This function tokenizes brackets such as ( ) { } in the input stream. It verifies the
  * presence of the bracket and consumes the appropriate characters. The negation operators are then tokenized.
  *
@@ -424,6 +425,42 @@ int mpir_tokenise_brackets(mpir_lexer* lexer)
         case(L'}'):
             (void) mpir_lexer_tryconsume(lexer, '}');
             return mpir_tokenise_process_buffer(lexer, close_brace);
+        default:
+            return 0;
+    }
+}
+
+
+
+/**
+ * @brief Attempts to tokenise boolean connectives from the input stream.
+ *∂
+ * This function tokenizes boolean connectives in the input stream. It verifies the
+ * presence of the connective and consumes the appropriate characters. The negation operators are then tokenized.
+ *
+ * @param lexer A pointer to the lexer structure that provides access to the input stream.
+ * @return 1 on success, 0 on failure.
+ */
+int mpir_tokenise_connectives(mpir_lexer* lexer)
+{
+    /* Guard Clause to reject if the next character is not a negation. */
+    if (mpir_wchar_in_list(lexer->peek(lexer), L"→↔^∨")) NULL;
+    else return 0;
+
+    switch(lexer -> peek(lexer))
+    {
+        case(L'→'):
+            (void) mpir_lexer_tryconsume(lexer, L'→');
+            return mpir_tokenise_process_buffer(lexer, operator_arrow);
+        case(L'↔'):
+            (void) mpir_lexer_tryconsume(lexer, L'↔');
+            return mpir_tokenise_process_buffer(lexer, operator_bi_arrow);
+        case(L'^'):
+            (void) mpir_lexer_tryconsume(lexer, L'^');
+            return mpir_tokenise_process_buffer(lexer, operator_and);
+        case(L'∨'):
+            (void) mpir_lexer_tryconsume(lexer, L'∨');
+            return mpir_tokenise_process_buffer(lexer, operator_or);
         default:
             return 0;
     }
@@ -482,7 +519,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
     /* If the next character is a '>', then the symbol is an arrow ( -> ) */
     if (mpir_lexer_tryconsume(lexer, L'>'))
     {
-        return mpir_tokenise_process_buffer(lexer, KEYWORD);
+        return mpir_tokenise_process_buffer(lexer, operator_arrow);
     }
 
     /* If the next character is a digit, then we know it's a negative numerical literal */
@@ -558,6 +595,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
          mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
          mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
          mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
+         mpir_tokenise_connectives(lxr) ||                            /* ← Tokenises boolean comparators          */
          mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
          mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
          mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */
