@@ -366,6 +366,9 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
     if (mpir_wchar_in_list(lexer->peek(lexer), L"+/*-^∃∀")) NULL;
     else return 0;
 
+    if(mpir_lexer_tryconsume(lexer, L'∃')) return mpir_tokenise_process_buffer(lexer, quantifier_existential);
+    if(mpir_lexer_tryconsume(lexer, L'∀')) return mpir_tokenise_process_buffer(lexer, quantifier_universal);
+
     switch(lexer -> peek(lexer))
     {
         case(L'+'):
@@ -383,12 +386,6 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
         case(L'^'):
             (void) mpir_lexer_tryconsume(lexer, '^');
             return mpir_tokenise_process_buffer(lexer, operator_power);
-        case(L'∃'):
-            (void) mpir_lexer_tryconsume(lexer, L'∃');
-            return mpir_tokenise_process_buffer(lexer, quantifier_existential);
-        case(L'∀'):
-            (void) mpir_lexer_tryconsume(lexer, L'∀');
-            return mpir_tokenise_process_buffer(lexer, quantifier_universal);
         default:
             return 0;
     }
