@@ -42,12 +42,15 @@ type_identifiers            ::=         None | type_identifier | type_identifier
 -- Function Definition (body)
 function_definition_header  ::=         function_identifier parameter_list ':' '\n'
 indentation                 ::=         ('\t' | '\t' indentation)
-function_definition_body    ::=         indentation line_of_code
-let_assignment              ::=         indentation 'let' identifier 'as' type_identifier '\n'
-set_assignment              ::=         indentation 'set' identifier 'as' expression '\n'
-function_call_line          ::=         indentation function_call '\n'
-trycast_line                ::=         indentation 'trycast' identifier 'into' identifier '\n'
-on_line                     ::=         indentation 'on' literal '->' 'do' STUFF
+identifiers                 ::=         identifier | ( identifier identifiers )
+function_definition_body    ::=         line_of_code
+let_assignment              ::=         'let' identifier 'as' type_identifier '\n'
+set_assignment              ::=         'set' identifier 'as' expression '\n'
+function_call_line          ::=         function_call '\n'
+inbuilt_call                ::=         identifier identifiers
+trycast_line                ::=         'trycast' identifier 'into' identifier '\n'
+on_line                     ::=         'on' literal '->' line_of_code
+selection_statement         ::=         'if' <BOOLEAN STATEMENT THING> '->'
 
 -- Pattern Matching Syntax
 pattern_match               ::=         function_identifier parameter_list '=' expression
