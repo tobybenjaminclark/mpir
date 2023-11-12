@@ -39,6 +39,7 @@ function_identifier         ::=         ( letter | digit | symbol ) | ( identifi
 function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )
 type_identifiers            ::=         None | type_identifier | type_identifiers ", " type_identifier
 
+
 -- Function Definition (body)
 function_definition_header  ::=         function_identifier parameter_list ':' '\n'
 indentation                 ::=         ('\t' | '\t' indentation)
@@ -52,10 +53,13 @@ trycast_line                ::=         'trycast' identifier 'into' identifier '
 on_line                     ::=         'on' literal '->' line_of_code
 selection_statement         ::=         'if' <BOOLEAN STATEMENT THING> '->'
 
+-- Supports do/on notation
+
 -- Pattern Matching Syntax
 pattern_match               ::=         function_identifier parameter_list '=' expression
 pattern_parameter           ::=         (( letter | digit | symbol ) | (parameter letter | digit | symbol)) | literal
 pattern_parameter_list      ::=         pattern_parameter | (pattern_parameter ", " pattern_parameter_list)
+
 
 -- CFG Defines the syntax for declaring tag-associated documentatio section, starts with where:/suchthat:
 -- Followed by n statements of 'tag' 'identifier' as 'docstring', which can be formulated into documentation.
