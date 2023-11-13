@@ -565,20 +565,24 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 
 
 
-int mpir_tokenise_space(mpir_lexer* lxr, int count)
+int mpir_tokenise_space(mpir_lexer* lexer, int count)
 {
 
-    if(mpir_lexer_tryconsume(lxr, L' '))
+    if(mpir_lexer_tryconsume(lexer, L' '))
     {
         if(count == 3)
         {
-            (void)mpir_tokenise_process_buffer(lxr, indentation);
-            return mpir_tokenise_space(lxr, 0);
+            (void)mpir_tokenise_process_buffer(lexer, indentation);
+            return mpir_tokenise_space(lexer, 0);
         }
-        else return mpir_tokenise_space(lxr, count + 1);
+        else return mpir_tokenise_space(lexer, count + 1);
     }
     else
     {
+        /* Reset the lexeme and it's associated attributes */
+        (void)memset(lexer->lexeme, 0, sizeof(wchar_t) * BUFFER_SIZE);
+        lexer->buffer_size = 0;
+        lexer->current_index = 0;
         return 1;
     }
 }
