@@ -17,7 +17,7 @@
     "{", "}", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "=", ">",    \
     "<", ">=", "<=", "→", "↔", "^",         \
     "∨", "using", "return", "suchthat", "funcdef", "typedef", "let", "set", "in", "as", "end", ",",   \
-    "____", "|", ":", "::", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
+    "____", "|", ":", "::", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 
 typedef enum

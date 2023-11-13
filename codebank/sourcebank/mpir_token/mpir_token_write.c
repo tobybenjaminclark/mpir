@@ -68,6 +68,7 @@ int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short
 
 int mpir_write_token_md(mpir_token* token, FILE* file)
 {
+
     /* The file must already be open. */
     if(file == NULL)
     {
@@ -76,22 +77,22 @@ int mpir_write_token_md(mpir_token* token, FILE* file)
     }
 
     /* Write data to the file in JSON-like format with specified indentation */
-    if(token->type == NEWLINE)
+    if((token->type) == NEWLINE)
     {
-        fprintf(file, "<br>\n");
+        fprintf(file, "<code><b>\\n</b></code><br>\n");
         return 0;
     }
-    if(token->type == IDENTIFIER)
+    else if((token->type) == IDENTIFIER)
     {
-        fwprintf(file, L"<code>(%ls)</code> ", token->lexeme);
+        fwprintf(file, L"<code>'%ls'</code> ", token->lexeme);
         return 0;
     }
-    if(token->type == indentation)
+    else if((token->type) == indentation)
     {
-        fprintf(file, "&nbsp;&nbsp;&nbsp;&nbsp;");
+        fprintf(file, "<code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code>");
         return 0;
     }
-    fprintf(file, "<code>%s</code> ", token_names[token->type]);
+    else fprintf(file, "<code>%s</code> ", token_names[token->type]);
 
     return 0;
 }

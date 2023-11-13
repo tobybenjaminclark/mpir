@@ -82,7 +82,6 @@ bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
     {
         /* Handle lexeme overflow (if it happens). */
         mpir_fatal("mpir_tokeniser: buffer overflow at index (%d).", lexer->current_index);
-        wprintf(L"\t\t lexeme was '%ls'", lexer->lexeme);
         return false;
     }
 
@@ -288,17 +287,14 @@ int mpir_tokenise_colon(mpir_lexer* lexer)
  */
 int mpir_tokenise_equality(mpir_lexer* lexer)
 {
-    wprintf(L"Trying to tokenise equality operator with '%lc' \n", lexer->peek(lexer));
     /* Guard Clause to reject if the next character is not '=' */
     if(mpir_lexer_tryconsume(lexer, L'=')) NULL;
     else return 0;
 
-    wprintf(L"Tokenizing equality operator with '%ls' \n", lexer->lexeme);
     /* If the next character is equals, consume it, tokenise regardless */
     (void) mpir_lexer_tryconsume(lexer, L'=');
     if(wcscmp(lexer->lexeme, L"=") == 0) return mpir_tokenise_process_buffer(lexer, operator_equals);
     if(wcscmp(lexer->lexeme, L"==") == 0) return mpir_tokenise_process_buffer(lexer, operator_eq);
-    else printf("FUCK!");
 }
 
 
@@ -324,7 +320,6 @@ int mpir_tokenise_comparator(mpir_lexer* lexer)
 
     /* If the next character is equals consume it, regardless tokenise the buffer */
     (void) mpir_lexer_tryconsume(lexer, '=');
-    wprintf(L"COMPARATOR -> '%ls' \t", lexer->lexeme);
     if(wcscmp(lexer->lexeme, L">") == 0) return mpir_tokenise_process_buffer(lexer, operator_gt);
     if(wcscmp(lexer->lexeme, L">=") == 0) return mpir_tokenise_process_buffer(lexer, operator_gteq);
     if(wcscmp(lexer->lexeme, L"<") == 0) return mpir_tokenise_process_buffer(lexer, operator_lt);
@@ -522,17 +517,18 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 mpir_token_type mpir_match_keyword(wchar_t* lexeme)
 {
     if(wcscmp(lexeme, L"using") == 0) return keyword_using;
-    if(wcscmp(lexeme, L"return") == 0) return keyword_return;
-    if(wcscmp(lexeme, L"where") == 0) return keyword_suchthat;
-    if(wcscmp(lexeme, L"suchthat") == 0) return keyword_suchthat;
-    if(wcscmp(lexeme, L"funcdef") == 0) return keyword_funcdef;
-    if(wcscmp(lexeme, L"typedef") == 0) return keyword_typedef;
-    if(wcscmp(lexeme, L"let") == 0) return keyword_let;
-    if(wcscmp(lexeme, L"set") == 0) return keyword_set;
-    if(wcscmp(lexeme, L"end") == 0) return keyword_end;
-    if(wcscmp(lexeme, L"in") == 0) return keyword_in;
-    if(wcscmp(lexeme, L"as") == 0) return keyword_as;
-    if(wcscmp(lexeme, L",") == 0) return keyword_comma;
+    else if(wcscmp(lexeme, L"return") == 0) return keyword_return;
+    else if(wcscmp(lexeme, L"where") == 0) return keyword_suchthat;
+    else if(wcscmp(lexeme, L"suchthat") == 0) return keyword_suchthat;
+    else if(wcscmp(lexeme, L"funcdef") == 0) return keyword_funcdef;
+    else if(wcscmp(lexeme, L"typedef") == 0) return keyword_typedef;
+    else if(wcscmp(lexeme, L"let") == 0) return keyword_let;
+    else if(wcscmp(lexeme, L"set") == 0) return keyword_set;
+    else if(wcscmp(lexeme, L"end") == 0) return keyword_end;
+    else if(wcscmp(lexeme, L"in") == 0) return keyword_in;
+    else if(wcscmp(lexeme, L"as") == 0) return keyword_as;
+    else if(wcscmp(lexeme, L",") == 0) return keyword_comma;
+    else return 0;
 }
 
 
@@ -559,8 +555,8 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
     }
 
     /* Determine the token type based on whether the lexeme matches to a keyword or not. */
-    mpir_token_type keyword_type = mpir_match_keyword(lexer->lexeme);
-    if(mpir_is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, keyword_type);
+    mpir_token_type keyword_type;
+    if(( keyword_type = mpir_match_keyword(lexer->lexeme)) != NULL) return mpir_tokenise_process_buffer(lexer, keyword_type);
     else return mpir_tokenise_process_buffer(lexer, IDENTIFIER);
 }
 
@@ -569,8 +565,9 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 int mpir_tokenise_space(mpir_lexer* lexer, int count)
 {
 
-    if(mpir_lexer_tryconsume(lexer, L' '))
+    if(lexer->peek(lexer) == L' ')
     {
+        (void)mpir_lexer_tryconsume(lexer, L' ');
         if(count == 3)
         {
             (void)mpir_tokenise_process_buffer(lexer, indentation);

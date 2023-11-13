@@ -28,7 +28,7 @@
 0x00B1, 0x00A7, '~', '`', '<', '>', ',', '.', '/', '?', ';', ':', '\\', '|', ']', '[', '{', '}', L'"', L'\'', L'\n', \
 L'\t', L' ', L'→', L'↔', L'∀', L'∃'}
 
-#define KEYWORD_LIST { L"suchthat", L"where", L"using", L"funcdef", L"typedef", L"let", L"set", L"in", L"as", L"end"}
+#define KEYWORD_LIST { L"suchthat", L"where", L"using", L"funcdef", L"typedef", L"let", L"set", L"in", L"as", L"end", L"return", L"show"}
 
 int mpir_wchar_in_list(wchar_t item, const wchar_t* list);
 
