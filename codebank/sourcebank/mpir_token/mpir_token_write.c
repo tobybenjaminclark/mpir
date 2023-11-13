@@ -63,3 +63,35 @@ int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short
 
     return 0;
 }
+
+
+
+int mpir_write_token_md(mpir_token* token, FILE* file)
+{
+    /* The file must already be open. */
+    if(file == NULL)
+    {
+        fprintf(stderr, "Error: Unable to write token to file.\n");
+        return 1;
+    }
+
+    /* Write data to the file in JSON-like format with specified indentation */
+    if(token->type == NEWLINE)
+    {
+        fprintf(file, "<br>\n");
+        return 0;
+    }
+    if(token->type == IDENTIFIER)
+    {
+        fwprintf(file, L"<code>(%ls)</code> ", token->lexeme);
+        return 0;
+    }
+    if(token->type == indentation)
+    {
+        fprintf(file, "&nbsp;&nbsp;&nbsp;&nbsp;");
+        return 0;
+    }
+    fprintf(file, "<code>%s</code> ", token_names[token->type]);
+
+    return 0;
+}

@@ -81,7 +81,8 @@ bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
     if (lexer->current_index >= BUFFER_SIZE - 1)
     {
         /* Handle lexeme overflow (if it happens). */
-        mpir_fatal("mpir_tokeniser: buffer overflow at index (%d)", lexer->current_index);
+        mpir_fatal("mpir_tokeniser: buffer overflow at index (%d).", lexer->current_index);
+        wprintf(L"\t\t lexeme was '%ls'", lexer->lexeme);
         return false;
     }
 
@@ -509,10 +510,10 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
         return mpir_tokenise_process_buffer(lexer, operator_arrow);
     }
 
-    /* If the next character is a digit, then we know it's a negative numerical literal */
+        /* If the next character is a digit, then we know it's a negative numerical literal */
     else if(iswdigit(lexer->peek(lexer))) return mpir_tokenise_numerical_literal(lexer);
 
-    /* If it's not a digit or a '>', then it's a syntactic error */
+        /* If it's not a digit or a '>', then it's a syntactic error */
     else return ERROR_UNEXPECTED_CHARACTER;
 }
 
@@ -609,7 +610,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     if (lxr->peek(lxr) == L' ') (void)mpir_tokenise_space(lxr, 0);
     if (mpir_lexer_tryconsume(lxr, L'|')) mpir_tokenise_process_buffer(lxr, pipe);
 
-    /* If a newline character \n is detected, tokenise it */
+        /* If a newline character \n is detected, tokenise it */
     else if (lxr->peek(lxr) == L'\n')
     {
         mpir_lexer_tryconsume(lxr, L'\n');
@@ -619,24 +620,24 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
     else if(mpir_lexer_tryconsume(lxr, L',')) mpir_tokenise_process_buffer(lxr, keyword_comma);
     else if(mpir_lexer_tryconsume(lxr, L'\t')) mpir_tokenise_process_buffer(lxr, indentation);
 
-    /* Handle more complex tokenisation states (Token creation is handled in the functions, so do nothing) */
-    /* Similar style to alternative parsing, could potentially, add peek() commands here                   */
+        /* Handle more complex tokenisation states (Token creation is handled in the functions, so do nothing) */
+        /* Similar style to alternative parsing, could potentially, add peek() commands here                   */
     else if
-    (
-         mpir_tokenise_comment_and_division(lxr) ||             /* ← Tokenises '//str' & '/'                */
-         mpir_tokenise_string_literal(lxr) ||                   /* ← Tokenises 'str' & "str" literals       */
-         mpir_tokenise_colon(lxr) ||                            /* ← Tokenises colon operators ':'/'::'     */
-         mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
-         mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
-         mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
-         mpir_tokenise_connectives(lxr) ||                      /* ← Tokenises boolean comparators          */
-         mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
-         mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
-         mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */
-         mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */
-    ) NULL;
+            (
+            mpir_tokenise_comment_and_division(lxr) ||             /* ← Tokenises '//str' & '/'                */
+            mpir_tokenise_string_literal(lxr) ||                   /* ← Tokenises 'str' & "str" literals       */
+            mpir_tokenise_colon(lxr) ||                            /* ← Tokenises colon operators ':'/'::'     */
+            mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
+            mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
+            mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
+            mpir_tokenise_connectives(lxr) ||                      /* ← Tokenises boolean comparators          */
+            mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
+            mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
+            mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */
+            mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */
+            ) NULL;
 
-    /* Handle special symbols */
+        /* Handle special symbols */
     else if (!mpir_is_identifiable_char(lxr->peek(lxr)))
     {
         /* Consume character and tokenize as keyword */
@@ -644,7 +645,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
         mpir_tokenise_process_buffer(lxr, KEYWORD);
     }
 
-    /* Error case, return 0 (Failure), else return 1 (success) */
+        /* Error case, return 0 (Failure), else return 1 (success) */
     else return 0;
     return 1;
 }
@@ -652,10 +653,10 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
 
 
 /* Needs better integration with compiler flags, doxygen not written yet. */
-int mpir_tokenise(const char* file_path)
+int mpir_tokenise(const char* file_path, char* output_path)
 {
     mpir_lexer *lexer;           /* ← Instance of the lexer we're using, stores all associated data */
-    int lexification_fail; /* ← Becomes 1 if the lexer fails to tokenise something            */
+    int lexification_fail;      /* ← Becomes 1 if the lexer fails to tokenise something            */
 
     /* Instantiate a lexer instance, and instruct it to read from the filepath. */
     lexer = mpir_lexer_create(file_path);
@@ -663,7 +664,7 @@ int mpir_tokenise(const char* file_path)
 
     /* Tokenise until WEOF is met, then write the tokens to the file if it didn't fail. */
     while (lexer->peek(lexer) != WEOF) if((lexification_fail = !mpir_tokenise_base_state(lexer))) break; else NULL;
-    if(!lexification_fail) (void)mpir_tokeniser_write(lexer, "output.txt");
+    if(!lexification_fail) (void)mpir_tokeniser_write(lexer, output_path);
 
     /* Free the lexer regardless, then return whether the tokenisation worked */
     (void)mpir_lexer_free(lexer);

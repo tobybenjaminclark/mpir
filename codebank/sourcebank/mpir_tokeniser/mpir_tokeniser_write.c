@@ -23,20 +23,15 @@ int mpir_tokeniser_write(mpir_lexer* lexer, const char* file_path)
         return 1;
     }
 
-    /* Write the contents of the file in JSON-style notation */
-    fprintf(file, "%*stokens : {\n", (0), "");
-    fprintf(file, "%*s\"token_count\": %ld,\n", (1 * 4) + 4, "", lexer->token_count);
-    fprintf(file, "%*s\"token_list\": [\n", (1 * 4) + 4, "");
+    fwprintf(file, L"<blockquote>", file);
     for(token_index = 0; token_index < lexer -> token_count; token_index++)
     {
         /* Write the current token to the file, if this fails, exit with a failure code */
         current_token = lexer->tokens[token_index];
-        add_comma = token_index == (lexer->token_count - 1) ? 0 : 1;
-        writing_failed = mpir_write_token(current_token, file, 4, add_comma);
+        writing_failed = mpir_write_token_md(current_token, file);
         if(writing_failed){return 1;}
     }
-    fprintf(file, "%*s]\n", (1 * 4) + 4, "");
-    fprintf(file, "%*s}\n", (0), "");
+    fwprintf(file, L"</blockquote>", file);
 
     /* Close the file & return */
     fclose(file);

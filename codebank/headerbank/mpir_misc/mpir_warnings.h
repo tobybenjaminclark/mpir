@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 /** @brief Prefix for warning messages in MPIR_Compiler. */
 #define WARNING_PREFIX "MPIR_Compiler -> Warning :: "

@@ -42,8 +42,6 @@ int mpir_is_keyword(const wchar_t* target);
 
 bool mpir_lexer_consume(mpir_lexer* lexer);
 
-int mpir_tokenise(const char* file_path);
-
 /* Tokenises division and comments ( / and //str ) */
 int mpir_tokenise_comment_and_division(mpir_lexer* lexer);
 
@@ -70,5 +68,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer);
 int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer);
 
 int mpir_tokenise_base_state(mpir_lexer* lxr);
+
+int mpir_tokenise(const char* file_path, char* output_path);
 
 #endif

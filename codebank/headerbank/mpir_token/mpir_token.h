@@ -13,10 +13,10 @@
 #include "../mpir_misc/mpir_warnings.h"
 
 #define TOKEN_NAME_MAP \
-    "OP_MULTIPLY", "OP_DIVIDE", "OP_SUM", "OP_SUBTRACT", "OP_POWER", "OP_EQUALS", "OPEN_BRACKET", "CLOSED_BRACKET", \
-    "OPEN_BRACE", "CLOSE_BRACE", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "OPERATOR_EQ", "OPERATOR_GT",    \
-    "OPERATOR_LT", "OPERATOR_GTEQ", "OPERATOR_LTEQ", "OPERATOR_ARROW", "OPERATOR_BI_ARROW", "OPERATOR_AND",         \
-    "OPERATOR_OR", "USING", "RETURN", "SUCHTHAT", "FUNCDEF", "TYPEDEF", "LET", "SET", "IN", "AS", "END", "COMMA",   \
+    "*", "/", "+", "-", "^", "=", "(", ")", \
+    "{", "}", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "=", ">",    \
+    "<", ">=", "<=", "→", "↔", "^",         \
+    "∨", "using", "return", "suchthat", "funcdef", "typedef", "let", "set", "in", "as", "end", ",",   \
     "____", "|", ":", "::", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "OPERATOR", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 
@@ -75,7 +75,6 @@ typedef enum
     COMMENT,
     NUMERICAL_LITERAL,
     STRING_LITERAL,
-    OPERATOR,
     IDENTIFIER,
     KEYWORD,
     NEWLINE
