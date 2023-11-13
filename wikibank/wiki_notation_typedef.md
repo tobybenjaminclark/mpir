@@ -29,3 +29,8 @@ Refinements on types are expressed using `propositional`/`predicate` notation, m
 
 > `typedef` `PositiveInteger` `i` `::` `Int`<br>
   `typedef` `i` `:` `Int` `{` `∀i : i > 0` `}`
+
+-- Recursive Types
+-- Inductive Types
+-- Do recursive types
+-- Working compiler by december

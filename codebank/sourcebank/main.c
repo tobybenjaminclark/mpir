@@ -12,6 +12,14 @@
 
 int main(int argc, char** argv)
 {
+    const char* token_names[] = { TOKEN_NAME_MAP };
+    int x = 0;
+    size_t n = sizeof(token_names)/sizeof(token_names[0]);
+    for(x = 0; x < n; x++)
+    {
+        printf("ID: %d CONTENTS: %s \n", x, token_names[x]);
+    }
+
     int a;
     a = mpir_tokenise("test.mpir");
 

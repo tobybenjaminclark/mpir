@@ -42,12 +42,24 @@ int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short
     }
 
     /* Write data to the file in JSON-like format with specified indentation */
-    fprintf(file, "%*s{\n", (indentation*4), "");
-    fprintf(file, "%*s\"type\": %s,\n", (indentation*4) + 4, "", token_names[token->type]);
-    fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", (indentation*4) + 4, "", token->lexeme);
-    fprintf(file, "%*s\"line_index\": %lu,\n", (indentation*4) + 4, "", token->line_index);
-    fprintf(file, "%*s\"column_index\": %lu\n", (indentation*4) + 4, "", token->column_index);
-    fprintf(file, "%*s}%s\n", (indentation*4), "", (add_comma) ? "," : "");
+    //fprintf(file, "%*s{\n", (indentation*4), "");
+    //fprintf(file, "%*s\"type\": %s,\n", (indentation*4) + 4, "", token_names[token->type]);
+    if(token->type == NEWLINE)
+    {
+        fprintf(file, "\\n\n");
+        return 0;
+    }
+    if(token->type == IDENTIFIER)
+    {
+        fwprintf(file, L"%ls ", token->lexeme);
+        return 0;
+    }
+    fprintf(file, "%s ", token_names[token->type]);
+
+    //fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", (indentation*4) + 4, "", token->lexeme);
+    //fprintf(file, "%*s\"line_index\": %lu,\n", (indentation*4) + 4, "", token->line_index);
+    //fprintf(file, "%*s\"column_index\": %lu\n", (indentation*4) + 4, "", token->column_index);
+    //fprintf(file, "%*s}%s\n", (indentation*4), "", (add_comma) ? "," : "");
 
     return 0;
 }

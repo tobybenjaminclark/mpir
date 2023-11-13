@@ -32,12 +32,11 @@ lines_of_code               ::=         line_of_code | (line_of_code lines_of_co
 
 import_directive            ::=         "using " "'" relative_file_path "'" "\n"
 
--- function
---                                      KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
+-- function KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
 function_declaration        ::=         "funcdef" function_identifier "::" function_io '\n'
 function_identifier         ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol) '\n'
 function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )
-type_identifiers            ::=         None | type_identifier | type_identifiers ", " type_identifier
+type_identifiers            ::=         None | type_identifier | type_identifiers comma type_identifier
 
 
 -- Function Definition (body)
@@ -54,11 +53,10 @@ on_line                     ::=         'on' literal '->' line_of_code
 selection_statement         ::=         'if' <BOOLEAN STATEMENT THING> '->'
 
 -- Supports do/on notation
-
 -- Pattern Matching Syntax
 pattern_match               ::=         function_identifier parameter_list '=' expression
 pattern_parameter           ::=         (( letter | digit | symbol ) | (parameter letter | digit | symbol)) | literal
-pattern_parameter_list      ::=         pattern_parameter | (pattern_parameter ", " pattern_parameter_list)
+pattern_parameter_list      ::=         pattern_parameter | (pattern_parameter comma pattern_parameter_list)
 
 
 -- CFG Defines the syntax for declaring tag-associated documentatio section, starts with where:/suchthat:
@@ -69,12 +67,16 @@ doc_definitions             ::=         doc_definition | doc_definitions doc_def
 letters                     ::=         letter | letters letter
 docstring                   ::=         '`' letters '`'
 
+
+
 arithmetic_expression       ::=         term | arithmetic_expression operator_sum term | arithmetic_expression operator_subtract term
 term                        ::=         factor | term operator_multiply factor | term operator_divide factor
 factor                      ::=         open_bracket expression close_bracket | number | identifier | function_call
 function_call               ::=         function_name open_bracket argument_list close_bracket
-argument_list               ::=         expression | argument_list ',' expression
+argument_list               ::=         expression | argument_list comma expression
 number                      ::=         digit | ( number digit )
+
+
 
 variable_identifier         ::=         ( letter | digit ) | ( variable_identifier letter | digit )
 type_identifier             ::=         ( letter | digit ) | ( type_identifier letter | digit)
@@ -128,3 +130,9 @@ open_bracket                ::=         '('
 close_bracket               ::=         ')'
 open_brace                  ::=         '{'
 close_brace                 ::=         '}'
+
+-- Comma
+comma                       ::=         ','
+pipe                        ::=         '|'
+colon                       ::=         ':'
+double_colon                ::=         '::'

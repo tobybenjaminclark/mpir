@@ -206,7 +206,7 @@ int mpir_tokenise_comment_and_division(mpir_lexer* lexer)
 
     /* If the next character is '/', continue, if not then tokenise as the '/' operator. */
     if (mpir_lexer_tryconsume(lexer, '/')) NULL;
-    else return mpir_tokenise_process_buffer(lexer, OPERATOR);
+    else return mpir_tokenise_process_buffer(lexer, operator_divide);
 
     /* If it is a code comment, continue consuming characters until the end of the file or a new line character. */
     while(lexer->peek(lexer) != L'\n' && lexer->peek(lexer) != WEOF)
@@ -270,8 +270,8 @@ int mpir_tokenise_colon(mpir_lexer* lexer)
     if(mpir_lexer_tryconsume(lexer, L':')) NULL; else return 0;
 
     /* If there is another colon, consume it, then tokenise regardless */
-    (void) mpir_lexer_tryconsume(lexer, L':');
-    return mpir_tokenise_process_buffer(lexer, KEYWORD);
+    if (mpir_lexer_tryconsume(lexer, L':')) return mpir_tokenise_process_buffer(lexer, double_colon);
+    else return mpir_tokenise_process_buffer(lexer, colon);
 }
 
 
@@ -287,14 +287,17 @@ int mpir_tokenise_colon(mpir_lexer* lexer)
  */
 int mpir_tokenise_equality(mpir_lexer* lexer)
 {
+    wprintf(L"Trying to tokenise equality operator with '%lc' \n", lexer->peek(lexer));
     /* Guard Clause to reject if the next character is not '=' */
     if(mpir_lexer_tryconsume(lexer, L'=')) NULL;
     else return 0;
 
+    wprintf(L"Tokenizing equality operator with '%ls' \n", lexer->lexeme);
     /* If the next character is equals, consume it, tokenise regardless */
     (void) mpir_lexer_tryconsume(lexer, L'=');
     if(wcscmp(lexer->lexeme, L"=") == 0) return mpir_tokenise_process_buffer(lexer, operator_equals);
     if(wcscmp(lexer->lexeme, L"==") == 0) return mpir_tokenise_process_buffer(lexer, operator_eq);
+    else printf("FUCK!");
 }
 
 
@@ -345,8 +348,8 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
     else return 0;
 
     /* If the next character is an equal sign, then consume it, tokenise as operator regardless. */
-    (void) mpir_lexer_tryconsume(lexer, '=');
-    return mpir_tokenise_process_buffer(lexer, OPERATOR);
+    (void) mpir_lexer_tryconsume(lexer, L'=');
+    return mpir_tokenise_process_buffer(lexer, operator_equals);
 }
 
 
@@ -515,6 +518,24 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 
 
 
+mpir_token_type mpir_match_keyword(wchar_t* lexeme)
+{
+    if(wcscmp(lexeme, L"using") == 0) return keyword_using;
+    if(wcscmp(lexeme, L"return") == 0) return keyword_return;
+    if(wcscmp(lexeme, L"where") == 0) return keyword_suchthat;
+    if(wcscmp(lexeme, L"suchthat") == 0) return keyword_suchthat;
+    if(wcscmp(lexeme, L"funcdef") == 0) return keyword_funcdef;
+    if(wcscmp(lexeme, L"typedef") == 0) return keyword_typedef;
+    if(wcscmp(lexeme, L"let") == 0) return keyword_let;
+    if(wcscmp(lexeme, L"set") == 0) return keyword_set;
+    if(wcscmp(lexeme, L"end") == 0) return keyword_end;
+    if(wcscmp(lexeme, L"in") == 0) return keyword_in;
+    if(wcscmp(lexeme, L"as") == 0) return keyword_as;
+    if(wcscmp(lexeme, L",") == 0) return keyword_comma;
+}
+
+
+
 /**
  * @brief Attempts to tokenise a keyword/identifier from the input stream.
  *
@@ -537,8 +558,29 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
     }
 
     /* Determine the token type based on whether the lexeme matches to a keyword or not. */
-    if(mpir_is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, KEYWORD);
+    mpir_token_type keyword_type = mpir_match_keyword(lexer->lexeme);
+    if(mpir_is_keyword(lexer->lexeme)) return mpir_tokenise_process_buffer(lexer, keyword_type);
     else return mpir_tokenise_process_buffer(lexer, IDENTIFIER);
+}
+
+
+
+int mpir_tokenise_space(mpir_lexer* lxr, int count)
+{
+
+    if(mpir_lexer_tryconsume(lxr, L' '))
+    {
+        if(count == 3)
+        {
+            (void)mpir_tokenise_process_buffer(lxr, indentation);
+            return mpir_tokenise_space(lxr, 0);
+        }
+        else return mpir_tokenise_space(lxr, count + 1);
+    }
+    else
+    {
+        return 1;
+    }
 }
 
 
@@ -560,7 +602,8 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer)
 int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
     /* If a space is detected, void/ignore it */
-    if (lxr->peek(lxr) == L' ') (void)lxr->get(lxr);
+    if (lxr->peek(lxr) == L' ') (void)mpir_tokenise_space(lxr, 0);
+    if (mpir_lexer_tryconsume(lxr, L'|')) mpir_tokenise_process_buffer(lxr, pipe);
 
     /* If a newline character \n is detected, tokenise it */
     else if (lxr->peek(lxr) == L'\n')
@@ -568,6 +611,9 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
         mpir_lexer_tryconsume(lxr, L'\n');
         mpir_tokenise_process_buffer(lxr, NEWLINE);
     }
+
+    else if(mpir_lexer_tryconsume(lxr, L',')) mpir_tokenise_process_buffer(lxr, keyword_comma);
+    else if(mpir_lexer_tryconsume(lxr, L'\t')) mpir_tokenise_process_buffer(lxr, indentation);
 
     /* Handle more complex tokenisation states (Token creation is handled in the functions, so do nothing) */
     /* Similar style to alternative parsing, could potentially, add peek() commands here                   */
@@ -579,7 +625,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
          mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
          mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
          mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
-         mpir_tokenise_connectives(lxr) ||                            /* ← Tokenises boolean comparators          */
+         mpir_tokenise_connectives(lxr) ||                      /* ← Tokenises boolean comparators          */
          mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
          mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
          mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */

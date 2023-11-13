@@ -4,9 +4,9 @@ using "anothertest.mpir"
 funcdef divide :: TypeInt, TypeInt → TypeInt
 funcdef divide 🔥, y = 🔥 / y
 suchthat:
-    |   doc 🔥 as "First Integer"
-    |   doc y as "Second Integer"
-    |   doc as "Function to divide 2 numbers"
+    |    doc 🔥 as "First Integer"
+    |    doc y as "Second Integer"
+    |    doc as "Function to divide 2 numbers"
 end
 
 funcdef multiply_show :: TypeInt, TypeInt  → TypeInt
@@ -16,10 +16,10 @@ funcdef multiply_show x y
     show z
     return z
 suchthat:
-    |   doc x as "First Integer"
-    |   doc y as "Second Integer"
-    |   doc z as "Product of X & Y"
-    |   doc as "Function to show product of 2 integers"
+    |    doc x as "First Integer"
+    |    doc y as "Second Integer"
+    |    doc z as "Product of X & Y"
+    |    doc as "Function to show product of 2 integers"
 end
 
 typedef NewInt a :: Int
