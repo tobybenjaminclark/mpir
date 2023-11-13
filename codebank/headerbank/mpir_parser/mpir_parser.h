@@ -8,11 +8,26 @@
 #define MPIR_COMPILER_MPIR_PARSER_H
 
 #include "../../headerbank/mpir_token/mpir_token.h"
+#include "../../headerbank/mpir_token/mpir_token_write.h"
+#include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
 
-typedef struct {
-    unsigned long int current_index;
-} mpir_parser;
 
-void mpir_parse(mpir_token** list_of_tokens);
+struct mpir_parser{
+    unsigned long int token_count;
+    unsigned long int token_index;
+    mpir_token** tokens;
+
+    /* Function Pointers */
+    mpir_token* (*get)(struct mpir_parser *lexer);
+    mpir_token* (*peek)(struct mpir_parser *lexer);
+};
+
+typedef struct mpir_parser mpir_parser;
+
+mpir_token* mpir_parser_peek(mpir_parser* parser);
+mpir_token* mpir_parser_get(mpir_parser* parser);
+
+mpir_parser* create_parser(mpir_lexer* lexer);
+void mpir_parse(mpir_parser* parser);
 
 #endif

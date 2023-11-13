@@ -650,7 +650,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
 
 
 /* Needs better integration with compiler flags, doxygen not written yet. */
-int mpir_tokenise(const char* file_path, char* output_path)
+mpir_lexer* mpir_tokenise(const char* file_path, char* output_path)
 {
     mpir_lexer *lexer;           /* ← Instance of the lexer we're using, stores all associated data */
     int lexification_fail;      /* ← Becomes 1 if the lexer fails to tokenise something            */
@@ -663,8 +663,5 @@ int mpir_tokenise(const char* file_path, char* output_path)
     while (lexer->peek(lexer) != WEOF) if((lexification_fail = !mpir_tokenise_base_state(lexer))) break; else NULL;
     if(!lexification_fail) (void)mpir_tokeniser_write(lexer, output_path);
 
-    /* Free the lexer regardless, then return whether the tokenisation worked */
-    (void)mpir_lexer_free(lexer);
-
-    return lexification_fail;
+    return lexer;
 }

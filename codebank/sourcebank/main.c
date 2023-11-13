@@ -9,11 +9,14 @@
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_write.h"
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_parse.h"
 #include "../headerbank/mpir_protobuffer/mpir_protobuffer.h"
+#include "../headerbank/mpir_parser/mpir_parser.h"
 
 int main(int argc, char** argv)
 {
-    int a;
+    mpir_lexer* a;
     a = mpir_tokenise("test.mpir", "test.md");
-
+    mpir_parser* psr = create_parser(a->tokens);
+    mpir_parse(psr);
+    (void)mpir_lexer_free(a);
     return 0;
 }

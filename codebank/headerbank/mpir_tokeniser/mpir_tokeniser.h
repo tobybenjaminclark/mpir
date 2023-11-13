@@ -69,6 +69,6 @@ int mpir_tokenise_identifiers_and_keywords(mpir_lexer* lexer);
 
 int mpir_tokenise_base_state(mpir_lexer* lxr);
 
-int mpir_tokenise(const char* file_path, char* output_path);
+mpir_lexer* mpir_tokenise(const char* file_path, char* output_path);
 
 #endif
