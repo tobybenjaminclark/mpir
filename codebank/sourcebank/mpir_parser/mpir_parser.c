@@ -50,16 +50,17 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     }
 
     /* Copy tokens from lexer to parser */
-    for (unsigned long int i = 0; i < lexer->token_count; ++i)
+    unsigned long int tok_index = 0;
+    for (tok_index = 0; tok_index < lexer->token_count; ++tok_index)
     {
         /* Allocate memory for the new token in the parser */
-        parser->tokens[i] = (mpir_token*)malloc(sizeof(mpir_token));
+        parser->tokens[tok_index] = (mpir_token*)malloc(sizeof(mpir_token));
 
         /* Memory allocation failure! */
-        if (parser->tokens[i] == NULL) return NULL;
+        if (parser->tokens[tok_index] == NULL) return NULL;
 
         /* Copy token attributes from lexer to parser */
-        memcpy(parser->tokens[i], lexer->tokens[i], sizeof(mpir_token));
+        memcpy(parser->tokens[tok_index], lexer->tokens[tok_index], sizeof(mpir_token));
     }
 
     /* Free memory used by lexer (assuming mpir_lexer_free is implemented) */
@@ -84,7 +85,8 @@ void mpir_parser_free(mpir_parser* parser)
     if (parser == NULL) return; /* Nothing to free */
 
     /* Free individual tokens */
-    for (unsigned long int i = 0; i < parser->token_count; ++i) free(parser->tokens[i]);
+    unsigned long int tok_index = 0;
+    for (tok_index = 0; tok_index < parser->token_count; ++tok_index) free(parser->tokens[tok_index]);
 
     /* Free the array of tokens */
     free(parser->tokens);
