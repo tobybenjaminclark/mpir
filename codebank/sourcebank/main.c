@@ -15,8 +15,8 @@ int main(int argc, char** argv)
 {
     mpir_lexer* a;
     a = mpir_tokenise("test.mpir", "test.md");
-    mpir_parser* psr = create_parser(a->tokens);
+    mpir_parser* psr = upgrade_to_parser(a);
     mpir_parse(psr);
-    (void)mpir_lexer_free(a);
+    mpir_parser_free(psr);
     return 0;
 }
