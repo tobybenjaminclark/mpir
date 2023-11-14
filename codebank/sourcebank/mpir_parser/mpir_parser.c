@@ -21,72 +21,76 @@ mpir_token* mpir_parser_get(mpir_parser* parser)
 
 
 
-void mpir_parser_free(mpir_parser* parser)
-{
-    if (parser == NULL) {
-        return; // Nothing to free
-    }
-
-    // Free individual tokens
-    for (unsigned long int i = 0; i < parser->token_count; ++i) {
-        free(parser->tokens[i]);
-    }
-
-    // Free the array of tokens
-    free(parser->tokens);
-
-    // Free the parser itself
-    free(parser);
-}
-
-
-
-/* Function to upgrade mpir_lexer to mpir_parser */
+/**
+ * @brief Upgrade an mpir_lexer to an mpir_parser, allocating new memory for tokens.
+ *
+ * This function takes an mpir_lexer, creates an mpir_parser, and copies tokens from the lexer to the parser. Memory is
+ * allocated for the parser and its tokens. The original lexer is freed using mpir_lexer_free.
+ *
+ * @param lexer The mpir_lexer to upgrade.
+ * @return A newly created mpir_parser if successful, NULL otherwise.
+ */
 mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
 {
-    // Allocate memory for mpir_parser
+    /* Allocate memory for mpir_parser */
     mpir_parser* parser = (mpir_parser*)malloc(sizeof(mpir_parser));
-    if (parser == NULL) {
-        // Handle memory allocation failure
-        return NULL;
-    }
+    if (parser == NULL) return NULL; /* Handle memory allocation failure */
 
-    // Initialize mpir_parser members
+    /* Initialize mpir_parser members */
     parser->token_count = lexer->token_count;
     parser->token_index = 0;
 
-    // Allocate memory for tokens in mpir_parser
+    /* Allocate memory for tokens in mpir_parser */
     parser->tokens = (mpir_token**)malloc(parser->token_count * sizeof(mpir_token*));
-    if (parser->tokens == NULL) {
-        // Handle memory allocation failure
-        free(parser);  // Free previously allocated memory
+    if (parser->tokens == NULL)
+    {
+        /* Handle memory allocation failure */
+        free(parser);  /* Free previously allocated memory */
         return NULL;
     }
 
-    // Copy tokens from lexer to parser
+    /* Copy tokens from lexer to parser */
     for (unsigned long int i = 0; i < lexer->token_count; ++i)
     {
-        // Allocate memory for the new token in the parser
+        /* Allocate memory for the new token in the parser */
         parser->tokens[i] = (mpir_token*)malloc(sizeof(mpir_token));
-        if (parser->tokens[i] == NULL)
-        {
-            // Handle memory allocation failure
-            // You may need to free previously allocated memory before returning
-            return NULL;
-        }
 
-        // Copy token attributes from lexer to parser
+        /* Memory allocation failure! */
+        if (parser->tokens[i] == NULL) return NULL;
+
+        /* Copy token attributes from lexer to parser */
         memcpy(parser->tokens[i], lexer->tokens[i], sizeof(mpir_token));
     }
 
-    // Free memory used by lexer (assuming mpir_lexer_free is implemented)
+    /* Free memory used by lexer (assuming mpir_lexer_free is implemented) */
     mpir_lexer_free(lexer);
 
-    // Set function pointers in parser to appropriate functions
+    /* Set function pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;
     parser->peek = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_peek;
 
     return parser;
+}
+
+/**
+ * @brief Free the memory allocated for an mpir_parser.
+ *
+ * This function frees the memory allocated for the mpir_parser and its tokens.
+ *
+ * @param parser The mpir_parser to free.
+ */
+void mpir_parser_free(mpir_parser* parser)
+{
+    if (parser == NULL) return; /* Nothing to free */
+
+    /* Free individual tokens */
+    for (unsigned long int i = 0; i < parser->token_count; ++i) free(parser->tokens[i]);
+
+    /* Free the array of tokens */
+    free(parser->tokens);
+
+    /* Free the parser itself */
+    free(parser);
 }
 
 void mpir_parse(mpir_parser* parser)
