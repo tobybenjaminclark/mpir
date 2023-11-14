@@ -6,7 +6,6 @@
 
 #include "../../headerbank/mpir_parser/mpir_parser.h"
 
-
 mpir_token* mpir_parser_peek(mpir_parser* parser)
 {
     if(parser -> token_index >= parser -> token_count) return NULL;
@@ -106,10 +105,21 @@ void mpir_parse(mpir_parser* parser)
     return;
 }
 
-void parse_function_declaration(mpir_token** list_of_tokens)
+mpir_parser* parse_function_declaration(mpir_parser* psr)
 {
     /*
      * 'funcdef' identifier '::' function_io '\n'
      */
 
+    /* Guard Clause */
+    if((psr->peek(psr))->type != keyword_funcdef) return NULL;
+    else NULL;
+
+    /* Consume funcdef & do nothing with it */
+    /* Consume the identifier -> save associated with the signature */
+    /* Consume the ::, do nothing with it */
+    /* Consume the IO and store in the signature */
+    /* Add the parse function to the current data pointer */
+
+    return psr;
 }
