@@ -10,4 +10,6 @@ MPIR is a programming language, with a focus on a **refinement-type** system, al
 
 MPIR, akin to many other languages, aims to provide an **easy-to-use, syntactically futureproofed** interface to machine code. What differentiates MPIR from other languages, however, is its focus on a **Refinement Type System**, which allows users to **formally define constraints on types** through **propositional** and **predicate** logic, which in combination with **tag-associated documentation**, will allow programmers to create **well documented**, **readable** code that is **understandable in the long-term**.
 
+Here's an outdated, but still cool High Level Overview!
+
 ![High Level](imagebank/mpir_high_level_overview.png)
