@@ -125,3 +125,40 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
 }
 
 /* Implement all Parsers to produce AST */
+/*
+ * |-- Function Definition: password_check
+|   |
+|   |-- Identifier: password_check
+|   |-- Parameter: p
+|   |   |
+|   |   |-- Identifier: p
+|   |   |-- Type: [Char]
+|   |
+|   |-- Return Type: TypeInt
+|   |
+|   |-- Block
+|       |
+|       |-- Statement: set pw as Password
+|       |
+|       |-- Statement: trycast p into pw
+|       |
+|       |-- If Statement
+|           |
+|           |-- Condition: success
+|           |
+|           |-- Block
+|               |
+|               |-- Statement: return 1
+|           |
+|           |-- Condition: failure
+|           |
+|           |-- Block
+|               |
+|               |-- Statement: return 0
+|
+|-- SuchThat Clause
+|   |
+|   |-- Predicate: doc p as "Password to check"
+|   |
+|   |-- Predicate: doc pw as "Password (if compatible)"
+ */
