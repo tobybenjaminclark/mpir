@@ -123,3 +123,5 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
 
     return psr;
 }
+
+/* Implement all Parsers to produce AST */
