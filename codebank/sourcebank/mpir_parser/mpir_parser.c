@@ -18,7 +18,17 @@ mpir_token* mpir_parser_get(mpir_parser* parser)
     return parser -> tokens[(parser -> token_index++)];
 }
 
-
+mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type)
+{
+    const char** token_name_map = {TOKEN_NAME_MAP};
+    if(parser -> token_index >= parser -> token_count) return NULL;
+    if (((parser -> tokens[parser -> token_index]->type) == type)) return parser -> tokens[(parser -> token_index++)];
+    else
+    {
+        mpir_error("mpir_parser expected %s but got %s", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
+        return NULL;
+    }
+}
 
 /**
  * @brief Upgrade an mpir_lexer to an mpir_parser, allocating new memory for tokens.
@@ -68,7 +78,8 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     /* Set function pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;
     parser->peek = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_peek;
-
+    parser->tryget = (mpir_token *(*)(struct mpir_parser *, mpir_token_type)) (mpir_token *(*)(struct mpir_parser *,
+                                                                                               mpir_token_type *)) mpir_parser_tryget;
     return parser;
 }
 
@@ -105,21 +116,59 @@ void mpir_parse(mpir_parser* parser)
     return;
 }
 
+struct mpir_identifier* parse_identifier(mpir_parser* psr)
+{
+    struct mpir_identifier* node;
+    if((psr->peek(psr))->type != IDENTIFIER)
+    {
+        mpir_error("parse_function_declaration: expected function identifier got other.");
+        return NULL;
+    }
+    else node->data = (psr->get(psr))->lexeme;
+    return node;
+}
+
+struct mpir_identifier* parse_returntype(mpir_parser* psr)
+{
+    struct mpir_type* node;
+    if((psr->peek(psr))->type != IDENTIFIER)
+    {
+        mpir_error("parse_function_declaration: expected function identifier got other.");
+        return NULL;
+    }
+    else node->data = (psr->get(psr))->lexeme;
+    return node;
+}
+
+struct mpir_* parse_returntype(mpir_parser* psr)
+{
+    struct mpir_type* node;
+    if((psr->peek(psr))->type != IDENTIFIER)
+    {
+        mpir_error("parse_function_declaration: expected function identifier got other.");
+        return NULL;
+    }
+    else node->data = (psr->get(psr))->lexeme;
+    return node;
+}
+
 mpir_parser* parse_function_declaration(mpir_parser* psr)
 {
     /*
      * 'funcdef' identifier '::' function_io '\n'
      */
 
-    /* Guard Clause */
-    if((psr->peek(psr))->type != keyword_funcdef) return NULL;
-    else NULL;
+    /* Create Funcdef AST node & Consume 'fundef' */
+    struct mpir_function_declaration* node;
 
-    /* Consume funcdef & do nothing with it */
-    /* Consume the identifier -> save associated with the signature */
-    /* Consume the ::, do nothing with it */
-    /* Consume the IO and store in the signature */
-    /* Add the parse function to the current data pointer */
+    /* Parsing */
+    if(!(psr->tryget(psr, keyword_funcdef))) return NULL;
+    else if((node->identifier = parse_identifier(psr)) == NULL) return NULL;
+    if(!(psr->tryget(psr, double_colon))) return NULL;
+    else if((node->inputs = parse_inputs(psr)) == NULL) return NULL;
+    if(!(psr->tryget(psr, operator_arrow))) return NULL;
+    else if((node->inputs = parse_returntype(psr)) == NULL) return NULL;
+    else return node;
 
     return psr;
 }

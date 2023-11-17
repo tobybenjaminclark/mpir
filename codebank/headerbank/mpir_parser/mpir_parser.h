@@ -10,7 +10,7 @@
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_token/mpir_token_write.h"
 #include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
-
+#include "../../headerbank/mpir_ast/mpir_ast.h"
 
 struct mpir_parser{
     unsigned long int token_count;
@@ -18,14 +18,16 @@ struct mpir_parser{
     mpir_token** tokens;
 
     /* Function Pointers */
-    mpir_token* (*get)(struct mpir_parser *lexer);
-    mpir_token* (*peek)(struct mpir_parser *lexer);
+    mpir_token* (*get)(struct mpir_parser *parser);
+    mpir_token* (*peek)(struct mpir_parser *parser);
+    mpir_token* (*tryget)(struct mpir_parser *parser, mpir_token_type type);
 };
 
 typedef struct mpir_parser mpir_parser;
 
 mpir_token* mpir_parser_peek(mpir_parser* parser);
 mpir_token* mpir_parser_get(mpir_parser* parser);
+mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type);
 
 mpir_parser* upgrade_to_parser(mpir_lexer* lexer);
 void mpir_parser_free(mpir_parser* parser);
