@@ -140,8 +140,11 @@ struct mpir_identifier* parse_returntype(mpir_parser* psr)
     return node;
 }
 
-struct mpir_* parse_returntype(mpir_parser* psr)
+struct mpir_type** parse_inputs(mpir_parser* psr)
 {
+    /*
+     * Needs to dynamically read & process types i.e. Int, Int or Int, Float,
+     */
     struct mpir_type* node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
