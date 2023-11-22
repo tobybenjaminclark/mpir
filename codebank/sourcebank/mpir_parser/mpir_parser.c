@@ -109,31 +109,31 @@ void mpir_parser_free(mpir_parser* parser)
 
 struct mpir_identifier* parse_identifier(mpir_parser* psr)
 {
-    struct mpir_identifier* node;
+    struct mpir_identifier node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else node->data = (psr->get(psr))->lexeme;
-    return node;
+    else node.data = (psr->get(psr))->lexeme;
+    return &node;
 }
 
 struct mpir_identifier* parse_returntype(mpir_parser* psr)
 {
-    struct mpir_type* node;
+    struct mpir_type node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else node->data = (psr->get(psr))->lexeme;
-    return node;
+    else node.data = (psr->get(psr))->lexeme;
+    return &node;
 }
 
 struct mpir_identifier* parse_type(mpir_parser* psr)
 {
-    struct mpir_type* node;
+    struct mpir_type node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
@@ -143,9 +143,9 @@ struct mpir_identifier* parse_type(mpir_parser* psr)
     else
     {
         wprintf(L"Parse Identifier %ls", (psr->peek(psr)->lexeme));
-        node->data = (psr->get(psr))->lexeme;
+        node.data = (psr->get(psr))->lexeme;
     }
-    return node;
+    return &node;
 }
 
 struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
@@ -191,16 +191,23 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
      */
 
     /* Create Funcdef AST node & Consume 'fundef' */
-    struct mpir_function_declaration* node;
+    struct mpir_function_declaration node;
 
     /* Parsing */
+
     if(!(psr->tryget(psr, keyword_funcdef))) return NULL;
-    else if((node->identifier = parse_identifier(psr)) == NULL) return NULL;
+    node.identifier = parse_identifier(psr);
+    if(node.identifier == NULL) return NULL;
+
     if(!(psr->tryget(psr, double_colon))) return NULL;
-    else if((node->inputs = parse_inputs(psr)) == NULL) return NULL;
+
+    if((node.inputs = parse_inputs(psr)) == NULL) return NULL;
+
     if(!(psr->tryget(psr, operator_arrow))) return NULL;
-    else if((node->inputs = parse_returntype(psr)) == NULL) return NULL;
-    else return node;
+
+    if((node.inputs = parse_returntype(psr)) == NULL) return NULL;
+
+    else return psr;
 
     return psr;
 }
@@ -210,8 +217,10 @@ void mpir_parse(mpir_parser* parser)
     mpir_token* current_token = parser->get(parser);
     while(current_token != NULL)
     {
-        if((parser->peek(parser))->type == keyword_funcdef)
+
+        if(((parser->peek(parser))->type) == keyword_funcdef)
         {
+            printf("branching to parse_function_declaration!");
             (void)parse_function_declaration(parser);
         }
 
