@@ -18,12 +18,12 @@ struct mpir_ast {
 
 struct mpir_identifier
 {
-    wchar_t* data;
+    wchar_t* data[128];
 };
 
 struct mpir_type
 {
-    wchar_t* data;
+    wchar_t* data[128];
 };
 
 struct mpir_function_declaration

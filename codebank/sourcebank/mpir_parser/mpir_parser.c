@@ -20,12 +20,14 @@ mpir_token* mpir_parser_get(mpir_parser* parser)
 
 mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type)
 {
-    const char** token_name_map = {TOKEN_NAME_MAP};
+    const char* token_name_map[] = {TOKEN_NAME_MAP};
+
     if(parser -> token_index >= parser -> token_count) return NULL;
     if (((parser -> tokens[parser -> token_index]->type) == type)) return parser -> tokens[(parser -> token_index++)];
     else
     {
-        mpir_error("mpir_parser expected %s but got %s", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
+        printf("mpir_parser expected %s but got '%s' \n", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
+        //mpir_error("mpir_parser expected %s but got %s", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
         return NULL;
     }
 }
@@ -115,7 +117,7 @@ struct mpir_identifier* parse_identifier(mpir_parser* psr)
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else node.data = (psr->get(psr))->lexeme;
+    else wcscpy(node.data, (psr->get(psr))->lexeme);
     return &node;
 }
 
@@ -124,10 +126,11 @@ struct mpir_identifier* parse_returntype(mpir_parser* psr)
     struct mpir_type node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
+        mpir_error("parse_function_declaration: expected function returntype got other.");
         return NULL;
     }
-    else node.data = (psr->get(psr))->lexeme;
+    else wcscpy(node.data, (psr->get(psr))->lexeme);
+    wprintf(L"Parsed Return Type of '%ls' \n", node.data);
     return &node;
 }
 
@@ -136,16 +139,17 @@ struct mpir_identifier* parse_type(mpir_parser* psr)
     struct mpir_type node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
+        mpir_error("parse_function_declaration: expected function type got other.");
         return NULL;
     }
 
-    else
+    else if((psr->peek(psr))->type == IDENTIFIER)
     {
-        wprintf(L"Parse Identifier %ls", (psr->peek(psr)->lexeme));
-        node.data = (psr->get(psr))->lexeme;
+        wcscpy(node.data, (psr->get(psr))->lexeme);
+        wprintf(L"Type Identifier '%ls' \n", node.data);
+        return &node;
     }
-    return &node;
+    else return NULL;
 }
 
 struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
@@ -164,10 +168,8 @@ struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** no
     nodes = realloc(nodes, sizeof(struct mpir_type*) * (node_index + 1));
     nodes[0] = parse_type(psr);
 
-    if(psr->peek(psr) == keyword_comma)
+    if(psr->tryget(psr, keyword_comma) != NULL)
     {
-        // Parse multiple
-        (void)psr->get(psr);
         node_index++;
         parse_inputs_internal(psr, nodes, node_index);
     }
@@ -192,39 +194,45 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
 
     /* Create Funcdef AST node & Consume 'fundef' */
     struct mpir_function_declaration node;
-
     /* Parsing */
 
     if(!(psr->tryget(psr, keyword_funcdef))) return NULL;
     node.identifier = parse_identifier(psr);
+    wprintf(L"Function Identifier: '%ls'\n", node.identifier);
+
     if(node.identifier == NULL) return NULL;
 
     if(!(psr->tryget(psr, double_colon))) return NULL;
+    printf("Parsed :: \n");
 
     if((node.inputs = parse_inputs(psr)) == NULL) return NULL;
 
+    wprintf("next lexeme is %ls \n", psr->peek(psr)->lexeme);
     if(!(psr->tryget(psr, operator_arrow))) return NULL;
+    printf("Parsed -> \n");
 
     if((node.inputs = parse_returntype(psr)) == NULL) return NULL;
-
-    else return psr;
 
     return psr;
 }
 
 void mpir_parse(mpir_parser* parser)
 {
+    mpir_token_type next_type;
     mpir_token* current_token = parser->get(parser);
     while(current_token != NULL)
     {
-
-        if(((parser->peek(parser))->type) == keyword_funcdef)
+        if(parser->peek(parser) != NULL)
         {
-            printf("branching to parse_function_declaration!");
-            (void)parse_function_declaration(parser);
+            next_type = (parser->peek(parser))->type;
+            if(next_type == keyword_funcdef)
+            {
+                printf("branching to parse_function_declaration!\n");
+                (void)parse_function_declaration(parser);
+            }
         }
+        else next_type = (mpir_token_type) NULL;
 
-        wprintf(L"Token is '%ls'\n", current_token->lexeme);
         current_token = parser->get(parser);
     }
     return;
