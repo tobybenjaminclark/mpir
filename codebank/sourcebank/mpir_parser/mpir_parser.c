@@ -105,16 +105,7 @@ void mpir_parser_free(mpir_parser* parser)
     free(parser);
 }
 
-void mpir_parse(mpir_parser* parser)
-{
-    mpir_token* current_token = parser->get(parser);
-    while(current_token != NULL)
-    {
-        wprintf(L"Token is '%ls'\n", current_token->lexeme);
-        current_token = parser->get(parser);
-    }
-    return;
-}
+
 
 struct mpir_identifier* parse_identifier(mpir_parser* psr)
 {
@@ -140,19 +131,57 @@ struct mpir_identifier* parse_returntype(mpir_parser* psr)
     return node;
 }
 
-struct mpir_type** parse_inputs(mpir_parser* psr)
+struct mpir_identifier* parse_type(mpir_parser* psr)
 {
-    /*
-     * Needs to dynamically read & process types i.e. Int, Int or Int, Float,
-     */
     struct mpir_type* node;
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else node->data = (psr->get(psr))->lexeme;
+
+    else
+    {
+        wprintf(L"Parse Identifier %ls", (psr->peek(psr)->lexeme));
+        node->data = (psr->get(psr))->lexeme;
+    }
     return node;
+}
+
+struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
+{
+    /*
+     * Needs to dynamically read & process types i.e. Int, Int or Int, Float,
+     */
+
+    if((psr->peek(psr))->type != IDENTIFIER)
+    {
+        mpir_error("parse_function_declaration: expected function identifier got other.");
+        return NULL;
+    }
+
+    /* Allocate Memory for list of types */
+    nodes = realloc(nodes, sizeof(struct mpir_type*) * (node_index + 1));
+    nodes[0] = parse_type(psr);
+
+    if(psr->peek(psr) == keyword_comma)
+    {
+        // Parse multiple
+        (void)psr->get(psr);
+        node_index++;
+        parse_inputs_internal(psr, nodes, node_index);
+    }
+    else
+    {
+        return nodes;
+    }
+}
+
+struct mpir_type** parse_inputs(mpir_parser* psr)
+{
+    struct mpir_type** nodes;
+    nodes = malloc(sizeof(struct mpir_type*));
+    return parse_inputs_internal(psr, nodes, 0);
 }
 
 mpir_parser* parse_function_declaration(mpir_parser* psr)
@@ -174,6 +203,22 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
     else return node;
 
     return psr;
+}
+
+void mpir_parse(mpir_parser* parser)
+{
+    mpir_token* current_token = parser->get(parser);
+    while(current_token != NULL)
+    {
+        if((parser->peek(parser))->type == keyword_funcdef)
+        {
+            (void)parse_function_declaration(parser);
+        }
+
+        wprintf(L"Token is '%ls'\n", current_token->lexeme);
+        current_token = parser->get(parser);
+    }
+    return;
 }
 
 /* Implement all Parsers to produce AST */
