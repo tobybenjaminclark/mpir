@@ -27,7 +27,6 @@ mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type)
     else
     {
         printf("mpir_parser expected %s but got '%s' \n", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
-        //mpir_error("mpir_parser expected %s but got %s", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
         return NULL;
     }
 }
