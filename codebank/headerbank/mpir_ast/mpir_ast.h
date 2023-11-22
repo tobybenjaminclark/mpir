@@ -10,10 +10,10 @@
 #include "../../headerbank/mpir_token/mpir_token.h"
 
 struct mpir_ast {
-    mpir_token_type type;           // Type of the AST node
-    char* value;                    // For literals or identifiers
-    struct mpir_ast* left;          // Left child
-    struct mpir_ast* right;         // Right child
+    mpir_token_type type;           /* Type of the AST node */
+    char* value;                    /* For literals or identifiers */
+    struct mpir_ast* left;          /* Left child */
+    struct mpir_ast* right;         /* Right child */
 };
 
 struct mpir_identifier
