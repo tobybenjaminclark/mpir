@@ -106,8 +106,6 @@ void mpir_parser_free(mpir_parser* parser)
     free(parser);
 }
 
-
-
 struct mpir_identifier* parse_identifier(mpir_parser* psr)
 {
     struct mpir_identifier node;

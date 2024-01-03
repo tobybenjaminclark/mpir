@@ -41,7 +41,7 @@ type_identifiers            ::=         None | type_identifier | type_identifier
 
 -- Function Definition (body)
 function_definition_header  ::=         function_identifier parameter_list ':' '\n'
-indentation                 ::=         ('\t' | '\t' indentation)
+parameter_list              ::=         identifier | parameter_list ',' identifier
 identifiers                 ::=         identifier | ( identifier identifiers )
 function_definition_body    ::=         line_of_code
 let_assignment              ::=         'let' identifier 'as' type_identifier '\n'
@@ -49,15 +49,17 @@ set_assignment              ::=         'set' identifier 'as' expression '\n'
 function_call_line          ::=         function_call '\n'
 inbuilt_call                ::=         identifier identifiers
 trycast_line                ::=         'trycast' identifier 'into' identifier '\n'
+do_line                     ::=         'do' function_call '\n'
 on_line                     ::=         'on' literal '->' line_of_code
-selection_statement         ::=         'if' <BOOLEAN STATEMENT THING> '->'
+imperative_statement        ::=         set_assignment | let_assignment | function_call_line | inbuilt_call | trycast_line | do_line | on_line
+imperative_statements       ::=         imperative_statement | imperative_statements imperative_statement
+imperative_definition       ::=         function_identifier parameter_list '=' imperative_statements
 
 -- Supports do/on notation
 -- Pattern Matching Syntax
 pattern_match               ::=         function_identifier parameter_list '=' expression
 pattern_parameter           ::=         (( letter | digit | symbol ) | (parameter letter | digit | symbol)) | literal
 pattern_parameter_list      ::=         pattern_parameter | (pattern_parameter comma pattern_parameter_list)
-
 
 -- CFG Defines the syntax for declaring tag-associated documentatio section, starts with where:/suchthat:
 -- Followed by n statements of 'tag' 'identifier' as 'docstring', which can be formulated into documentation.
@@ -67,16 +69,15 @@ doc_definitions             ::=         doc_definition | doc_definitions doc_def
 letters                     ::=         letter | letters letter
 docstring                   ::=         '`' letters '`'
 
-
-
 arithmetic_expression       ::=         term | arithmetic_expression operator_sum term | arithmetic_expression operator_subtract term
 term                        ::=         factor | term operator_multiply factor | term operator_divide factor
-factor                      ::=         open_bracket expression close_bracket | number | identifier | function_call
+factor                      ::=         open_bracket expression close_bracket | numerical_literal | identifier | function_call | string_literal
 function_call               ::=         function_name open_bracket argument_list close_bracket
 argument_list               ::=         expression | argument_list comma expression
-number                      ::=         digit | ( number digit )
-
-
+string_literal              ::=         '"' characters '""'
+characters                  ::=         character | characters character
+numerical_literal           ::=         ('-' | ε) digits ( ('.' digits) | ε )
+digits                      ::=         digit | ( digits digit )
 
 variable_identifier         ::=         ( letter | digit ) | ( variable_identifier letter | digit )
 type_identifier             ::=         ( letter | digit ) | ( type_identifier letter | digit)
