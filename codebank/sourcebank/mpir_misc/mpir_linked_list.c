@@ -7,49 +7,49 @@
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
 // Function to create a new node with the given data
-struct command_node* create_node(union command_data data) {
-    struct command_node* new_node = (struct command_node*)malloc(sizeof(struct command_node));
+struct mpir_command_node* create_node(union command_data data) {
+    struct mpir_command_node* new_node = (struct mpir_command_node*)malloc(sizeof(struct mpir_command_node));
     new_node->data = data;
     new_node->next = NULL;
     new_node->prev = NULL;
     return new_node;
 }
 
+// Function to initialize a new doubly linked list
+struct mpir_command_list* initialize_list(){
+    struct mpir_command_list* list = (struct mpir_command_list*)malloc(sizeof(struct mpir_command_list));
+    list->head = NULL;
+    list->tail = NULL;
+    list->length = 0;
+    return list;
+}
+
 // Function to insert a new node at the end of the doubly linked list
-void insert_at_end(struct command_node** head, union command_data data) {
-    struct command_node* new_node = create_node(data);
+void insert_at_end(struct mpir_command_list* list, union command_data data) {
+    struct mpir_command_node* new_node = create_node(data);
 
-    if (*head == NULL) {
-        *head = new_node;
+    if (list->head == NULL) {
+        list->head = new_node;
+        list->tail = new_node;
     } else {
-        struct command_node* current = *head;
-        while (current->next != NULL) {
-            current = current->next;
-        }
-
-        current->next = new_node;
-        new_node->prev = current;
+        new_node->prev = list->tail;
+        list->tail->next = new_node;
+        list->tail = new_node;
     }
+
+    list->length++;
+
+    printf("added to list, new length is %d \n", list->length);
 }
 
 // Function to free the memory allocated for the doubly linked list
-void free_list(struct command_node* head) {
-    struct command_node* current = head;
+void free_list(struct mpir_command_list* list) {
+    struct mpir_command_node* current = list->head;
     while (current != NULL) {
-        struct command_node* next_node = current->next;
+        struct mpir_command_node* next_node = current->next;
         free(current);
         current = next_node;
     }
-}
 
-int main() {
-    struct command_node* head = NULL;
-
-    // Inserting elements into the doubly linked list with different data types
-    insert_at_end(&head, (union command_data){.intValue = 1});
-    insert_at_end(&head, (union command_data){.floatValue = 2.5});
-    insert_at_end(&head, (union command_data){.stringValue = "Hello"});
-
-
-    return 0;
+    free(list);
 }

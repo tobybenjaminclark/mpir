@@ -11,11 +11,15 @@
 #include "../../headerbank/mpir_token/mpir_token_write.h"
 #include "../../headerbank/mpir_tokeniser/mpir_lexer.h"
 #include "../../headerbank/mpir_ast/mpir_ast.h"
+#include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
 struct mpir_parser{
     unsigned long int token_count;
     unsigned long int token_index;
     mpir_token** tokens;
+
+    /* Program */
+    struct mpir_command_list* program;
 
     /* Function Pointers */
     mpir_token* (*get)(struct mpir_parser *parser);

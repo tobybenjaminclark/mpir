@@ -76,6 +76,9 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     /* Free memory used by lexer (assuming mpir_lexer_free is implemented) */
     mpir_lexer_free(lexer);
 
+    /* Setup Initial Program Linked List */
+    parser->program = initialize_list();
+
     /* Set function pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;
     parser->peek = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_peek;
@@ -190,7 +193,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
     return parse_inputs_internal(psr, nodes, 0);
 }
 
-mpir_parser* parse_function_declaration(mpir_parser* psr)
+struct mpir_function_declaration* parse_function_declaration(mpir_parser* psr)
 {
     /*
      * 'funcdef' identifier '::' function_io '\n'
@@ -226,6 +229,9 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return NULL;
 
+    /* Add Declaration Header to Program */
+    insert_at_end(psr->program, (union command_data){.function_declaration = &node});
+
     return psr;
 }
 
@@ -241,7 +247,7 @@ void mpir_parse(mpir_parser* parser)
             if(next_type == keyword_funcdef)
             {
                 printf("branching to parse_function_declaration!\n");
-                (void)parse_function_declaration(parser);
+                parse_function_declaration(parser);
             }
         }
         else next_type = (mpir_token_type) NULL;
