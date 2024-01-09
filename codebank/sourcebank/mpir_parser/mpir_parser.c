@@ -18,7 +18,18 @@ mpir_token* mpir_parser_get(mpir_parser* parser)
     return parser -> tokens[(parser -> token_index++)];
 }
 
+mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type)
+{
+    const char* token_name_map[] = {TOKEN_NAME_MAP};
 
+    if(parser -> token_index >= parser -> token_count) return NULL;
+    if (((parser -> tokens[parser -> token_index]->type) == type)) return parser -> tokens[(parser -> token_index++)];
+    else
+    {
+        printf("mpir_parser expected %s but got '%s' \n", token_name_map[type], token_name_map[parser -> tokens[parser -> token_index]->type]);
+        return NULL;
+    }
+}
 
 /**
  * @brief Upgrade an mpir_lexer to an mpir_parser, allocating new memory for tokens.
@@ -65,10 +76,14 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     /* Free memory used by lexer (assuming mpir_lexer_free is implemented) */
     mpir_lexer_free(lexer);
 
+    /* Setup Initial Program Linked List */
+    parser->program = initialize_declaration_list();
+
     /* Set function pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;
     parser->peek = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_peek;
-
+    parser->tryget = (mpir_token *(*)(struct mpir_parser *, mpir_token_type)) (mpir_token *(*)(struct mpir_parser *,
+                                                                                               mpir_token_type *)) mpir_parser_tryget;
     return parser;
 }
 
@@ -94,38 +109,7 @@ void mpir_parser_free(mpir_parser* parser)
     free(parser);
 }
 
-void mpir_parse(mpir_parser* parser)
-{
-    mpir_token* current_token = parser->get(parser);
-    while(current_token != NULL)
-    {
-        wprintf(L"Token is '%ls'\n", current_token->lexeme);
-        current_token = parser->get(parser);
-    }
-    return;
-}
-
-mpir_parser* parse_function_declaration(mpir_parser* psr)
-{
-    /*
-     * 'funcdef' identifier '::' function_io '\n'
-     */
-
-    /* Guard Clause */
-    if((psr->peek(psr))->type != keyword_funcdef) return NULL;
-    else NULL;
-
-    /* Consume funcdef & do nothing with it */
-    /* Consume the identifier -> save associated with the signature */
-    /* Consume the ::, do nothing with it */
-    /* Consume the IO and store in the signature */
-    /* Add the parse function to the current data pointer */
-
-    return psr;
-}
-
-/* Implement all Parsers to produce AST */
-/*
+/* Implement all Parsers to produce AST
  * |-- Function Definition: password_check
 |   |
 |   |-- Identifier: password_check
