@@ -8,21 +8,18 @@
 #define MPIR_COMPILER_MPIR_COMMAND_AST_H
 
 #include "../../headerbank/mpir_token/mpir_token.h"
-
-struct mpir_identifier
-{
-    wchar_t* data[128];
-};
-
-struct mpir_type
-{
-    wchar_t* data[128];
-};
+#include "../../headerbank/mpir_ast/mpir_expression_ast.h"
 
 struct mpir_type_assignment
 {
     struct mpir_identifier* identifier;
     struct mpir_type* type;
+};
+
+struct mpir_value_assignment
+{
+    struct mpir_identifier* identifier;
+    struct mpir_expression* expression;
 };
 
 #endif //MPIR_COMPILER_MPIR_COMMAND_AST_H

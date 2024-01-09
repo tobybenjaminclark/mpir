@@ -18,6 +18,15 @@ struct mpir_identifier* parse_identifier(mpir_parser* psr)
     return &node;
 }
 
+struct mpir_function_identifier* parse_function_identifier(mpir_parser* psr)
+{
+    struct mpir_function_identifier node;
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.data, (psr->get(psr))->lexeme);
+    else return NULL;
+    return &node;
+}
+
+
 struct mpir_type* parse_returntype(mpir_parser* psr)
 {
     struct mpir_type node;
