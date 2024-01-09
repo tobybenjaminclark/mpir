@@ -11,19 +11,16 @@
 #include <stdlib.h>
 #include "../../headerbank/mpir_ast/mpir_command_ast.h"
 
-// Define a union for different data types
 union command_data {
     struct mpir_type_assignment type_assignment;
 };
 
-// Define a node structure for the doubly linked list
 struct mpir_command_node {
     union command_data data;
     struct mpir_command_node* next;
     struct mpir_command_node* prev;
 };
 
-// Define a structure for the doubly linked list
 struct mpir_command_list {
     struct mpir_command_node* head;
     struct mpir_command_node* tail;
