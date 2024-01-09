@@ -18,16 +18,6 @@ struct mpir_ast {
     struct mpir_ast* right;         /* Right child */
 };
 
-struct mpir_identifier
-{
-    wchar_t* data[128];
-};
-
-struct mpir_type
-{
-    wchar_t* data[128];
-};
-
 struct mpir_function_declaration
 {
     struct mpir_identifier* identifier;

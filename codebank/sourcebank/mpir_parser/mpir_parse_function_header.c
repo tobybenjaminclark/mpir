@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_parser/mpir_parse_funcdef.h"
+#include "../../headerbank/mpir_parser/mpir_parse_function_header.h"
 
 struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
 {
@@ -84,7 +84,7 @@ struct mpir_function_declaration* parse_function_declaration(mpir_parser* psr)
     else return NULL;
 
     /* Parse function body */
-    
+    node.body = parse_function_body(psr);
 
     /* Add Declaration Header to Program */
     add_declaration(psr->program, (union mpir_declaration_data){.function_declaration = &node});
