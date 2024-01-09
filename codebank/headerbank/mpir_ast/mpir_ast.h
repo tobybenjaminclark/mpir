@@ -33,4 +33,10 @@ struct mpir_function_declaration
     struct mpir_type* return_type;
 };
 
+struct mpir_type_assignment
+{
+    struct mpir_identifier* identifier;
+    struct mpir_type* type;
+};
+
 #endif
