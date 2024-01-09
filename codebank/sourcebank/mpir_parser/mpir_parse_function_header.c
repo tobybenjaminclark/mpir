@@ -6,12 +6,22 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_function_header.h"
 
+/**
+ * @brief Internal Function to parse a list of input types within a function declaration recursively.
+ *
+ * This recursive function parses a series of input types in the context of a function declaration. It expects
+ * identifiers representing input types separated by commas. The parsing process involves allocating memory for a
+ * dynamic array of `mpir_type` struct pointers. The function recursively calls itself when encountering multiple input
+ * types, and it terminates when it encounters the '->' operator, indicating the end of the input types section.
+ *
+ * @param psr A pointer to the MPIR parser structure.
+ * @param nodes  A pointer to an array of `mpir_type` structures, may be reallocated.
+ * @param node_index The index indicating the current position in the 'nodes' array.
+ *
+ * @return A pointer to the array of parsed input types on success or NULL on parsing failure.
+ */
 struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
 {
-    /*
-     * Needs to dynamically read & process types i.e. Int, Int or Int, Float,
-     */
-
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
@@ -29,17 +39,20 @@ struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** no
         node_index++;
         parse_inputs_internal(psr, nodes, node_index);
     }
-    else if(psr->peek(psr)->type == operator_arrow)
-    {
-        /* No more types */
-        return nodes;
-    }
-    else
-    {
-        mpir_error("Parser expected ', Type' or ->");
-    }
+    else if(psr->peek(psr)->type == operator_arrow) return nodes;
+    else return NULL;
 }
 
+/**
+ * @brief Function to parse Function IO Input Types, returns a list of mpir_type structures
+ *
+ * This function is responsible for parsing the declaration of function input types. It does this using the `parse_
+ * inputs_internal()` function, which uses a recursive approach. Memory is allocated for this list dynamically,
+ * meaning a function can take any (*reasonable) number of arguments.
+ *
+ * @param psr A pointer to the MPIR parser structure.
+ * @return List of Inputs on success, NULL on parsing failure.
+ */
 struct mpir_type** parse_inputs(mpir_parser* psr)
 {
     struct mpir_type** nodes;
@@ -55,7 +68,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
  * is added to the declaration list in the parser. The grammar can be seen below, and also in the CFG documentation.
  * `funcdef' identifier '::' function_io '\n'`
  *
- * @param psr A pointer to the MPiR parser structure.
+ * @param psr A pointer to the MPIR parser structure.
  * @return True on parsing success, False on parsing failure.
  */
 bool parse_function_declaration(mpir_parser* psr)
