@@ -6,7 +6,7 @@
 
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
-// Function to create a new node with the given data
+
 struct mpir_command_node* create_node(union command_data data) {
     struct mpir_command_node* new_node = (struct mpir_command_node*)malloc(sizeof(struct mpir_command_node));
     new_node->data = data;
@@ -15,7 +15,7 @@ struct mpir_command_node* create_node(union command_data data) {
     return new_node;
 }
 
-// Function to initialize a new doubly linked list
+∂
 struct mpir_command_list* initialize_list(){
     struct mpir_command_list* list = (struct mpir_command_list*)malloc(sizeof(struct mpir_command_list));
     list->head = NULL;
@@ -24,7 +24,7 @@ struct mpir_command_list* initialize_list(){
     return list;
 }
 
-// Function to insert a new node at the end of the doubly linked list
+
 void insert_at_end(struct mpir_command_list* list, union command_data data) {
     struct mpir_command_node* new_node = create_node(data);
 
@@ -42,7 +42,7 @@ void insert_at_end(struct mpir_command_list* list, union command_data data) {
     printf("added to list, new length is %d \n", list->length);
 }
 
-// Function to free the memory allocated for the doubly linked list
+
 void free_list(struct mpir_command_list* list) {
     struct mpir_command_node* current = list->head;
     while (current != NULL) {
