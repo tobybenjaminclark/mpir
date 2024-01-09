@@ -8,6 +8,7 @@
 #define MPIR_COMPILER_MPIR_PARSER_UTILITIES_H
 
 #include "../../headerbank/mpir_parser/mpir_parser.h"
+#include "stdbool.h"
 
 struct mpir_identifier* parse_identifier(mpir_parser* psr);
 struct mpir_type* parse_returntype(mpir_parser* psr);

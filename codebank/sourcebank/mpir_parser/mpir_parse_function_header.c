@@ -47,47 +47,53 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
     return parse_inputs_internal(psr, nodes, 0);
 }
 
-struct mpir_function_declaration* parse_function_declaration(mpir_parser* psr)
+/**
+ * @brief Function to parse a Function Header, returns a mpir_function_declaration structure.
+ *
+ * This function is responsible for parsing the declaration of a function according to the MPIR Grammar. It gathers
+ * the identifier, input types, and output types. Performs memory allocation for the list of input types. The decl.
+ * is added to the declaration list in the parser. The grammar can be seen below, and also in the CFG documentation.
+ * `funcdef' identifier '::' function_io '\n'`
+ *
+ * @param psr A pointer to the MPiR parser structure.
+ * @return True on parsing success, False on parsing failure.
+ */
+bool parse_function_declaration(mpir_parser* psr)
 {
-    /*
-     * 'funcdef' identifier '::' function_io '\n'
-     */
-
     /* Create Funcdef AST node & Consume 'fundef' */
     struct mpir_function_declaration node;
     /* Parsing */
 
     /* Parse `funcdef */
-    if(psr->peek(psr)->type != keyword_funcdef) return NULL;
+    if(psr->peek(psr)->type != keyword_funcdef) return false;
     else if(psr->peek(psr)->type == keyword_funcdef) (void)psr->get(psr);
-    else return NULL;
+    else return false;
 
     /* Parse function identifier */
     if(psr->peek(psr)->type == IDENTIFIER) node.identifier = node.identifier = parse_identifier(psr);
-    else return NULL;
-    if(node.identifier == NULL) return NULL;
+    else return false;
+    if(node.identifier == NULL) return false;
     wprintf(L"Function Identifier: '%ls'\n", node.identifier);
 
     /* Parse I/O shield operator `::` */
-    if(psr->peek(psr)->type != double_colon) return NULL;
+    if(psr->peek(psr)->type != double_colon) return false;
     else if(psr->peek(psr)->type == double_colon) (void)psr->get(psr);
-    else return NULL;
+    else return false;
     printf("Parsed :: \n");
 
     /* Parse return type */
-    if((node.inputs = parse_inputs(psr)) == NULL) return NULL;
-    if(!(psr->tryget(psr, operator_arrow))) return NULL;
-    if((node.return_type = parse_returntype(psr)) == NULL) return NULL;
+    if((node.inputs = parse_inputs(psr)) == NULL) return false;
+    if(!(psr->tryget(psr, operator_arrow))) return false;
+    if((node.return_type = parse_returntype(psr)) == NULL) return false;
 
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
-    else return NULL;
+    else return false;
 
     /* Parse function body */
     node.body = parse_function_body(psr);
 
-    /* Add Declaration Header to Program */
+    /* Add Declaration Header to Program & Return PSR*/
     add_declaration(psr->program, (union mpir_declaration_data){.function_declaration = &node});
-
-    return psr;
+    return true;
 }
