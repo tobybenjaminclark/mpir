@@ -15,7 +15,7 @@ struct mpir_command_node* create_node(union command_data data) {
     return new_node;
 }
 
-∂
+
 struct mpir_command_list* initialize_list(){
     struct mpir_command_list* list = (struct mpir_command_list*)malloc(sizeof(struct mpir_command_list));
     list->head = NULL;
