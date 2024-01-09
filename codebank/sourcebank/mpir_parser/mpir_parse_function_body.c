@@ -55,7 +55,29 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr)
     return &node;
 }
 
+struct mpir_trycast_statement* parse_trycast(mpir_parser* psr)
+{
+    struct mpir_trycast_statement node;
+
+    if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);
+    else return NULL;
+
+    node.dominant_variable = parse_identifier(psr);
+    if(node.dominant_variable == NULL) return NULL;
+
+    if(psr->peek(psr)->type == keyword_into) (void)psr->get(psr);
+    else return NULL;
+
+    node.casted_variable = parse_identifier(psr);
+    if(node.casted_variable == NULL) return NULL;
+
+    return &node;
+}
+
 struct mpir_command_list* parse_function_body(mpir_parser* psr)
 {
+    /*
+     * (let <|> set <|> parse_function_body) '\n'
+     */
     return NULL;
 }

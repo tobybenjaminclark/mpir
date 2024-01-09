@@ -22,4 +22,16 @@ struct mpir_value_assignment
     struct mpir_expression* expression;
 };
 
+struct mpir_on_statement
+{
+    int a;
+};
+
+struct mpir_trycast_statement
+{
+    struct mpir_identifier* dominant_variable;
+    struct mpir_identifier* casted_variable;
+    struct mpir_on_statement** actions;
+};
+
 #endif //MPIR_COMPILER_MPIR_COMMAND_AST_H
