@@ -9,20 +9,16 @@
 
 #include "../../headerbank/mpir_ast/mpir_ast.h"
 
-// Define a union for different data types
 union mpir_declaration_data {
     struct mpir_function_declaration function_declaration;
-    // Add other data types as needed
 };
 
-// Define a node structure for the doubly linked list
 struct mpir_declaration_node {
     union mpir_declaration_data data;
     struct mpir_declaration_node* next;
     struct mpir_declaration_node* prev;
 };
 
-// Define a structure for the doubly linked list
 struct mpir_declaration_list {
     struct mpir_declaration_node* head;
     struct mpir_declaration_node* tail;
@@ -34,4 +30,4 @@ struct mpir_declaration_list* initialize_declaration_list();
 void add_declaration(struct mpir_declaration_list* list, union mpir_declaration_data data);
 void free_list(struct mpir_command_list* list);
 
-#endif //MPIR_COMPILER_MPIR_DEFINITION_LIST_H
+#endif

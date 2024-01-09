@@ -18,4 +18,4 @@ struct mpir_identifier** parse_arguments_internal(mpir_parser* psr, struct mpir_
 struct mpir_identifier** parse_arguments(mpir_parser* psr);
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr);
 
-#endif //MPIR_COMPILER_MPIR_PARSE_EXPRESSION_H
+#endif

@@ -34,4 +34,4 @@ struct mpir_trycast_statement
     struct mpir_on_statement** actions;
 };
 
-#endif //MPIR_COMPILER_MPIR_COMMAND_AST_H
+#endif

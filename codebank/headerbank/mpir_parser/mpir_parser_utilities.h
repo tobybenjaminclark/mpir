@@ -15,4 +15,4 @@ struct mpir_type* parse_returntype(mpir_parser* psr);
 struct mpir_type* parse_type(mpir_parser* psr);
 struct mpir_function_identifier* parse_function_identifier(mpir_parser* psr);
 
-#endif //MPIR_COMPILER_MPIR_PARSER_UTILITIES_H
+#endif
