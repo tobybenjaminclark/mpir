@@ -9,12 +9,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../headerbank/mpir_ast/mpir_ast.h"
+#include "../../headerbank/mpir_ast/mpir_command_ast.h"
 
 // Define a union for different data types
 union command_data {
-    struct mpir_function_declaration function_declaration;
-    // Add other data types as needed
+    struct mpir_type_assignment type_assignment;
 };
 
 // Define a node structure for the doubly linked list

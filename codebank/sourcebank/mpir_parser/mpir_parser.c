@@ -77,7 +77,7 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     mpir_lexer_free(lexer);
 
     /* Setup Initial Program Linked List */
-    parser->program = initialize_list();
+    parser->program = initialize_declaration_list();
 
     /* Set function pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;

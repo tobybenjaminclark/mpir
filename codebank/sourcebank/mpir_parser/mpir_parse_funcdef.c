@@ -83,8 +83,11 @@ struct mpir_function_declaration* parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return NULL;
 
+    /* Parse function body */
+    
+
     /* Add Declaration Header to Program */
-    insert_at_end(psr->program, (union command_data){.function_declaration = &node});
+    add_declaration(psr->program, (union mpir_declaration_data){.function_declaration = &node});
 
     return psr;
 }

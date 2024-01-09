@@ -8,6 +8,8 @@
 #define MPIR_COMPILER_MPIR_AST_H
 
 #include "../../headerbank/mpir_token/mpir_token.h"
+#include "../../headerbank/mpir_misc/mpir_linked_list.h"
+#include "../../headerbank/mpir_ast/mpir_command_ast.h"
 
 struct mpir_ast {
     mpir_token_type type;           /* Type of the AST node */
@@ -31,12 +33,7 @@ struct mpir_function_declaration
     struct mpir_identifier* identifier;
     struct mpir_type** inputs;
     struct mpir_type* return_type;
-};
-
-struct mpir_type_assignment
-{
-    struct mpir_identifier* identifier;
-    struct mpir_type* type;
+    struct mpir_command_list* body;
 };
 
 #endif
