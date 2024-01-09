@@ -34,4 +34,7 @@ struct mpir_command_list {
 void insert_at_end(struct mpir_command_list* list, union command_data data);
 struct mpir_command_list* initialize_list();
 
+void insert_at_end(struct mpir_command_list* list, union command_data data);
+struct mpir_command_list* initialize_list();
+
 #endif //MPIR_COMPILER_MPIR_LINKED_LIST_H
