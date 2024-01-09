@@ -165,14 +165,21 @@ struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** no
     nodes = realloc(nodes, sizeof(struct mpir_type*) * (node_index + 1));
     nodes[0] = parse_type(psr);
 
-    if(psr->tryget(psr, keyword_comma) != NULL)
+    if((psr->peek(psr))->type == keyword_comma)
     {
+        /* The ',' token is voided, as it has no semantic integrity. */
+        (void)psr->get(psr);
         node_index++;
         parse_inputs_internal(psr, nodes, node_index);
     }
+    else if(psr->peek(psr)->type == operator_arrow)
+    {
+        /* No more types */
+        return nodes;
+    }
     else
     {
-        return nodes;
+        mpir_error("Parser expected ', Type' or ->");
     }
 }
 
@@ -193,22 +200,31 @@ mpir_parser* parse_function_declaration(mpir_parser* psr)
     struct mpir_function_declaration node;
     /* Parsing */
 
-    if(!(psr->tryget(psr, keyword_funcdef))) return NULL;
-    node.identifier = parse_identifier(psr);
+    /* Parse `funcdef */
+    if(psr->peek(psr)->type != keyword_funcdef) return NULL;
+    else if(psr->peek(psr)->type == keyword_funcdef) (void)psr->get(psr);
+    else return NULL;
+
+    /* Parse function identifier */
+    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = psr->get(psr);
+    else return NULL;
+    if(node.identifier == NULL) return NULL;
     wprintf(L"Function Identifier: '%ls'\n", node.identifier);
 
-    if(node.identifier == NULL) return NULL;
-
-    if(!(psr->tryget(psr, double_colon))) return NULL;
+    /* Parse I/O shield operator `::` */
+    if(psr->peek(psr)->type != double_colon) return NULL;
+    else if(psr->peek(psr)->type == double_colon) (void)psr->get(psr);
+    else return NULL;
     printf("Parsed :: \n");
 
+    /* Parse return type */
     if((node.inputs = parse_inputs(psr)) == NULL) return NULL;
-
-    wprintf("next lexeme is %ls \n", psr->peek(psr)->lexeme);
     if(!(psr->tryget(psr, operator_arrow))) return NULL;
-    printf("Parsed -> \n");
+    if((node.return_type = parse_returntype(psr)) == NULL) return NULL;
 
-    if((node.inputs = parse_returntype(psr)) == NULL) return NULL;
+    /* Parse Newline */
+    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
+    else return NULL;
 
     return psr;
 }
