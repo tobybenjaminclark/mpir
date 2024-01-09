@@ -26,14 +26,14 @@ struct mpir_value_assignment
 struct mpir_command_list;
 struct mpir_on_statement
 {
-    union literal {
-        float mpir_numerical_literal;
+    union {
+        double mpir_numerical_literal;
         wchar_t* mpir_string_literal;
-    };
+    } literal;
     enum stored_type{
         numerical_literal,
         string_literal,
-    } type;
+    } stored_type;
     struct mpir_command_list* commands;
 };
 
@@ -41,6 +41,12 @@ struct mpir_trycast_statement
 {
     struct mpir_identifier* dominant_variable;
     struct mpir_identifier* casted_variable;
+    struct mpir_on_statement** actions;
+};
+
+struct mpir_do_statement
+{
+    struct mpir_function_call* function;
     struct mpir_on_statement** actions;
 };
 

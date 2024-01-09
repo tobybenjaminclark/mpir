@@ -6,6 +6,7 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_function_body.h"
 
+
 /**
  * @brief Function to parse a 'let' binding (type assignment) within the MPIR parser.
  *
@@ -43,6 +44,7 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr)
     return &node;
 }
 
+
 /**
  * @brief Function to parse a 'set' binding (value assignment) within the MPIR parser.
  *
@@ -78,6 +80,96 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr)
     return &node;
 }
 
+
+struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
+{
+    /* Parse & discard `on` keyword */
+    struct mpir_on_statement node;
+    if(psr->peek(psr)->type == keyword_on) (void)psr->get(psr);
+    else return NULL;
+
+    /* Parse literals */
+    switch(psr->peek(psr)->type)
+    {
+    case NUMERICAL_LITERAL:
+        node.stored_type = numerical_literal;
+        node.literal.mpir_numerical_literal = wcstod(psr->get(psr)->lexeme, NULL);
+        break;
+    case STRING_LITERAL:
+        node.stored_type = string_literal;
+        node.literal.mpir_string_literal = psr->get(psr)->lexeme;
+        break;
+    default:
+        return NULL;
+    }
+
+    /* Parse & discard arrow */
+    if(psr->peek(psr)->type = operator_arrow) (void)psr->get(psr);
+    else return NULL;
+
+    /* Setup Command List Structure */
+    struct mpir_command_list* command;
+    command = initialize_command_list();
+
+    /* Parse Command */
+    switch(psr->peek(psr)->type)
+    {
+    case keyword_let:
+        /* try parse let */
+        break;
+    case keyword_set:
+        /* try parse set */
+        break;
+    case IDENTIFIER:
+        /* try parse function call */
+        break;
+    default:
+        /* check for inbuilt call */
+        return NULL;
+    }
+
+    /* Parse & discard newline */
+    if(psr->peek(psr)->type == NEWLINE)(void)psr->get(psr);
+    else return NULL;
+
+    node.commands = command;
+    return &node;
+}
+
+
+struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* psr)
+{
+    struct mpir_on_statement** on_statements = NULL;
+    size_t num_statements = 0;
+
+    while (psr->peek(psr)->type == keyword_on)
+    {
+        struct mpir_on_statement* on_statement = parse_on_statement(psr);
+
+        if (on_statement != NULL)
+        {
+            num_statements++;
+            on_statements = realloc(on_statements, num_statements * sizeof(struct mpir_on_statement*));
+            on_statements[num_statements - 1] = on_statement;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    if (num_statements > 0)
+    {
+        return on_statements;
+    }
+    else
+    {
+        free(on_statements);
+        return NULL;
+    }
+}
+
+
 struct mpir_trycast_statement* parse_trycast(mpir_parser* psr)
 {
     struct mpir_trycast_statement node;
@@ -103,20 +195,39 @@ struct mpir_trycast_statement* parse_trycast(mpir_parser* psr)
     else return NULL;
 
     /* Parse `on` statements */
-    while(psr->peek(psr)->type == keyword_on)
-    {
-        /* parse_on_statement; */
-        /* `on` literal/variable `->` function_call | assignment */
-        NULL;
-    }
+    node.actions = parse_multiple_on_statements(psr);
+    if(node.actions == NULL) return NULL;
 
     return &node;
 }
 
+
+struct mpir_do_statement* parse_do(mpir_parser* psr)
+{
+    struct mpir_do_statement node;
+
+    /* Parse & discard `do` keyword. */
+    if(psr->peek(psr)->type == keyword_do) (void)psr->get(psr);
+    else return NULL;
+
+    /* Try to parse function call */
+    if((node.function = mpir_parse_function_call(psr)) == NULL) return NULL;
+
+    /* Parse & discard newline. */
+    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
+    else return NULL;
+
+    /* Parse on statements */
+    node.actions = parse_multiple_on_statements(psr);
+    if(node.actions == NULL) return NULL;
+    else return &node;
+}
+
+
 struct mpir_command_list* parse_function_body(mpir_parser* psr)
 {
     /*
-     * (let <|> set <|> parse_function_body) '\n'
+     * (let <|> set <|> parse_function_body <|> trycast <|> ) '\n'
      */
     return NULL;
 }
