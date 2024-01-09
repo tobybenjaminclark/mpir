@@ -6,7 +6,7 @@
 
 #include "../../headerbank/mpir_misc/mpir_definition_list.h"
 
-// Function to create a new node with the given data
+
 struct mpir_declaration_node* create_declaration_node(union mpir_declaration_data data) {
     struct mpir_declaration_node* new_node = (struct mpir_command_node*)malloc(sizeof(struct mpir_declaration_node));
     new_node->data = data;
@@ -15,7 +15,7 @@ struct mpir_declaration_node* create_declaration_node(union mpir_declaration_dat
     return new_node;
 }
 
-// Function to initialize a new doubly linked list
+
 struct mpir_declaration_list* initialize_declaration_list(){
     struct mpir_declaration_list* list = (struct mpir_command_list*)malloc(sizeof(struct mpir_declaration_list));
     list->head = NULL;
@@ -24,7 +24,7 @@ struct mpir_declaration_list* initialize_declaration_list(){
     return list;
 }
 
-// Function to insert a new node at the end of the doubly linked list
+
 void add_declaration(struct mpir_declaration_list* list, union mpir_declaration_data data) {
     struct mpir_declaration_node* new_node = create_declaration_node(data);
 
@@ -42,7 +42,7 @@ void add_declaration(struct mpir_declaration_list* list, union mpir_declaration_
     printf("added to list, new length is %d \n", list->length);
 }
 
-// Function to free the memory allocated for the doubly linked list
+
 void free_declaration_list(struct mpir_declaration_list* list) {
     struct mpir_declaration_node* current = list->head;
     while (current != NULL) {
