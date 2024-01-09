@@ -107,6 +107,6 @@ bool parse_function_declaration(mpir_parser* psr)
     node.body = parse_function_body(psr);
 
     /* Add Declaration Header to Program & Return PSR*/
-    add_declaration(psr->program, (union mpir_declaration_data){.function_declaration = &node});
+    append_command(psr->program, (union mpir_command_data){.function_declaration = &node});
     return true;
 }

@@ -7,7 +7,7 @@
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
 
-struct mpir_command_node* create_node(union command_data data) {
+struct mpir_command_node* create_node(union mpir_command_data data) {
     struct mpir_command_node* new_node = (struct mpir_command_node*)malloc(sizeof(struct mpir_command_node));
     new_node->data = data;
     new_node->next = NULL;
@@ -16,7 +16,7 @@ struct mpir_command_node* create_node(union command_data data) {
 }
 
 
-struct mpir_command_list* initialize_list(){
+struct mpir_command_list* initialize_command_list(){
     struct mpir_command_list* list = (struct mpir_command_list*)malloc(sizeof(struct mpir_command_list));
     list->head = NULL;
     list->tail = NULL;
@@ -25,7 +25,7 @@ struct mpir_command_list* initialize_list(){
 }
 
 
-void insert_at_end(struct mpir_command_list* list, union command_data data) {
+void append_command(struct mpir_command_list* list, union mpir_command_data data) {
     struct mpir_command_node* new_node = create_node(data);
 
     if (list->head == NULL) {

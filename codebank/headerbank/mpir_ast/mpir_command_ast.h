@@ -9,6 +9,7 @@
 
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_ast/mpir_expression_ast.h"
+#include "../mpir_misc/mpir_linked_list.h"
 
 struct mpir_type_assignment
 {
@@ -22,9 +23,18 @@ struct mpir_value_assignment
     struct mpir_expression* expression;
 };
 
+struct mpir_command_list;
 struct mpir_on_statement
 {
-    int a;
+    union literal {
+        float mpir_numerical_literal;
+        wchar_t* mpir_string_literal;
+    };
+    enum stored_type{
+        numerical_literal,
+        string_literal,
+    };
+    struct mpir_command_list* commands;
 };
 
 struct mpir_trycast_statement
@@ -33,5 +43,6 @@ struct mpir_trycast_statement
     struct mpir_identifier* casted_variable;
     struct mpir_on_statement** actions;
 };
+
 
 #endif

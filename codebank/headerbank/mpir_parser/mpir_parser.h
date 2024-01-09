@@ -20,7 +20,7 @@ struct mpir_parser{
     mpir_token** tokens;
 
     /* Program */
-    struct mpir_declaration_list* program;
+    struct mpir_command_list* program;
 
     /* Function Pointers */
     mpir_token* (*get)(struct mpir_parser *parser);

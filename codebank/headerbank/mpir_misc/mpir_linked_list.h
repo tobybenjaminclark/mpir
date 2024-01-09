@@ -11,12 +11,16 @@
 #include <stdlib.h>
 #include "../../headerbank/mpir_ast/mpir_command_ast.h"
 
-union command_data {
-    struct mpir_type_assignment type_assignment;
+
+union mpir_command_data {
+    struct mpir_function_declaration* function_declaration;
+    struct mpir_type_assignment* type_assignment;
+    struct mpir_value_assignment* value_assignment;
+    struct mpir_trycast_statement* trycast_statement;
 };
 
 struct mpir_command_node {
-    union command_data data;
+    union mpir_command_data data;
     struct mpir_command_node* next;
     struct mpir_command_node* prev;
 };
@@ -27,10 +31,7 @@ struct mpir_command_list {
     int length;
 };
 
-void insert_at_end(struct mpir_command_list* list, union command_data data);
-struct mpir_command_list* initialize_list();
-
-void insert_at_end(struct mpir_command_list* list, union command_data data);
-struct mpir_command_list* initialize_list();
+void append_command(struct mpir_command_list* list, union mpir_command_data data);
+struct mpir_command_list* initialize_command_list();
 
 #endif
