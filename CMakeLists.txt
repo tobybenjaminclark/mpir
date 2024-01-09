@@ -51,8 +51,6 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_parser/mpir_parse.h
         codebank/sourcebank/mpir_parser/mpir_parse_function_header.c
         codebank/headerbank/mpir_parser/mpir_parse_function_header.h
-        codebank/sourcebank/mpir_misc/mpir_definition_list.c
-        codebank/headerbank/mpir_misc/mpir_definition_list.h
         codebank/sourcebank/mpir_ast/mpir_command_ast.c
         codebank/headerbank/mpir_ast/mpir_command_ast.h
         codebank/sourcebank/mpir_parser/mpir_parse_function_body.c

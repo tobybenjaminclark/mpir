@@ -33,7 +33,7 @@ struct mpir_on_statement
     enum stored_type{
         numerical_literal,
         string_literal,
-    };
+    } type;
     struct mpir_command_list* commands;
 };
 
