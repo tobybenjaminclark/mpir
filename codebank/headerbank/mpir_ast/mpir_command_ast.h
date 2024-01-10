@@ -17,6 +17,16 @@ struct mpir_type_assignment
     struct mpir_type* type;
 };
 
+/**
+ * @brief Structure representing a value assignment in the AST.
+ *
+ * Represents a `set` binding in the language, between a variable identifier and an expression. Please note that
+ * the core calculus specifies that the type of the expression must reduce and be equal to the type of the bound
+ * variable - otherwise a compile time type error will be thrown.
+ *
+ * @var mpir_value_assignment::identifier   Variable identifier that is being assigned a value.
+ * @var mpir_value_assignment::expression   Expression to assign to the variable.
+ */
 struct mpir_value_assignment
 {
     struct mpir_identifier* identifier;
