@@ -59,7 +59,8 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     struct mpir_function_call node;
 
     /* Parse function identifier */
-    node.identifier = parse_function_identifier(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = parse_function_identifier(psr);
+    else return NULL;
 
     /* Parse `(` */
     if(psr->peek(psr)->type == open_bracket) (void)psr->get(psr);
@@ -72,6 +73,8 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     /* Parse `)` */
     if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);
     else return NULL;
+
+    wprintf(L"Parsed: Function call to %ls \n", (node.identifier->data));
 
     return &node;
 }

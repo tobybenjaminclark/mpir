@@ -13,6 +13,7 @@ funcdef multiply_show :: TypeInt, TypeInt  → TypeInt
 funcdef multiply_show x y
     let z as TypeInt
     set z as (x * y)
+    a(b)
     show z
     return z
 suchthat:

@@ -11,13 +11,6 @@
 #include "../../headerbank/mpir_ast/mpir_command_ast.h"
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
-struct mpir_ast {
-    mpir_token_type type;           /* Type of the AST node */
-    char* value;                    /* For literals or identifiers */
-    struct mpir_ast* left;          /* Left child */
-    struct mpir_ast* right;         /* Right child */
-};
-
 struct mpir_function_declaration
 {
     struct mpir_identifier* identifier;

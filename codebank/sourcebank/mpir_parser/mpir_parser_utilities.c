@@ -8,41 +8,50 @@
 
 struct mpir_identifier* parse_identifier(mpir_parser* psr)
 {
-    struct mpir_identifier node;
+    struct mpir_identifier* node = malloc(sizeof(struct mpir_identifier));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else wcscpy(node.data, (psr->get(psr))->lexeme);
-    return &node;
+    else wcscpy(node->data, (psr->get(psr))->lexeme);
+    return node;
 }
+
 
 struct mpir_function_identifier* parse_function_identifier(mpir_parser* psr)
 {
-    struct mpir_function_identifier node;
-    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.data, (psr->get(psr))->lexeme);
+    struct mpir_function_identifier* node = malloc(sizeof(struct mpir_function_identifier));
+    if(psr->peek(psr)->type == IDENTIFIER)
+    {
+        node->data[0] = L'\0';
+        wcscpy(node->data, (psr->get(psr))->lexeme);
+    }
     else return NULL;
-    return &node;
+    return node;
 }
 
 
 struct mpir_type* parse_returntype(mpir_parser* psr)
 {
-    struct mpir_type node;
+    struct mpir_type* node = malloc(sizeof(struct mpir_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function returntype got other.");
         return NULL;
     }
-    else wcscpy(node.data, (psr->get(psr))->lexeme);
-    wprintf(L"Parsed Return Type of '%ls' \n", node.data);
+    else
+    {
+        node->data[0] = L'\0';
+        wcscpy(node->data, (psr->get(psr))->lexeme);
+    }
     return &node;
 }
 
+
 struct mpir_type* parse_type(mpir_parser* psr)
 {
-    struct mpir_type node;
+    struct mpir_type* node = malloc(sizeof(struct mpir_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function type got other.");
@@ -51,9 +60,9 @@ struct mpir_type* parse_type(mpir_parser* psr)
 
     else if((psr->peek(psr))->type == IDENTIFIER)
     {
-        wcscpy(node.data, (psr->get(psr))->lexeme);
-        wprintf(L"Type Identifier '%ls' \n", node.data);
-        return &node;
+        node->data[0] = L'\0';
+        wcscpy(node->data, (psr->get(psr))->lexeme);
+        return node;
     }
     else return NULL;
 }

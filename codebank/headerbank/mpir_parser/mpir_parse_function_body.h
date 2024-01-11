@@ -23,10 +23,10 @@
  * representing the parsed 'let' binding as part of the AST.
  *
  * @param psr A pointer to the MPIR parser structure.
- *
+ * @nodes A pointer to a mpir_command_list structure containing the list of current commands.
  * @return A pointer to a dynamically allocated `struct mpir_type_assignment` on successful parsing.
  */
-struct mpir_type_assignment* parse_let_binding(mpir_parser* psr);
+struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes);
 
 /**
  * @brief Function to parse a 'set' binding (value assignment) within the MPIR parser.
@@ -37,9 +37,10 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr);
  * `struct mpir_value_assignment` representing the parsed 'set' binding.
  *
  * @param psr A pointer to the MPIR parser structure.
+ * @param nodes A pointer to a mpir_command_list structure containing the list of current commands.
  * @return A pointer to a dynamically allocated `struct mpir_value_assignment` on successful parsing.
  */
-struct mpir_value_assignment* parse_set_binding(mpir_parser* psr);
+struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes);
 
 struct mpir_command_list* parse_function_body(mpir_parser* psr);
 

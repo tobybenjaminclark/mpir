@@ -8,7 +8,8 @@
 #define MPIR_COMPILER_MPIR_EXPRESSION_AST_H
 
 #include "../../headerbank/mpir_token/mpir_token.h"
-
+#include <stdbool.h>
+\
 struct mpir_identifier
 {
     wchar_t* data[128];
@@ -24,14 +25,20 @@ struct mpir_function_identifier
     wchar_t* data[128];
 };
 
-struct mpir_expression{
-    int a;
-};
-
-
 struct mpir_function_call{
     struct mpir_function_identifier* identifier;
     struct mpir_identifier** arguments;
+};
+
+struct mpir_expression{
+    union {
+        struct mpir_function_call* function_call;
+        long double numerical_literal;
+        wchar_t* identifier;
+        wchar_t* string_literal;
+    } data;
+    struct mpir_ast* left;
+    struct mpir_ast* right;
 };
 
 #endif

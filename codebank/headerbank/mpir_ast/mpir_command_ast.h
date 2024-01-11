@@ -13,8 +13,8 @@
 
 struct mpir_type_assignment
 {
-    struct mpir_identifier* identifier;
-    struct mpir_type* type;
+    struct wchar_t* identifier[128];
+    struct wchar_t* type[128];
 };
 
 /**
@@ -29,7 +29,7 @@ struct mpir_type_assignment
  */
 struct mpir_value_assignment
 {
-    struct mpir_identifier* identifier;
+    struct wchar_t* identifier[128];
     struct mpir_expression* expression;
 };
 

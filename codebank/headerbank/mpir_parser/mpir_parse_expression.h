@@ -13,6 +13,9 @@
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
 
 struct mpir_expression* mpir_parse_expression(mpir_parser* psr);
+struct mpir_expression* parse_arithmetic_expression(mpir_parser* psr);
+struct mpir_expression* parse_term(mpir_parser* psr);
+struct mpir_expression* parse_factor(mpir_parser* psr);
 
 struct mpir_identifier** parse_arguments_internal(mpir_parser* psr, struct mpir_identifier** nodes, int node_index);
 struct mpir_identifier** parse_arguments(mpir_parser* psr);

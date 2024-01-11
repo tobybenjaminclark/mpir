@@ -106,6 +106,8 @@ bool parse_function_declaration(mpir_parser* psr)
     /* Parse function body */
     node.body = parse_function_body(psr);
 
+    printf("Passed function \n");
+
     /* Add Declaration Header to Program & Return PSR*/
     append_command(psr->program, (union mpir_command_data){.function_declaration = &node});
     return true;

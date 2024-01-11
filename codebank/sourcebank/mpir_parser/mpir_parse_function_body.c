@@ -19,7 +19,7 @@
  *
  * @return A pointer to a dynamically allocated `struct mpir_type_assignment` on successful parsing.
  */
-struct mpir_type_assignment* parse_let_binding(mpir_parser* psr)
+struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_type_assignment node;
 
@@ -28,7 +28,7 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr)
     else return NULL;
 
     /* Parse variable identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = parse_type(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.identifier, (psr->get(psr))->lexeme);
     else return NULL;
     if(node.identifier == NULL) return NULL;
 
@@ -37,10 +37,13 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr)
     else return NULL;
 
     /* Parse type identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node.type = parse_type(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.type, (psr->get(psr))->lexeme);
     else return NULL;
     if(node.type == NULL) return NULL;
 
+    wprintf(L"Parsed: let '%ls' as '%ls' \n", node.identifier, node.type);
+
+    append_command(nodes, (union mpir_command_data){.type_assignment = &node});
     return &node;
 }
 
@@ -56,7 +59,7 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr)
  * @param psr A pointer to the MPIR parser structure.
  * @return A pointer to a dynamically allocated `struct mpir_value_assignment` on successful parsing.
  */
-struct mpir_value_assignment* parse_set_binding(mpir_parser* psr)
+struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_value_assignment node;
 
@@ -65,7 +68,7 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr)
     else return NULL;
 
     /* Parse variable identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = parse_type(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.identifier, (psr->get(psr))->lexeme);
     else return NULL;
     if(node.identifier == NULL) return NULL;
 
@@ -73,10 +76,12 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr)
     if(psr->peek(psr)->type == keyword_as) (void)psr->get(psr);
     else return NULL;
 
-    /* Parse type identifier */
+    /* Parse expression */
     node.expression = mpir_parse_expression(psr);
-    if(node.expression == NULL) return NULL;
+    /*if(node.expression == NULL) return NULL;*/
 
+    wprintf(L"Parsed: `set` binding of identifier %ls \n", node.identifier);
+    append_command(nodes, (union mpir_command_data){.value_assignment = &node});
     return &node;
 }
 
@@ -170,7 +175,7 @@ struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* psr)
 }
 
 
-struct mpir_trycast_statement* parse_trycast(mpir_parser* psr)
+struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_trycast_statement node;
 
@@ -198,11 +203,12 @@ struct mpir_trycast_statement* parse_trycast(mpir_parser* psr)
     node.actions = parse_multiple_on_statements(psr);
     if(node.actions == NULL) return NULL;
 
+    append_command(nodes, (union mpir_command_data){.trycast_statement = &node});
     return &node;
 }
 
 
-struct mpir_do_statement* parse_do(mpir_parser* psr)
+struct mpir_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_do_statement node;
 
@@ -220,14 +226,38 @@ struct mpir_do_statement* parse_do(mpir_parser* psr)
     /* Parse on statements */
     node.actions = parse_multiple_on_statements(psr);
     if(node.actions == NULL) return NULL;
-    else return &node;
+
+    append_command(nodes, (union mpir_command_data){.do_statement = &node});
+    return &node;
 }
 
 
 struct mpir_command_list* parse_function_body(mpir_parser* psr)
 {
-    /*
-     * (let <|> set <|> parse_function_body <|> trycast <|> ) '\n'
-     */
+    /* Setup & Allocate Memory for Command List */
+    struct mpir_command_list* nodes = initialize_command_list();
+    mpir_token_type ntt;
+
+    while ((ntt = psr->peek(psr)->type) != keyword_suchthat)
+    {
+        switch (ntt)
+        {
+        case keyword_let:
+            parse_let_binding(psr, nodes);
+            break;
+        case keyword_set:
+            parse_set_binding(psr, nodes);
+            break;
+        case keyword_trycast:
+            break;
+        case IDENTIFIER:
+            {};
+            struct mpir_function_call* a = mpir_parse_function_call(psr);
+            if(a != NULL) append_command(nodes, (union mpir_command_data){.function_call = a});
+            break;
+        default:
+            (void)psr->get(psr);
+        }
+    }
     return NULL;
 }

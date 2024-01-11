@@ -13,10 +13,12 @@
 
 
 union mpir_command_data {
+    struct mpir_function_call* function_call;
     struct mpir_function_declaration* function_declaration;
     struct mpir_type_assignment* type_assignment;
     struct mpir_value_assignment* value_assignment;
     struct mpir_trycast_statement* trycast_statement;
+    struct mpir_do_statement* do_statement;
 };
 
 struct mpir_command_node {
