@@ -9,7 +9,7 @@
 
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include <stdbool.h>
-\
+
 struct mpir_identifier
 {
     wchar_t* data[128];

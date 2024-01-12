@@ -14,7 +14,11 @@ struct mpir_identifier* parse_identifier(mpir_parser* psr)
         mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
-    else wcscpy(node->data, (psr->get(psr))->lexeme);
+    else
+    {
+        node->data[0] = L'\0';
+        wcscpy(node->data, (psr->get(psr))->lexeme);
+    }
     return node;
 }
 
