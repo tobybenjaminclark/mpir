@@ -11,61 +11,45 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr)
     return NULL;
 }
 
-/*
- * TODO: fix argument parsing
- * */
-struct mpir_identifier** parse_arguments_internal(mpir_parser* psr, struct mpir_identifier** nodes, int node_index)
+struct mpir_identifier* get_arg(mpir_parser* psr)
 {
-    if ((psr->peek(psr))->type != IDENTIFIER)
-    {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
-        return NULL;
-    }
+    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    /* Allocate Memory for list of types */
-    nodes = realloc(nodes, sizeof(struct mpir_identifier*) * (node_index + 1));
-    nodes[node_index] = parse_identifier(psr);
-
-    wprintf(L"Argument Identifier %ls inserted at index %d\n", nodes[node_index]->data, node_index);
-
-    if ((psr->peek(psr))->type == keyword_comma)
-    {
-        /* The ',' token is voided, as it has no semantic integrity. */
-        (void)psr->get(psr);
-        parse_arguments_internal(psr, nodes, node_index++);  // Fix: Update node_index
-    }
-    else if (psr->peek(psr)->type == close_bracket)
-    {
-        /* No more types */
-        return nodes;
-    }
-    else
-    {
-        mpir_error("Parser expected ', Type' or ->");
-    }
+    struct mpir_identifier* arg = malloc(sizeof (struct mpir_identifier));
+    wcscpy(arg->data, psr->get(psr)->lexeme);
+    if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
+    return arg;
 }
+
 
 struct mpir_identifier** parse_arguments(mpir_parser* psr)
 {
-    struct mpir_identifier** nodes = malloc(sizeof(struct mpir_identifier*));
-    nodes = parse_arguments_internal(psr, nodes, 0);
+    struct mpir_identifier** nodes = malloc(2 * sizeof(struct mpir_identifier*));
 
-    printf("Showing parameters:\n");
-    int argument_count = sizeof(nodes) / sizeof(nodes[0]);
-    printf("Total of %d arguments. size: %d \n", argument_count, sizeof(nodes));
-    int argument_index;
-
-    for (argument_index = 0; argument_index < argument_count; argument_index++)
+    int arg_index = 0;
+    struct mpir_identifier* arg;
+    while((arg = get_arg(psr)) != NULL)
     {
-        wprintf(L"%ls\n", nodes[argument_index]->data);
+        wprintf(L"Parse argument %ls \n", arg->data);
 
-        if (argument_index < argument_count - 1)
+        // Reallocate memory and assign the result back to nodes
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_identifier*));
+        if (temp == NULL)
         {
-            wprintf(L", ");
+            free(nodes);
+            return NULL;
         }
+        nodes = temp;
+
+        nodes[arg_index] = arg;
+        arg_index++;
     }
+
+    // Ensure the array is properly terminated with NULL
+    nodes[arg_index] = NULL;
     return nodes;
 }
+
 
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
 {
@@ -85,24 +69,16 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     node.arguments = parse_arguments(psr);
     if(node.arguments == NULL) return NULL;
 
+    wprintf(L"Function Call to `%ls` with args: \n", node.identifier->data);
+    int argument_count = 0;
+    while (node.arguments[argument_count] != NULL) {
+        wprintf(L"\tArgument %d: %ls\n", argument_count, node.arguments[argument_count]->data);
+        argument_count++;
+    }
+
     /* Parse `)` */
     if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);
     else return NULL;
 
-    wprintf(L"Parsed: Function call to %ls with arguments: [", (node.identifier->data));
-    int argument_count = sizeof(node.arguments) / sizeof(node.arguments[0]);
-    int argument_index;
-
-    for (argument_index = 0; argument_index < argument_count; argument_index++)
-    {
-        wprintf(L"%ls ", node.arguments[argument_index]->data);
-
-        if (argument_index < argument_count - 1)
-        {
-            wprintf(L", ");
-        }
-    }
-
-    wprintf(L"].\n");
     return &node;
 }

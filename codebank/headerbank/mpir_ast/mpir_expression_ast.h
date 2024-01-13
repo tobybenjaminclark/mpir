@@ -12,17 +12,17 @@
 
 struct mpir_identifier
 {
-    wchar_t* data[128];
+    wchar_t data[128];
 };
 
 struct mpir_type
 {
-    wchar_t* data[128];
+    wchar_t data[128];
 };
 
 struct mpir_function_identifier
 {
-    wchar_t* data[128];
+    wchar_t data[128];
 };
 
 struct mpir_function_call{

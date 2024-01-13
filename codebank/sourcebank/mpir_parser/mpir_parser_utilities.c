@@ -17,7 +17,7 @@ struct mpir_identifier* parse_identifier(mpir_parser* psr)
     else
     {
         node->data[0] = L'\0';
-        wcscpy(node->data, (psr->get(psr))->lexeme);
+        wcscpy((wchar_t *) node->data, (psr->get(psr))->lexeme);
     }
     return node;
 }
