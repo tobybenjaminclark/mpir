@@ -21,7 +21,6 @@ struct mpir_identifier* get_arg(mpir_parser* psr)
     return arg;
 }
 
-
 struct mpir_identifier** parse_arguments(mpir_parser* psr)
 {
     struct mpir_identifier** nodes = NULL;
@@ -30,7 +29,6 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
     struct mpir_identifier* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        // Reallocate memory and assign the result back to nodes
         struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_identifier*));
         if (temp == NULL)
         {
@@ -43,7 +41,6 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
         arg_index++;
     }
 
-    // Ensure the array is properly terminated with NULL
     nodes[arg_index] = NULL;
     return nodes;
 }

@@ -37,7 +37,6 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
         arg_index++;
     }
 
-    // Ensure the array is properly terminated with NULL
     nodes[arg_index] = NULL;
     return nodes;
 }
