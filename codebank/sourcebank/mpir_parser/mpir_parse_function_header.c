@@ -79,13 +79,6 @@ bool parse_function_declaration(mpir_parser* psr)
     if(!(psr->tryget(psr, operator_arrow))) return false;
     if((node.return_type = parse_returntype(psr)) == NULL) return false;
 
-    wprintf(L"\tFunction `%ls` inputs: \n", node.identifier->data);
-    int argument_count = 0;
-    while (node.inputs[argument_count] != NULL) {
-        wprintf(L"\t\tInput %d: %ls\n", argument_count, node.inputs[argument_count]->data);
-        argument_count++;
-    }    
-
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return false;
@@ -94,7 +87,40 @@ bool parse_function_declaration(mpir_parser* psr)
     node.body = parse_function_body(psr);
 
     /* Add Declaration Header to Program & Return PSR*/
-    append_command(psr->program, (union mpir_command_data){.function_declaration = &node});
+    append_command(psr->program, (union mpir_command_data){.function_declaration = &node}, FUNCTION_DECLARATION);
+
+    wprintf(L"Function Declaration :: %ls \n\tInput Types:\n", psr->program->tail->data.function_declaration->identifier->data);
+    int argument_count = 0;
+    while (psr->program->tail->data.function_declaration->inputs[argument_count] != NULL) {
+        wprintf(L"\t\tInput %d: %ls\n", argument_count, psr->program->tail->data.function_declaration->inputs[argument_count]->data);
+        argument_count++;
+    }
+    wprintf(L"\tReturn Type: %ls\n\tBody:\n", psr->program->tail->data.function_declaration->return_type->data);
+
+    struct mpir_command_node* current_node = psr->program->tail->data.function_declaration->body->head;
+    while(current_node != NULL)
+    {
+        switch(current_node->type)
+        {
+            case VALUE_ASSIGNMENT:
+                wprintf(L"\t\tValue Assignment `%ls` to expression:\n", current_node->data.value_assignment->identifier);
+                break;
+            case TYPE_ASSIGNMENT:
+                wprintf(L"\t\tType Assignment `%ls` to type `%ls`\n", current_node->data.type_assignment->identifier, current_node->data.type_assignment->type);
+                break;
+            case FUNCTION_CALL:
+                wprintf(L"\t\tFunction call to '%ls':\n", current_node->data.function_call->identifier->data);
+                int argument_count = 0;
+                while (current_node->data.function_call->arguments[argument_count] != NULL) {
+                    wprintf(L"\t\t\t| Argument %d: %ls\n", argument_count, current_node->data.function_call->arguments[argument_count]->data);
+                    argument_count++;
+                }
+                break;
+            default:
+                break;
+        }
+        current_node = current_node->next;
+    }
 
     return true;
 }

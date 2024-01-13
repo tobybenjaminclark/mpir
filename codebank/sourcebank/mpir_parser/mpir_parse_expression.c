@@ -50,10 +50,10 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
 {
     /*  identifier `(` arg0 `,` arg1 `,` ... argn `)` */
 
-    struct mpir_function_call node;
+    struct mpir_function_call* node = malloc(sizeof(struct mpir_function_call));
 
     /* Parse function identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = parse_function_identifier(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_function_identifier(psr);
     else return NULL;
 
     /* Parse `(` */
@@ -61,13 +61,13 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     else return NULL;
 
     /* Parse Arguments */
-    node.arguments = parse_arguments(psr);
-    if(node.arguments == NULL) return NULL;
+    node->arguments = parse_arguments(psr);
+    if(node->arguments == NULL) return NULL;
 
-    wprintf(L"\tFunction Call to `%ls` with args: \n", node.identifier->data);
+    wprintf(L"\tFunction Call to `%ls` with args: \n", node->identifier->data);
     int argument_count = 0;
-    while (node.arguments[argument_count] != NULL) {
-        wprintf(L"\t\tArgument %d: %ls\n", argument_count, node.arguments[argument_count]->data);
+    while (node->arguments[argument_count] != NULL) {
+        wprintf(L"\t\tArgument %d: %ls\n", argument_count, node->arguments[argument_count]->data);
         argument_count++;
     }
 
@@ -75,5 +75,5 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);
     else return NULL;
 
-    return &node;
+    return node;
 }

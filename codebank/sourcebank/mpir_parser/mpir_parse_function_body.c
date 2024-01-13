@@ -43,7 +43,7 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_com
 
 
 
-    append_command(nodes, (union mpir_command_data){.type_assignment = node});
+    append_command(nodes, (union mpir_command_data){.type_assignment = node}, TYPE_ASSIGNMENT);
     wprintf(L"\tParsed: let '%ls' as '%ls' \n",
             nodes->tail->data.type_assignment->identifier,
             nodes->tail->data.type_assignment->type);
@@ -84,7 +84,7 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
     /*if(node.expression == NULL) return NULL;*/
 
 
-    append_command(nodes, (union mpir_command_data){.value_assignment = &node});
+    append_command(nodes, (union mpir_command_data){.value_assignment = &node}, VALUE_ASSIGNMENT);
 
     wprintf(L"\tParsed: set '%ls' as '%ls' \n",
             nodes->tail->data.value_assignment->identifier,
@@ -211,7 +211,7 @@ struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_comma
     node.actions = parse_multiple_on_statements(psr);
     if(node.actions == NULL) return NULL;
 
-    append_command(nodes, (union mpir_command_data){.trycast_statement = &node});
+    append_command(nodes, (union mpir_command_data){.trycast_statement = &node}, TRYCAST_STATEMENT);
     return &node;
 }
 
@@ -235,7 +235,7 @@ struct mpir_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* n
     node.actions = parse_multiple_on_statements(psr);
     if(node.actions == NULL) return NULL;
 
-    append_command(nodes, (union mpir_command_data){.do_statement = &node});
+    append_command(nodes, (union mpir_command_data){.do_statement = &node}, DO_STATEMENT);
     return &node;
 }
 
@@ -261,7 +261,7 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
         case IDENTIFIER:
             {};
             struct mpir_function_call* a = mpir_parse_function_call(psr);
-            if(a != NULL) append_command(nodes, (union mpir_command_data){.function_call = a});
+            if(a != NULL) append_command(nodes, (union mpir_command_data){.function_call = a}, FUNCTION_CALL);
             break;
         default:
             (void)psr->get(psr);

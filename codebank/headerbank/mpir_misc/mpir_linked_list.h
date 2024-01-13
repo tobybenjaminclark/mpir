@@ -21,8 +21,18 @@ union mpir_command_data {
     struct mpir_do_statement* do_statement;
 };
 
+enum mpir_command_type{
+    FUNCTION_CALL,
+    FUNCTION_DECLARATION,
+    TYPE_ASSIGNMENT,
+    VALUE_ASSIGNMENT,
+    TRYCAST_STATEMENT,
+    DO_STATEMENT
+};
+
 struct mpir_command_node {
     union mpir_command_data data;
+    enum mpir_command_type type;
     struct mpir_command_node* next;
     struct mpir_command_node* prev;
 };
@@ -33,7 +43,7 @@ struct mpir_command_list {
     int length;
 };
 
-void append_command(struct mpir_command_list* list, union mpir_command_data data);
+void append_command(struct mpir_command_list* list, union mpir_command_data data, enum mpir_command_type type);
 struct mpir_command_list* initialize_command_list();
 
 #endif

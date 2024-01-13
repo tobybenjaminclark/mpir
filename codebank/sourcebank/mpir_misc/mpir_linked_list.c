@@ -7,8 +7,9 @@
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
 
-struct mpir_command_node* create_node(union mpir_command_data data) {
+struct mpir_command_node* create_node(union mpir_command_data data, enum mpir_command_type type) {
     struct mpir_command_node* new_node = (struct mpir_command_node*)malloc(sizeof(struct mpir_command_node));
+    new_node->type = type;
     new_node->data = data;
     new_node->next = NULL;
     new_node->prev = NULL;
@@ -25,8 +26,8 @@ struct mpir_command_list* initialize_command_list(){
 }
 
 
-void append_command(struct mpir_command_list* list, union mpir_command_data data) {
-    struct mpir_command_node* new_node = create_node(data);
+void append_command(struct mpir_command_list* list, union mpir_command_data data, enum mpir_command_type type) {
+    struct mpir_command_node* new_node = create_node(data, type);
 
     if (list->head == NULL) {
         list->head = new_node;
