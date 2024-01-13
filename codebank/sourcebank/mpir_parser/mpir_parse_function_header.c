@@ -25,7 +25,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
     struct mpir_type* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_type*));
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_type*));
         if (temp == NULL)
         {
             free(nodes);
@@ -88,39 +88,6 @@ bool parse_function_declaration(mpir_parser* psr)
 
     /* Add Declaration Header to Program & Return PSR*/
     append_command(psr->program, (union mpir_command_data){.function_declaration = &node}, FUNCTION_DECLARATION);
-
-    wprintf(L"Function Declaration :: %ls \n\tInput Types:\n", psr->program->tail->data.function_declaration->identifier->data);
-    int argument_count = 0;
-    while (psr->program->tail->data.function_declaration->inputs[argument_count] != NULL) {
-        wprintf(L"\t\tInput %d: %ls\n", argument_count, psr->program->tail->data.function_declaration->inputs[argument_count]->data);
-        argument_count++;
-    }
-    wprintf(L"\tReturn Type: %ls\n\tBody:\n", psr->program->tail->data.function_declaration->return_type->data);
-
-    struct mpir_command_node* current_node = psr->program->tail->data.function_declaration->body->head;
-    while(current_node != NULL)
-    {
-        switch(current_node->type)
-        {
-            case VALUE_ASSIGNMENT:
-                wprintf(L"\t\tValue Assignment `%ls` to expression:\n", current_node->data.value_assignment->identifier);
-                break;
-            case TYPE_ASSIGNMENT:
-                wprintf(L"\t\tType Assignment `%ls` to type `%ls`\n", current_node->data.type_assignment->identifier, current_node->data.type_assignment->type);
-                break;
-            case FUNCTION_CALL:
-                wprintf(L"\t\tFunction call to '%ls':\n", current_node->data.function_call->identifier->data);
-                int argument_count = 0;
-                while (current_node->data.function_call->arguments[argument_count] != NULL) {
-                    wprintf(L"\t\t\t| Argument %d: %ls\n", argument_count, current_node->data.function_call->arguments[argument_count]->data);
-                    argument_count++;
-                }
-                break;
-            default:
-                break;
-        }
-        current_node = current_node->next;
-    }
 
     return true;
 }

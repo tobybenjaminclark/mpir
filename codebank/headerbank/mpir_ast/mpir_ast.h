@@ -19,4 +19,11 @@ struct mpir_function_declaration
     struct mpir_command_list* body;
 };
 
+struct mpir_type_declaration
+{
+    struct mpir_identifier* identifier;
+    struct mpir_type** inputs;
+    struct mpir_type* base_type;
+};
+
 #endif
