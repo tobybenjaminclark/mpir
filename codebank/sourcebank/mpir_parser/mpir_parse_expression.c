@@ -15,7 +15,7 @@ struct mpir_identifier* get_arg(mpir_parser* psr)
 {
     if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    struct mpir_identifier* arg = malloc(sizeof (struct mpir_identifier));
+    struct mpir_identifier* arg = calloc(1, sizeof (struct mpir_identifier));
     wcscpy(arg->data, psr->get(psr)->lexeme);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;
@@ -29,7 +29,7 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
     struct mpir_identifier* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_identifier*));
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_identifier*));
         if (temp == NULL)
         {
             free(nodes);

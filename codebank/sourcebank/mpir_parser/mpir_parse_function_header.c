@@ -25,7 +25,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
     struct mpir_type* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_type*));
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_type*));
         if (temp == NULL)
         {
             free(nodes);
