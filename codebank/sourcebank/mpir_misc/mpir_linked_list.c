@@ -38,8 +38,6 @@ void append_command(struct mpir_command_list* list, union mpir_command_data data
     }
 
     list->length++;
-
-    printf("added to list, new length is %d \n", list->length);
 }
 
 

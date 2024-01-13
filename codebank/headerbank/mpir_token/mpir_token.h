@@ -16,7 +16,7 @@
     "*", "/", "+", "-", "^", "=", "(", ")", \
     "{", "}", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "=", ">",    \
     "<", ">=", "<=", "→", "↔", "^",         \
-    "∨", "using", "return", "suchthat", "funcdef", "typedef", "trycast", "into", "do", "on", "let", "set", "in", "as", "end", ",",   \
+    "∨", "using", "suchthat", "funcdef", "typedef", "trycast", "into", "do", "on", "let", "set", "in", "as", "end", ",",   \
     "____", "|", ":", "::", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
 
@@ -55,7 +55,6 @@ typedef enum
 
     /* Keywords */
     keyword_using,
-    keyword_return,
     keyword_suchthat,
     keyword_funcdef,
     keyword_typedef,

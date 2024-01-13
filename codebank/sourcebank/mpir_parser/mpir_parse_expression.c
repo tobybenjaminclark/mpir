@@ -30,8 +30,6 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
     struct mpir_identifier* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        wprintf(L"Parse argument %ls \n", arg->data);
-
         // Reallocate memory and assign the result back to nodes
         struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_identifier*));
         if (temp == NULL)
@@ -69,10 +67,10 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     node.arguments = parse_arguments(psr);
     if(node.arguments == NULL) return NULL;
 
-    wprintf(L"Function Call to `%ls` with args: \n", node.identifier->data);
+    wprintf(L"\tFunction Call to `%ls` with args: \n", node.identifier->data);
     int argument_count = 0;
     while (node.arguments[argument_count] != NULL) {
-        wprintf(L"\tArgument %d: %ls\n", argument_count, node.arguments[argument_count]->data);
+        wprintf(L"\t\tArgument %d: %ls\n", argument_count, node.arguments[argument_count]->data);
         argument_count++;
     }
 

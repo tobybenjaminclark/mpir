@@ -74,17 +74,16 @@ bool parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type != double_colon) return false;
     else if(psr->peek(psr)->type == double_colon) (void)psr->get(psr);
     else return false;
-    printf("Parsed :: \n");
 
     /* Parse return type */
     if((node.inputs = parse_inputs(psr)) == NULL) return false;
     if(!(psr->tryget(psr, operator_arrow))) return false;
     if((node.return_type = parse_returntype(psr)) == NULL) return false;
 
-    wprintf(L"Function `%ls` with inputs: \n", node.identifier->data);
+    wprintf(L"\tFunction `%ls` inputs: \n", node.identifier->data);
     int argument_count = 0;
     while (node.inputs[argument_count] != NULL) {
-        wprintf(L"\tInput %d: %ls\n", argument_count, node.inputs[argument_count]->data);
+        wprintf(L"\t\tInput %d: %ls\n", argument_count, node.inputs[argument_count]->data);
         argument_count++;
     }    
 

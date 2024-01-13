@@ -517,7 +517,6 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
 mpir_token_type mpir_match_keyword(wchar_t* lexeme)
 {
     if(wcscmp(lexeme, L"using") == 0) return keyword_using;
-    else if(wcscmp(lexeme, L"return") == 0) return keyword_return;
     else if(wcscmp(lexeme, L"where") == 0) return keyword_suchthat;
     else if(wcscmp(lexeme, L"suchthat") == 0) return keyword_suchthat;
     else if(wcscmp(lexeme, L"funcdef") == 0) return keyword_funcdef;

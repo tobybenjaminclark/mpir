@@ -21,30 +21,33 @@
  */
 struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
-    struct mpir_type_assignment node;
+    struct mpir_type_assignment* node = malloc(sizeof(struct mpir_type_assignment));
 
     /* Parse `let` */
     if(psr->peek(psr)->type == keyword_let) (void)psr->get(psr);
     else return NULL;
 
     /* Parse variable identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.identifier, (psr->get(psr))->lexeme);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node->identifier, (psr->get(psr))->lexeme);
     else return NULL;
-    if(node.identifier == NULL) return NULL;
+    if(node->identifier == NULL) return NULL;
 
     /* Parse `as` */
     if(psr->peek(psr)->type == keyword_as) (void)psr->get(psr);
     else return NULL;
 
     /* Parse type identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.type, (psr->get(psr))->lexeme);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node->type, (psr->get(psr))->lexeme);
     else return NULL;
-    if(node.type == NULL) return NULL;
+    if(node->type == NULL) return NULL;
 
-    wprintf(L"Parsed: let '%ls' as '%ls' \n", node.identifier, node.type);
 
-    append_command(nodes, (union mpir_command_data){.type_assignment = &node});
-    return &node;
+
+    append_command(nodes, (union mpir_command_data){.type_assignment = node});
+    wprintf(L"\tParsed: let '%ls' as '%ls' \n",
+            nodes->tail->data.type_assignment->identifier,
+            nodes->tail->data.type_assignment->type);
+    return node;
 }
 
 
@@ -80,8 +83,13 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
     node.expression = mpir_parse_expression(psr);
     /*if(node.expression == NULL) return NULL;*/
 
-    wprintf(L"Parsed: `set` binding of identifier %ls \n", node.identifier);
+
     append_command(nodes, (union mpir_command_data){.value_assignment = &node});
+
+    wprintf(L"\tParsed: set '%ls' as '%ls' \n",
+            nodes->tail->data.value_assignment->identifier,
+            nodes->tail->data.value_assignment->expression);
+
     return &node;
 }
 
@@ -259,5 +267,6 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
             (void)psr->get(psr);
         }
     }
-    return NULL;
+
+    return nodes;
 }
