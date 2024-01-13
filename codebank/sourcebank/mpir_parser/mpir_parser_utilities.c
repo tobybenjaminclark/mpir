@@ -41,15 +41,15 @@ struct mpir_type* parse_returntype(mpir_parser* psr)
     struct mpir_type* node = malloc(sizeof(struct mpir_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function returntype got other.");
+        mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
     else
     {
         node->data[0] = L'\0';
-        wcscpy(node->data, (psr->get(psr))->lexeme);
+        wcscpy((wchar_t *) node->data, (psr->get(psr))->lexeme);
     }
-    return &node;
+    return node;
 }
 
 

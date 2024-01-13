@@ -6,58 +6,41 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_function_header.h"
 
-/**
- * @brief Internal Function to parse a list of input types within a function declaration recursively.
- *
- * This recursive function parses a series of input types in the context of a function declaration. It expects
- * identifiers representing input types separated by commas. The parsing process involves allocating memory for a
- * dynamic array of `mpir_type` struct pointers. The function recursively calls itself when encountering multiple input
- * types, and it terminates when it encounters the '->' operator, indicating the end of the input types section.
- *
- * @param psr A pointer to the MPIR parser structure.
- * @param nodes  A pointer to an array of `mpir_type` structures, may be reallocated.
- * @param node_index The index indicating the current position in the 'nodes' array.
- *
- * @return A pointer to the array of parsed input types on success or NULL on parsing failure.
- */
-struct mpir_type** parse_inputs_internal(mpir_parser* psr, struct mpir_type** nodes, int node_index)
+struct mpir_type* get_input(mpir_parser* psr)
 {
-    if((psr->peek(psr))->type != IDENTIFIER)
-    {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
-        return NULL;
-    }
+    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    /* Allocate Memory for list of types */
-    nodes = realloc(nodes, sizeof(struct mpir_type*) * (node_index + 1));
-    nodes[0] = parse_type(psr);
-
-    if((psr->peek(psr))->type == keyword_comma)
-    {
-        /* The ',' token is voided, as it has no semantic integrity. */
-        (void)psr->get(psr);
-        node_index++;
-        parse_inputs_internal(psr, nodes, node_index);
-    }
-    else if(psr->peek(psr)->type == operator_arrow) return nodes;
-    else return NULL;
+    struct mpir_type* arg = malloc(sizeof (struct mpir_type));
+    wcscpy(arg->data, psr->get(psr)->lexeme);
+    if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
+    return arg;
 }
 
-/**
- * @brief Function to parse Function IO Input Types, returns a list of mpir_type structures
- *
- * This function is responsible for parsing the declaration of function input types. It does this using the `parse_
- * inputs_internal()` function, which uses a recursive approach. Memory is allocated for this list dynamically,
- * meaning a function can take any (*reasonable) number of arguments.
- *
- * @param psr A pointer to the MPIR parser structure.
- * @return List of Inputs on success, NULL on parsing failure.
- */
+
 struct mpir_type** parse_inputs(mpir_parser* psr)
 {
-    struct mpir_type** nodes;
-    nodes = malloc(sizeof(struct mpir_type*));
-    return parse_inputs_internal(psr, nodes, 0);
+    struct mpir_type** nodes = NULL;
+
+    int arg_index = 0;
+    struct mpir_type* arg;
+    while((arg = get_arg(psr)) != NULL)
+    {
+        // Reallocate memory and assign the result back to nodes
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_type*));
+        if (temp == NULL)
+        {
+            free(nodes);
+            return NULL;
+        }
+        nodes = temp;
+
+        nodes[arg_index] = arg;
+        arg_index++;
+    }
+
+    // Ensure the array is properly terminated with NULL
+    nodes[arg_index] = NULL;
+    return nodes;
 }
 
 /**
@@ -99,6 +82,13 @@ bool parse_function_declaration(mpir_parser* psr)
     if(!(psr->tryget(psr, operator_arrow))) return false;
     if((node.return_type = parse_returntype(psr)) == NULL) return false;
 
+    wprintf(L"Function `%ls` with inputs: \n", node.identifier->data);
+    int argument_count = 0;
+    while (node.inputs[argument_count] != NULL) {
+        wprintf(L"\tInput %d: %ls\n", argument_count, node.inputs[argument_count]->data);
+        argument_count++;
+    }    
+
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return false;
@@ -106,9 +96,8 @@ bool parse_function_declaration(mpir_parser* psr)
     /* Parse function body */
     node.body = parse_function_body(psr);
 
-    printf("Passed function \n");
-
     /* Add Declaration Header to Program & Return PSR*/
     append_command(psr->program, (union mpir_command_data){.function_declaration = &node});
+
     return true;
 }

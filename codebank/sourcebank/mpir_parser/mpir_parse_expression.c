@@ -24,7 +24,7 @@ struct mpir_identifier* get_arg(mpir_parser* psr)
 
 struct mpir_identifier** parse_arguments(mpir_parser* psr)
 {
-    struct mpir_identifier** nodes = malloc(2 * sizeof(struct mpir_identifier*));
+    struct mpir_identifier** nodes = NULL;
 
     int arg_index = 0;
     struct mpir_identifier* arg;
