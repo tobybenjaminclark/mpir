@@ -64,13 +64,6 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     node->arguments = parse_arguments(psr);
     if(node->arguments == NULL) return NULL;
 
-    wprintf(L"\tFunction Call to `%ls` with args: \n", node->identifier->data);
-    int argument_count = 0;
-    while (node->arguments[argument_count] != NULL) {
-        wprintf(L"\t\tArgument %d: %ls\n", argument_count, node->arguments[argument_count]->data);
-        argument_count++;
-    }
-
     /* Parse `)` */
     if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);
     else return NULL;

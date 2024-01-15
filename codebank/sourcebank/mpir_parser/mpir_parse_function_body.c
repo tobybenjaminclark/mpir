@@ -44,9 +44,7 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_com
 
 
     append_command(nodes, (union mpir_command_data){.type_assignment = node}, TYPE_ASSIGNMENT);
-    wprintf(L"\tParsed: let '%ls' as '%ls' \n",
-            nodes->tail->data.type_assignment->identifier,
-            nodes->tail->data.type_assignment->type);
+
     return node;
 }
 
@@ -83,12 +81,7 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
     node.expression = mpir_parse_expression(psr);
     /*if(node.expression == NULL) return NULL;*/
 
-
     append_command(nodes, (union mpir_command_data){.value_assignment = &node}, VALUE_ASSIGNMENT);
-
-    wprintf(L"\tParsed: set '%ls' as '%ls' \n",
-            nodes->tail->data.value_assignment->identifier,
-            nodes->tail->data.value_assignment->expression);
 
     return &node;
 }

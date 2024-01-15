@@ -67,7 +67,6 @@ bool parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type == IDENTIFIER) node.identifier = node.identifier = parse_identifier(psr);
     else return false;
     if(node.identifier == NULL) return false;
-    wprintf(L"Function Identifier: '%ls'\n", node.identifier);
 
     /* Parse I/O shield operator `::` */
     if(psr->peek(psr)->type != double_colon) return false;
