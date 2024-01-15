@@ -6,26 +6,25 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_function_header.h"
 
-struct mpir_type* get_input(mpir_parser* psr)
+struct mpir_type* get_type(mpir_parser* psr)
 {
     if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    struct mpir_type* arg = malloc(sizeof (struct mpir_type));
+    struct mpir_type* arg = calloc(1, sizeof (struct mpir_identifier));
     wcscpy(arg->data, psr->get(psr)->lexeme);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;
 }
 
-
 struct mpir_type** parse_inputs(mpir_parser* psr)
 {
-    struct mpir_type** nodes = NULL;
+    struct mpir_identifier** nodes = NULL;
 
     int arg_index = 0;
-    struct mpir_type* arg;
-    while((arg = get_arg(psr)) != NULL)
+    struct mpir_identifier* arg;
+    while((arg = get_type(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 1) * sizeof(struct mpir_type*));
+        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_identifier*));
         if (temp == NULL)
         {
             free(nodes);
@@ -55,7 +54,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
 bool parse_function_declaration(mpir_parser* psr)
 {
     /* Create Funcdef AST node & Consume 'fundef' */
-    struct mpir_function_declaration node;
+    struct mpir_function_declaration* node = calloc(1, sizeof(struct mpir_function_declaration));
     /* Parsing */
 
     /* Parse `funcdef */
@@ -64,9 +63,9 @@ bool parse_function_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse function identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node.identifier = node.identifier = parse_identifier(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_identifier(psr);
     else return false;
-    if(node.identifier == NULL) return false;
+    if(node->identifier == NULL) return false;
 
     /* Parse I/O shield operator `::` */
     if(psr->peek(psr)->type != double_colon) return false;
@@ -74,19 +73,19 @@ bool parse_function_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse return type */
-    if((node.inputs = parse_inputs(psr)) == NULL) return false;
+    if((node->inputs = parse_inputs(psr)) == NULL) return false;
     if(!(psr->tryget(psr, operator_arrow))) return false;
-    if((node.return_type = parse_returntype(psr)) == NULL) return false;
+    if((node->return_type = parse_returntype(psr)) == NULL) return false;
 
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return false;
 
     /* Parse function body */
-    node.body = parse_function_body(psr);
+    node->body = parse_function_body(psr);
 
     /* Add Declaration Header to Program & Return PSR*/
-    append_command(psr->program, (union mpir_command_data){.function_declaration = &node}, FUNCTION_DECLARATION);
+    append_command(psr->program, (union mpir_command_data){.function_declaration = node}, FUNCTION_DECLARATION);
 
     return true;
 }

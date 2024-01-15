@@ -28,8 +28,8 @@ void print_command_node(struct mpir_command_node* current_node)
             wprintf(L"Function Declaration :: %ls \n\tInput Types:\n", current_node->data.function_declaration->identifier->data);
             int argument_count2 = 0;
             while (current_node->data.function_declaration->inputs[argument_count2] != NULL) {
-                wprintf(L"\t\tInput %d: %ls\n", argument_count, current_node->data.function_declaration->inputs[argument_count2]->data);
-                argument_count++;
+                wprintf(L"\t\tInput %d: %ls\n", argument_count2, current_node->data.function_declaration->inputs[argument_count2]->data);
+                argument_count2++;
             }
             wprintf(L"\tReturn Type: %ls\n\tBody:\n", current_node->data.function_declaration->return_type->data);
 
