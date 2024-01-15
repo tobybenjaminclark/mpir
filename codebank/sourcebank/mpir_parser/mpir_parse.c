@@ -33,11 +33,11 @@ void print_command_node(struct mpir_command_node* current_node)
             }
             wprintf(L"\tReturn Type: %ls\n\tBody:\n", current_node->data.function_declaration->return_type->data);
 
-            struct mpir_command_node* current_node = current_node->data.function_declaration->body->head;
-            while(current_node != NULL)
+            struct mpir_command_node* command_node = current_node->data.function_declaration->body->head;
+            while(command_node != NULL)
             {
-                print_command_node(current_node);
-                current_node = current_node->next;
+                print_command_node(command_node);
+                command_node = command_node->next;
             }
             break;
         default:
@@ -69,6 +69,7 @@ void mpir_parse(mpir_parser* parser)
     while(program_node != NULL)
     {
         print_command_node(program_node);
+        program_node = program_node->next;
     }
 
 
