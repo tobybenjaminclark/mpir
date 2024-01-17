@@ -235,12 +235,12 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
             struct mpir_expression* newOperator = mpir_create_operator_node(op_lexeme, NULL, NULL);
-            newOperator->left = root;  // Connect the existing root as the left operand
+            newOperator->left = root;
 
             struct mpir_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
-            newOperator->right = rightOperand;  // Set the right operand
+            newOperator->right = rightOperand;
 
-            root = newOperator;  // The new operator is now the root
+            root = newOperator;
         }
         else
         {
