@@ -41,4 +41,14 @@ struct mpir_expression{
     struct mpir_ast* right;
 };
 
+// Node structure for the Abstract Syntax Tree (AST)
+typedef struct Node
+{
+    char type;                  // 'n' for number, 'o' for operator
+    double value;               // value if the node is a number
+    wchar_t operator[128];      // operator if the node is an operator
+    struct Node* left;          // left child
+    struct Node* right;         // right child
+} Node;
+
 #endif

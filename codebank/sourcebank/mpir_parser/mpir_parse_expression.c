@@ -45,7 +45,6 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
     return nodes;
 }
 
-
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
 {
     /*  identifier `(` arg0 `,` arg1 `,` ... argn `)` */
@@ -69,4 +68,125 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     else return NULL;
 
     return node;
+}
+
+int isOperator(char ch) {
+    return (ch == '+' || ch == '-' || ch == '*' || ch == '/');
+}
+
+int getPrecedence(char operator) {
+    switch (operator) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+void displayAST(Node* root)
+{
+    if (root == NULL)
+    {
+        printf("Null AST!\n");
+        return;
+    }
+
+    if (root->type == 'n') {
+        wprintf(L"%lf", root->value);
+    } else if (root->type == 'o') {
+        wprintf(L"%ls", root->operator);
+    }
+
+    if (root->left != NULL || root->right != NULL) {
+        wprintf(L" ( ");
+        displayAST(root->left);
+        wprintf(L", ");
+        displayAST(root->right);
+        wprintf(L" ) ");
+    }
+}
+
+
+// Function to create a new number node
+Node* createNumberNode(double value)
+{
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->type = 'n';
+    node->value = value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+
+
+// Function to create a new operator node
+Node* createOperatorNode(const wchar_t* operator, Node* left, Node* right) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->type = 'o';
+    wcscpy(node->operator, operator);
+    node->left = left;
+    node->right = right;
+    return node;
+}
+
+Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
+{
+    Node* root = NULL;
+    const char* token_names[] = { TOKEN_NAME_MAP };
+    while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE)
+    {
+        wprintf(L"Expression Lexemme: %ls (type = %s :: %d) \n", psr->peek(psr)->lexeme, token_names[psr->peek(psr)->type], psr->peek(psr)->type);
+        if (psr->peek(psr)->type == NUMERICAL_LITERAL)
+        {
+            printf("EXPR: Parsing Numerical Literal\n");
+            root = createNumberNode(wcstol(psr->get(psr)->lexeme, NULL, 10));
+        }
+        else if (psr->peek(psr)->type == open_bracket)
+        {
+            printf("EXPR: Parsing Open Bracket\n");
+            // If an opening parenthesis is encountered, recursively build the AST for the subexpression
+            (void)psr->get(psr);
+            Node* subexpression = buildAST(psr, NEWLINE);
+            root = subexpression;
+        }
+        else if (psr->peek(psr)->type == close_bracket)
+        {
+            printf("EXPR: Parsing Closed Bracket\n");
+            // If a closing parenthesis is encountered, return the root of the current subexpression
+            (void)psr->get(psr);
+            return root;
+        }
+
+        else if (psr->peek(psr)->type == operator_sum
+        || psr->peek(psr)->type == operator_divide
+        || psr->peek(psr)->type == operator_multiply
+        || psr->peek(psr)->type == operator_subtract)
+        {
+            printf("EXPR: Parsing Operators\n");
+            wchar_t op_lexeme[128];
+            wcscpy(psr->get(psr)->lexeme, op_lexeme);
+
+            Node* leftOperand = root;
+            Node* rightOperand = buildAST(psr, NEWLINE);
+            root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
+        }
+        else
+        {
+            if(root != NULL)
+            {
+                return createNumberNode(wcstol(psr->get(psr)->lexeme, NULL, 10));
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+    }
+
+    return root;
 }

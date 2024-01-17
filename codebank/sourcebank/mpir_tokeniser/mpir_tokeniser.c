@@ -505,7 +505,7 @@ int mpir_tokenise_negative_numerical_or_arrow(mpir_lexer* lexer)
         return mpir_tokenise_process_buffer(lexer, operator_arrow);
     }
 
-        /* If the next character is a digit, then we know it's a negative numerical literal */
+    /* If the next character is a digit, then we know it's a negative numerical literal */
     else if(iswdigit(lexer->peek(lexer))) return mpir_tokenise_numerical_literal(lexer);
 
         /* If it's not a digit or a '>', then it's a syntactic error */
@@ -628,6 +628,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
             mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
             mpir_tokenise_connectives(lxr) ||                      /* ← Tokenises boolean comparators          */
             mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
+            mpir_tokenise_numerical_literal(lxr) ||                /* ← Tokenises numerical literals           */
             mpir_tokenise_brackets(lxr) ||                         /* ← Tokenises brackets/braces              */
             mpir_tokenise_operators(lxr) ||                        /* ← Tokenises + - * / ^ ∀ ∃ operators      */
             mpir_tokenise_identifiers_and_keywords(lxr)            /* ← Tokenises identifiers & keywords       */

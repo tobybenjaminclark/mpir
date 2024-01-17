@@ -56,7 +56,6 @@ void mpir_parse(mpir_parser* parser)
             next_type = (parser->peek(parser))->type;
             if(next_type == keyword_funcdef)
             {
-                printf("branching to parse_function_declaration!\n");
                 parse_function_declaration(parser);
             }
         }

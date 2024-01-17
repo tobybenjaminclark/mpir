@@ -12,7 +12,7 @@ end
 funcdef multiply_show :: TypeInt, TypeInt  → TypeInt
 funcdef multiply_show x y
     let z as TypeInt
-    set z as (x * y)
+    set z as (1 + 5)
     function(nuts, balls)
     show(z)
     return(z)
