@@ -41,7 +41,7 @@ struct mpir_function_identifier
 
 struct mpir_function_call{
     struct mpir_function_identifier* identifier;
-    struct mpir_identifier** arguments;
+    struct mpir_expression** arguments;
 };
 
 

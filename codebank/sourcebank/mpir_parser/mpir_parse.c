@@ -11,19 +11,24 @@ void print_command_node(struct mpir_command_node* current_node)
     switch(current_node->type)
     {
         case VALUE_ASSIGNMENT:
+
             wprintf(L"\t\tValue Assignment `%ls` to expression:\n", current_node->data.value_assignment->identifier);
+            mpir_display_ast(current_node->data.value_assignment->expression, 2);
             break;
         case TYPE_ASSIGNMENT:
             wprintf(L"\t\tType Assignment `%ls` to type `%ls`\n", current_node->data.type_assignment->identifier, current_node->data.type_assignment->type);
             break;
         case FUNCTION_CALL:
+
             wprintf(L"\t\tFunction call to '%ls':\n", current_node->data.function_call->identifier->data);
             int argument_count = 0;
             while (current_node->data.function_call->arguments[argument_count] != NULL) {
-                wprintf(L"\t\t\t| Argument %d: %ls\n", argument_count, current_node->data.function_call->arguments[argument_count]->data);
+                wprintf(L"\t\t\t| Argument %d:\n", argument_count);
+                mpir_display_ast(current_node->data.function_call->arguments[argument_count], 3);
                 argument_count++;
             }
             break;
+
         case FUNCTION_DECLARATION:
             wprintf(L"Function Declaration :: %ls \n\tInput Types:\n", current_node->data.function_declaration->identifier->data);
             int argument_count2 = 0;

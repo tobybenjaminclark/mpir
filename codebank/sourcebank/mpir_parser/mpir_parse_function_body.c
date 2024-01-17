@@ -78,9 +78,8 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
     else return NULL;
 
     /* Parse expression */
-    node.expression = NULL;
-    struct mpir_expression* a = mpir_parse_expression(psr, NEWLINE, 0);
-    mpir_display_ast(a, 0);
+    node.expression = mpir_parse_expression(psr, NEWLINE, 0);
+    mpir_display_ast(node.expression, 0);
 
     append_command(nodes, (union mpir_command_data){.value_assignment = &node}, VALUE_ASSIGNMENT);
 

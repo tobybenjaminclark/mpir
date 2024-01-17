@@ -6,12 +6,12 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_expression.h"
 
-struct mpir_identifier* get_arg(mpir_parser* psr)
+struct mpir_expression* get_arg(mpir_parser* psr)
 {
-    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
+    if(psr->peek(psr)->type == close_bracket) return NULL;
 
-    struct mpir_identifier* arg = calloc(1, sizeof (struct mpir_identifier));
-    wcscpy(arg->data, psr->get(psr)->lexeme);
+    struct mpir_expression* arg = calloc(1, sizeof (struct mpir_expression));
+    arg = mpir_parse_expression(psr, keyword_comma, 0);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;
 }
@@ -21,10 +21,10 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr)
     struct mpir_identifier** nodes = NULL;
 
     int arg_index = 0;
-    struct mpir_identifier* arg;
+    struct mpir_expression* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_identifier*));
+        struct mpir_expression** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_expression*));
         if (temp == NULL)
         {
             free(nodes);
@@ -57,6 +57,13 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     /* Parse Arguments */
     node->arguments = parse_arguments(psr);
     if(node->arguments == NULL) return NULL;
+
+    int argument_count = 0;
+    while (node->arguments[argument_count] != NULL) {
+        wprintf(L"\t\t\t| Argument %d:\n", argument_count);
+        mpir_display_ast(node->arguments[argument_count], 0);
+        argument_count++;
+    }
 
     /* Parse `)` */
     if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);

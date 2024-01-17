@@ -14,10 +14,7 @@
 #include <wchar.h>
 #include <stdio.h>
 
-struct mpir_expression* parse_arithmetic_expression(mpir_parser* psr);
-struct mpir_expression* parse_term(mpir_parser* psr);
-struct mpir_expression* parse_factor(mpir_parser* psr);
-struct mpir_identifier* get_arg(mpir_parser* psr);
+struct mpir_expression* get_arg(mpir_parser* psr);
 
 struct mpir_identifier** parse_arguments(mpir_parser* psr);
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr);
