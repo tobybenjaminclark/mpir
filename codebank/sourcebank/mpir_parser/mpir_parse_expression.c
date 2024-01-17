@@ -96,10 +96,10 @@ void mpir_display_ast(struct mpir_expression* root, int indentation_level)
     switch(root->type)
     {
         case(AST_FUNCTION_CALL):
-            wprintf(L"%s\n", root->data.function_call->identifier->data);
+            wprintf(L"%ls(args)\n", root->data.function_call->identifier->data);
             break;
         case(AST_NUMERICAL_LITERAL):
-            wprintf(L"%d\n", root->data.numerical_literal);
+            wprintf(L"%lf\n", root->data.numerical_literal);
             break;
         case(AST_STRING_LITERAL):
             wprintf(L"%ls\n", root->data.string_literal);
