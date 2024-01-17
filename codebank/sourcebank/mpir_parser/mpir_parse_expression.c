@@ -74,13 +74,14 @@ int isOperator(char ch) {
     return (ch == '+' || ch == '-' || ch == '*' || ch == '/');
 }
 
-int getPrecedence(char operator) {
+int getPrecedence(mpir_token_type operator)
+{
     switch (operator) {
-        case '+':
-        case '-':
+        case operator_sum:
+        case operator_subtract:
             return 1;
-        case '*':
-        case '/':
+        case operator_multiply:
+        case operator_divide:
             return 2;
         default:
             return 0;
@@ -115,7 +116,6 @@ void displayASTIndented(Node* root, int indentLevel)
     }
 }
 
-
 // Function to create a new number node
 Node* createNumberNode(double value)
 {
@@ -126,8 +126,6 @@ Node* createNumberNode(double value)
     node->right = NULL;
     return node;
 }
-
-
 
 // Function to create a new operator node
 Node* createOperatorNode(const wchar_t* operator, Node* left, Node* right) {
@@ -140,13 +138,14 @@ Node* createOperatorNode(const wchar_t* operator, Node* left, Node* right) {
 }
 
 
-Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
+Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPrecedence)
 {
     Node* root = NULL;
     const char* token_names[] = { TOKEN_NAME_MAP };
-    while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE)
+
+    while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE && getPrecedence(psr->peek(psr)->type) >= minPrecedence)
     {
-        wprintf(L"Expression Lexemme: %ls (type = %s :: %d) \n", psr->peek(psr)->lexeme, token_names[psr->peek(psr)->type], psr->peek(psr)->type);
+        wprintf(L"Expression Lexeme: %ls (type = %s :: %d) \n", psr->peek(psr)->lexeme, token_names[psr->peek(psr)->type], psr->peek(psr)->type);
         if (psr->peek(psr)->type == NUMERICAL_LITERAL)
         {
             printf("EXPR: Parsing Numerical Literal\n");
@@ -157,7 +156,7 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
             printf("EXPR: Parsing Open Bracket\n");
             // If an opening parenthesis is encountered, recursively build the AST for the subexpression
             (void)psr->get(psr);
-            Node* subexpression = buildAST(psr, NEWLINE);
+            Node* subexpression = buildAST(psr, NEWLINE, 0);  // Reset minPrecedence for the subexpression
             root = subexpression;
         }
         else if (psr->peek(psr)->type == close_bracket)
@@ -167,25 +166,32 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
             (void)psr->get(psr);
             return root;
         }
-
-        else if (psr->peek(psr)->type == operator_sum
-        || psr->peek(psr)->type == operator_divide
-        || psr->peek(psr)->type == operator_multiply
-        || psr->peek(psr)->type == operator_subtract)
+        else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract)
         {
-            printf("EXPR: Parsing Operators\n");
+            printf("EXPR: Parsing Right-Associative Operator\n");
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
             Node* leftOperand = root;
-            Node* rightOperand = buildAST(psr, NEWLINE);
+            Node* rightOperand = buildAST(psr, NEWLINE, getPrecedence(psr->peek(psr)->type));
+            root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
+        }
+        else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide)
+        {
+            printf("EXPR: Parsing Left-Associative Operator\n");
+            wchar_t op_lexeme[128];
+            wcscpy(op_lexeme, psr->get(psr)->lexeme);
+
+            Node* leftOperand = root;
+            Node* rightOperand = buildAST(psr, NEWLINE, getPrecedence(psr->peek(psr)->type) + 1);  // Adjust minPrecedence for left-associative operators
             root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
         }
         else
         {
-            if(root != NULL)
+            if (root != NULL)
             {
-                return createNumberNode(wcstol(psr->get(psr)->lexeme, NULL, 10));
+                printf("Unexpected token type: %s\n", token_names[psr->peek(psr)->type]);
+                exit(EXIT_FAILURE);  // Or handle the error in a way suitable for your application
             }
             else
             {
@@ -196,3 +202,4 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
 
     return root;
 }
+

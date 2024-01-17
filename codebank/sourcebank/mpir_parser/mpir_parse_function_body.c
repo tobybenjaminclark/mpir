@@ -79,7 +79,7 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
 
     /* Parse expression */
     node.expression = NULL;
-    Node* a = buildAST(psr, NEWLINE);
+    Node* a = buildAST(psr, NEWLINE, 0);
     displayASTIndented(a, 0);
 
     append_command(nodes, (union mpir_command_data){.value_assignment = &node}, VALUE_ASSIGNMENT);

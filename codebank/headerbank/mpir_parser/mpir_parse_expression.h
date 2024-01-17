@@ -24,7 +24,7 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr);
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr);
 
 // Function to build the AST from the expression
-Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type);
+Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPrecedence);
 
 // Helper function to perform arithmetic operations
 double performOperation(double operand1, char operator, double operand2);
@@ -33,7 +33,7 @@ double performOperation(double operand1, char operator, double operand2);
 int isOperator(char ch);
 
 // Helper function to get the precedence of an operator
-int getPrecedence(char operator);
+int getPrecedence(mpir_token_type operator);
 
 void displayASTIndented(Node* root, int indentLevel);
 
