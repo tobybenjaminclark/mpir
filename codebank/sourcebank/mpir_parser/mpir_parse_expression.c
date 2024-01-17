@@ -173,7 +173,7 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPreceden
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
             Node* leftOperand = root;
-            Node* rightOperand = buildAST(psr, NEWLINE, getPrecedence(psr->peek(psr)->type));
+            Node* rightOperand = buildAST(psr, NEWLINE, 0);
             root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
         }
         else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide)
@@ -182,9 +182,13 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPreceden
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
-            Node* leftOperand = root;
-            Node* rightOperand = buildAST(psr, NEWLINE, getPrecedence(psr->peek(psr)->type) + 1);  // Adjust minPrecedence for left-associative operators
-            root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
+            Node* newOperator = createOperatorNode(op_lexeme, NULL, NULL);
+            newOperator->left = root;  // Connect the existing root as the left operand
+
+            Node* rightOperand = buildAST(psr, NEWLINE, 0);
+            newOperator->right = rightOperand;  // Set the right operand
+
+            root = newOperator;  // The new operator is now the root
         }
         else
         {
