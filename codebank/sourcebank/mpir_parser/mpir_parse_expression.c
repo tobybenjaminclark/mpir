@@ -87,26 +87,31 @@ int getPrecedence(char operator) {
     }
 }
 
-void displayAST(Node* root)
+void displayASTIndented(Node* root, int indentLevel)
 {
-    if (root == NULL)
-    {
+    if (root == NULL) {
         printf("Null AST!\n");
         return;
     }
 
+    for (int i = 0; i < indentLevel; i++) {
+        wprintf(L"-- ");
+    }
+
     if (root->type == 'n') {
-        wprintf(L"%lf", root->value);
+        wprintf(L"%lf\n", root->value);
     } else if (root->type == 'o') {
-        wprintf(L"%ls", root->operator);
+        wprintf(L"%ls\n", root->operator);
     }
 
     if (root->left != NULL || root->right != NULL) {
-        wprintf(L" ( ");
-        displayAST(root->left);
-        wprintf(L", ");
-        displayAST(root->right);
-        wprintf(L" ) ");
+        if (root->left != NULL) {
+            displayASTIndented(root->left, indentLevel + 1);
+        }
+
+        if (root->right != NULL) {
+            displayASTIndented(root->right, indentLevel + 1);
+        }
     }
 }
 
@@ -133,6 +138,7 @@ Node* createOperatorNode(const wchar_t* operator, Node* left, Node* right) {
     node->right = right;
     return node;
 }
+
 
 Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
 {
@@ -169,7 +175,7 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type)
         {
             printf("EXPR: Parsing Operators\n");
             wchar_t op_lexeme[128];
-            wcscpy(psr->get(psr)->lexeme, op_lexeme);
+            wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
             Node* leftOperand = root;
             Node* rightOperand = buildAST(psr, NEWLINE);

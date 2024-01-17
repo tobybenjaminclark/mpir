@@ -35,6 +35,6 @@ int isOperator(char ch);
 // Helper function to get the precedence of an operator
 int getPrecedence(char operator);
 
-void displayAST(Node* root);
+void displayASTIndented(Node* root, int indentLevel);
 
 #endif
