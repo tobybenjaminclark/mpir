@@ -14,7 +14,6 @@
 #include <wchar.h>
 #include <stdio.h>
 
-struct mpir_expression* mpir_parse_expression(mpir_parser* psr);
 struct mpir_expression* parse_arithmetic_expression(mpir_parser* psr);
 struct mpir_expression* parse_term(mpir_parser* psr);
 struct mpir_expression* parse_factor(mpir_parser* psr);
@@ -24,7 +23,7 @@ struct mpir_identifier** parse_arguments(mpir_parser* psr);
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr);
 
 // Function to build the AST from the expression
-Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPrecedence);
+struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence);
 
 // Helper function to perform arithmetic operations
 double performOperation(double operand1, char operator, double operand2);
@@ -33,8 +32,8 @@ double performOperation(double operand1, char operator, double operand2);
 int isOperator(char ch);
 
 // Helper function to get the precedence of an operator
-int getPrecedence(mpir_token_type operator);
+int mpir_get_op_presedence(mpir_token_type operator);
 
-void displayASTIndented(Node* root, int indentLevel);
+void mpir_display_ast(struct mpir_expression* root, int indentation_level);
 
 #endif

@@ -32,6 +32,7 @@ typedef struct mpir_parser mpir_parser;
 mpir_token* mpir_parser_peek(mpir_parser* parser);
 mpir_token* mpir_parser_get(mpir_parser* parser);
 mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type);
+mpir_token* mpir_parser_peek_k(mpir_parser* parser, int k);
 
 mpir_parser* upgrade_to_parser(mpir_lexer* lexer);
 void mpir_parser_free(mpir_parser* parser);

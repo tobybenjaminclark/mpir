@@ -6,11 +6,6 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_expression.h"
 
-struct mpir_expression* mpir_parse_expression(mpir_parser* psr)
-{
-    return NULL;
-}
-
 struct mpir_identifier* get_arg(mpir_parser* psr)
 {
     if(psr->peek(psr)->type != IDENTIFIER) return NULL;
@@ -70,11 +65,7 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     return node;
 }
 
-int isOperator(char ch) {
-    return (ch == '+' || ch == '-' || ch == '*' || ch == '/');
-}
-
-int getPrecedence(mpir_token_type operator)
+int mpir_get_op_presedence(mpir_token_type operator)
 {
     switch (operator) {
         case operator_sum:
@@ -88,75 +79,136 @@ int getPrecedence(mpir_token_type operator)
     }
 }
 
-void displayASTIndented(Node* root, int indentLevel)
+void mpir_display_ast(struct mpir_expression* root, int indentation_level)
 {
-    if (root == NULL) {
+    if (root == NULL)
+    {
         printf("Null AST!\n");
         return;
     }
 
-    for (int i = 0; i < indentLevel; i++) {
+    for (int i = 0; i < indentation_level; i++)
+    {
         wprintf(L"-- ");
     }
 
-    if (root->type == 'n') {
-        wprintf(L"%lf\n", root->value);
-    } else if (root->type == 'o') {
-        wprintf(L"%ls\n", root->operator);
+    /* Display Type */
+    switch(root->type)
+    {
+        case(AST_FUNCTION_CALL):
+            wprintf(L"%s\n", root->data.function_call->identifier->data);
+            break;
+        case(AST_NUMERICAL_LITERAL):
+            wprintf(L"%d\n", root->data.numerical_literal);
+            break;
+        case(AST_STRING_LITERAL):
+            wprintf(L"%ls\n", root->data.string_literal);
+            break;
+        case(AST_IDENTIFIER):
+            wprintf(L"%ls\n", root->data.identifier);
+            break;
+        case(AST_OPERATOR):
+            wprintf(L"%ls\n", root->data.operator);
+            break;
     }
 
     if (root->left != NULL || root->right != NULL) {
         if (root->left != NULL) {
-            displayASTIndented(root->left, indentLevel + 1);
+            mpir_display_ast(root->left, indentation_level + 1);
         }
 
         if (root->right != NULL) {
-            displayASTIndented(root->right, indentLevel + 1);
+            mpir_display_ast(root->right, indentation_level + 1);
         }
     }
 }
 
 // Function to create a new number node
-Node* createNumberNode(double value)
+struct mpir_expression* mpir_create_numerical_node(long double value)
 {
-    Node* node = (Node*)malloc(sizeof(Node));
-    node->type = 'n';
-    node->value = value;
+    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    node->type = AST_NUMERICAL_LITERAL;
+    node->data.numerical_literal = value;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Function to create a new identifier node
+struct mpir_expression* mpir_create_identifier_node(struct mpir_identifier* identifier)
+{
+    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    node->type = AST_IDENTIFIER;
+    wcscpy(node->data.identifier, identifier->data);
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+// Function to create a new function call node
+struct mpir_expression* mpir_create_function_call_node(struct mpir_function_call* call)
+{
+    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    node->type = AST_FUNCTION_CALL;
+    node->data.function_call = call;
     node->left = NULL;
     node->right = NULL;
     return node;
 }
 
 // Function to create a new operator node
-Node* createOperatorNode(const wchar_t* operator, Node* left, Node* right) {
-    Node* node = (Node*)malloc(sizeof(Node));
-    node->type = 'o';
-    wcscpy(node->operator, operator);
+struct mpir_expression* mpir_create_operator_node(const wchar_t* operator, struct mpir_expression* left, struct mpir_expression* right) {
+    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    node->type = AST_OPERATOR;
+    wcscpy(node->data.operator, operator);
     node->left = left;
     node->right = right;
     return node;
 }
 
 
-Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPrecedence)
+struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence)
 {
-    Node* root = NULL;
+    struct mpir_expression* root = NULL;
     const char* token_names[] = { TOKEN_NAME_MAP };
 
-    while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE && getPrecedence(psr->peek(psr)->type) >= minPrecedence)
+    while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE &&
+           mpir_get_op_presedence(psr->peek(psr)->type) >= minimum_precedence)
     {
         wprintf(L"Expression Lexeme: %ls (type = %s :: %d) \n", psr->peek(psr)->lexeme, token_names[psr->peek(psr)->type], psr->peek(psr)->type);
         if (psr->peek(psr)->type == NUMERICAL_LITERAL)
         {
             printf("EXPR: Parsing Numerical Literal\n");
-            root = createNumberNode(wcstol(psr->get(psr)->lexeme, NULL, 10));
+            root = mpir_create_numerical_node(wcstol(psr->get(psr)->lexeme, NULL, 10));
         }
+        else if(psr->peek(psr)->type == IDENTIFIER)
+        {
+            /* Term is function call */
+            if(mpir_parser_peek_k(psr,1)->type == open_bracket)
+            {
+                /* Parse Function call */
+                printf("EXPR: Parsing Function Call\n");
+                struct mpir_function_call* func_call = mpir_parse_function_call(psr);
+                root = mpir_create_function_call_node(func_call);
+            }
+            /* Term is identifier */
+            else
+            {
+                printf("EXPR: Parsing Identifier\n");
+                /* Parse identifier */
+                struct mpir_identifier* identifier = parse_identifier(psr);
+                root = mpir_create_identifier_node(identifier);
+            }
+        }
+
         else if (psr->peek(psr)->type == open_bracket)
         {
             printf("EXPR: Parsing Open Bracket\n");
             // If an opening parenthesis is encountered, recursively build the AST for the subexpression
             (void)psr->get(psr);
-            Node* subexpression = buildAST(psr, NEWLINE, 0);  // Reset minPrecedence for the subexpression
+            // Reset minimum_precedence for the subexpression
+            struct mpir_expression* subexpression = mpir_parse_expression(psr, NEWLINE, 0);
+
             root = subexpression;
         }
         else if (psr->peek(psr)->type == close_bracket)
@@ -172,9 +224,9 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPreceden
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
-            Node* leftOperand = root;
-            Node* rightOperand = buildAST(psr, NEWLINE, 0);
-            root = createOperatorNode(op_lexeme, leftOperand, rightOperand);
+            struct mpir_expression* leftOperand = root;
+            struct mpir_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
+            root = mpir_create_operator_node(op_lexeme, leftOperand, rightOperand);
         }
         else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide)
         {
@@ -182,10 +234,10 @@ Node* buildAST(mpir_parser* psr, mpir_token_type delimiter_type, int minPreceden
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
-            Node* newOperator = createOperatorNode(op_lexeme, NULL, NULL);
+            struct mpir_expression* newOperator = mpir_create_operator_node(op_lexeme, NULL, NULL);
             newOperator->left = root;  // Connect the existing root as the left operand
 
-            Node* rightOperand = buildAST(psr, NEWLINE, 0);
+            struct mpir_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
             newOperator->right = rightOperand;  // Set the right operand
 
             root = newOperator;  // The new operator is now the root

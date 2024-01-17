@@ -10,45 +10,55 @@
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include <stdbool.h>
 
+#define AST_IDENTIFIER 1
+#define AST_NUMERICAL_LITERAL 2
+#define AST_STRING_LITERAL 3
+#define AST_FUNCTION_CALL 4
+#define AST_OPERATOR 5
+
+
+
 struct mpir_identifier
 {
     wchar_t data[128];
 };
+
+
 
 struct mpir_type
 {
     wchar_t data[128];
 };
 
+
+
 struct mpir_function_identifier
 {
     wchar_t data[128];
 };
+
+
 
 struct mpir_function_call{
     struct mpir_function_identifier* identifier;
     struct mpir_identifier** arguments;
 };
 
-struct mpir_expression{
+
+
+// Node structure for the Abstract Syntax Tree (AST)
+struct mpir_expression
+{
+    int type;                  // 'n' for number, 'o' for operator
     union {
         struct mpir_function_call* function_call;
         long double numerical_literal;
-        wchar_t* identifier;
-        wchar_t* string_literal;
+        wchar_t identifier[128];
+        wchar_t string_literal[128];
+        wchar_t operator[128];
     } data;
-    struct mpir_ast* left;
-    struct mpir_ast* right;
-};
-
-// Node structure for the Abstract Syntax Tree (AST)
-typedef struct Node
-{
-    char type;                  // 'n' for number, 'o' for operator
-    double value;               // value if the node is a number
-    wchar_t operator[128];      // operator if the node is an operator
     struct Node* left;          // left child
     struct Node* right;         // right child
-} Node;
+};
 
 #endif

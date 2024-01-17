@@ -12,6 +12,12 @@ mpir_token* mpir_parser_peek(mpir_parser* parser)
     return parser -> tokens[parser -> token_index];
 }
 
+mpir_token* mpir_parser_peek_k(mpir_parser* parser, int k)
+{
+    if((parser -> token_index) + k >= parser -> token_count) return NULL;
+    return parser -> tokens[parser -> token_index + k];
+}
+
 mpir_token* mpir_parser_get(mpir_parser* parser)
 {
     if(parser -> token_index >= parser -> token_count) return NULL;
