@@ -263,14 +263,6 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             }
         }
     }
-    if(root != NULL)
-    {
-        return root;
-    }
-    else
-    {
-        printf("Parse error on expression");
-        return NULL;
-    }
+    return root;
 }
 

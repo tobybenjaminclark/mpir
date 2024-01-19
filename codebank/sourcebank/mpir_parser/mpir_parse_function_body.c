@@ -90,7 +90,7 @@ struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_co
 struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
 {
     /* Parse & discard `on` keyword */
-    struct mpir_on_statement node;
+    struct mpir_on_statement* node = calloc(1, sizeof(struct mpir_on_statement));
     if(psr->peek(psr)->type == keyword_on) (void)psr->get(psr);
     else return NULL;
 
@@ -98,12 +98,12 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
     switch(psr->peek(psr)->type)
     {
     case NUMERICAL_LITERAL:
-        node.stored_type = numerical_literal;
-        node.literal.mpir_numerical_literal = wcstod(psr->get(psr)->lexeme, NULL);
+        node->stored_type = numerical_literal;
+        node->literal.mpir_numerical_literal = wcstod(psr->get(psr)->lexeme, NULL);
         break;
     case STRING_LITERAL:
-        node.stored_type = string_literal;
-        node.literal.mpir_string_literal = psr->get(psr)->lexeme;
+        node->stored_type = string_literal;
+        wcscpy(node->literal.mpir_string_literal, psr->get(psr)->lexeme);
         break;
     default:
         return NULL;
@@ -121,13 +121,12 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
     switch(psr->peek(psr)->type)
     {
     case keyword_let:
-        /* try parse let */
+        parse_let_binding(psr, command);
         break;
     case keyword_set:
-        /* try parse set */
+        parse_set_binding(psr, command);
         break;
-    case IDENTIFIER:
-        /* try parse function call */
+        case IDENTIFIER:
         break;
     default:
         /* check for inbuilt call */
@@ -138,67 +137,66 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
     if(psr->peek(psr)->type == NEWLINE)(void)psr->get(psr);
     else return NULL;
 
-    node.commands = command;
-    return &node;
+    node->commands = command;
+    return node;
 }
 
 
 struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* psr)
 {
-    struct mpir_on_statement** on_statements = NULL;
-    size_t num_statements = 0;
+    struct mpir_on_statement** nodes = NULL;
 
-    while (psr->peek(psr)->type == keyword_on)
+    int arg_index = 0;
+    struct mpir_on_statement* arg;
+    while((arg = parse_on_statement(psr)) != NULL)
     {
-        struct mpir_on_statement* on_statement = parse_on_statement(psr);
-
-        if (on_statement != NULL)
+        struct mpir_on_statement** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_on_statement*));
+        if (temp == NULL)
         {
-            num_statements++;
-            on_statements = realloc(on_statements, num_statements * sizeof(struct mpir_on_statement*));
-            on_statements[num_statements - 1] = on_statement;
+            free(nodes);
+            return NULL;
         }
-        else
-        {
-            break;
-        }
-    }
+        nodes = temp;
 
-    if (num_statements > 0)
-    {
-        return on_statements;
+        nodes[arg_index] = arg;
+        arg_index++;
     }
-    else
-    {
-        free(on_statements);
-        return NULL;
-    }
+    if(arg_index == 0) return NULL;
+
+    nodes[arg_index] = NULL;
+    return nodes;
 }
 
 
 struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_trycast_statement* node = malloc(sizeof (struct mpir_trycast_statement));
+    printf("Parsing Trycast!\n");
 
     /* Parse & Discard `Keyword` Variable */
     if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);
     else return NULL;
+    printf("Parsing Trycast!\n");
 
     /* Parse Dominant Variable */
     node->dominant_variable = parse_identifier(psr);
     if(node->dominant_variable == NULL) return NULL;
+    printf("Parsing Trycast!\n");
 
     /* Parse & Discard `into` keyword */
     if(psr->peek(psr)->type == keyword_into) (void)psr->get(psr);
     else return NULL;
+    printf("Parsing Trycast!\n");
 
     /* Parse 2nd Identifier (casted variable) */
     node->casted_variable = parse_identifier(psr);
     if(node->casted_variable == NULL) return NULL;
+    printf("Parsing Trycast!\n");
 
     /* Parse `\n` */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return NULL;
+    printf("Parsing Trycast!\n");
 
     /* Parse `on` statements */
     node->actions = parse_multiple_on_statements(psr);
@@ -236,11 +234,13 @@ struct mpir_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* n
 struct mpir_command_list* parse_function_body(mpir_parser* psr)
 {
     /* Setup & Allocate Memory for Command List */
+    char* token_names[] = {TOKEN_NAME_MAP};
     struct mpir_command_list* nodes = initialize_command_list();
     mpir_token_type ntt;
 
     while ((ntt = psr->peek(psr)->type) != keyword_suchthat)
     {
+        wprintf(L"Next Token Type is %s \n", token_names[ntt]);
         switch (ntt)
         {
         case keyword_let:
@@ -250,6 +250,7 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
             parse_set_binding(psr, nodes);
             break;
         case keyword_trycast:
+            parse_trycast(psr, nodes);
             break;
         case IDENTIFIER:
             {};
