@@ -62,28 +62,28 @@ struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_com
  */
 struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
-    struct mpir_value_assignment node;
+    struct mpir_value_assignment* node = calloc(1, sizeof(struct mpir_value_assignment));
 
     /* Parse `set` */
     if(psr->peek(psr)->type == keyword_set) (void)psr->get(psr);
     else return NULL;
 
     /* Parse variable identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node.identifier, (psr->get(psr))->lexeme);
+    if(psr->peek(psr)->type == IDENTIFIER) wcscpy(node->identifier, (psr->get(psr))->lexeme);
     else return NULL;
-    if(node.identifier == NULL) return NULL;
+    if(node->identifier == NULL) return NULL;
 
     /* Parse `as` */
     if(psr->peek(psr)->type == keyword_as) (void)psr->get(psr);
     else return NULL;
 
     /* Parse expression */
-    node.expression = mpir_parse_expression(psr, NEWLINE, 0);
-    mpir_display_ast(node.expression, 0);
+    node->expression = mpir_parse_expression(psr, NEWLINE, 0);
+    mpir_display_ast(node->expression, 0);
 
-    append_command(nodes, (union mpir_command_data){.value_assignment = &node}, VALUE_ASSIGNMENT);
+    append_command(nodes, (union mpir_command_data){.value_assignment = node}, VALUE_ASSIGNMENT);
 
-    return &node;
+    return node;
 }
 
 

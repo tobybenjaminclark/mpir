@@ -49,7 +49,7 @@ struct mpir_function_call{
 // Node structure for the Abstract Syntax Tree (AST)
 struct mpir_expression
 {
-    int type;                  // 'n' for number, 'o' for operator
+    int type;
     union {
         struct mpir_function_call* function_call;
         long double numerical_literal;
@@ -57,8 +57,8 @@ struct mpir_expression
         wchar_t string_literal[128];
         wchar_t operator[128];
     } data;
-    struct Node* left;          // left child
-    struct Node* right;         // right child
+    struct mpir_expression* left;
+    struct mpir_expression* right;
 };
 
 #endif

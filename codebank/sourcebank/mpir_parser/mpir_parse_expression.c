@@ -224,6 +224,7 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             // If a closing parenthesis is encountered, return the root of the current subexpression
             (void)psr->get(psr);
             return root;
+            printf("This shouldn't be reached.");
         }
         else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract)
         {
@@ -262,7 +263,14 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             }
         }
     }
-
-    return root;
+    if(root != NULL)
+    {
+        return root;
+    }
+    else
+    {
+        printf("Parse error on expression");
+        return NULL;
+    }
 }
 
