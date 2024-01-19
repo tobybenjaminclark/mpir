@@ -254,7 +254,10 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
         case IDENTIFIER:
             {};
             struct mpir_function_call* a = mpir_parse_function_call(psr);
-            if(a != NULL) append_command(nodes, (union mpir_command_data){.function_call = a}, FUNCTION_CALL);
+            if(a != NULL)
+            {
+                append_command(nodes, (union mpir_command_data){.function_call = a}, FUNCTION_CALL);
+            }
             break;
         default:
             (void)psr->get(psr);

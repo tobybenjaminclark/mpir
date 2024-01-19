@@ -65,8 +65,8 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
         argument_count++;
     }
 
-    /* Parse `)` */
-    if(psr->peek(psr)->type == close_bracket) (void)psr->get(psr);
+    /* Parse `\n` */
+    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return NULL;
 
     return node;
