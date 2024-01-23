@@ -43,6 +43,18 @@ void print_command_node(struct mpir_command_node* current_node)
                 command_node = command_node->next;
             }
             break;
+        case TRYCAST_STATEMENT:
+            wprintf(L"\t\tTrycast of `%ls` into `%ls`\n", current_node->data.trycast_statement->dominant_variable->data, current_node->data.trycast_statement->casted_variable->data);
+            int argument_count3 = 0;
+            while (current_node->data.trycast_statement->actions[argument_count3] != NULL)
+            {
+                if(current_node->data.trycast_statement->actions[argument_count3]->stored_type == string_literal) wprintf(L"\t\t\t%d. on `%ls` do:", argument_count3, current_node->data.trycast_statement->actions[argument_count3]->literal.mpir_string_literal);
+                else if(current_node->data.trycast_statement->actions[argument_count3]->stored_type == numerical_literal) wprintf(L"\t\t\t%d. on `%f` do:", argument_count3, current_node->data.trycast_statement->actions[argument_count3]->literal.mpir_string_literal);
+                print_command_node(current_node->data.trycast_statement->actions[argument_count3]->commands->head);
+                argument_count3++;
+            }
+
+            break;
         default:
             break;
     }

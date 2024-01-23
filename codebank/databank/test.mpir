@@ -16,7 +16,7 @@ funcdef multiply_show x y
     function(nuts, balls)
     show(z)
     trycast z into a
-    on 1 do set z as 1
+    on 1 -> set z as 1
     return(z)
 suchthat:
     |    doc x as "First Integer"
