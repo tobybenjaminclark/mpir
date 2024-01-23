@@ -9,6 +9,7 @@
 
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_ast/mpir_expression_ast.h"
+#include "../../headerbank/mpir_ast/mpir_doc_ast.h"
 #include "../mpir_misc/mpir_linked_list.h"
 
 struct mpir_type_assignment

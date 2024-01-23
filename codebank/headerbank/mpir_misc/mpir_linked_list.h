@@ -20,6 +20,7 @@ union mpir_command_data {
     struct mpir_value_assignment* value_assignment;
     struct mpir_trycast_statement* trycast_statement;
     struct mpir_do_statement* do_statement;
+    struct mpir_doc* doc_statement;
 };
 
 enum mpir_command_type{
@@ -29,7 +30,8 @@ enum mpir_command_type{
     TYPE_ASSIGNMENT,
     VALUE_ASSIGNMENT,
     TRYCAST_STATEMENT,
-    DO_STATEMENT
+    DO_STATEMENT,
+    DOC_STATEMENT
 };
 
 struct mpir_command_node {

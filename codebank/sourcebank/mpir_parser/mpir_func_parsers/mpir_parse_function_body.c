@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_function_body.h"
+#include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.h"
 
 
 
@@ -16,7 +16,7 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
     struct mpir_command_list* nodes = initialize_command_list();
     mpir_token_type ntt;
 
-    while ((ntt = psr->peek(psr)->type) != keyword_suchthat)
+    while ((ntt = psr->peek(psr)->type) != keyword_suchthat && psr->peek(psr)->type != keyword_end)
     {
         wprintf(L"Next Token Type is %s \n", token_names[ntt]);
         switch (ntt)

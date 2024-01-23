@@ -18,6 +18,7 @@ struct mpir_function_declaration
     struct mpir_type** inputs;
     struct mpir_type* return_type;
     struct mpir_command_list* body;
+    struct mpir_docsection* docsection;
 };
 
 struct mpir_type_declaration

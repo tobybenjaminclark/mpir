@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_function_header.h"
+#include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.h"
 
 struct mpir_type* get_type(mpir_parser* psr)
 {
@@ -83,6 +83,23 @@ bool parse_function_declaration(mpir_parser* psr)
 
     /* Parse function body */
     node->body = parse_function_body(psr);
+
+    /* Parse Doc */
+    if(psr->peek(psr)->type == keyword_suchthat)
+    {
+        /* Consume Suchthat */
+        (void)psr->get(psr);
+        if(psr->peek(psr)->type == colon) (void)psr->get(psr);
+        else return NULL;
+
+        node -> docsection = mpir_parse_docsection(psr);
+    }
+    else if(psr->peek(psr)->type == keyword_end)
+    {
+        printf("See END!");
+        (void)psr->get(psr);
+        node -> docsection = NULL;
+    }
 
     /* Add Declaration Header to Program & Return PSR*/
     append_command(psr->program, (union mpir_command_data){.function_declaration = node}, FUNCTION_DECLARATION);

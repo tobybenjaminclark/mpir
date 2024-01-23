@@ -11,6 +11,7 @@
 #include "../mpir_parser_utilities.h"
 #include "mpir_parse_function_body.h"
 #include "../mpir_parse_multiple.h"
+#include "../mpir_doc_parsers/mpir_parse_docsection.h"
 
 struct mpir_type* get_input(mpir_parser* psr);
 struct mpir_type** parse_inputs(mpir_parser* psr);

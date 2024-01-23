@@ -29,13 +29,30 @@ void print_command_node(struct mpir_command_node* current_node)
 
         case FUNCTION_DECLARATION:
             wprintf(L"Function Declaration :: %ls \n\tInput Types:\n", current_node->data.function_declaration->identifier->data);
+
             int argument_count2 = 0;
             while (current_node->data.function_declaration->inputs[argument_count2] != NULL) {
                 wprintf(L"\t\tInput %d: %ls\n", argument_count2, current_node->data.function_declaration->inputs[argument_count2]->data);
                 argument_count2++;
             }
-            wprintf(L"\tReturn Type: %ls\n\tBody:\n", current_node->data.function_declaration->return_type->data);
 
+            wprintf(L"\tReturn Type: %ls\n", current_node->data.function_declaration->return_type->data);
+
+            /* Print Docs */
+            if(current_node->data.function_declaration->docsection != NULL)
+            {
+                printf("Docs: \n");
+                struct mpir_command_node* doc_node = current_node->data.function_declaration->docsection->docs->head;
+                while (doc_node != NULL)
+                {
+                    wprintf(L"\t\t\t       Flag: %ls \n", doc_node->data.doc_statement->flag_type->data);
+                    wprintf(L"\t\t\t Identifier: %ls \n", doc_node->data.doc_statement->variable->data);
+                    wprintf(L"\t\t\t     String: %ls \n\n", doc_node->data.doc_statement->documentation);
+                    doc_node = doc_node->next;
+                }
+            }
+
+            printf("\tBody:\n");
             struct mpir_command_node* command_node = current_node->data.function_declaration->body->head;
             while(command_node != NULL)
             {
