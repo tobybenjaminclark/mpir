@@ -13,6 +13,7 @@
 #include "../../headerbank/mpir_parser/mpir_parser.h"
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
 #include "../../headerbank/mpir_parser/mpir_parse_expression.h"
+#include "../../headerbank/mpir_parser/mpir_parse_set_binding.h"
 
 /**
  * @brief Function to parse a 'let' binding (type assignment) within the MPIR parser.
