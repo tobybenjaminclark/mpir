@@ -10,6 +10,7 @@
 #include "../../headerbank/mpir_parser/mpir_parser.h"
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
 #include "../../headerbank/mpir_parser/mpir_parse_function_body.h"
+#include "../../headerbank/mpir_parser/mpir_parse_multiple.h"
 
 struct mpir_type* get_input(mpir_parser* psr);
 struct mpir_type** parse_inputs(mpir_parser* psr);

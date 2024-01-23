@@ -11,6 +11,8 @@
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include "../../headerbank/mpir_parser/mpir_parser.h"
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
+#include "../../headerbank/mpir_parser/mpir_parse_multiple.h"
+
 #include <wchar.h>
 #include <stdio.h>
 

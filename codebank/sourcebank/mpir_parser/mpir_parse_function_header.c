@@ -73,7 +73,7 @@ bool parse_function_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse return type */
-    if((node->inputs = parse_inputs(psr)) == NULL) return false;
+    if((node->inputs = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL) return false;
     if(!(psr->tryget(psr, operator_arrow))) return false;
     if((node->return_type = parse_returntype(psr)) == NULL) return false;
 

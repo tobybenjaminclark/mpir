@@ -15,6 +15,7 @@
 #include "../../headerbank/mpir_parser/mpir_parse_expression.h"
 #include "../../headerbank/mpir_parser/mpir_parse_set_binding.h"
 #include "../../headerbank/mpir_parser/mpir_parse_let_binding.h"
+#include "../../headerbank/mpir_parser/mpir_parse_multiple.h"
 
 struct mpir_command_list* parse_function_body(mpir_parser* psr);
 

@@ -55,7 +55,7 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     else return NULL;
 
     /* Parse Arguments */
-    node->arguments = parse_arguments(psr);
+    node->arguments = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_arg, psr);
     if(node->arguments == NULL) return NULL;
 
     int argument_count = 0;

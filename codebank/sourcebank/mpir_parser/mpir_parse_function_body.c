@@ -68,11 +68,12 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
 }
 
 
-struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* psr)
+struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* parser)
 {
     struct mpir_on_statement** nodes = NULL;
     int arg_index = 0;
     struct mpir_on_statement* arg;
+    mpir_parser* psr = parser;
 
     while((arg = parse_on_statement(psr)) != NULL)
     {
@@ -125,7 +126,8 @@ struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_comma
     printf("Parsing Trycast!\n");
 
     /* Parse `on` statements */
-    node->actions = parse_multiple_on_statements(psr);
+    node->actions = PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
+    //  PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
     if(node->actions == NULL) return NULL;
     printf("Parsing Trycast!\n");
 

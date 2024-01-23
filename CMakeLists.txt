@@ -66,6 +66,7 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_parser/mpir_parse_set_binding.h
         codebank/sourcebank/mpir_parser/mpir_parse_let_binding.c
         codebank/headerbank/mpir_parser/mpir_parse_let_binding.h
+        codebank/headerbank/mpir_parser/mpir_parse_multiple.h
 )
 
 # Create the main executable
