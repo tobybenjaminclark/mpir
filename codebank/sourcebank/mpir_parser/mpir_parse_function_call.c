@@ -6,14 +6,29 @@
 
 #include "../../headerbank/mpir_parser/mpir_parse_function_call.h"
 
+/**
+ * @brief Parses a Function Call, returns a pointer to a mpir_function_call structure.
+ *
+ * This function attempts to parse a function call from the provided parser, verifying its structure according to the
+ * MPIR grammar. It allocates memory for both the parser, and the input expressions (using the expression parser), the
+ * grammar can be seen in the CFG Documentation or as follows: identifier `(` expr0 `,` expr1 `,` ... exprN )
+ *
+ * @param psr Pointer to the MPIR parser structure.
+ * @return A pointer to a dynamically allocated `mpir_function_call` structure representing the parsed function call.
+ *         Returns NULL if the parsing fails or encounters an unexpected structure.
+ */
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
 {
-    /*  identifier `(` arg0 `,` arg1 `,` ... argn `)` */
+    /* Peek ahead 2 tokens, to ensure it follows IDENTIFIER `(` */
+    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
+    if(mpir_parser_peek_k(psr, 1)->type != open_bracket) return NULL;
 
+    /* Since we know this is a function call, we can allocate memory */
     struct mpir_function_call* node = malloc(sizeof(struct mpir_function_call));
 
     /* Parse function identifier */
-    if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_function_identifier(psr);
+    wchar_t* identifier;
+    if(psr->peek(psr)->type == IDENTIFIER) identifier = parse_function_identifier(psr);
     else return NULL;
 
     /* Parse `(` */
@@ -23,13 +38,6 @@ struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
     /* Parse Arguments */
     node->arguments = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_arg, psr);
     if(node->arguments == NULL) return NULL;
-
-    int argument_count = 0;
-    while (node->arguments[argument_count] != NULL) {
-        wprintf(L"\t\t\t| Argument %d:\n", argument_count);
-        mpir_display_ast(node->arguments[argument_count], 0);
-        argument_count++;
-    }
 
     /* Parse `\n` */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
