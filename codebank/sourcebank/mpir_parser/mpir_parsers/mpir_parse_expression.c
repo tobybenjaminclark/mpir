@@ -6,15 +6,7 @@
 
 #include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_expression.h"
 
-struct mpir_expression* get_arg(mpir_parser* psr)
-{
-    if(psr->peek(psr)->type == close_bracket) return NULL;
 
-    struct mpir_expression* arg = calloc(1, sizeof (struct mpir_expression));
-    arg = mpir_parse_expression(psr, keyword_comma, 0);
-    if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
-    return arg;
-}
 
 struct mpir_identifier** parse_arguments(mpir_parser* psr)
 {

@@ -12,6 +12,21 @@
 #include "mpir_parse_expression.h"
 
 /**
+ * @brief Parses an argument in the context of a function call, returns a pointer to a mpir_expression structure.
+ *
+ * This function parses an argument from the provided parser within the context of a function call.
+ * It checks for the presence of a closing bracket to determine the end of arguments. It parses the expression to
+ * the MPIR Grammar spec. Please note that this expression must be freed when after use.
+ *
+ * @param psr Pointer to the MPIR parser structure.
+ * @return A pointer to a dynamically allocated `mpir_expression` structure representing the parsed argument.
+ *         Returns NULL if the parsing encounters a closing bracket or fails to parse the argument.
+ */
+struct mpir_expression* get_arg(mpir_parser* psr);
+
+
+
+/**
  * @brief Parses a Function Call, returns a pointer to a mpir_function_call structure.
  *
  * This function attempts to parse a function call from the provided parser, verifying its structure according to the

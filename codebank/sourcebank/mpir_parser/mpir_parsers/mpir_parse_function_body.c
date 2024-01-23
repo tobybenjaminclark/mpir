@@ -68,33 +68,6 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
 }
 
 
-struct mpir_on_statement** parse_multiple_on_statements(mpir_parser* parser)
-{
-    struct mpir_on_statement** nodes = NULL;
-    int arg_index = 0;
-    struct mpir_on_statement* arg;
-    mpir_parser* psr = parser;
-
-    while((arg = parse_on_statement(psr)) != NULL)
-    {
-        struct mpir_on_statement** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_on_statement*));
-        if (temp == NULL)
-        {
-            free(nodes);
-            return NULL;
-        }
-        nodes = temp;
-
-        nodes[arg_index] = arg;
-        arg_index++;
-    }
-    if(arg_index == 0) return NULL;
-
-    nodes[arg_index] = NULL;
-    return nodes;
-}
-
-
 struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_trycast_statement* node = malloc(sizeof (struct mpir_trycast_statement));
@@ -152,7 +125,7 @@ struct mpir_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* n
     else return NULL;
 
     /* Parse on statements */
-    node->actions = parse_multiple_on_statements(psr);
+    node->actions = PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
     if(node->actions == NULL) return NULL;
 
     append_command(nodes, (union mpir_command_data){.do_statement = node}, DO_STATEMENT);
