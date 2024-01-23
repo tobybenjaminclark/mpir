@@ -5,3 +5,13 @@
  */
 
 #include "../../../headerbank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.h"
+
+struct mpir_doc* mpir_parse_doc(mpir_parser* psr)
+{
+    return NULL;
+}
+
+struct mpir_docsection* mpir_parse_docsection(mpir_parser* psr)
+{
+    return NULL;
+}

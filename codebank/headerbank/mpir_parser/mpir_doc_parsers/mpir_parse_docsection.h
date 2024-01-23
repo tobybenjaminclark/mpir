@@ -7,4 +7,7 @@
 #ifndef MPIR_COMPILER_MPIR_PARSE_DOCSECTION_H
 #define MPIR_COMPILER_MPIR_PARSE_DOCSECTION_H
 
+#include "../../mpir_ast/mpir_ast.h"
+#include "../../mpir_parser/mpir_parser.h"
+
 #endif
