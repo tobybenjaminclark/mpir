@@ -7,7 +7,7 @@
 #ifndef MPIR_COMPILER_MPIR_PARSE_LET_BINDING_H
 #define MPIR_COMPILER_MPIR_PARSE_LET_BINDING_H
 
-#include "../../headerbank/mpir_parser/mpir_parser.h"
+#include "../mpir_parser.h"
 
 /**
  * @brief Function to parse a 'let' binding (type assignment) within the MPIR parser.

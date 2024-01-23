@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_parser/mpir_parse_let_binding.h"
+#include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_let_binding.h"
 
 /**
  * @brief Function to parse a 'let' binding (type assignment) within the MPIR parser.

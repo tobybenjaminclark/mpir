@@ -7,11 +7,11 @@
 #ifndef MPIR_COMPILER_MPIR_PARSE_EXPRESSION_H
 #define MPIR_COMPILER_MPIR_PARSE_EXPRESSION_H
 
-#include "../../headerbank/mpir_ast/mpir_ast.h"
-#include "../../headerbank/mpir_token/mpir_token.h"
-#include "../../headerbank/mpir_parser/mpir_parser.h"
-#include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
-#include "../../headerbank/mpir_parser/mpir_parse_multiple.h"
+#include "../../mpir_ast/mpir_ast.h"
+#include "../../mpir_token/mpir_token.h"
+#include "../mpir_parser.h"
+#include "../mpir_parser_utilities.h"
+#include "../mpir_parse_multiple.h"
 
 #include <wchar.h>
 #include <stdio.h>

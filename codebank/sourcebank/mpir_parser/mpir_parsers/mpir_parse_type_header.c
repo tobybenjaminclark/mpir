@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_parser/mpir_parse_type_header.h"
+#include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_type_header.h"
 
 struct mpir_identifier* get_type_arg(mpir_parser* psr)
 {

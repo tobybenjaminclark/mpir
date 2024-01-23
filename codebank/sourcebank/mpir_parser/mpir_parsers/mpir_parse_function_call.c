@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../headerbank/mpir_parser/mpir_parse_function_call.h"
+#include "../../../headerbank/mpir_parser/mpir_parsers/mpir_parse_function_call.h"
 
 /**
  * @brief Parses a Function Call, returns a pointer to a mpir_function_call structure.
@@ -19,21 +19,17 @@
  */
 struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr)
 {
-    /* Peek ahead 2 tokens, to ensure it follows IDENTIFIER `(` */
-    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
-    if(mpir_parser_peek_k(psr, 1)->type != open_bracket) return NULL;
-
-    /* Since we know this is a function call, we can allocate memory */
-    struct mpir_function_call* node = malloc(sizeof(struct mpir_function_call));
-
     /* Parse function identifier */
-    wchar_t* identifier;
+    struct mpir_identifier* identifier;
     if(psr->peek(psr)->type == IDENTIFIER) identifier = parse_function_identifier(psr);
     else return NULL;
 
     /* Parse `(` */
     if(psr->peek(psr)->type == open_bracket) (void)psr->get(psr);
     else return NULL;
+
+    struct mpir_function_call* node = malloc(sizeof(struct mpir_function_call));
+    node->identifier = identifier;
 
     /* Parse Arguments */
     node->arguments = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_arg, psr);

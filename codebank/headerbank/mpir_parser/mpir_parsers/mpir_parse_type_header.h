@@ -4,11 +4,11 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#ifndef MPIR_COMPILER_MPIR_PARSE_FUNCTION_CALL_H
-#define MPIR_COMPILER_MPIR_PARSE_FUNCTION_CALL_H
+#ifndef MPIR_COMPILER_MPIR_PARSE_TYPE_HEADER_H
+#define MPIR_COMPILER_MPIR_PARSE_TYPE_HEADER_H
 
-#include "../../headerbank/mpir_parser/mpir_parser.h"
-#include "../../headerbank/mpir_parser/mpir_parse_multiple.h"
-#include "../../headerbank/mpir_parser/mpir_parse_expression.h"
+#include "../mpir_parser.h"
+#include "../mpir_parser_utilities.h"
+#include "mpir_parse_function_body.h"
 
-#endif //MPIR_COMPILER_MPIR_PARSE_FUNCTION_CALL_H
+#endif
