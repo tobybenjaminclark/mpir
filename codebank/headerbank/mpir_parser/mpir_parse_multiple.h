@@ -7,7 +7,6 @@
 #ifndef MPIR_COMPILER_MPIR_PARSE_MULTIPLE_H
 #define MPIR_COMPILER_MPIR_PARSE_MULTIPLE_H
 
-
 #define PARSE_MULTIPLE_STATEMENTS(type, parse_function, parser) \
     ({ \
         type** nodes = NULL; \
