@@ -69,6 +69,10 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_parser/mpir_parse_multiple.h
         codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_function_call.c
         codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_function_call.h
+        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_trycast.c
+        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_trycast.h
+        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_on.c
+        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_on.h
 )
 
 # Create the main executable

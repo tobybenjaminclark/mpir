@@ -15,7 +15,9 @@
 #include "mpir_parse_expression.h"
 #include "mpir_parse_set_binding.h"
 #include "mpir_parse_let_binding.h"
+#include "mpir_parse_trycast.h"
 #include "../mpir_parse_multiple.h"
+#include "mpir_parse_on.h"
 
 struct mpir_command_list* parse_function_body(mpir_parser* psr);
 
