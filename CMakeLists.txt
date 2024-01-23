@@ -49,32 +49,35 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_parser/mpir_parser_utilities.h
         codebank/sourcebank/mpir_parser/mpir_parse.c
         codebank/headerbank/mpir_parser/mpir_parse.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_function_header.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_function_header.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.h
         codebank/sourcebank/mpir_ast/mpir_command_ast.c
         codebank/headerbank/mpir_ast/mpir_command_ast.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_function_body.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_function_body.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_function_body.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_body.h
         codebank/headerbank/mpir_ast/mpir_expression_ast.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_expression.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_expression.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_expression.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_expression.h
         codebank/sourcebank/mpir_misc/mpir_print_ast.c
         codebank/headerbank/mpir_misc/mpir_print_ast.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_type_header.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_type_header.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_set_binding.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_set_binding.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_let_binding.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_let_binding.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_type_header.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_type_header.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_set_binding.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_set_binding.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_let_binding.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_let_binding.h
         codebank/headerbank/mpir_parser/mpir_parse_multiple.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_function_call.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_function_call.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_trycast.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_trycast.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_on.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_on.h
-        codebank/sourcebank/mpir_parser/mpir_parsers/mpir_parse_do.c
-        codebank/headerbank/mpir_parser/mpir_parsers/mpir_parse_do.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_function_call.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_call.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_trycast.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_trycast.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_on.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_on.h
+        codebank/sourcebank/mpir_parser/mpir_func_parsers/mpir_parse_do.c
+        codebank/headerbank/mpir_parser/mpir_func_parsers/mpir_parse_do.h
+        codebank/sourcebank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.c
+        codebank/headerbank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.h
+        codebank/headerbank/mpir_ast/mpir_doc_ast.h
 )
 
 # Create the main executable
