@@ -9,5 +9,6 @@
 
 #include "../../mpir_ast/mpir_ast.h"
 #include "../../mpir_parser/mpir_parser.h"
+#include "../../mpir_parser/mpir_parser_utilities.h"
 
 #endif
