@@ -53,7 +53,25 @@ void print_command_node(struct mpir_command_node* current_node)
                 print_command_node(current_node->data.trycast_statement->actions[argument_count3]->commands->head);
                 argument_count3++;
             }
+            break;
+        case DO_STATEMENT:
+            wprintf(L"\t\tDo Statment: ");
+            wprintf(L"Function call to '%ls':\n", current_node->data.do_statement->function->identifier->data);
+            int argument_count4 = 0;
+            while (current_node->data.do_statement->function->arguments[argument_count4] != NULL) {
+                wprintf(L"\t\t\t| Argument %d:\n", argument_count);
+                mpir_display_ast(current_node->data.do_statement->function->arguments[argument_count4], 3);
+                argument_count4++;
+            }
 
+            int argument_count5 = 0;
+            while (current_node->data.do_statement->actions[argument_count5] != NULL)
+            {
+                if(current_node->data.do_statement->actions[argument_count5]->stored_type == string_literal) wprintf(L"\t\t\t%d. on `%ls` do:", argument_count5, current_node->data.do_statement->actions[argument_count5]->literal.mpir_string_literal);
+                else if(current_node->data.do_statement->actions[argument_count5]->stored_type == numerical_literal) wprintf(L"\t\t\t%d. on `%f` do:", argument_count5, current_node->data.do_statement->actions[argument_count5]->literal.mpir_string_literal);
+                print_command_node(current_node->data.do_statement->actions[argument_count5]->commands->head);
+                argument_count5++;
+            }
             break;
         default:
             break;

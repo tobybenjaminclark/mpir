@@ -12,12 +12,19 @@ end
 funcdef multiply_show :: TypeInt, TypeInt  → TypeInt
 funcdef multiply_show x y
     let z as TypeInt
-    set z as 1 * 2
-    function(nuts, balls)
-    show(z)
-    trycast z into a
+    set z as 5
+
+    let x as TypeInt2
+    set x as 0
+
+    trycast z into x
     on 1 -> set z as 1
+
+    do call(z)
+    on 5 -> set z as 2
+
     return(z)
+
 suchthat:
     |    doc x as "First Integer"
     |    doc y as "Second Integer"

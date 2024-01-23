@@ -30,6 +30,9 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
         case keyword_trycast:
             parse_trycast(psr, nodes);
             break;
+        case keyword_do:
+            parse_do(psr, nodes);
+            break;
         case IDENTIFIER:
             {};
             struct mpir_function_call* a = mpir_parse_function_call(psr);

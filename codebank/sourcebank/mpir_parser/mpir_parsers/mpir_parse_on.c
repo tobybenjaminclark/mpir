@@ -10,6 +10,7 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
 {
     /* Parse Indentation then parse `on` keyword */
     while(psr->peek(psr)->type == indentation)(void)psr->get(psr);
+
     if(psr->peek(psr)->type == keyword_on) (void)psr->get(psr);
     else return NULL;
 
