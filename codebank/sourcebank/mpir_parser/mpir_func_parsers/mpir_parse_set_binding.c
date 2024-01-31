@@ -14,7 +14,8 @@
  * keyword, and the associated expression (value). It then creates and returns a dynamically allocated
  * `struct mpir_value_assignment` representing the parsed 'set' binding.
  *
- * @param psr A pointer to the MPIR parser structure.
+ * @param psr A Pointer to the MPIR parser structure.
+ * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
  * @return A pointer to a dynamically allocated `struct mpir_value_assignment` on successful parsing.
  */
 struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes)

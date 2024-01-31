@@ -6,41 +6,45 @@
 
 #include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_trycast.h"
 
+/**
+ * @brief Function to parse a 'trycast' statement within the MPiR parser.
+ *
+ * This function parses a 'trycast' statement within the context of MPIR. The trycast statement attempts to cast a
+ * variable of one type into a variable of another type. The function parses the `trycast` keyword, followed by an
+ * identifier, followed by the `into` keyword, followed by another identifier. It then creates & returns a dynamically
+ * allocated `struct mpir_trycast_statement` representing the parsed 'trycast' statement as part of the AST.
+ *
+ * @param psr A Pointer to the MPIR parser structure.
+ * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
+ * @return Pointer to an allocate mpir_trycast_statement struct or NULL on failure.
+ */
 struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     struct mpir_trycast_statement* node = malloc(sizeof (struct mpir_trycast_statement));
-    printf("Parsing Trycast!\n");
 
     /* Parse & Discard `Keyword` Variable */
     if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);
     else return NULL;
-    printf("Parsing Trycast!\n");
 
     /* Parse Dominant Variable */
     node->dominant_variable = parse_identifier(psr);
     if(node->dominant_variable == NULL) return NULL;
-    wprintf(L"Parsing Trycast! Dominant Variable -> %ls\n", node->dominant_variable->data);
 
     /* Parse & Discard `into` keyword */
     if(psr->peek(psr)->type == keyword_into) (void)psr->get(psr);
     else return NULL;
-    printf("Parsing Trycast!\n");
 
     /* Parse 2nd Identifier (casted variable) */
     node->casted_variable = parse_identifier(psr);
     if(node->casted_variable == NULL) return NULL;
-    wprintf(L"Parsing Trycast! Casted Variable -> %ls\n", node->casted_variable->data);
 
     /* Parse `\n` */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return NULL;
-    printf("Parsing Trycast!\n");
 
     /* Parse `on` statements */
     node->actions = PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
-    //  PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
     if(node->actions == NULL) return NULL;
-    printf("Parsing Trycast!\n");
 
     append_command(nodes, (union mpir_command_data){.trycast_statement = node}, TRYCAST_STATEMENT);
     return node;

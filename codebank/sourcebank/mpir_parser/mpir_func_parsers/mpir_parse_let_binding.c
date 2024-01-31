@@ -14,8 +14,8 @@
  * and the associated type identifier. It then creates and returns a dynamically allocated `struct mpir_type_assignment`
  * representing the parsed 'let' binding as part of the AST.
  *
- * @param psr A pointer to the MPIR parser structure.
- *
+ * @param psr A Pointer to the MPIR parser structure.
+ * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
  * @return A pointer to a dynamically allocated `struct mpir_type_assignment` on successful parsing.
  */
 struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes)
