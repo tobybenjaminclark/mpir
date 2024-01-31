@@ -6,21 +6,27 @@
 
 #include "../../../headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typelogic.h"
 
-void parse_and(struct boolean_logic_token** node_ptr, mpir_token_type delimiter)
+mpir_token_type PRESEDENCE_TABLE[] = {
+        operator_and,
+        operator_or,
+        operator_eq,
+        operator_lteq,
+        operator_lt,
+        operator_gt,
+        operator_gteq
+};
+
+void parse_and(struct boolean_logic_token** node_ptr, int presedence)
 {
-    struct boolean_logic_token* node = *node_ptr;
-
-    /* Checks if Node is singular (meaning it represents 1 mathematical unit: i.e. a term or operator) */
-    /* Singularity can be derived from token count */
-    if(node->token_count > 1)
-    {
-        if(node->left != NULL) parse_and(node->left, delimiter);
-        if(node->right != NULL) parse_and(node->right, delimiter);
-    }
-
     /* Used as a counter */
     unsigned long int i;
     int delimiter_found = 0;
+
+    if(presedence < 0 || presedence > 6) return;
+
+    mpir_token_type delimiter = PRESEDENCE_TABLE[presedence];
+    struct boolean_logic_token* node = *node_ptr;
+
 
     /* Check if the delimiter is present in the list */
     for (i = 0; i < node->token_count; i++)
@@ -35,12 +41,8 @@ void parse_and(struct boolean_logic_token** node_ptr, mpir_token_type delimiter)
     if (!delimiter_found)
     {
         /* If delimiter is not present, print the original list */
-        printf("Original List: [");
-        for (i = 0; i < node->token_count; i++)
-        {
-            printf("%c,", node->tokens[i]->type);
-        }
-        printf("]\n");
+        printf("%d\n", presedence);
+        parse_and(node_ptr, ++presedence);
         return;
     }
 
@@ -85,8 +87,8 @@ void parse_and(struct boolean_logic_token** node_ptr, mpir_token_type delimiter)
 
     // Print the token lexemes of list1, list2, and list3
     printf("List 1: [");
-    for (i = 0; i < list1->token_count; i++) {
-        wprintf(L"%ls ", list1->tokens[i]->lexeme);
+    for (i = 0; i < list2->left->token_count; i++) {
+        wprintf(L"%ls ", list2->left->tokens[i]->lexeme);
     }
     printf("]\n");
 
@@ -97,10 +99,17 @@ void parse_and(struct boolean_logic_token** node_ptr, mpir_token_type delimiter)
     printf("]\n");
 
     printf("List 3: [");
-    for (i = 0; i < list3->token_count; i++) {
-        wprintf(L"%ls ", list3->tokens[i]->lexeme);
+    for (i = 0; i < list2->right->token_count; i++) {
+        wprintf(L"%ls ", list2->right->tokens[i]->lexeme);
     }
     printf("]\n");
+
+    // Update the node_ptr content
+    *node_ptr = list2;
+
+    // Recursively call parse_and on the left and right
+    parse_and(&(list2->left), presedence);
+    parse_and(&(list2->right), presedence);
 
 
     return;
@@ -136,7 +145,7 @@ struct mpir_type_logic* parse_type_logic(mpir_parser* psr)
     if(psr->peek(psr)->type == close_brace) (void)psr->get(psr);
     else return NULL;
 
-    parse_and(&root, operator_and);
+    parse_and(&root, 0);
 
     return NULL;
 }
