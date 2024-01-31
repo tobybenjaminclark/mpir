@@ -78,6 +78,8 @@ set(SOURCE_FILES
         codebank/sourcebank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.c
         codebank/headerbank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.h
         codebank/headerbank/mpir_ast/mpir_doc_ast.h
+        "codebank/sourcebank/mpir_parser/ mpir_type_parsers/mpir_parse_typedef.c"
+        "codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typedef.h"
 )
 
 # Create the main executable
