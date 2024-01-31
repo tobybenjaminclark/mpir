@@ -9,6 +9,7 @@
 
 #include "../../headerbank/mpir_parser/mpir_parser.h"
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
-#include "mpir_func_parsers//mpir_parse_function_header.h"
+#include "mpir_func_parsers/mpir_parse_function_header.h"
+#include "mpir_type_parsers/mpir_parse_typedef.h"
 
 #endif

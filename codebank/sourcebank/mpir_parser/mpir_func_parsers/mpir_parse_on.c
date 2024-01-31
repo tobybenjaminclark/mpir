@@ -28,8 +28,6 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
     /* Parse & discard `on` keyword */
     struct mpir_on_statement* node = calloc(1, sizeof(struct mpir_on_statement));
 
-    printf("PARSED ON!\n102");
-
     /* Parse literals */
     switch(psr->peek(psr)->type)
     {

@@ -32,6 +32,4 @@ suchthat:
     |    doc as "Function to show product of 2 integers"
 end
 
-typedef NewInt a :: Int
-typedef a : Int {∀x : x == 1}
-typedef a : Int {∃x : x>=-35.0}
+typedef NewInt a :: Int {∀x : x > 5 ^ x < 10}

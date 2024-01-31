@@ -6,16 +6,6 @@
 
 #include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.h"
 
-struct mpir_type* get_type(mpir_parser* psr)
-{
-    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
-
-    struct mpir_type* arg = calloc(1, sizeof (struct mpir_identifier));
-    wcscpy(arg->data, psr->get(psr)->lexeme);
-    if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
-    return arg;
-}
-
 struct mpir_type** parse_inputs(mpir_parser* psr)
 {
     struct mpir_identifier** nodes = NULL;

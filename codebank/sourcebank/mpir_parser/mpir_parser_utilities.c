@@ -70,3 +70,15 @@ struct mpir_type* parse_type(mpir_parser* psr)
     }
     else return NULL;
 }
+
+
+
+struct mpir_type* get_type(mpir_parser* psr)
+{
+    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
+
+    struct mpir_type* arg = calloc(1, sizeof (struct mpir_identifier));
+    wcscpy(arg->data, psr->get(psr)->lexeme);
+    if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
+    return arg;
+}

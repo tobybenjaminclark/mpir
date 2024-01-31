@@ -108,6 +108,10 @@ void mpir_parse(mpir_parser* parser)
             {
                 parse_function_declaration(parser);
             }
+            else if(next_type == keyword_typedef)
+            {
+                parse_type_declaration(parser);
+            }
         }
         else next_type = (mpir_token_type) NULL;
 

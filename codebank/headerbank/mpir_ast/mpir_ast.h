@@ -21,11 +21,40 @@ struct mpir_function_declaration
     struct mpir_docsection* docsection;
 };
 
+
+enum type_logic_operator
+{
+    GT,
+    GTEQ,
+    LT,
+    LTEQ,
+    EQ,
+    AND,
+    OR,
+    NOT,
+    FORALL,
+    EXISTS
+};
+
+struct type_logic
+{
+    int type;
+    union {
+        enum type_logic_operator op;
+        struct mpir_identifier* id;
+        wchar_t* str_literal;
+        double num_literal;
+    } data;
+    struct mpir_expression* left;
+    struct mpir_expression* right;
+};
+
 struct mpir_type_declaration
 {
     struct mpir_identifier* identifier;
     struct mpir_type** inputs;
     struct mpir_type* base_type;
+    struct type_logic* refinement;
 };
 
 #endif
