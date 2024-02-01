@@ -31,7 +31,8 @@ enum mpir_command_type{
     VALUE_ASSIGNMENT,
     TRYCAST_STATEMENT,
     DO_STATEMENT,
-    DOC_STATEMENT
+    DOC_STATEMENT,
+    NEW_TYPE_DECLARATION,
 };
 
 struct mpir_command_node {

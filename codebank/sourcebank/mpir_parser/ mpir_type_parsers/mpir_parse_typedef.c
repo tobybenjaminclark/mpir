@@ -8,7 +8,6 @@
 
 bool parse_type_declaration(mpir_parser* psr)
 {
-    printf("PARSING TYPEDEF!");
     /* Attempt to Parse * Discard 'typedef' keyword */
     if(psr->peek(psr)->type == keyword_typedef) (void)psr->get(psr);
     else return false;
@@ -33,6 +32,8 @@ bool parse_type_declaration(mpir_parser* psr)
 
     /* Parse Type Logic */
     node->refinement = parse_type_logic(psr);
+
+    append_command(psr->program, (union mpir_command_data){.type_declaration = node}, NEW_TYPE_DECLARATION);
 
     return true;
 }

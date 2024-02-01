@@ -20,6 +20,7 @@ struct boolean_logic_token{
     struct boolean_logic_token* right;
 };
 
+void print_type_logic(struct type_logic* node);
 struct mpir_type_logic* parse_type_logic(mpir_parser* psr);
 
 #endif

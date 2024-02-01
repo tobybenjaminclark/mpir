@@ -260,7 +260,6 @@ struct mpir_type_logic* parse_type_logic(mpir_parser* psr)
 
     internal_parse_type_logic(&root, 0);
     struct type_logic* type_expr = convert_to_type_logic(root);
-    print_type_logic(type_expr);
 
-    return NULL;
+    return type_expr;
 }

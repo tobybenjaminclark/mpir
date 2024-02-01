@@ -10,6 +10,10 @@ void print_command_node(struct mpir_command_node* current_node)
 {
     switch(current_node->type)
     {
+        case NEW_TYPE_DECLARATION:
+            wprintf(L"Type Declaration `%ls` such that::\n", current_node->data.type_declaration->identifier);
+            print_type_logic(current_node->data.type_declaration->refinement);
+            break;
         case VALUE_ASSIGNMENT:
             wprintf(L"\t\tValue Assignment `%ls` to expression:\n", current_node->data.value_assignment->identifier);
             mpir_display_ast(current_node->data.value_assignment->expression, 2);
