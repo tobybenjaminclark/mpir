@@ -331,7 +331,7 @@ int mpir_tokenise_comparator(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise negation operators ('!','!=','¬' and '¬=') in the input stream.
  *
- * This function tokenizes negation operators such as '!', '!=', '¬', and '¬=' in the input stream. It verifies the
+ * This function tokenizes negation operators such as '!', '¬' in the input stream. It verifies the
  * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -343,9 +343,9 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
     if (lexer->peek(lexer) == L'!' || lexer->peek(lexer) == L'¬') NULL;
     else return 0;
 
-    /* If the next character is an equal sign, then consume it, tokenise as operator regardless. */
-    (void) mpir_lexer_tryconsume(lexer, L'=');
-    return mpir_tokenise_process_buffer(lexer, operator_equals);
+    /* Consume ¬ */
+    (void) mpir_lexer_consume(lexer);
+    return mpir_tokenise_process_buffer(lexer, operator_not);
 }
 
 
@@ -629,7 +629,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
             mpir_tokenise_colon(lxr) ||                            /* ← Tokenises colon operators ':'/'::'     */
             mpir_tokenise_equality(lxr) ||                         /* ← Tokenises equality operators '='/'=='  */
             mpir_tokenise_comparator(lxr) ||                       /* ← Tokenises '>', '<', '>=', and '<='     */
-            mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!','!=','¬', and '¬='       */
+            mpir_tokenise_negation(lxr) ||                         /* ← Tokenises '!', and '¬'                 */
             mpir_tokenise_connectives(lxr) ||                      /* ← Tokenises boolean comparators          */
             mpir_tokenise_negative_numerical_or_arrow(lxr) ||      /* ← Tokenises negative numericals & '->'   */
             mpir_tokenise_numerical_literal(lxr) ||                /* ← Tokenises numerical literals           */

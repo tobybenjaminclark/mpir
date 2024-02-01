@@ -15,7 +15,7 @@
 #define TOKEN_NAME_MAP \
     "*", "/", "+", "-", "^", "=", "(", ")", \
     "{", "}", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "=", ">",    \
-    "<", ">=", "<=", "→", "↔", "^",         \
+    "<", ">=", "<=", "→", "↔", "^", "¬",        \
     "∨", "using", "suchthat", "funcdef", "typedef", "trycast", "into", "do", "on", "let", "set", "in", "as", "end", ",",   \
     "____", "|", ":", "::", "COMMENT", "NUMERICAL_LITERAL", "STRING_LITERAL", "IDENTIFIER", "KEYWORD", "NEWLINE"
 
@@ -50,6 +50,7 @@ typedef enum
     /* Connective Operators */
     operator_arrow,
     operator_bi_arrow,
+    operator_not,
     operator_and,
     operator_or,
 

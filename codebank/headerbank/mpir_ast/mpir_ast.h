@@ -45,8 +45,8 @@ struct type_logic
         wchar_t* str_literal;
         double num_literal;
     } data;
-    struct mpir_expression* left;
-    struct mpir_expression* right;
+    struct type_logic* left;
+    struct type_logic* right;
 };
 
 struct mpir_type_declaration
