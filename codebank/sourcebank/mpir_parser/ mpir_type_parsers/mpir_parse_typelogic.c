@@ -86,28 +86,6 @@ void internal_parse_type_logic(struct boolean_logic_token** node_ptr, int presed
     central_tokens->right = right_tokens;
     *node_ptr = central_tokens;
 
-    // Print the token lexemes of left_tokens, central_tokens, and right_tokens
-    printf("Left: [");
-    for (i = 0; i < central_tokens->left->token_count; i++) {
-        wprintf(L"%ls ", central_tokens->left->tokens[i]->lexeme);
-    }
-    printf("]\n");
-
-    printf("Middle: [");
-    for (i = 0; i < central_tokens->token_count; i++) {
-        wprintf(L"%ls ", central_tokens->tokens[i]->lexeme);
-    }
-    printf("]\n");
-
-    printf("Right: [");
-    for (i = 0; i < central_tokens->right->token_count; i++) {
-        wprintf(L"%ls ", central_tokens->right->tokens[i]->lexeme);
-    }
-    printf("]\n");
-
-    // Update the node_ptr content
-    *node_ptr = central_tokens;
-
     // Recursively call parse_type_logic on the left and right
     internal_parse_type_logic(&(central_tokens->left), presedence);
     internal_parse_type_logic(&(central_tokens->right), presedence);
@@ -128,6 +106,8 @@ enum type_logic_operator get_ast_logic_mapping(mpir_token_type tok_type)
         case operator_gteq: return GTEQ;
         case operator_and: return AND;
         case operator_or: return OR;
+        case operator_not: return NOT;
+        default: return INVALID;
     }
 }
 
@@ -136,11 +116,116 @@ struct type_logic* convert_to_type_logic(struct boolean_logic_token* node_ptr)
     struct type_logic* node = calloc(1, sizeof(struct type_logic));
     mpir_token_type tok_type = node_ptr->tokens[0]->type;
 
+    /* Forward Declaration for later in function. */
+    enum type_logic_operator ast_operator;
+    struct mpir_identifier* identifier;
 
+    /* Set all attributes in union to NULL */
+    node->data.id = NULL;
+    node->data.str_literal = NULL;
+    node->data.num_literal = 0;
+    node->data.op = INVALID;
+
+    switch(tok_type)
+    {
+        /* Case for singular term (identifier) */
+        case IDENTIFIER:
+            identifier = malloc(sizeof(struct mpir_identifier));
+            identifier->data[0] = L'\0';
+            wcscpy(identifier->data, node_ptr->tokens[0]->lexeme);
+            node->data.id = identifier;
+            node->type = type_IDENTIFIER;
+            break;
+
+        /* Case for string literal term */
+        case STRING_LITERAL:
+            node->data.str_literal = malloc(sizeof(struct mpir_identifier));
+            identifier->data[0] = L'\0';
+            wcscpy(identifier->data, node_ptr->tokens[0]->lexeme);
+            node->data.id = identifier;
+            node->type = type_STRING;
+            break;
+
+        /* Case for numerical literal term */
+        case NUMERICAL_LITERAL:
+            node->data.num_literal = wcstol(node_ptr->tokens[0]->lexeme, NULL, 10);
+            node->type = type_NUMERICAL;
+            break;
+
+        /* Default Case (inc. operators) */
+        default:
+            ast_operator = get_ast_logic_mapping(tok_type);
+            if(ast_operator == INVALID)
+            {
+                /* Okay, this means there is an error */
+                mpir_fatal("Failed to parse boolean expression, unknown token type.");
+                return NULL;
+            }
+
+            /* Token is valid */
+            node->data.op = ast_operator;
+            node->type = type_OPERATOR;
+            break;
+    }
 
     /* Recursive Call if not NULL */
+    if(node_ptr->left != NULL) node->left = convert_to_type_logic(node_ptr->left);
+    else node->left = NULL;
 
-    return NULL;
+    if(node_ptr->right != NULL) node->right = convert_to_type_logic(node_ptr->right);
+    else node->right = NULL;
+
+    return node;
+}
+
+void print_type_logic_operator(enum type_logic_operator op)
+{
+    switch (op)
+    {
+        case GT: printf("GT"); break;
+        case GTEQ: printf("GTEQ"); break;
+        case LT: printf("LT"); break;
+        case LTEQ: printf("LTEQ"); break;
+        case EQ: printf("EQ"); break;
+        case AND: printf("AND"); break;
+        case OR: printf("OR"); break;
+        case NOT: printf("NOT"); break;
+        case FORALL: printf("FORALL"); break;
+        case EXISTS: printf("EXISTS"); break;
+        case INVALID: printf("INVALID"); break;
+        default: printf("UNKNOWN"); break;
+    }
+}
+
+void print_type_logic(struct type_logic* node)
+{
+    if (node == NULL)
+        return;
+
+    switch (node->type)
+    {
+        case type_OPERATOR:
+            printf("(");
+            print_type_logic_operator(node->data.op);
+            printf(" ");
+            print_type_logic(node->left);
+            printf(" ");
+            print_type_logic(node->right);
+            printf(")");
+            break;
+        case type_IDENTIFIER:
+            wprintf(L"%ls", node->data.id->data);
+            break;
+        case type_STRING:
+            wprintf(L"\"%ls\"", node->data.str_literal);
+            break;
+        case type_NUMERICAL:
+            printf("%f", node->data.num_literal);
+            break;
+        default:
+            printf("UNKNOWN TYPE");
+            break;
+    }
 }
 
 struct mpir_type_logic* parse_type_logic(mpir_parser* psr)
@@ -174,6 +259,8 @@ struct mpir_type_logic* parse_type_logic(mpir_parser* psr)
     else return NULL;
 
     internal_parse_type_logic(&root, 0);
+    struct type_logic* type_expr = convert_to_type_logic(root);
+    print_type_logic(type_expr);
 
     return NULL;
 }

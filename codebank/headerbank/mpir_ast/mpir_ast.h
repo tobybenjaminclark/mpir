@@ -33,12 +33,21 @@ enum type_logic_operator
     OR,
     NOT,
     FORALL,
-    EXISTS
+    EXISTS,
+    INVALID
+};
+
+enum type_logic_type
+{
+    type_OPERATOR,
+    type_IDENTIFIER,
+    type_NUMERICAL,
+    type_STRING
 };
 
 struct type_logic
 {
-    int type;
+    enum type_logic_type type;
     union {
         enum type_logic_operator op;
         struct mpir_identifier* id;
