@@ -82,6 +82,8 @@ set(SOURCE_FILES
         "codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typedef.h"
         "codebank/sourcebank/mpir_parser/ mpir_type_parsers/mpir_parse_typelogic.c"
         codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typelogic.h
+        codebank/sourcebank/mpir_architecture/mpir_server.c
+        codebank/headerbank/mpir_architecture/mpir_server.h
 )
 
 # Create the main executable

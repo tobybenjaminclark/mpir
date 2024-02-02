@@ -608,7 +608,7 @@ int mpir_tokenise_base_state(mpir_lexer* lxr)
 {
     /* If a space is detected, void/ignore it */
     if (lxr->peek(lxr) == L' ') (void)mpir_tokenise_space(lxr, 0);
-    if (mpir_lexer_tryconsume(lxr, L'|')) mpir_tokenise_process_buffer(lxr, pipe);
+    if (mpir_lexer_tryconsume(lxr, L'|')) mpir_tokenise_process_buffer(lxr, pipesymb);
 
         /* If a newline character \n is detected, tokenise it */
     else if (lxr->peek(lxr) == L'\n')

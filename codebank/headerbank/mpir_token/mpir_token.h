@@ -72,7 +72,7 @@ typedef enum
 
     /* Indentation */
     indentation,
-    pipe,
+    pipesymb,
     colon,
     double_colon,
 

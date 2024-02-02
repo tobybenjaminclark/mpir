@@ -20,3 +20,4 @@ int main(int argc, char** argv)
     mpir_parser_free(psr);
     return 0;
 }
+
