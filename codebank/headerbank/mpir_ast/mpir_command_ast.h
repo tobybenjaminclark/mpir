@@ -12,54 +12,82 @@
 #include "../../headerbank/mpir_ast/mpir_doc_ast.h"
 #include "../mpir_misc/mpir_linked_list.h"
 
-struct mpir_ast_type_assignment
-{
-    struct wchar_t* identifier[128];
-    struct wchar_t* type[128];
-};
+
 
 /**
- * @brief Structure representing a value assignment in the AST.
+ * @struct mpir_ast_type_assignment
+ * @brief Represents a type assignment in the Abstract Syntax Tree (AST).
  *
- * Represents a `set` binding in the language, between a variable identifier and an expression. Please note that
- * the core calculus specifies that the type of the expression must reduce and be equal to the type of the bound
- * variable - otherwise a compile time type error will be thrown.
+ * This structure captures information about assigning a type to a variable. (let statement)
+ */
+struct mpir_ast_type_assignment
+{
+    wchar_t* identifier[128];                       /** ← Identifier associated with the type assignment. */
+    wchar_t* type[128];                             /** ← Type associated with the type assignment. */
+};
+
+
+
+/**
+ * @struct mpir_ast_value_assignment
+ * @brief Represents a value assignment in the Abstract Syntax Tree (AST).
  *
- * @var mpir_ast_value_assignment::identifier   Variable identifier that is being assigned a value.
- * @var mpir_ast_value_assignment::expression   Expression to assign to the variable.
+ * This structure represents the assignment of a value to a variable in the AST. (set statement)
  */
 struct mpir_ast_value_assignment
 {
-    struct wchar_t* identifier[128];
-    struct mpir_ast_expression* expression;
+    wchar_t* identifier[128];                       /** ← Identifier associated with the value assignment. */
+    struct mpir_ast_expression* expression;         /** ← Expression assigned to the variable. */
 };
 
-struct mpir_command_list;
+
+
+/**
+ * @struct mpir_ast_on_statement
+ * @brief Represents an 'on' statement in the Abstract Syntax Tree (AST).
+ *
+ * This structure is part of the AST and is used to define actions based on certain conditions.
+ */
 struct mpir_ast_on_statement
 {
-    union {
-        double mpir_numerical_literal;
-        wchar_t* mpir_string_literal;
-    } literal;
-    enum stored_type{
-        numerical_literal,
-        string_literal,
-    } stored_type;
-    struct mpir_command_list* commands;
+    union{
+        double mpir_numerical_literal;              /** ← Numerical literal value. */
+        wchar_t* mpir_string_literal;               /** ← String literal value. */
+    } literal;                                      /** ← Union of possible literal data. */
+    enum stored_type {
+        numerical_literal,                          /** ← Indicates the stored type is numerical. */
+        string_literal                              /** ← Indicates the stored type is a string. */
+    } stored_type;                                  /** ← Enum indicating the stored type. */
+    struct mpir_command_list* commands;             /** ← Pointer to a list of commands associated with the 'on' statement. */
 };
 
+
+
+/**
+ * @struct mpir_ast_trycast_statement
+ * @brief Represents a 'trycast' statement in the Abstract Syntax Tree (AST).
+ *
+ * This structure represents the 'trycast' statement, attempting to cast a variable into another type.
+ */
 struct mpir_ast_trycast_statement
 {
-    struct mpir_ast_identifier* dominant_variable;
-    struct mpir_ast_identifier* casted_variable;
-    struct mpir_ast_on_statement** actions;
+    struct mpir_ast_identifier* dominant_variable;  /** ← Dominant variable in the trycast statement. */
+    struct mpir_ast_identifier* casted_variable;    /** ← Casted variable in the trycast statement. */
+    struct mpir_ast_on_statement** actions;         /** ← Array of 'on' statements associated with the trycast statement. */
 };
 
+
+
+/**
+ * @struct mpir_ast_do_statement
+ * @brief Represents a 'do' statement in the Abstract Syntax Tree (AST).
+ *
+ * This structure represents the 'do' statement, involving a function call and associated actions.
+ */
 struct mpir_ast_do_statement
 {
-    struct mpir_ast_function_call* function;
-    struct mpir_ast_on_statement** actions;
+    struct mpir_ast_function_call* function;         /** ← Function call in the 'do' statement. */
+    struct mpir_ast_on_statement** actions;          /** ← Array of 'on' statements associated with the 'do' statement. */
 };
-
 
 #endif

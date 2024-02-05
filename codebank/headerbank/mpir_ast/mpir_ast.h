@@ -12,6 +12,16 @@
 #include "../../headerbank/mpir_ast/mpir_doc_ast.h"
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
+struct mpir_ast_function_declaration
+{
+    struct mpir_ast_identifier* identifier;
+    struct mpir_ast_type** inputs;
+    struct mpir_ast_type* return_type;
+    struct mpir_command_list* body;
+    struct mpir_ast_docsection* docsection;
+};
+
+
 enum type_logic_operator
 {
     GT,
@@ -55,15 +65,5 @@ struct mpir_ast_type_declaration
     struct mpir_ast_type* base_type;
     struct type_logic* refinement;
 };
-
-struct mpir_ast_function_declaration
-{
-    struct mpir_ast_identifier* identifier;
-    struct mpir_ast_type** inputs;
-    struct mpir_ast_type* return_type;
-    struct mpir_command_list* body;
-    struct mpir_ast_docsection* docsection;
-};
-
 
 #endif

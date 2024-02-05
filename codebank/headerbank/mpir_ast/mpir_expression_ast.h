@@ -10,6 +10,7 @@
 #include "../../headerbank/mpir_token/mpir_token.h"
 #include <stdbool.h>
 
+/* Defining Macros for expression types */
 #define AST_IDENTIFIER 1
 #define AST_NUMERICAL_LITERAL 2
 #define AST_STRING_LITERAL 3
@@ -27,6 +28,8 @@ struct mpir_ast_identifier
     wchar_t data[128]; /** ← Data associated with the identifier. */
 };
 
+
+
 /**
  * @struct mpir_ast_type
  * @brief Structure representing a type in the Abstract Syntax Tree (AST).
@@ -35,6 +38,8 @@ struct mpir_ast_type
 {
     wchar_t data[128];  /** ← Data associated with the type. */
 };
+
+
 
 /**
  * @struct mpir_ast_function_identifier
@@ -45,6 +50,8 @@ struct mpir_ast_function_identifier
     wchar_t data[128];  /** ← Data associated with the function identifier. */
 };
 
+
+
 /**
  * @struct mpir_ast_function_call
  * @brief Structure representing a function call in the Abstract Syntax Tree (AST).
@@ -54,6 +61,8 @@ struct mpir_ast_function_call
     struct mpir_ast_function_identifier* identifier;      /** ← Function identifier for the call. */
     struct mpir_ast_expression** arguments;               /** ← Array of arguments for the function call. */
 };
+
+
 
 /**
  * @struct mpir_ast_expression
@@ -72,5 +81,7 @@ struct mpir_ast_expression
     struct mpir_ast_expression* left;                     /** ← Pointer to the left subexpression. */
     struct mpir_ast_expression* right;                    /** ← Pointer to the right subexpression. */
 };
+
+
 
 #endif
