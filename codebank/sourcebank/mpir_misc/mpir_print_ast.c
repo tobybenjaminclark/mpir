@@ -6,7 +6,7 @@
 
 #include "../../headerbank/mpir_misc/mpir_print_ast.h"
 
-void print_type(struct mpir_type* node, int indentation)
+void print_type(struct mpir_ast_type* node, int indentation)
 {
     /*
      *  wchar_t data[128];
@@ -16,13 +16,13 @@ void print_type(struct mpir_type* node, int indentation)
     return;
 }
 
-void print_types(struct mpir_type** nodes, int indentation)
+void print_types(struct mpir_ast_type** nodes, int indentation)
 {
     /* Implement here using print_type */
     return;
 }
 
-void print_identifier(struct mpir_identifier* node, int indentation)
+void print_identifier(struct mpir_ast_identifier* node, int indentation)
 {
     /*
      *  wchar_t data[128];
@@ -32,12 +32,12 @@ void print_identifier(struct mpir_identifier* node, int indentation)
     return;
 }
 
-void print_function_declaration(struct mpir_function_declaration* node, int indentation)
+void print_function_declaration(struct mpir_ast_function_declaration* node, int indentation)
 {
     /*
-    struct mpir_identifier* identifier;
-    struct mpir_type** inputs;
-    struct mpir_type* return_type;
+    struct mpir_ast_identifier* identifier;
+    struct mpir_ast_type** inputs;
+    struct mpir_ast_type* return_type;
     struct mpir_command_list* body;
     */
     (void) wprintf(L"%*ls \n", indentation * TAB_WIDTH, "Function Declaration:");

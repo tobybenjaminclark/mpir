@@ -11,13 +11,13 @@
  *
  * This function parses an 'on' statement, which is used in the context of MPiR to specify actions to be taken
  * based on certain conditions. The 'on' statement starts with the 'on' keyword followed by a literal value,
- * an arrow '->', and a command. The function creates and returns a dynamically allocated `struct mpir_on_statement`
+ * an arrow '->', and a command. The function creates and returns a dynamically allocated `struct mpir_ast_on_statement`
  * representing the parsed 'on' statement as part of the AST.
  *
  * @param psr A pointer to the MPiR parser structure.
- * @return Pointer to a dynamically allocated `struct mpir_on_statement` or NULL on failure.
+ * @return Pointer to a dynamically allocated `struct mpir_ast_on_statement` or NULL on failure.
  */
-struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
+struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr)
 {
     /* Parse Indentation then parse `on` keyword */
     while(psr->peek(psr)->type == indentation)(void)psr->get(psr);
@@ -26,7 +26,7 @@ struct mpir_on_statement* parse_on_statement(mpir_parser* psr)
     else return NULL;
 
     /* Parse & discard `on` keyword */
-    struct mpir_on_statement* node = calloc(1, sizeof(struct mpir_on_statement));
+    struct mpir_ast_on_statement* node = calloc(1, sizeof(struct mpir_ast_on_statement));
 
     /* Parse literals */
     switch(psr->peek(psr)->type)

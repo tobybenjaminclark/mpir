@@ -6,9 +6,9 @@
 
 #include "../../../headerbank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.h"
 
-struct mpir_doc* mpir_parse_doc(mpir_parser* psr)
+struct mpir_ast_doc* mpir_parse_doc(mpir_parser* psr)
 {
-    struct mpir_doc* node = calloc(1, sizeof(struct mpir_doc));
+    struct mpir_ast_doc* node = calloc(1, sizeof(struct mpir_ast_doc));
 
     /* identifier maybe(identifier) 'as' string_literal */
     if(psr->peek(psr)->type == IDENTIFIER) node->flag_type = parse_identifier(psr);
@@ -29,14 +29,14 @@ struct mpir_doc* mpir_parse_doc(mpir_parser* psr)
     return node;
 }
 
-struct mpir_docsection* mpir_parse_docsection(mpir_parser* psr)
+struct mpir_ast_docsection* mpir_parse_docsection(mpir_parser* psr)
 {
     printf("\n\nTRYING TO PARSE DOCS\n\n");
-    struct mpir_docsection* docsection = malloc(sizeof(struct mpir_docsection));
+    struct mpir_ast_docsection* docsection = malloc(sizeof(struct mpir_ast_docsection));
     struct mpir_command_list* docs = initialize_command_list();
 
     /* suchthat: `\n` ( ____ `|` ____ doc `\n`)* end */
-    struct mpir_doc* current_node;
+    struct mpir_ast_doc* current_node;
     while(psr->peek(psr)->type != keyword_end)
     {
         wprintf(L"%ls \n", psr->peek(psr)->lexeme);

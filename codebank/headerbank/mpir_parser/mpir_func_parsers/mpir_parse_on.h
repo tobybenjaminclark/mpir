@@ -13,6 +13,6 @@
 #include "mpir_parse_set_binding.h"
 #include "mpir_parse_function_call.h"
 
-struct mpir_on_statement* parse_on_statement(mpir_parser* psr);
+struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr);
 
 #endif //MPIR_COMPILER_MPIR_PARSE_ON_H

@@ -12,15 +12,15 @@
  * This function parses a 'set' binding within the context of the MPIR. A 'set' binding involves assigning a value to a
  * variable with a specified type. The function sequentially parses the 'set' keyword, the variable identifier, the 'as'
  * keyword, and the associated expression (value). It then creates and returns a dynamically allocated
- * `struct mpir_value_assignment` representing the parsed 'set' binding.
+ * `struct mpir_ast_value_assignment` representing the parsed 'set' binding.
  *
  * @param psr A Pointer to the MPIR parser structure.
  * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
- * @return A pointer to a dynamically allocated `struct mpir_value_assignment` on successful parsing.
+ * @return A pointer to a dynamically allocated `struct mpir_ast_value_assignment` on successful parsing.
  */
-struct mpir_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes)
+struct mpir_ast_value_assignment* parse_set_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
-    struct mpir_value_assignment* node = calloc(1, sizeof(struct mpir_value_assignment));
+    struct mpir_ast_value_assignment* node = calloc(1, sizeof(struct mpir_ast_value_assignment));
 
     /* Parse `set` */
     if(psr->peek(psr)->type == keyword_set) (void)psr->get(psr);

@@ -13,14 +13,14 @@
 
 
 union mpir_command_data {
-    struct mpir_function_call* function_call;
+    struct mpir_ast_function_call* function_call;
     struct mpir_function_declaration* function_declaration;
     struct mpir_type_declaration* type_declaration;
-    struct mpir_type_assignment* type_assignment;
-    struct mpir_value_assignment* value_assignment;
-    struct mpir_trycast_statement* trycast_statement;
-    struct mpir_do_statement* do_statement;
-    struct mpir_doc* doc_statement;
+    struct mpir_ast_type_assignment* type_assignment;
+    struct mpir_ast_value_assignment* value_assignment;
+    struct mpir_ast_trycast_statement* trycast_statement;
+    struct mpir_ast_do_statement* do_statement;
+    struct mpir_ast_doc* doc_statement;
 };
 
 enum mpir_command_type{

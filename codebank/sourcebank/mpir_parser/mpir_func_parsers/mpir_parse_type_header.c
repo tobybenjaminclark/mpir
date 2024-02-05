@@ -6,25 +6,25 @@
 
 #include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_type_header.h"
 
-struct mpir_identifier* get_type_arg(mpir_parser* psr)
+struct mpir_ast_identifier* get_type_arg(mpir_parser* psr)
 {
     if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    struct mpir_identifier* arg = calloc(1, sizeof (struct mpir_identifier));
+    struct mpir_ast_identifier* arg = calloc(1, sizeof (struct mpir_ast_identifier));
     wcscpy(arg->data, psr->get(psr)->lexeme);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;
 }
 
-struct mpir_identifier** parse_type_args(mpir_parser* psr)
+struct mpir_ast_identifier** parse_type_args(mpir_parser* psr)
 {
-    struct mpir_identifier** nodes = NULL;
+    struct mpir_ast_identifier** nodes = NULL;
 
     int arg_index = 0;
-    struct mpir_identifier* arg;
+    struct mpir_ast_identifier* arg;
     while((arg = get_type_arg(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_identifier*));
+        struct mpir_ast_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_ast_identifier*));
         if (temp == NULL)
         {
             free(nodes);
@@ -43,7 +43,7 @@ struct mpir_identifier** parse_type_args(mpir_parser* psr)
 bool parse_type_header(mpir_parser* psr)
 {
     /* Create Funcdef AST node & Consume 'fundef' */
-    struct mpir_type_declaration node;
+    struct mpir_ast_type_declaration node;
     /* Parsing */
 
     /* Parse `funcdef */

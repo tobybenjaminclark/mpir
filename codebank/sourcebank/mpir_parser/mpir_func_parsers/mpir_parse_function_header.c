@@ -6,15 +6,15 @@
 
 #include "../../../headerbank/mpir_parser/mpir_func_parsers/mpir_parse_function_header.h"
 
-struct mpir_type** parse_inputs(mpir_parser* psr)
+struct mpir_ast_type** parse_inputs(mpir_parser* psr)
 {
-    struct mpir_identifier** nodes = NULL;
+    struct mpir_ast_identifier** nodes = NULL;
 
     int arg_index = 0;
-    struct mpir_identifier* arg;
+    struct mpir_ast_identifier* arg;
     while((arg = get_type(psr)) != NULL)
     {
-        struct mpir_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_identifier*));
+        struct mpir_ast_identifier** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_ast_identifier*));
         if (temp == NULL)
         {
             free(nodes);
@@ -31,7 +31,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
 }
 
 /**
- * @brief Function to parse a Function Header, returns a mpir_function_declaration structure.
+ * @brief Function to parse a Function Header, returns a mpir_ast_function_declaration structure.
  *
  * This function is responsible for parsing the declaration of a function according to the MPIR Grammar. It gathers
  * the identifier, input types, and output types. Performs memory allocation for the list of input types. The decl.
@@ -44,7 +44,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr)
 bool parse_function_declaration(mpir_parser* psr)
 {
     /* Create Funcdef AST node & Consume 'fundef' */
-    struct mpir_function_declaration* node = calloc(1, sizeof(struct mpir_function_declaration));
+    struct mpir_ast_function_declaration* node = calloc(1, sizeof(struct mpir_ast_function_declaration));
     /* Parsing */
 
     /* Parse `funcdef */

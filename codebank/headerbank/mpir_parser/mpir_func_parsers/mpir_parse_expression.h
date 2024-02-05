@@ -16,13 +16,13 @@
 #include <wchar.h>
 #include <stdio.h>
 
-struct mpir_expression* get_arg(mpir_parser* psr);
+struct mpir_ast_expression* get_arg(mpir_parser* psr);
 
-struct mpir_identifier** parse_arguments(mpir_parser* psr);
-struct mpir_function_call* mpir_parse_function_call(mpir_parser* psr);
+struct mpir_ast_identifier** parse_arguments(mpir_parser* psr);
+struct mpir_ast_function_call* mpir_parse_function_call(mpir_parser* psr);
 
 // Function to build the AST from the expression
-struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence);
+struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence);
 
 // Helper function to perform arithmetic operations
 double performOperation(double operand1, char operator, double operand2);
@@ -33,6 +33,6 @@ int isOperator(char ch);
 // Helper function to get the precedence of an operator
 int mpir_get_op_presedence(mpir_token_type operator);
 
-void mpir_display_ast(struct mpir_expression* root, int indentation_level);
+void mpir_display_ast(struct mpir_ast_expression* root, int indentation_level);
 
 #endif

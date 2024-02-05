@@ -12,6 +12,6 @@
 #include "mpir_parse_on.h"
 #include "../../../headerbank/mpir_parser/mpir_parse_multiple.h"
 
-struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes);
+struct mpir_ast_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes);
 
 #endif //MPIR_COMPILER_MPIR_PARSE_TRYCAST_H

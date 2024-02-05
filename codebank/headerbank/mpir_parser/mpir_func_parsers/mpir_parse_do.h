@@ -18,15 +18,15 @@
  * @brief Parses a do statement within the MPIR parser.
  *
  * This function parses a `do` statement from the provided MPIR parser, including the associated function call
- * and the following list of `on` statements. It creates, allocates and returns a `mpir_do_statement` structure,
+ * and the following list of `on` statements. It creates, allocates and returns a `mpir_ast_do_statement` structure,
  * which gets returned. The statement is parsed in accoradance with the MPIR grammar.
  *
  * @param psr Pointer to the parser structure.
  * @param nodes Pointer to the command list to which the parsed `do` statement will be appended.
  *
- * @return A pointer to a dynamically allocated `mpir_do_statement` structure representing the parsed `do` statement.
+ * @return A pointer to a dynamically allocated `mpir_ast_do_statement` structure representing the parsed `do` statement.
  *         Returns NULL if the parsing fails or encounters an unexpected structure.
  */
-struct mpir_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* nodes);
+struct mpir_ast_do_statement* parse_do(mpir_parser* psr, struct mpir_command_list* nodes);
 
 #endif

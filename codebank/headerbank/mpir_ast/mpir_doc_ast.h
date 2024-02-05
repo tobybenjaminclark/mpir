@@ -7,14 +7,14 @@
 #ifndef MPIR_COMPILER_MPIR_DOC_AST_H
 #define MPIR_COMPILER_MPIR_DOC_AST_H
 
-struct mpir_doc
+struct mpir_ast_doc
 {
-    struct mpir_identifier* flag_type;
-    struct mpir_identifier* variable;
+    struct mpir_ast_identifier* flag_type;
+    struct mpir_ast_identifier* variable;
     wchar_t** documentation;
 };
 
-struct mpir_docsection
+struct mpir_ast_docsection
 {
     struct mpir_command_list* docs;
 };

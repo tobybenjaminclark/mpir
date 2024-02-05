@@ -8,15 +8,15 @@
 
 
 
-struct mpir_identifier** parse_arguments(mpir_parser* psr)
+struct mpir_ast_identifier** parse_arguments(mpir_parser* psr)
 {
-    struct mpir_identifier** nodes = NULL;
+    struct mpir_ast_identifier** nodes = NULL;
 
     int arg_index = 0;
-    struct mpir_expression* arg;
+    struct mpir_ast_expression* arg;
     while((arg = get_arg(psr)) != NULL)
     {
-        struct mpir_expression** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_expression*));
+        struct mpir_ast_expression** temp = realloc(nodes, (arg_index + 2) * sizeof(struct mpir_ast_expression*));
         if (temp == NULL)
         {
             free(nodes);
@@ -46,7 +46,7 @@ int mpir_get_op_presedence(mpir_token_type operator)
     }
 }
 
-void mpir_display_ast(struct mpir_expression* root, int indentation_level)
+void mpir_display_ast(struct mpir_ast_expression* root, int indentation_level)
 {
     if (root == NULL)
     {
@@ -91,9 +91,9 @@ void mpir_display_ast(struct mpir_expression* root, int indentation_level)
 }
 
 // Function to create a new number node
-struct mpir_expression* mpir_create_numerical_node(long double value)
+struct mpir_ast_expression* mpir_create_numerical_node(long double value)
 {
-    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
     node->type = AST_NUMERICAL_LITERAL;
     node->data.numerical_literal = value;
     node->left = NULL;
@@ -102,9 +102,9 @@ struct mpir_expression* mpir_create_numerical_node(long double value)
 }
 
 // Function to create a new identifier node
-struct mpir_expression* mpir_create_identifier_node(struct mpir_identifier* identifier)
+struct mpir_ast_expression* mpir_create_identifier_node(struct mpir_ast_identifier* identifier)
 {
-    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
     node->type = AST_IDENTIFIER;
     wcscpy(node->data.identifier, identifier->data);
     node->left = NULL;
@@ -113,9 +113,9 @@ struct mpir_expression* mpir_create_identifier_node(struct mpir_identifier* iden
 }
 
 // Function to create a new function call node
-struct mpir_expression* mpir_create_function_call_node(struct mpir_function_call* call)
+struct mpir_ast_expression* mpir_create_function_call_node(struct mpir_ast_function_call* call)
 {
-    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+    struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
     node->type = AST_FUNCTION_CALL;
     node->data.function_call = call;
     node->left = NULL;
@@ -124,8 +124,8 @@ struct mpir_expression* mpir_create_function_call_node(struct mpir_function_call
 }
 
 // Function to create a new operator node
-struct mpir_expression* mpir_create_operator_node(const wchar_t* operator, struct mpir_expression* left, struct mpir_expression* right) {
-    struct mpir_expression* node = (struct mpir_expression*)malloc(sizeof(struct mpir_expression));
+struct mpir_ast_expression* mpir_create_operator_node(const wchar_t* operator, struct mpir_ast_expression* left, struct mpir_ast_expression* right) {
+    struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
     node->type = AST_OPERATOR;
     wcscpy(node->data.operator, operator);
     node->left = left;
@@ -134,9 +134,9 @@ struct mpir_expression* mpir_create_operator_node(const wchar_t* operator, struc
 }
 
 
-struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence)
+struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence)
 {
-    struct mpir_expression* root = NULL;
+    struct mpir_ast_expression* root = NULL;
     const char* token_names[] = { TOKEN_NAME_MAP };
 
     while (psr->peek(psr)->type != delimiter_type && psr->peek(psr)->type != NEWLINE &&
@@ -155,7 +155,7 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             {
                 /* Parse Function call */
                 printf("EXPR: Parsing Function Call\n");
-                struct mpir_function_call* func_call = mpir_parse_function_call(psr);
+                struct mpir_ast_function_call* func_call = mpir_parse_function_call(psr);
                 root = mpir_create_function_call_node(func_call);
             }
             /* Term is identifier */
@@ -163,7 +163,7 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             {
                 printf("EXPR: Parsing Identifier\n");
                 /* Parse identifier */
-                struct mpir_identifier* identifier = parse_identifier(psr);
+                struct mpir_ast_identifier* identifier = parse_identifier(psr);
                 root = mpir_create_identifier_node(identifier);
             }
         }
@@ -174,7 +174,7 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             // If an opening parenthesis is encountered, recursively build the AST for the subexpression
             (void)psr->get(psr);
             // Reset minimum_precedence for the subexpression
-            struct mpir_expression* subexpression = mpir_parse_expression(psr, NEWLINE, 0);
+            struct mpir_ast_expression* subexpression = mpir_parse_expression(psr, NEWLINE, 0);
 
             root = subexpression;
         }
@@ -192,8 +192,8 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
-            struct mpir_expression* leftOperand = root;
-            struct mpir_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
+            struct mpir_ast_expression* leftOperand = root;
+            struct mpir_ast_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
             root = mpir_create_operator_node(op_lexeme, leftOperand, rightOperand);
         }
         else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide)
@@ -202,10 +202,10 @@ struct mpir_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type 
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 
-            struct mpir_expression* newOperator = mpir_create_operator_node(op_lexeme, NULL, NULL);
+            struct mpir_ast_expression* newOperator = mpir_create_operator_node(op_lexeme, NULL, NULL);
             newOperator->left = root;
 
-            struct mpir_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
+            struct mpir_ast_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
             newOperator->right = rightOperand;
 
             root = newOperator;

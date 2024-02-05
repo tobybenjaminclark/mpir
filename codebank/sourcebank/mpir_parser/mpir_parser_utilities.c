@@ -6,9 +6,9 @@
 
 #include "../../headerbank/mpir_parser/mpir_parser_utilities.h"
 
-struct mpir_identifier* parse_identifier(mpir_parser* psr)
+struct mpir_ast_identifier* parse_identifier(mpir_parser* psr)
 {
-    struct mpir_identifier* node = malloc(sizeof(struct mpir_identifier));
+    struct mpir_ast_identifier* node = malloc(sizeof(struct mpir_ast_identifier));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
@@ -23,9 +23,9 @@ struct mpir_identifier* parse_identifier(mpir_parser* psr)
 }
 
 
-struct mpir_function_identifier* parse_function_identifier(mpir_parser* psr)
+struct mpir_ast_function_identifier* parse_function_identifier(mpir_parser* psr)
 {
-    struct mpir_function_identifier* node = malloc(sizeof(struct mpir_function_identifier));
+    struct mpir_ast_function_identifier* node = malloc(sizeof(struct mpir_ast_function_identifier));
     if(psr->peek(psr)->type == IDENTIFIER)
     {
         node->data[0] = L'\0';
@@ -36,9 +36,9 @@ struct mpir_function_identifier* parse_function_identifier(mpir_parser* psr)
 }
 
 
-struct mpir_type* parse_returntype(mpir_parser* psr)
+struct mpir_ast_type* parse_returntype(mpir_parser* psr)
 {
-    struct mpir_type* node = malloc(sizeof(struct mpir_type));
+    struct mpir_ast_type* node = malloc(sizeof(struct mpir_ast_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function identifier got other.");
@@ -53,9 +53,9 @@ struct mpir_type* parse_returntype(mpir_parser* psr)
 }
 
 
-struct mpir_type* parse_type(mpir_parser* psr)
+struct mpir_ast_type* parse_type(mpir_parser* psr)
 {
-    struct mpir_type* node = malloc(sizeof(struct mpir_type));
+    struct mpir_ast_type* node = malloc(sizeof(struct mpir_ast_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
         mpir_error("parse_function_declaration: expected function type got other.");
@@ -73,11 +73,11 @@ struct mpir_type* parse_type(mpir_parser* psr)
 
 
 
-struct mpir_type* get_type(mpir_parser* psr)
+struct mpir_ast_type* get_type(mpir_parser* psr)
 {
     if(psr->peek(psr)->type != IDENTIFIER) return NULL;
 
-    struct mpir_type* arg = calloc(1, sizeof (struct mpir_identifier));
+    struct mpir_ast_type* arg = calloc(1, sizeof (struct mpir_ast_identifier));
     wcscpy(arg->data, psr->get(psr)->lexeme);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;

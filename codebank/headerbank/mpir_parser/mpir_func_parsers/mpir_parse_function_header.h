@@ -13,11 +13,11 @@
 #include "../mpir_parse_multiple.h"
 #include "../mpir_doc_parsers/mpir_parse_docsection.h"
 
-struct mpir_type* get_input(mpir_parser* psr);
-struct mpir_type** parse_inputs(mpir_parser* psr);
+struct mpir_ast_type* get_input(mpir_parser* psr);
+struct mpir_ast_type** parse_inputs(mpir_parser* psr);
 
 /**
- * @brief Function to parse a Function Header, returns a mpir_function_declaration structure.
+ * @brief Function to parse a Function Header, returns a mpir_ast_function_declaration structure.
  *
  * This function is responsible for parsing the declaration of a function according to the MPIR Grammar. It gathers
  * the identifier, input types, and output types. Performs memory allocation for the list of input types. The decl.
@@ -27,7 +27,7 @@ struct mpir_type** parse_inputs(mpir_parser* psr);
  * @param psr A pointer to the MPIR parser structure.
  * @return True on parsing success, False on parsing failure.
  *
- * @brief Function to parse Function IO Input Types, returns a list of mpir_type structures
+ * @brief Function to parse Function IO Input Types, returns a list of mpir_ast_type structures
  *
  * This function is responsible for parsing the declaration of function input types. It does this using the `parse_
  * inputs_internal()` function, which uses a recursive approach. Memory is allocated for this list dynamically,

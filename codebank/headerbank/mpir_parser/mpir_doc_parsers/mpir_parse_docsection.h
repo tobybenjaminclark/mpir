@@ -11,7 +11,7 @@
 #include "../../mpir_parser/mpir_parser.h"
 #include "../../mpir_parser/mpir_parser_utilities.h"
 
-struct mpir_doc* mpir_parse_doc(mpir_parser* psr);
-struct mpir_docsection* mpir_parse_docsection(mpir_parser* psr);
+struct mpir_ast_doc* mpir_parse_doc(mpir_parser* psr);
+struct mpir_ast_docsection* mpir_parse_docsection(mpir_parser* psr);
 
 #endif

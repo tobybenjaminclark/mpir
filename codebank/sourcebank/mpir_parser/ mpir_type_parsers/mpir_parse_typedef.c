@@ -13,7 +13,7 @@ bool parse_type_declaration(mpir_parser* psr)
     else return false;
 
     /* Allocate Memory for type declaration AST node */
-    struct mpir_type_declaration* node = calloc(1, sizeof(struct mpir_type_declaration));
+    struct mpir_ast_type_declaration* node = calloc(1, sizeof(struct mpir_ast_type_declaration));
 
     /* Attempt to Parse Type Identifier */
     if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_identifier(psr);

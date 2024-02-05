@@ -11,16 +11,16 @@
  *
  * This function parses a 'let' binding within the context of MPIR. A 'let' binding involves declaring a variable
  * with a specified type. The function sequentially parses the 'let' keyword, the variable identifier, the 'as' keyword,
- * and the associated type identifier. It then creates and returns a dynamically allocated `struct mpir_type_assignment`
+ * and the associated type identifier. It then creates and returns a dynamically allocated `struct mpir_ast_type_assignment`
  * representing the parsed 'let' binding as part of the AST.
  *
  * @param psr A Pointer to the MPIR parser structure.
  * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
- * @return A pointer to a dynamically allocated `struct mpir_type_assignment` on successful parsing.
+ * @return A pointer to a dynamically allocated `struct mpir_ast_type_assignment` on successful parsing.
  */
-struct mpir_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes)
+struct mpir_ast_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir_command_list* nodes)
 {
-    struct mpir_type_assignment* node = malloc(sizeof(struct mpir_type_assignment));
+    struct mpir_ast_type_assignment* node = malloc(sizeof(struct mpir_ast_type_assignment));
 
     /* Parse `let` */
     if(psr->peek(psr)->type == keyword_let) (void)psr->get(psr);

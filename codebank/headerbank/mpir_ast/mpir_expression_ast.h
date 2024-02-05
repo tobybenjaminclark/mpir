@@ -18,47 +18,59 @@
 
 
 
-struct mpir_identifier
+/**
+ * @struct mpir_ast_identifier
+ * @brief Structure representing an identifier in the Abstract Syntax Tree (AST).
+ */
+struct mpir_ast_identifier
 {
-    wchar_t data[128];
+    wchar_t data[128]; /** ← Data associated with the identifier. */
 };
 
-
-
-struct mpir_type
+/**
+ * @struct mpir_ast_type
+ * @brief Structure representing a type in the Abstract Syntax Tree (AST).
+ */
+struct mpir_ast_type
 {
-    wchar_t data[128];
+    wchar_t data[128];  /** ← Data associated with the type. */
 };
 
-
-
-struct mpir_function_identifier
+/**
+ * @struct mpir_ast_function_identifier
+ * @brief Structure representing a function identifier in the Abstract Syntax Tree (AST).
+ */
+struct mpir_ast_function_identifier
 {
-    wchar_t data[128];
+    wchar_t data[128];  /** ← Data associated with the function identifier. */
 };
 
-
-
-struct mpir_function_call{
-    struct mpir_function_identifier* identifier;
-    struct mpir_expression** arguments;
+/**
+ * @struct mpir_ast_function_call
+ * @brief Structure representing a function call in the Abstract Syntax Tree (AST).
+ */
+struct mpir_ast_function_call
+{
+    struct mpir_ast_function_identifier* identifier;      /** ← Function identifier for the call. */
+    struct mpir_ast_expression** arguments;               /** ← Array of arguments for the function call. */
 };
 
-
-
-// Node structure for the Abstract Syntax Tree (AST)
-struct mpir_expression
+/**
+ * @struct mpir_ast_expression
+ * @brief Node structure for the Abstract Syntax Tree (AST).
+ */
+struct mpir_ast_expression
 {
-    int type;
+    int type;                                             /** ← Type of expression. */
     union {
-        struct mpir_function_call* function_call;
-        long double numerical_literal;
-        wchar_t identifier[128];
-        wchar_t string_literal[128];
-        wchar_t operator[128];
-    } data;
-    struct mpir_expression* left;
-    struct mpir_expression* right;
+        struct mpir_ast_function_call* function_call;     /** ← Data for a function call expression. */
+        long double numerical_literal;                    /** ← Data for a numerical literal expression. */
+        wchar_t identifier[128];                          /** ← Data for an identifier expression. */
+        wchar_t string_literal[128];                      /** ← Data for a string literal expression. */
+        wchar_t operator[128];                            /** ← Data for an operator expression. */
+    } data;                                               /** ← Union of possible expression data. */
+    struct mpir_ast_expression* left;                     /** ← Pointer to the left subexpression. */
+    struct mpir_ast_expression* right;                    /** ← Pointer to the right subexpression. */
 };
 
 #endif

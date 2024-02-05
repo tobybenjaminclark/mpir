@@ -12,15 +12,15 @@
  * This function parses a 'trycast' statement within the context of MPIR. The trycast statement attempts to cast a
  * variable of one type into a variable of another type. The function parses the `trycast` keyword, followed by an
  * identifier, followed by the `into` keyword, followed by another identifier. It then creates & returns a dynamically
- * allocated `struct mpir_trycast_statement` representing the parsed 'trycast' statement as part of the AST.
+ * allocated `struct mpir_ast_trycast_statement` representing the parsed 'trycast' statement as part of the AST.
  *
  * @param psr A Pointer to the MPIR parser structure.
  * @param nodes A Pointer to a mpir_command_list structure (representing imperative statements in the AST)
- * @return Pointer to an allocate mpir_trycast_statement struct or NULL on failure.
+ * @return Pointer to an allocate mpir_ast_trycast_statement struct or NULL on failure.
  */
-struct mpir_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
+struct mpir_ast_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_command_list* nodes)
 {
-    struct mpir_trycast_statement* node = malloc(sizeof (struct mpir_trycast_statement));
+    struct mpir_ast_trycast_statement* node = malloc(sizeof (struct mpir_ast_trycast_statement));
 
     /* Parse & Discard `Keyword` Variable */
     if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);

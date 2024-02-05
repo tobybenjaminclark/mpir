@@ -12,7 +12,7 @@
 #include "../../headerbank/mpir_ast/mpir_doc_ast.h"
 #include "../mpir_misc/mpir_linked_list.h"
 
-struct mpir_type_assignment
+struct mpir_ast_type_assignment
 {
     struct wchar_t* identifier[128];
     struct wchar_t* type[128];
@@ -25,17 +25,17 @@ struct mpir_type_assignment
  * the core calculus specifies that the type of the expression must reduce and be equal to the type of the bound
  * variable - otherwise a compile time type error will be thrown.
  *
- * @var mpir_value_assignment::identifier   Variable identifier that is being assigned a value.
- * @var mpir_value_assignment::expression   Expression to assign to the variable.
+ * @var mpir_ast_value_assignment::identifier   Variable identifier that is being assigned a value.
+ * @var mpir_ast_value_assignment::expression   Expression to assign to the variable.
  */
-struct mpir_value_assignment
+struct mpir_ast_value_assignment
 {
     struct wchar_t* identifier[128];
-    struct mpir_expression* expression;
+    struct mpir_ast_expression* expression;
 };
 
 struct mpir_command_list;
-struct mpir_on_statement
+struct mpir_ast_on_statement
 {
     union {
         double mpir_numerical_literal;
@@ -48,17 +48,17 @@ struct mpir_on_statement
     struct mpir_command_list* commands;
 };
 
-struct mpir_trycast_statement
+struct mpir_ast_trycast_statement
 {
-    struct mpir_identifier* dominant_variable;
-    struct mpir_identifier* casted_variable;
-    struct mpir_on_statement** actions;
+    struct mpir_ast_identifier* dominant_variable;
+    struct mpir_ast_identifier* casted_variable;
+    struct mpir_ast_on_statement** actions;
 };
 
-struct mpir_do_statement
+struct mpir_ast_do_statement
 {
-    struct mpir_function_call* function;
-    struct mpir_on_statement** actions;
+    struct mpir_ast_function_call* function;
+    struct mpir_ast_on_statement** actions;
 };
 
 

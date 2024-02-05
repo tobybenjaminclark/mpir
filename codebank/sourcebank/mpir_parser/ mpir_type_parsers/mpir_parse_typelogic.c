@@ -118,7 +118,7 @@ struct type_logic* convert_to_type_logic(struct boolean_logic_token* node_ptr)
 
     /* Forward Declaration for later in function. */
     enum type_logic_operator ast_operator;
-    struct mpir_identifier* identifier;
+    struct mpir_ast_identifier* identifier;
 
     /* Set all attributes in union to NULL */
     node->data.id = NULL;
@@ -130,7 +130,7 @@ struct type_logic* convert_to_type_logic(struct boolean_logic_token* node_ptr)
     {
         /* Case for singular term (identifier) */
         case IDENTIFIER:
-            identifier = malloc(sizeof(struct mpir_identifier));
+            identifier = malloc(sizeof(struct mpir_ast_identifier));
             identifier->data[0] = L'\0';
             wcscpy(identifier->data, node_ptr->tokens[0]->lexeme);
             node->data.id = identifier;
@@ -139,7 +139,7 @@ struct type_logic* convert_to_type_logic(struct boolean_logic_token* node_ptr)
 
         /* Case for string literal term */
         case STRING_LITERAL:
-            node->data.str_literal = malloc(sizeof(struct mpir_identifier));
+            node->data.str_literal = malloc(sizeof(struct mpir_ast_identifier));
             identifier->data[0] = L'\0';
             wcscpy(identifier->data, node_ptr->tokens[0]->lexeme);
             node->data.id = identifier;
