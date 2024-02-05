@@ -20,7 +20,7 @@ funcdef multiply_show x y
     trycast z into x
     on 1 -> set z as 1
 
-    do call(z)
+    do call(z, a)
     on 5 -> set z as 2
 
     return(z)

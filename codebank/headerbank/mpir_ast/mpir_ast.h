@@ -12,58 +12,85 @@
 #include "../../headerbank/mpir_ast/mpir_doc_ast.h"
 #include "../../headerbank/mpir_misc/mpir_linked_list.h"
 
+/**
+ * @struct mpir_ast_function_declaration
+ * @brief Represents a function declaration in the Abstract Syntax Tree (AST).
+ *
+ * This structure captures information about a function declaration, including its identifier, input types,
+ * return type, body, and associated documentation section.
+ */
 struct mpir_ast_function_declaration
 {
-    struct mpir_ast_identifier* identifier;
-    struct mpir_ast_type** inputs;
-    struct mpir_ast_type* return_type;
-    struct mpir_command_list* body;
-    struct mpir_ast_docsection* docsection;
+    struct mpir_ast_identifier* identifier;    /** ← Identifier of the function.                                        */
+    struct mpir_ast_type** inputs;             /** ← Array of input types for the function.                             */
+    struct mpir_ast_type* return_type;         /** ← Return type of the function.                                       */
+    struct mpir_command_list* body;            /** ← Pointer to the body of the function.                               */
+    struct mpir_ast_docsection* docsection;    /** ← Pointer to the documentation section associated with the function. */
 };
 
-
+/**
+ * @enum type_logic_operator
+ * @brief Enumeration of logic operators used in type logic expressions.
+ */
 enum type_logic_operator
 {
-    GT,
-    GTEQ,
-    LT,
-    LTEQ,
-    EQ,
-    AND,
-    OR,
-    NOT,
-    FORALL,
-    EXISTS,
-    INVALID
+    GT,         /** ← Greater than              */
+    GTEQ,       /** ← Greater than or equal to  */
+    LT,         /** ← Less than                 */
+    LTEQ,       /** ← Less than or equal to     */
+    EQ,         /** ← Equal to                  */
+    AND,        /** ← Logical AND               */
+    OR,         /** ← Logical OR                */
+    NOT,        /** ← Logical NOT               */
+    FORALL,     /** ← Universal quantifier      */
+    EXISTS,     /** ← Existential quantifier    */
+    INVALID     /** ← Invalid operator          */
 };
 
+/**
+ * @enum type_logic_type
+ * @brief Enumeration of types in type logic expressions.
+ */
 enum type_logic_type
 {
-    type_OPERATOR,
-    type_IDENTIFIER,
-    type_NUMERICAL,
-    type_STRING
+    type_OPERATOR,      /** ← Operator type          */
+    type_IDENTIFIER,    /** ← Identifier type        */
+    type_NUMERICAL,     /** ← Numerical literal type */
+    type_STRING         /** ← String literal type    */
 };
 
+/**
+ * @struct type_logic
+ * @brief Represents a node in the type logic expression tree.
+ *
+ * This structure captures information about a node in the type logic expression tree, including its type,
+ * data, and pointers to left and right subexpressions.
+ */
 struct type_logic
 {
-    enum type_logic_type type;
+    enum type_logic_type type; /**< Type of the logic node. */
     union {
-        enum type_logic_operator op;
-        struct mpir_ast_identifier* id;
-        wchar_t* str_literal;
-        double num_literal;
-    } data;
-    struct type_logic* left;
-    struct type_logic* right;
+        enum type_logic_operator op;        /** ← Logic operator data.                                   */
+        struct mpir_ast_identifier* id;     /** ← Identifier data.                                       */
+        wchar_t* str_literal;               /** ← String literal data.                                   */
+        double num_literal;                 /** ← Numerical literal data.                                */
+    } data;                                 /** ← Union of possible data associated with the logic node. */
+    struct type_logic* left;                /** ← Pointer to the left subexpression.                     */
+    struct type_logic* right;               /** ← Pointer to the right subexpression.                    */
 };
 
+/**
+ * @struct mpir_ast_type_declaration
+ * @brief Represents a type declaration in the Abstract Syntax Tree (AST).
+ *
+ * This structure captures information about a type declaration, including its identifier, input types,
+ * base type, and type refinement logic.
+ */
 struct mpir_ast_type_declaration
 {
-    struct mpir_ast_identifier* identifier;
-    struct mpir_ast_type** inputs;
-    struct mpir_ast_type* base_type;
-    struct type_logic* refinement;
+    struct mpir_ast_identifier* identifier; /** ← Identifier of the type.               */
+    struct mpir_ast_type** inputs;          /** ← Array of input types for the type.    */
+    struct mpir_ast_type* base_type;        /** ← Base type of the type.                */
+    struct type_logic* refinement;          /** ← Pointer to the type refinement logic. */
 };
-
 #endif

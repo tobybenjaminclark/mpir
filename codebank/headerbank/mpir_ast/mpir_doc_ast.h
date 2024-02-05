@@ -7,16 +7,29 @@
 #ifndef MPIR_COMPILER_MPIR_DOC_AST_H
 #define MPIR_COMPILER_MPIR_DOC_AST_H
 
+/**
+ * @struct mpir_ast_doc
+ * @brief Represents documentation associated with a variable in the Abstract Syntax Tree (AST).
+ *
+ * This structure captures information about the documentation of a variable, including its flag type, variable identifier,
+ * and an array of documentation lines.
+ */
 struct mpir_ast_doc
 {
-    struct mpir_ast_identifier* flag_type;
-    struct mpir_ast_identifier* variable;
-    wchar_t** documentation;
+    struct mpir_ast_identifier* flag_type;          /** ← Flag type associated with the documentation.           */
+    struct mpir_ast_identifier* variable;           /** ← Variable identifier associated with the documentation. */
+    wchar_t** documentation;                        /** ← Array of documentation lines.                          */
 };
 
+/**
+ * @struct mpir_ast_docsection
+ * @brief Represents a documentation section in the Abstract Syntax Tree (AST).
+ *
+ * This structure represents a section of documentation and is part of the AST.
+ */
 struct mpir_ast_docsection
 {
-    struct mpir_command_list* docs;
+    struct mpir_command_list* docs;                 /** ← Pointer to a list of documentation commands associated with the section. */
 };
 
 #endif

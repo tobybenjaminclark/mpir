@@ -22,8 +22,8 @@
  */
 struct mpir_ast_type_assignment
 {
-    wchar_t* identifier[128];                       /** ← Identifier associated with the type assignment. */
-    wchar_t* type[128];                             /** ← Type associated with the type assignment. */
+    wchar_t* identifier[128];                       /** ← Identifier associated with the type assignment.                   */
+    wchar_t* type[128];                             /** ← Type associated with the type assignment.                         */
 };
 
 
@@ -36,8 +36,8 @@ struct mpir_ast_type_assignment
  */
 struct mpir_ast_value_assignment
 {
-    wchar_t* identifier[128];                       /** ← Identifier associated with the value assignment. */
-    struct mpir_ast_expression* expression;         /** ← Expression assigned to the variable. */
+    wchar_t* identifier[128];                       /** ← Identifier associated with the value assignment.                  */
+    struct mpir_ast_expression* expression;         /** ← Expression assigned to the variable.                              */
 };
 
 
@@ -51,13 +51,13 @@ struct mpir_ast_value_assignment
 struct mpir_ast_on_statement
 {
     union{
-        double mpir_numerical_literal;              /** ← Numerical literal value. */
-        wchar_t* mpir_string_literal;               /** ← String literal value. */
-    } literal;                                      /** ← Union of possible literal data. */
+        double mpir_numerical_literal;              /** ← Numerical literal value.                                          */
+        wchar_t* mpir_string_literal;               /** ← String literal value.                                             */
+    } literal;                                      /** ← Union of possible literal data.                                   */
     enum stored_type {
-        numerical_literal,                          /** ← Indicates the stored type is numerical. */
-        string_literal                              /** ← Indicates the stored type is a string. */
-    } stored_type;                                  /** ← Enum indicating the stored type. */
+        numerical_literal,                          /** ← Indicates the stored type is numerical.                           */
+        string_literal                              /** ← Indicates the stored type is a string.                            */
+    } stored_type;                                  /** ← Enum indicating the stored type.                                  */
     struct mpir_command_list* commands;             /** ← Pointer to a list of commands associated with the 'on' statement. */
 };
 
@@ -71,8 +71,8 @@ struct mpir_ast_on_statement
  */
 struct mpir_ast_trycast_statement
 {
-    struct mpir_ast_identifier* dominant_variable;  /** ← Dominant variable in the trycast statement. */
-    struct mpir_ast_identifier* casted_variable;    /** ← Casted variable in the trycast statement. */
+    struct mpir_ast_identifier* dominant_variable;  /** ← Dominant variable in the trycast statement.                     */
+    struct mpir_ast_identifier* casted_variable;    /** ← Casted variable in the trycast statement.                       */
     struct mpir_ast_on_statement** actions;         /** ← Array of 'on' statements associated with the trycast statement. */
 };
 
@@ -86,7 +86,7 @@ struct mpir_ast_trycast_statement
  */
 struct mpir_ast_do_statement
 {
-    struct mpir_ast_function_call* function;         /** ← Function call in the 'do' statement. */
+    struct mpir_ast_function_call* function;         /** ← Function call in the 'do' statement.                         */
     struct mpir_ast_on_statement** actions;          /** ← Array of 'on' statements associated with the 'do' statement. */
 };
 
