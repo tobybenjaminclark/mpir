@@ -84,6 +84,10 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typelogic.h
         codebank/sourcebank/mpir_architecture/mpir_server.c
         codebank/headerbank/mpir_architecture/mpir_server.h
+        codebank/sourcebank/mpir_parser/mpir_parser_writer.c
+        codebank/headerbank/mpir_parser/mpir_parser_writer.h
+        codebank/sourcebank/mpir_wjson/mpir_wjson.c
+        codebank/headerbank/mpir_wjson/mpir_wjson.h
 )
 
 # Create the main executable
