@@ -30,6 +30,16 @@ int main(int argc, char** argv)
 
     struct mpir_wjson_entry** list = new_wjson_list();
 
+    struct mpir_wjson* my_wjson3 = create_wjson();
+    wjson_add_attribute(my_wjson3, L"name2", L"John Doe");
+    wjson_add_attribute(my_wjson3, L"age2", L"25");
+
+    struct mpir_wjson* my_wjson4 = create_wjson();
+    wjson_add_attribute(my_wjson4, L"name2", L"John Doe");
+    wjson_add_attribute(my_wjson4, L"age2", L"25");
+
+    wjson_list_append(list, my_wjson4);
+
     // Add subjson to main json
     wjson_add_subwjson(my_wjson, L"address", subjson);
 

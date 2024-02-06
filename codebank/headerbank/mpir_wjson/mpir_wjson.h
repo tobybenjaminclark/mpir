@@ -42,7 +42,7 @@ struct mpir_wjson {
 struct mpir_wjson* create_wjson();
 int wjson_add_attribute(struct mpir_wjson* wjson_node, wchar_t* key, wchar_t* value);
 int wjson_add_subwjson(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_wjson* sub_wjson_node);
-int wjson_add_wjsonlist(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_wjson_entry** list);
+int wjson_add_wjsonlist(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_wjson** list);
 int free_wjson(struct mpir_wjson* wjson_node);
 
 // Test function to print mpir_wjson content
