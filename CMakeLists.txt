@@ -37,8 +37,6 @@ set(SOURCE_FILES
         codebank/headerbank/mpir_tokeniser/mpir_tokeniser_append.h
         codebank/sourcebank/mpir_tokeniser/mpir_tokeniser_parse.c
         codebank/headerbank/mpir_tokeniser/mpir_tokeniser_parse.h
-        codebank/sourcebank/mpir_protobuffer/mpir_protobuffer.c
-        codebank/headerbank/mpir_protobuffer/mpir_protobuffer.h
         codebank/sourcebank/mpir_parser/mpir_parser.c
         codebank/headerbank/mpir_parser/mpir_parser.h
         codebank/sourcebank/mpir_ast/mpir_ast.c
@@ -92,9 +90,7 @@ set(SOURCE_FILES
 
 # Create the main executable
 
-add_executable(mpir ${SOURCE_FILES}
-        codebank/sourcebank/mpir_protobuffer/mpir_protobuffer.c
-        codebank/headerbank/mpir_protobuffer/mpir_protobuffer.h)
+add_executable(mpir ${SOURCE_FILES})
 
 enable_testing()
 add_executable(mpir_test codebank/testbank/test_example.c

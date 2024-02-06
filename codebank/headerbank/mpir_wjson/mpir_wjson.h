@@ -21,7 +21,7 @@ struct mpir_wjson_entry;
 typedef union {
     wchar_t value[128];
     struct mpir_wjson* subjson;
-    struct mpir_wjson_entry** list;
+    struct mpir_wjson** list;
 } mpir_wjson_data;
 
 
@@ -52,8 +52,8 @@ void write_wjson_to_file(const wchar_t* file_path, struct mpir_wjson* wjson_node
 void write_wjson_to_file_recursive(FILE* file, struct mpir_wjson* wjson_node, size_t indentation_level);
 
 /* WJson List Stuff */
-void wjson_list_free(struct mpir_wjson_entry** list);
-void wjson_list_append(struct mpir_wjson_entry** list, struct mpir_wjson_entry* node);
-struct mpir_wjson_entry** new_wjson_list();
+void wjson_list_free(struct mpir_wjson** list);
+void wjson_list_append(struct mpir_wjson** list, struct mpir_wjson* node);
+struct mpir_wjson** new_wjson_list();
 
 #endif

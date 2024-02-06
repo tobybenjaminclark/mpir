@@ -239,10 +239,38 @@ void write_wjson_to_file_recursive(FILE* file, struct mpir_wjson* wjson_node, si
 }
 
 
-struct mpir_wjson_entry** new_wjson_list()
+void wjson_list_free(struct mpir_wjson** list) {
+    struct mpir_wjson* current = *list;
+    struct mpir_wjson* next;
+
+    // Free each entry in the list
+    while (current != NULL) {
+        next = current->entries;
+        free(current);
+        current = next;
+    }
+
+    // Free the list itself
+    free(list);
+}
+
+void wjson_list_append(struct mpir_wjson** list, struct mpir_wjson* node)
 {
+    // Reallocate memory for a new node in the list
+    *list = (struct mpir_wjson*)realloc(*list, ((*list)->entries_count + 1) * sizeof(struct mpir_wjson));
+
+    if (*list == NULL) {
+        fprintf(stderr, "Memory allocation error for wjson_list_append\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set the new node's entries to the provided entry
+    (*list)->entries[(*list)->entries_count++] = node;
+}
+
+struct mpir_wjson** new_wjson_list() {
     // Allocate memory for the list
-    struct mpir_wjson_entry** list = (struct mpir_wjson_entry**)malloc(sizeof(struct mpir_wjson_entry*));
+    struct mpir_wjson** list = (struct mpir_wjson**)malloc(sizeof(struct mpir_wjson*));
 
     if (list == NULL) {
         fprintf(stderr, "Memory allocation error for new_wjson_list\n");
@@ -253,44 +281,4 @@ struct mpir_wjson_entry** new_wjson_list()
     *list = NULL;
 
     return list;
-}
-
-
-
-void wjson_list_append(struct mpir_wjson_entry** list, struct mpir_wjson_entry* node)
-{
-    // Allocate memory for a new node in the list
-    struct mpir_wjson_entry** new_node = (struct mpir_wjson_entry**)malloc(sizeof(struct mpir_wjson_entry*));
-
-    if (new_node == NULL) {
-        fprintf(stderr, "Memory allocation error for wjson_list_append\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Set the new node's entry to the provided node
-    *new_node = node;
-
-    // Update the next pointer of the new node to the current list
-    (*new_node)->data.list = *list;
-
-    // Update the list to point to the new node
-    *list = new_node;
-}
-
-
-
-void wjson_list_free(struct mpir_wjson_entry** list)
-{
-    struct mpir_wjson_entry* current = *list;
-    struct mpir_wjson_entry* next;
-
-    // Free each node in the list
-    while (current != NULL) {
-        next = current->data.list;
-        free(current);
-        current = next;
-    }
-
-    // Free the list itself
-    free(list);
 }

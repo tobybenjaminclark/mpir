@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     wjson_add_attribute(subjson, L"city", L"New York");
     wjson_add_attribute(subjson, L"country", L"USA");
 
-    wjson_cre
+    struct mpir_wjson_entry** list = new_wjson_list();
 
     // Add subjson to main json
     wjson_add_subwjson(my_wjson, L"address", subjson);
