@@ -17,6 +17,9 @@
 struct mpir_wjson;
 struct mpir_wjson_entry;
 
+#define WJSON_SUBJSON 0
+#define WJSON_ATTRIBUTE 1
+#define WJSON_LIST 2
 
 typedef union {
     wchar_t value[128];
@@ -26,7 +29,7 @@ typedef union {
 
 
 struct mpir_wjson_entry {
-    int is_attribute;
+    int type;
     wchar_t key[128];
     mpir_wjson_data data;
 };

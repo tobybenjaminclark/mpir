@@ -41,7 +41,7 @@ int wjson_add_attribute(struct mpir_wjson* wjson_node, wchar_t* key, wchar_t* va
     // Copy key and value into the new entry
     wcsncpy(new_entry->key, key, 128);
     wcsncpy(new_entry->data.value, value, 128);
-    new_entry->is_attribute = 1;
+    new_entry->type = WJSON_ATTRIBUTE;
 
     // Reallocate memory for entries array
     wjson_node->entries = realloc(wjson_node->entries, (wjson_node->entries_count + 1) * sizeof(struct mpir_wjson_entry*));
@@ -78,7 +78,7 @@ int wjson_add_subwjson(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_
     // Copy key and subjson into the new entry
     wcsncpy(new_entry->key, key, 128);
     new_entry->data.subjson = sub_wjson_node;
-    new_entry->is_attribute = 0;
+    new_entry->type = WJSON_SUBJSON;
 
     // Reallocate memory for entries array
     wjson_node->entries = realloc(wjson_node->entries, (wjson_node->entries_count + 1) * sizeof(struct mpir_wjson_entry*));
@@ -116,7 +116,7 @@ int wjson_add_wjsonlist(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir
     // Copy key and value into the new entry
     wcsncpy(new_entry->key, key, 128);
     new_entry->data.list = list;
-    new_entry->is_attribute = 1;
+    new_entry->type = WJSON_LIST;
 
     // Reallocate memory for entries array
     wjson_node->entries = realloc(wjson_node->entries, (wjson_node->entries_count + 1) * sizeof(struct mpir_wjson_entry*));
@@ -172,13 +172,30 @@ void print_wjson(struct mpir_wjson* wjson_node, size_t indentation_level)
         }
 
         printf("\"%ls\": ", wjson_node->entries[i]->key);
-        if (wjson_node->entries[i]->is_attribute == 0)
+        if (wjson_node->entries[i]->type == WJSON_SUBJSON)
         {
             print_wjson(wjson_node->entries[i]->data.subjson, indentation_level + 1);
         }
-        else
+        else if(wjson_node->entries[i]->type == WJSON_ATTRIBUTE)
         {
             wprintf(L"\"%ls\"\n", wjson_node->entries[i]->data.value);
+        }
+        else if(wjson_node->entries[i]->type == WJSON_LIST)
+        {
+            /* WRITE CODE HERE! */
+            wprintf(L"[\n");
+
+            size_t list_size = sizeof(wjson_node->entries[i]->data.list) / sizeof(wjson_node->entries[i]->data.list[0]);
+
+            // Iterating over the list
+            for (size_t ia = 0; ia < list_size; ia++)
+            {
+                // Access the fields of the current_wjson
+                print_wjson(wjson_node->entries[i]->data.list[ia], indentation_level + 1);
+            }
+
+            for (size_t j = 0; j < indentation_level; j++) {wprintf(L"  ");}
+            wprintf(L"]\n");
         }
     }
 
@@ -221,7 +238,7 @@ void write_wjson_to_file_recursive(FILE* file, struct mpir_wjson* wjson_node, si
         }
 
         fwprintf(file, L"\"%ls\": ", wjson_node->entries[i]->key);
-        if (wjson_node->entries[i]->is_attribute == 0)
+        if (wjson_node->entries[i]->type == 0)
         {
             write_wjson_to_file_recursive(file, wjson_node->entries[i]->data.subjson, indentation_level + 1);
         }
