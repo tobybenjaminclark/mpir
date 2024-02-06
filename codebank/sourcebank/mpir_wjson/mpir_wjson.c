@@ -95,6 +95,46 @@ int wjson_add_subwjson(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_
     return 0;
 }
 
+int wjson_add_wjsonlist(struct mpir_wjson* wjson_node, wchar_t* key, struct mpir_wjson_entry** list)
+{
+    /* Validate Inputs */
+    if (wjson_node == NULL || key == NULL || list == NULL)
+    {
+        mpir_fatal("wJSON: Invalid Input");
+        return -1;
+    }
+
+    // Allocate memory for the new entry
+    struct mpir_wjson_entry* new_entry = malloc(sizeof(struct mpir_wjson_entry));
+    if (new_entry == NULL)
+    {
+        mpir_fatal("wJSON: Out of Memory");
+        return -1;
+    }
+
+    // Copy key and value into the new entry
+    wcsncpy(new_entry->key, key, 128);
+    new_entry->data.list = list;
+    new_entry->is_attribute = 1;
+
+    // Reallocate memory for entries array
+    wjson_node->entries = realloc(wjson_node->entries, (wjson_node->entries_count + 1) * sizeof(struct mpir_wjson_entry*));
+    if (wjson_node->entries == NULL)
+    {
+        mpir_fatal("wJSON: Out of Memory");
+        free(new_entry);
+        return -1;
+    }
+
+    // Add the new entry to the array
+    wjson_node->entries[wjson_node->entries_count] = new_entry;
+    wjson_node->entries_count++;
+
+    return 0;
+}
+
+
+
 // Function to free the memory allocated for mpir_wjson
 int free_wjson(struct mpir_wjson* wjson_node) {
     if (wjson_node == NULL)
@@ -196,4 +236,61 @@ void write_wjson_to_file_recursive(FILE* file, struct mpir_wjson* wjson_node, si
     }
 
     fwprintf(file, L"}\n");
+}
+
+
+struct mpir_wjson_entry** new_wjson_list()
+{
+    // Allocate memory for the list
+    struct mpir_wjson_entry** list = (struct mpir_wjson_entry**)malloc(sizeof(struct mpir_wjson_entry*));
+
+    if (list == NULL) {
+        fprintf(stderr, "Memory allocation error for new_wjson_list\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Initialize the list with a NULL pointer
+    *list = NULL;
+
+    return list;
+}
+
+
+
+void wjson_list_append(struct mpir_wjson_entry** list, struct mpir_wjson_entry* node)
+{
+    // Allocate memory for a new node in the list
+    struct mpir_wjson_entry** new_node = (struct mpir_wjson_entry**)malloc(sizeof(struct mpir_wjson_entry*));
+
+    if (new_node == NULL) {
+        fprintf(stderr, "Memory allocation error for wjson_list_append\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set the new node's entry to the provided node
+    *new_node = node;
+
+    // Update the next pointer of the new node to the current list
+    (*new_node)->data.list = *list;
+
+    // Update the list to point to the new node
+    *list = new_node;
+}
+
+
+
+void wjson_list_free(struct mpir_wjson_entry** list)
+{
+    struct mpir_wjson_entry* current = *list;
+    struct mpir_wjson_entry* next;
+
+    // Free each node in the list
+    while (current != NULL) {
+        next = current->data.list;
+        free(current);
+        current = next;
+    }
+
+    // Free the list itself
+    free(list);
 }

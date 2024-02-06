@@ -9,7 +9,6 @@
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser.h"
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_write.h"
 #include "../headerbank/mpir_tokeniser/mpir_tokeniser_parse.h"
-#include "../headerbank/mpir_protobuffer/mpir_protobuffer.h"
 #include "../headerbank/mpir_parser/mpir_parser.h"
 #include "../headerbank/mpir_parser/mpir_parser_writer.h"
 #include "../headerbank/mpir_wjson/mpir_wjson.h"
@@ -28,6 +27,8 @@ int main(int argc, char** argv)
     struct mpir_wjson* subjson = create_wjson();
     wjson_add_attribute(subjson, L"city", L"New York");
     wjson_add_attribute(subjson, L"country", L"USA");
+
+    wjson_cre
 
     // Add subjson to main json
     wjson_add_subwjson(my_wjson, L"address", subjson);
