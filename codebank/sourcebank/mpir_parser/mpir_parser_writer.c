@@ -36,6 +36,15 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 wjson_append_string(wjson_funcdef, L"TYPE", L"FUNCTION_DECLARATION");
                 wjson_append_string(wjson_funcdef, L"IDENTIFIER", program_node->data.function_declaration->identifier->data);
                 wjson_append_string(wjson_funcdef, L"RETURN_TYPE", program_node->data.function_declaration->return_type->data);
+
+                struct wjson* wjson_funcdef_inputs = wjson_initialize_list();
+                int argument_count1 = 0;
+                while (program_node->data.function_declaration->inputs[argument_count1] != NULL) {
+                    wjson_list_append_string(wjson_funcdef_inputs, program_node->data.function_declaration->inputs[argument_count1]->data);
+                    argument_count1++;
+                }
+
+                wjson_append_list(wjson_funcdef, L"INPUTS", wjson_funcdef_inputs);
                 wjson_list_append_object(wjson_commands, wjson_funcdef);
 
                 break;
