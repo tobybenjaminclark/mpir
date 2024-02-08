@@ -8,6 +8,7 @@
 #define MPIR_COMPILER_MPIR_PARSER_WRITER_H
 
 #include "../../headerbank/mpir_parser/mpir_parser.h"
+#include "../../headerbank/mpir_wjson/mpir_wjson.h"
 
 int mpir_write_ast(mpir_parser* psr, char path[]);
 

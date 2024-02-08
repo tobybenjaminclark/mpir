@@ -19,6 +19,10 @@ int mpir_write_ast(mpir_parser* psr, char path[])
     }
 
     fprintf(file, "\nWriting JSON to file.\n");
+    printf("\n");
+
+    /* Create wJson node for program */
+    struct wjson* wjson_commands = wjson_initialize_list();
 
     struct mpir_command_node* program_node = psr->program->head;
     while (program_node != NULL)
@@ -27,6 +31,13 @@ int mpir_write_ast(mpir_parser* psr, char path[])
         {
             case FUNCTION_DECLARATION:
                 fprintf(file, "FUNCTION_DECLARATION\n");
+
+                struct wjson* wjson_funcdef = wjson_initialize();
+                wjson_append_string(wjson_funcdef, L"TYPE", L"FUNCTION_DECLARATION");
+                wjson_append_string(wjson_funcdef, L"IDENTIFIER", program_node->data.function_declaration->identifier->data);
+                wjson_append_string(wjson_funcdef, L"RETURN_TYPE", program_node->data.function_declaration->return_type->data);
+                wjson_list_append_object(wjson_commands, wjson_funcdef);
+
                 break;
             case NEW_TYPE_DECLARATION:
                 fprintf(file, "TYPE_DECLARATION\n");
@@ -38,6 +49,10 @@ int mpir_write_ast(mpir_parser* psr, char path[])
     }
 
     fclose(file); // Close the file
+
+    struct wjson* wjson_master = wjson_initialize();
+    wjson_append_list(wjson_master, L"contents", wjson_commands);
+    wjson_print(wjson_master, 0);
 
     return 1; // Return 1 to indicate success
 }

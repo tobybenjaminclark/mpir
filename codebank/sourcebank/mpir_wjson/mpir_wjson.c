@@ -1093,33 +1093,3 @@ int wjson_list_append_boolean(struct wjson* wjson_node, bool value)
 
     return 1;
 }
-
-
-
-/**
- * @brief Test Function for JSON Functions
- *
- * @note Requires test.json in build folder.
- */
-void wjson_test()
-{
-    struct wjson* test_parse = wjson_parse("test.json");
-    wjson_print(test_parse, 0);
-
-    struct wjson* test = wjson_initialize();
-    wjson_append_string(test, L"Key1", L"Val1");
-    wjson_append_numerical(test, L"Key2", 32);
-    wjson_append_boolean(test, L"Key3", true);
-
-    struct wjson* nested = wjson_initialize();
-    wjson_append_string(nested, L"Nested1", L"NestedVal1");
-    wjson_append_string(nested, L"Nested2", L"NestedVal2");
-
-    struct wjson* list = wjson_initialize_list();
-    wjson_list_append_string(list, L"ListVal1");
-    wjson_list_append_string(list, L"ListVal2");
-
-    wjson_append_list(test, L"ListKey",list);
-    wjson_append_object(test, L"Nest!", nested);
-    wjson_print(test, 0);
-}
