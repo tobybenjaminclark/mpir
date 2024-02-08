@@ -16,33 +16,44 @@
 int main(int argc, char** argv)
 {
     /*start_server();*/
-    // Create mpir_wjson
+// Create mpir_wjson
     struct mpir_wjson* my_wjson = create_wjson();
 
-    // Add attributes
+// Add attributes
     wjson_add_attribute(my_wjson, L"name", L"John Doe");
     wjson_add_attribute(my_wjson, L"age", L"25");
 
-    // Create a subjson
+// Create a subjson
     struct mpir_wjson* subjson = create_wjson();
     wjson_add_attribute(subjson, L"city", L"New York");
     wjson_add_attribute(subjson, L"country", L"USA");
 
+// Create a list
     struct mpir_wjson_entry** list = new_wjson_list();
+
+// Create wjson entries for the list
     struct mpir_wjson* my_wjson3 = create_wjson();
     wjson_add_attribute(my_wjson3, L"name2", L"John Doe");
     wjson_add_attribute(my_wjson3, L"age2", L"25");
     struct mpir_wjson* my_wjson4 = create_wjson();
-    wjson_add_attribute(my_wjson4, L"name2", L"John Doe");
-    wjson_add_attribute(my_wjson4, L"age2", L"25");
+    wjson_add_attribute(my_wjson4, L"name3", L"John Doe");
+    wjson_add_attribute(my_wjson4, L"age3", L"25");
+    struct mpir_wjson* my_wjson5 = create_wjson();
+    wjson_add_attribute(my_wjson5, L"name4", L"John Doe");
+    wjson_add_attribute(my_wjson5, L"age4", L"25");
+
+// Append wjson entries to the list
     wjson_list_append(list, my_wjson3);
     wjson_list_append(list, my_wjson4);
+    wjson_list_append(list, my_wjson5);
+
+// Add the list to the main json
     wjson_add_wjsonlist(my_wjson, L"List", list);
 
-    // Add subjson to main json
+// Add subjson to main json
     wjson_add_subwjson(my_wjson, L"address", subjson);
 
-    // Print the created json
+// Print the created json
     print_wjson(my_wjson, 0);
     write_wjson_to_file("output.wjson", my_wjson, 0);
 
