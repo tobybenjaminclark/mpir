@@ -8,11 +8,27 @@
 
 #include <stdio.h>
 
+void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_list)
+{
+    return;
+}
+
+void mpir_wjsonify_command_list(struct mpir_command_list* body, struct wjson* wjson_list)
+{
+    struct mpir_command_node* command_node = body->head;
+    while(command_node != NULL)
+    {
+        mpir_wjsonify_command(wjson_list, command_node);
+        command_node = command_node->next;
+    }
+}
+
 void mpir_wjsonify_docsection(struct mpir_ast_docsection* docsection, struct wjson* wjson_list)
 {
     /* Setup JSON List Structure */
     struct wjson* wjson_docinstance;
 
+    /* Append each doc instance */
     struct mpir_command_node* doc_node = docsection->docs->head;
     while (doc_node != NULL)
     {
@@ -73,7 +89,12 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 struct wjson* wjson_funcdef_docsection = wjson_initialize_list();
                 mpir_wjsonify_docsection(program_node->data.function_declaration->docsection, wjson_funcdef_docsection);
 
+                /* Generate JSON for program */
+                struct wjson* wjson_funcdef_statements = wjson_initialize_list();
+                mpir_wjsonify_command_list(program_node->data.function_declaration->body, wjson_funcdef_statements);
+
                 /* Append to WJSON_Commands */
+                wjson_append_list(wjson_funcdef, L"BODY", wjson_funcdef_body);
                 wjson_append_list(wjson_funcdef, L"DOCSECTION", wjson_funcdef_docsection);
                 wjson_append_list(wjson_funcdef, L"INPUTS", wjson_funcdef_inputs);
                 wjson_list_append_object(wjson_commands, wjson_funcdef);
