@@ -36,6 +36,22 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node3, L"IDENTIFIER", node->data.function_call->identifier);
             wjson_list_append_object(wjson_list, wjson_node3);
             return;
+
+        case TRYCAST_STATEMENT:
+            printf("");
+            struct wjson* wjson_node4 = wjson_initialize();
+            wjson_append_string(wjson_node4, L"TYPE", L"TRYCAST_STATEMENT");
+            wjson_append_string(wjson_node4, L"DOMINANT_IDENTIFIER", node->data.trycast_statement->dominant_variable);
+            wjson_append_string(wjson_node4, L"CASTED_IDENTIFIER", node->data.trycast_statement->casted_variable);
+            wjson_list_append_object(wjson_list, wjson_node4);
+            return;
+
+        case DO_STATEMENT:
+            printf("");
+            struct wjson* wjson_node5 = wjson_initialize();
+            wjson_append_string(wjson_node5, L"TYPE", L"DO_STATEMENT");
+            wjson_list_append_object(wjson_list, wjson_node5);
+            return;
     }
     return;
 }
