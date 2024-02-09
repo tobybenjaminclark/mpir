@@ -13,12 +13,21 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
     switch (node->type)
     {
         case VALUE_ASSIGNMENT:
-            printf("oops!");
+            printf("");
             struct wjson* wjson_node = wjson_initialize();
             wjson_append_string(wjson_node, L"TYPE", L"VALUE_ASSIGNMENT");
             wjson_append_string(wjson_node, L"IDENTIFIER", node->data.value_assignment->identifier);
             wjson_list_append_object(wjson_list, wjson_node);
-            break;
+            return;
+
+        case TYPE_ASSIGNMENT:
+            printf("");
+            struct wjson* wjson_node2 = wjson_initialize();
+            wjson_append_string(wjson_node2, L"TYPE", L"TYPE_ASSIGNMENT");
+            wjson_append_string(wjson_node2, L"IDENTIFIER", node->data.type_assignment->identifier);
+            wjson_append_string(wjson_node2, L"TYPE", node->data.type_assignment->type);
+            wjson_list_append_object(wjson_list, wjson_node2);
+            return;
     }
     return;
 }
