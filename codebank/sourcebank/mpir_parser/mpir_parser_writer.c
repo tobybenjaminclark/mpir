@@ -86,6 +86,25 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node3 = wjson_initialize();
             wjson_append_string(wjson_node3, L"TYPE", L"FUNCTION_CALL");
             wjson_append_string(wjson_node3, L"IDENTIFIER", node->data.function_call->identifier);
+
+            /* Arguments */
+            int argument_count = 0;
+
+            struct wjson* current_argument;
+            struct wjson* arguments = wjson_initialize_list();
+            while (node->data.function_call->arguments[argument_count] != NULL)
+            {
+                current_argument = wjson_initialize();
+                wjson_append_string(current_argument, L"TYPE", L"FUNCTION_ARGUMENT");
+                wjson_append_numerical(current_argument, L"ARGUMENT_INDEX", (double)argument_count);
+                wjson_append_object(current_argument, L"VALUE", mpir_wjsonify_expression(node->data.function_call->arguments[argument_count]));
+
+                wjson_list_append_object(arguments, current_argument);
+                argument_count++;
+            }
+
+
+            wjson_append_list(wjson_node3, L"ARGUMENTS", arguments);
             wjson_list_append_object(wjson_list, wjson_node3);
             return;
 
@@ -95,6 +114,8 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node4, L"TYPE", L"TRYCAST_STATEMENT");
             wjson_append_string(wjson_node4, L"DOMINANT_IDENTIFIER", node->data.trycast_statement->dominant_variable);
             wjson_append_string(wjson_node4, L"CASTED_IDENTIFIER", node->data.trycast_statement->casted_variable);
+
+
             wjson_list_append_object(wjson_list, wjson_node4);
             return;
 
