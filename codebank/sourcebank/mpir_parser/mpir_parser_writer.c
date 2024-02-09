@@ -28,6 +28,14 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node2, L"TYPE", node->data.type_assignment->type);
             wjson_list_append_object(wjson_list, wjson_node2);
             return;
+
+        case FUNCTION_CALL:
+            printf("");
+            struct wjson* wjson_node3 = wjson_initialize();
+            wjson_append_string(wjson_node3, L"TYPE", L"FUNCTION_CALL");
+            wjson_append_string(wjson_node3, L"IDENTIFIER", node->data.function_call->identifier);
+            wjson_list_append_object(wjson_list, wjson_node3);
+            return;
     }
     return;
 }
