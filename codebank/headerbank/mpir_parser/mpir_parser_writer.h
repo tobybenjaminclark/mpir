@@ -11,5 +11,5 @@
 #include "../../headerbank/mpir_wjson/mpir_wjson.h"
 
 int mpir_write_ast(mpir_parser* psr, char path[]);
-
+void mpir_wjsonify_command_list(struct mpir_command_list* body, struct wjson* wjson_list);
 #endif

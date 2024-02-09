@@ -115,7 +115,36 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node4, L"DOMINANT_IDENTIFIER", node->data.trycast_statement->dominant_variable);
             wjson_append_string(wjson_node4, L"CASTED_IDENTIFIER", node->data.trycast_statement->casted_variable);
 
+            int argument_count3 = 0;
+            struct wjson* on_statement;
+            struct wjson* on_statements = wjson_initialize_list();
+            while (node->data.trycast_statement->actions[argument_count3] != NULL)
+            {
+                on_statement = wjson_initialize();
+                wjson_append_string(on_statement, L"TYPE", L"ON_STATEMENT");
+                if(node->data.trycast_statement->actions[argument_count3]->stored_type == string_literal)
+                {
+                    wjson_append_string(on_statement, L"MATCH_TYPE", L"STRING_LITERAL");
+                    wjson_append_string(on_statement, L"MATCH_VALUE",
+                                        node->data.trycast_statement->actions[argument_count3]->literal.mpir_string_literal);
+                }
+                else if(node->data.trycast_statement->actions[argument_count3]->stored_type == numerical_literal)
+                {
+                    wjson_append_string(on_statement, L"MATCH_TYPE", L"NUMERICAL_LITERAL");
+                    wjson_append_numerical(on_statement, L"MATCH_VALUE", node->data.trycast_statement->actions[argument_count3]->literal.mpir_numerical_literal);
 
+                }
+
+                struct wjson* wjson_do_commands  = wjson_initialize_list();
+                mpir_wjsonify_command_list(node->data.trycast_statement->actions[argument_count3]->commands, wjson_do_commands);
+
+                wjson_append_list(on_statement, L"MATCH_COMMANDS", wjson_do_commands);
+
+                wjson_list_append_object(on_statements, on_statement);
+                argument_count3++;
+            }
+
+            wjson_append_list(wjson_node4, L"ON_STATEMENTS", on_statements);
             wjson_list_append_object(wjson_list, wjson_node4);
             return;
 
