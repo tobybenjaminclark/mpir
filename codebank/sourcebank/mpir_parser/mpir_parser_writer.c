@@ -8,6 +8,25 @@
 
 #include <stdio.h>
 
+void mpir_wjsonify_docsection(struct mpir_ast_docsection* docsection, struct wjson* wjson_list)
+{
+    /* Setup JSON List Structure */
+    struct wjson* wjson_docinstance;
+
+    struct mpir_command_node* doc_node = docsection->docs->head;
+    while (doc_node != NULL)
+    {
+        wjson_docinstance = wjson_initialize();
+        wjson_append_string(wjson_docinstance, L"FLAG", doc_node->data.doc_statement->flag_type->data);
+        if(doc_node->data.doc_statement->variable->data != NULL)
+            wjson_append_string(wjson_docinstance, L"IDENTIFIER", doc_node->data.doc_statement->variable->data);
+        wjson_append_string(wjson_docinstance, L"STRING", doc_node->data.doc_statement->documentation);
+
+        wjson_list_append_object(wjson_list, wjson_docinstance);
+        doc_node = doc_node->next;
+    }
+}
+
 int mpir_write_ast(mpir_parser* psr, char path[])
 {
     FILE *file = fopen(path, "w");
@@ -32,22 +51,34 @@ int mpir_write_ast(mpir_parser* psr, char path[])
             case FUNCTION_DECLARATION:
                 fprintf(file, "FUNCTION_DECLARATION\n");
 
+                /* Generate JSON for Type, Identifier & Return Type */
                 struct wjson* wjson_funcdef = wjson_initialize();
                 wjson_append_string(wjson_funcdef, L"TYPE", L"FUNCTION_DECLARATION");
                 wjson_append_string(wjson_funcdef, L"IDENTIFIER", program_node->data.function_declaration->identifier->data);
                 wjson_append_string(wjson_funcdef, L"RETURN_TYPE", program_node->data.function_declaration->return_type->data);
 
+                /* Generate JSON for Input Types */
                 struct wjson* wjson_funcdef_inputs = wjson_initialize_list();
                 int argument_count1 = 0;
-                while (program_node->data.function_declaration->inputs[argument_count1] != NULL) {
+                while (program_node->data.function_declaration->inputs[argument_count1] != NULL)
+                {
                     wjson_list_append_string(wjson_funcdef_inputs, program_node->data.function_declaration->inputs[argument_count1]->data);
                     argument_count1++;
                 }
 
+                struct wjson* wjson_funcdef_body = wjson_initialize_list();
+                /* Generate JSON for body */
+
+                /* Generate JSON for docsection */
+                struct wjson* wjson_funcdef_docsection = wjson_initialize_list();
+                mpir_wjsonify_docsection(program_node->data.function_declaration->docsection, wjson_funcdef_docsection);
+
+                /* Append to WJSON_Commands */
+                wjson_append_list(wjson_funcdef, L"DOCSECTION", wjson_funcdef_docsection);
                 wjson_append_list(wjson_funcdef, L"INPUTS", wjson_funcdef_inputs);
                 wjson_list_append_object(wjson_commands, wjson_funcdef);
-
                 break;
+
             case NEW_TYPE_DECLARATION:
                 fprintf(file, "TYPE_DECLARATION\n");
                 break;
