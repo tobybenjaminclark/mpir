@@ -10,6 +10,16 @@
 
 void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_list)
 {
+    switch (node->type)
+    {
+        case VALUE_ASSIGNMENT:
+            printf("oops!");
+            struct wjson* wjson_node = wjson_initialize();
+            wjson_append_string(wjson_node, L"TYPE", L"VALUE_ASSIGNMENT");
+            wjson_append_string(wjson_node, L"IDENTIFIER", node->data.value_assignment->identifier);
+            wjson_list_append_object(wjson_list, wjson_node);
+            break;
+    }
     return;
 }
 
@@ -18,7 +28,7 @@ void mpir_wjsonify_command_list(struct mpir_command_list* body, struct wjson* wj
     struct mpir_command_node* command_node = body->head;
     while(command_node != NULL)
     {
-        mpir_wjsonify_command(wjson_list, command_node);
+        mpir_wjsonify_command(command_node, wjson_list);
         command_node = command_node->next;
     }
 }
@@ -94,7 +104,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 mpir_wjsonify_command_list(program_node->data.function_declaration->body, wjson_funcdef_statements);
 
                 /* Append to WJSON_Commands */
-                wjson_append_list(wjson_funcdef, L"BODY", wjson_funcdef_body);
+                wjson_append_list(wjson_funcdef, L"BODY", wjson_funcdef_statements);
                 wjson_append_list(wjson_funcdef, L"DOCSECTION", wjson_funcdef_docsection);
                 wjson_append_list(wjson_funcdef, L"INPUTS", wjson_funcdef_inputs);
                 wjson_list_append_object(wjson_commands, wjson_funcdef);
