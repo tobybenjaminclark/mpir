@@ -8,6 +8,57 @@
 
 #include <stdio.h>
 
+/*
+   struct mpir_ast_expression
+    {
+        int type;
+    union {
+        struct mpir_ast_function_call* function_call;
+        long double numerical_literal;
+        wchar_t identifier[128];
+        wchar_t string_literal[128];
+        wchar_t operator[128];
+    } data;
+    struct mpir_ast_expression* left;
+    struct mpir_ast_expression* right;
+    };
+ */
+struct wjson* mpir_wjsonify_expression(struct mpir_ast_expression* expr)
+{
+    struct wjson* wjson_node = wjson_initialize();
+    switch(expr->type)
+    {
+        case AST_IDENTIFIER:
+            printf("");
+            wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_IDENTIFIER");
+            wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.identifier);
+            break;
+
+        case AST_STRING_LITERAL:
+            printf("");
+            wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_STRING_LITERAL");
+            wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.string_literal);
+            break;
+
+        case AST_OPERATOR:
+            printf("");
+            wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_OPERATOR");
+            wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.operator);
+            break;
+
+        case AST_NUMERICAL_LITERAL:
+            printf("");
+            wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_NUMERICAL_LITERAL");
+            wjson_append_numerical(wjson_node, L"VALUE", expr->data.numerical_literal);
+            break;
+    }
+
+    if(expr->left != NULL) wjson_append_object(wjson_node, L"LEFT", mpir_wjsonify_expression(expr->left));
+    if(expr->right != NULL) wjson_append_object(wjson_node, L"RIGHT", mpir_wjsonify_expression(expr->right));
+    return wjson_node;
+
+}
+
 void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_list)
 {
     switch (node->type)
@@ -17,6 +68,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node = wjson_initialize();
             wjson_append_string(wjson_node, L"TYPE", L"VALUE_ASSIGNMENT");
             wjson_append_string(wjson_node, L"IDENTIFIER", node->data.value_assignment->identifier);
+            wjson_append_object(wjson_node, "EXPRESSION", mpir_wjsonify_expression(node->data.value_assignment->expression));
             wjson_list_append_object(wjson_list, wjson_node);
             return;
 
