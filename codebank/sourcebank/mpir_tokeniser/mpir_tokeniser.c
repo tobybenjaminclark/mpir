@@ -234,8 +234,17 @@ int mpir_tokenise_string_literal(mpir_lexer* lexer)
 {
     /* Guard Clause, try to consume ' and ", remembering if successfully consumed. Else reject */
     wchar_t string_literal_terminator;
-    if(mpir_lexer_tryconsume(lexer,  L'\'')) string_literal_terminator = L'\'';
-    else if(mpir_lexer_tryconsume(lexer,  L'"')) string_literal_terminator = L'"';
+
+    if(lexer->peek(lexer) == L'\'')
+    {
+        (void)lexer->get(lexer);
+        string_literal_terminator = L'\'';
+    }
+    else if(lexer->peek(lexer) == L'\"')
+    {
+        (void)lexer->get(lexer);
+        string_literal_terminator = L'\"';
+    }
     else return 0;
 
     /* Consume characters while the consumed character is not the string literal termination symbol */
@@ -245,8 +254,9 @@ int mpir_tokenise_string_literal(mpir_lexer* lexer)
     }
 
     /* Consume the string literal terminator ("/'), and process the buffer */
-    if (mpir_lexer_tryconsume(lexer, string_literal_terminator))
+    if(lexer->peek(lexer) == string_literal_terminator)
     {
+        (void)lexer->get(lexer);
         return mpir_tokenise_process_buffer(lexer, STRING_LITERAL);
     }
     else return ERROR_UNEXPECTED_CHARACTER; /* ← If the string literal is not closed before end of file */

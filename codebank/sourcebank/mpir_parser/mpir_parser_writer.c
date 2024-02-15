@@ -68,7 +68,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node = wjson_initialize();
             wjson_append_string(wjson_node, L"TYPE", L"VALUE_ASSIGNMENT");
             wjson_append_string(wjson_node, L"IDENTIFIER", node->data.value_assignment->identifier);
-            wjson_append_object(wjson_node, "EXPRESSION", mpir_wjsonify_expression(node->data.value_assignment->expression));
+            wjson_append_object(wjson_node, L"EXPRESSION", mpir_wjsonify_expression(node->data.value_assignment->expression));
             wjson_list_append_object(wjson_list, wjson_node);
             return;
 
@@ -265,7 +265,17 @@ int mpir_write_ast(mpir_parser* psr, char path[])
 
     struct wjson* wjson_master = wjson_initialize();
     wjson_append_list(wjson_master, L"contents", wjson_commands);
-    wjson_print(wjson_master, 0);
+
+    FILE* outputFile = fopen("output.mpirast", "w");
+    if (outputFile == NULL)
+    {
+        wprintf(L"Error opening the file for writing.\n");
+        return 1;
+    }
+
+    wjson_fprint(outputFile, wjson_master, 0);
+
+    fclose(outputFile);
 
     return 1; // Return 1 to indicate success
 }
