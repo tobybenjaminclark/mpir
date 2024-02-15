@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     mpir_write_ast(psr, "test.mpirast");
     mpir_parser_free(psr);
 
-    mpir_build("test.mpirast", "test.py");
+    mpir_build("output.mpirast", "test.py");
     return 0;
 }
 

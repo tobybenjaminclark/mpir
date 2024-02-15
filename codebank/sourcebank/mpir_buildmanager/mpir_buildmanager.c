@@ -13,7 +13,7 @@ int mpir_build(char* input_ast, char* output_file)
 
     // Build the command to run the Python script
     char command[100];
-    snprintf(command, sizeof(command), "python3 %s", pythonScript);
+    snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "output.py");
 
     // Use the system function to run the command
     int result = system(command);
