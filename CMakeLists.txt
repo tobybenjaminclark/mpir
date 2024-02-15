@@ -12,6 +12,16 @@ configure_file(codebank/databank/test.mpir
 configure_file(codebank/databank/protobuffer_templates/example.protobuf
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
+file(GLOB SOURCE_FILES "codebank/modulebank/*")
+foreach(SOURCE_FILE ${SOURCE_FILES})
+    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
+    configure_file(
+            ${SOURCE_FILE}
+            ${CMAKE_CURRENT_BINARY_DIR}/modulebank/${FILE_NAME}
+            COPYONLY
+    )
+endforeach()
+
 set(SOURCE_FILES
         codebank/sourcebank/main.c
         codebank/sourcebank/mpir_misc/mpir_warnings.c
