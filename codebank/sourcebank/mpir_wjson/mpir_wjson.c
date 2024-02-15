@@ -1093,3 +1093,122 @@ int wjson_list_append_boolean(struct wjson* wjson_node, bool value)
 
     return 1;
 }
+
+/**
+ * @brief Prints indentation spaces based on the specified indentation level.
+ *
+ * This function prints indentation spaces to the specified file based on the specified indentation level.
+ *
+ * @param file Pointer to the file where indentation is printed.
+ * @param indentation Number of indentation levels to be printed.
+ */
+void wjson_fprint_indentation(FILE* file, int indentation)
+{
+    int indentation_counter = 0;
+    for (indentation_counter = 0; indentation_counter < indentation; indentation_counter++)
+        fwprintf(file, L"\t");
+    return;
+}
+
+/**
+ * @brief Prints a JSON list to the specified file with specified indentation.
+ *
+ * This function recursively prints the elements of a JSON list to the specified file with proper indentation.
+ *
+ * @param file Pointer to the file where the JSON list is printed.
+ * @param head Pointer to the head of the wjson list.
+ * @param indentation Number of indentation levels for proper formatting.
+ */
+void wjson_fprint_list(FILE* file, struct wjson* head, int indentation)
+{
+    struct wjson* current = head;
+    fwprintf(file, L"[\n");
+
+    while (current != NULL)
+    {
+        wjson_fprint_indentation(file, indentation + 1);
+
+        switch (current->type)
+        {
+            case WJSON_TYPE_NUMERICAL:
+                fwprintf(file, L"%f", current->data_numerical);
+                break;
+            case WJSON_TYPE_STRING:
+                fwprintf(file, L"\"%ls\"", current->data_string);
+                break;
+            case WJSON_TYPE_BOOLEAN:
+                if (current->data_bool) fwprintf(file, L"true");
+                else fwprintf(file, L"false");
+                break;
+            case WJSON_TYPE_OBJECT:
+                wjson_fprint(file, current->data_object, indentation + 1);
+                break;
+            case WJSON_TYPE_LIST:
+                wjson_fprint_list(file, current->data_list, indentation + 1);
+                break;
+            case WJSON_TYPE_NULL:
+                fwprintf(file, L"null");
+                break;
+        }
+
+        if (current->next != NULL) fwprintf(file, L",");
+        fwprintf(file, L"\n");
+
+        current = current->next;
+    }
+
+    wjson_fprint_indentation(file, indentation);
+    fwprintf(file, L"]");
+}
+
+/**
+ * @brief Prints a JSON object to the specified file with specified indentation.
+ *
+ * This function recursively prints the key-value pairs of a JSON object to the specified file with proper indentation.
+ *
+ * @param file Pointer to the file where the JSON object is printed.
+ * @param head Pointer to the head of the wjson object.
+ * @param indentation Number of indentation levels for proper formatting.
+ */
+void wjson_fprint(FILE* file, struct wjson* head, int indentation)
+{
+    struct wjson* current = head;
+    fwprintf(file, L"{\n");
+
+    while (current != NULL)
+    {
+        wjson_fprint_indentation(file, indentation + 1);
+        fwprintf(file, L"\"%ls\" : ", current->key);
+
+        switch (current->type)
+        {
+            case WJSON_TYPE_NUMERICAL:
+                fwprintf(file, L"%f", current->data_numerical);
+                break;
+            case WJSON_TYPE_STRING:
+                fwprintf(file, L"\"%ls\"", current->data_string);
+                break;
+            case WJSON_TYPE_BOOLEAN:
+                if (current->data_bool) fwprintf(file, L"true");
+                else fwprintf(file, L"false");
+                break;
+            case WJSON_TYPE_OBJECT:
+                wjson_fprint(file, current->data_object, indentation + 1);
+                break;
+            case WJSON_TYPE_LIST:
+                wjson_fprint_list(file, current->data_list, indentation + 1);
+                break;
+            case WJSON_TYPE_NULL:
+                fwprintf(file, L"null");
+                break;
+        }
+
+        if (current->next != NULL) fwprintf(file, L",");
+        fwprintf(file, L"\n");
+
+        current = current->next;
+    }
+
+    wjson_fprint_indentation(file, indentation);
+    fwprintf(file, L"}");
+}

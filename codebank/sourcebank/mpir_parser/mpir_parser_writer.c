@@ -72,6 +72,9 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_list_append_object(wjson_list, wjson_node);
             return;
 
+
+
+
         case TYPE_ASSIGNMENT:
             printf("");
             struct wjson* wjson_node2 = wjson_initialize();
@@ -80,6 +83,9 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node2, L"TYPE", node->data.type_assignment->type);
             wjson_list_append_object(wjson_list, wjson_node2);
             return;
+
+
+
 
         case FUNCTION_CALL:
             printf("");
@@ -102,8 +108,6 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
                 wjson_list_append_object(arguments, current_argument);
                 argument_count++;
             }
-
-
             wjson_append_list(wjson_node3, L"ARGUMENTS", arguments);
             wjson_list_append_object(wjson_list, wjson_node3);
             return;
@@ -147,6 +151,9 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_list(wjson_node4, L"ON_STATEMENTS", on_statements);
             wjson_list_append_object(wjson_list, wjson_node4);
             return;
+
+
+
 
         case DO_STATEMENT:
             printf("");

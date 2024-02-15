@@ -59,6 +59,10 @@ int wjson_append_list(struct wjson* wjson_node, wchar_t* key, struct wjson* valu
 int wjson_append_numerical(struct wjson* wjson_node, wchar_t* key, double value);
 int wjson_append_boolean(struct wjson* wjson_node, wchar_t* key, bool value);
 
+void wjson_fprint(FILE* file, struct wjson* head, int indentation);
+void wjson_fprint_list(FILE* file, struct wjson* head, int indentation);
+void wjson_fprint_indentation(FILE* file, int indentation);
+
 void wjson_print(struct wjson* head, int indentation);
 void wjson_test();
 
