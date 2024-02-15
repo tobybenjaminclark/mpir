@@ -264,7 +264,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
     fclose(file); // Close the file
 
     struct wjson* wjson_master = wjson_initialize();
-    wjson_append_list(wjson_master, L"contents", wjson_commands);
+    wjson_append_list(wjson_master, L"CONTENTS", wjson_commands);
 
     FILE* outputFile = fopen("output.mpirast", "w");
     if (outputFile == NULL)

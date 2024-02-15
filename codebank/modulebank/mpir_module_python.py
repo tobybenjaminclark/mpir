@@ -22,7 +22,6 @@ def write_arguments_to_file(filename: str, args: argparse.Namespace):
 def parse_json_file(filename: str) -> dict|None:
     try:
         file = open(filename, 'r')
-        print("file: (", filename, ") ", file.readlines())
         data = json.load(file)
         file.close()
         return data
@@ -30,16 +29,31 @@ def parse_json_file(filename: str) -> dict|None:
         print(f"File '{filename}' not found.")
         return None
     except json.JSONDecodeError as e:
-        print(f"Error decoding JSON in '{filename}': {e}")
+        print(f"Error decoding AST in '{filename}': {e}")
         return None
 
 
 args = parse_arguments()
-data = parse_json_file(args.arg1)
-print(data)
+ast = parse_json_file(args.arg1)
+print(ast)
 # Write the arguments to the specified file
 write_arguments_to_file("output.txt", args)
 # Access the arguments
 print("arg1:", args.arg1)
 print("Arguments written to file:", args.output)
+
+if "CONTENTS" not in ast:
+    print("CONTENTS NOT IN AST!")
+    exit(1)
+else:
+    for node in ast["CONTENTS"]:
+        print(node["TYPE"])
+        if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
+            print("def", node["IDENTIFIER"] + "() ->", node["RETURN_TYPE"] + ":")
+            pass
+        elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
+            pass
+        else:
+            print(node)
+            exit(1)
 
