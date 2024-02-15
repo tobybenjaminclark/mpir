@@ -4,7 +4,7 @@
  * License as published by the Free Software Foundation, of version 3 or later - See LICENSE for full terms of use.
  */
 
-#include "../../../headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typelogic.h"
+#include "../../../headerbank/mpir_parser/mpir_types_parsers/mpir_parse_typelogic.h"
 
 mpir_token_type PRESEDENCE_TABLE[] = {
         operator_and,

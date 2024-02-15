@@ -76,16 +76,16 @@ set(SOURCE_FILES
         codebank/sourcebank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.c
         codebank/headerbank/mpir_parser/mpir_doc_parsers/mpir_parse_docsection.h
         codebank/headerbank/mpir_ast/mpir_doc_ast.h
-        "codebank/sourcebank/mpir_parser/ mpir_type_parsers/mpir_parse_typedef.c"
-        "codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typedef.h"
-        "codebank/sourcebank/mpir_parser/ mpir_type_parsers/mpir_parse_typelogic.c"
-        codebank/headerbank/mpir_parser/mpir_type_parsers/mpir_parse_typelogic.h
         codebank/sourcebank/mpir_architecture/mpir_server.c
         codebank/headerbank/mpir_architecture/mpir_server.h
         codebank/sourcebank/mpir_parser/mpir_parser_writer.c
         codebank/headerbank/mpir_parser/mpir_parser_writer.h
         codebank/sourcebank/mpir_wjson/mpir_wjson.c
         codebank/headerbank/mpir_wjson/mpir_wjson.h
+        codebank/sourcebank/mpir_parser/mpir_types_parsers/mpir_parse_typedef.c
+        codebank/headerbank/mpir_parser/mpir_types_parsers/mpir_parse_typedef.h
+        codebank/sourcebank/mpir_parser/mpir_types_parsers/mpir_parse_typelogic.c
+        codebank/headerbank/mpir_parser/mpir_types_parsers/mpir_parse_typelogic.h
 )
 
 # Create the main executable
