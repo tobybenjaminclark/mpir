@@ -12,6 +12,7 @@
 #include "../headerbank/mpir_parser/mpir_parser.h"
 #include "../headerbank/mpir_parser/mpir_parser_writer.h"
 #include "../headerbank/mpir_wjson/mpir_wjson.h"
+#include "../headerbank/mpir_buildmanager/mpir_buildmanager.h"
 
 int main(int argc, char** argv)
 {
@@ -19,8 +20,10 @@ int main(int argc, char** argv)
     a = mpir_tokenise("test.mpir", "test.md");
     mpir_parser* psr = upgrade_to_parser(a);
     mpir_parse(psr);
-    mpir_write_ast(psr, "A");
+    mpir_write_ast(psr, "test.mpirast");
     mpir_parser_free(psr);
+
+    mpir_build("test.mpirast", "test.py");
     return 0;
 }
 
