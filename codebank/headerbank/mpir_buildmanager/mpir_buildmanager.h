@@ -7,6 +7,9 @@
 #ifndef MPIR_COMPILER_MPIR_BUILDMANAGER_H
 #define MPIR_COMPILER_MPIR_BUILDMANAGER_H
 
+#include <stdlib.h>
+#include <stdio.h>
+
 int mpir_build(char* input_ast, char* output_file);
 
 #endif

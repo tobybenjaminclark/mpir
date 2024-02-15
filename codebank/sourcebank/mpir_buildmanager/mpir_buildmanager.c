@@ -8,5 +8,22 @@
 
 int mpir_build(char* input_ast, char* output_file)
 {
-    return 1;
+    // Replace "test.py" with the actual path to your Python script
+    const char* pythonScript = "modulebank/mpir_module_python.py";
+
+    // Build the command to run the Python script
+    char command[100];
+    snprintf(command, sizeof(command), "python3 %s", pythonScript);
+
+    // Use the system function to run the command
+    int result = system(command);
+
+    // Check the result of the system call
+    if (result == 0) {
+        printf("Python script executed successfully.\n");
+    } else {
+        printf("Error executing Python script.\n");
+    }
+
+    return 0;
 }
