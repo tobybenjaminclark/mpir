@@ -28,26 +28,27 @@ struct wjson* mpir_wjsonify_expression(struct mpir_ast_expression* expr)
     struct wjson* wjson_node = wjson_initialize();
     switch(expr->type)
     {
+        case AST_FUNCTION_CALL:
+            wjson_append_string(wjson_node, L"TYPE", L"FUNCTION_CALL");
+            // TODO: implement this!
+            break;
+
         case AST_IDENTIFIER:
-            printf("");
             wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_IDENTIFIER");
             wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.identifier);
             break;
 
         case AST_STRING_LITERAL:
-            printf("");
             wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_STRING_LITERAL");
             wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.string_literal);
             break;
 
         case AST_OPERATOR:
-            printf("");
             wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_OPERATOR");
             wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.operator);
             break;
 
         case AST_NUMERICAL_LITERAL:
-            printf("");
             wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_NUMERICAL_LITERAL");
             wjson_append_numerical(wjson_node, L"VALUE", expr->data.numerical_literal);
             break;

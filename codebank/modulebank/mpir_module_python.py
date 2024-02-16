@@ -42,6 +42,21 @@ write_arguments_to_file("output.txt", args)
 print("arg1:", args.arg1)
 print("Arguments written to file:", args.output)
 
+def convert_expression(expr: dict) -> str:
+    match(expr["TYPE"]):
+        case "EXPRESSION_IDENTIFIER":
+            return expr["IDENTIFIER"]
+        case "EXPRESSION_NUMERICAL_LITERAL":
+            return str(expr["VALUE"])
+        case "EXPRESSION_OPERATOR":
+            return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
+        case "EXPRESSION_STRING_LITERAL":
+            return expr["IDENTIFIER"]
+
+
+    if(expr["TYPE"] == ""):
+        pass
+
 if "CONTENTS" not in ast:
     print("CONTENTS NOT IN AST!")
     exit(1)
@@ -56,10 +71,11 @@ else:
             for statement in node["BODY"]:
                 if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
                     print("\t" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
+                elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
+                    print("\t" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
             pass
         elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
             pass
         else:
             print(node)
             exit(1)
-
