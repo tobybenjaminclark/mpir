@@ -22,7 +22,8 @@
 struct mpir_ast_function_declaration
 {
     struct mpir_ast_identifier* identifier;    /** ← Identifier of the function.                                        */
-    struct mpir_ast_type** inputs;             /** ← Array of input types for the function.                             */
+    struct mpir_ast_identifier** arguments;    /** ← Identifiers of Arguments (Types sequential to input_types          */
+    struct mpir_ast_type** input_types;        /** ← Array of input types for the function.                             */
     struct mpir_ast_type* return_type;         /** ← Return type of the function.                                       */
     struct mpir_command_list* body;            /** ← Pointer to the body of the function.                               */
     struct mpir_ast_docsection* docsection;    /** ← Pointer to the documentation section associated with the function. */

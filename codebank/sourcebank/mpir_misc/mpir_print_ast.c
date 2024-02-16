@@ -36,7 +36,7 @@ void print_function_declaration(struct mpir_ast_function_declaration* node, int 
 {
     /*
     struct mpir_ast_identifier* identifier;
-    struct mpir_ast_type** inputs;
+    struct mpir_ast_type** input_types;
     struct mpir_ast_type* return_type;
     struct mpir_command_list* body;
     */

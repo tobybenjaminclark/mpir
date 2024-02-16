@@ -50,6 +50,9 @@ else:
         print(node["TYPE"])
         if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
             print("def", node["IDENTIFIER"] + "() ->", node["RETURN_TYPE"] + ":")
+            for statement in node["BODY"]:
+                if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
+                    print("\t" + statement["IDENTIFIER"] + ":", statement["TYPE"])
             pass
         elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
             pass

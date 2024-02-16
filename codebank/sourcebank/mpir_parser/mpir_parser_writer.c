@@ -228,9 +228,9 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 /* Generate JSON for Input Types */
                 struct wjson* wjson_funcdef_inputs = wjson_initialize_list();
                 int argument_count1 = 0;
-                while (program_node->data.function_declaration->inputs[argument_count1] != NULL)
+                while (program_node->data.function_declaration->input_types[argument_count1] != NULL)
                 {
-                    wjson_list_append_string(wjson_funcdef_inputs, program_node->data.function_declaration->inputs[argument_count1]->data);
+                    wjson_list_append_string(wjson_funcdef_inputs, program_node->data.function_declaration->input_types[argument_count1]->data);
                     argument_count1++;
                 }
 

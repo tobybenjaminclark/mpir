@@ -16,6 +16,7 @@ struct mpir_command_list* parse_function_body(mpir_parser* psr)
     struct mpir_command_list* nodes = initialize_command_list();
     mpir_token_type ntt;
 
+    /* Parse Statements */
     while ((ntt = psr->peek(psr)->type) != keyword_suchthat && psr->peek(psr)->type != keyword_end)
     {
         wprintf(L"Next Token Type is %s \n", token_names[ntt]);

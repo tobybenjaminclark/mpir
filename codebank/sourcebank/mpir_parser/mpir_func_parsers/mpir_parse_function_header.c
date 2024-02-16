@@ -45,7 +45,7 @@ bool parse_function_declaration(mpir_parser* psr)
 {
     /* Create Funcdef AST node & Consume 'fundef' */
     struct mpir_ast_function_declaration* node = calloc(1, sizeof(struct mpir_ast_function_declaration));
-    /* Parsing */
+    node->arguments = NULL;
 
     /* Parse `funcdef */
     if(psr->peek(psr)->type != keyword_funcdef) return false;
@@ -63,13 +63,36 @@ bool parse_function_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse return type */
-    if((node->inputs = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL) return false;
+    if((node->input_types = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL) return false;
     if(!(psr->tryget(psr, operator_arrow))) return false;
     if((node->return_type = parse_returntype(psr)) == NULL) return false;
 
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return false;
+
+    /* Parse Pattern Matching / Inputs */
+    mpir_token_type ntt;
+    while ((ntt = psr->peek(psr)->type) != keyword_suchthat && psr->peek(psr)->type != keyword_end && psr->peek(psr)->type != NEWLINE)
+    {
+        switch (ntt)
+        {
+            case IDENTIFIER:
+                {};
+                struct mpir_ast_identifier** args = PARSE_MULTIPLE_STATEMENTS(struct mpir_ast_identifier, parse_identifier, psr);
+                node->arguments = args;
+                while (psr->peek(psr)->type != NEWLINE) (void)psr->get(psr);
+                break;
+
+            case STRING_LITERAL:
+            case NUMERICAL_LITERAL:
+                /* Pattern Matching case */
+                break;
+
+            default:
+                (void)psr->get(psr);
+        }
+    }
 
     /* Parse function body */
     node->body = parse_function_body(psr);
