@@ -20,6 +20,6 @@
 #include "../mpir_parse_multiple.h"
 #include "mpir_parse_on.h"
 
-struct mpir_command_list* parse_function_body(mpir_parser* psr);
+struct mpir_command_list* parse_function_body(mpir_parser* psr, struct mpir_command_list* nodes);
 
 #endif

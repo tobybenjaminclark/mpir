@@ -9,11 +9,10 @@
 
 
 
-struct mpir_command_list* parse_function_body(mpir_parser* psr)
+struct mpir_command_list* parse_function_body(mpir_parser* psr, struct mpir_command_list* nodes)
 {
     /* Setup & Allocate Memory for Command List */
     char* token_names[] = {TOKEN_NAME_MAP};
-    struct mpir_command_list* nodes = initialize_command_list();
     mpir_token_type ntt;
 
     /* Parse Statements */

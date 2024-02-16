@@ -42,6 +42,12 @@ void print_command_node(struct mpir_command_node* current_node)
 
             wprintf(L"\tReturn Type: %ls\n", current_node->data.function_declaration->return_type->data);
 
+            int argument_count8 = 0;
+            while (current_node->data.function_declaration->arguments[argument_count8] != NULL) {
+                wprintf(L"\t\tArgument %d: %ls\n", argument_count8, current_node->data.function_declaration->arguments[argument_count8]->data);
+                argument_count8++;
+            }
+
             /* Print Docs */
             if(current_node->data.function_declaration->docsection != NULL)
             {

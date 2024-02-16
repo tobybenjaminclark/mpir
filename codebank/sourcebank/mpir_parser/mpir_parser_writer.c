@@ -80,7 +80,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node2 = wjson_initialize();
             wjson_append_string(wjson_node2, L"TYPE", L"TYPE_ASSIGNMENT");
             wjson_append_string(wjson_node2, L"IDENTIFIER", node->data.type_assignment->identifier);
-            wjson_append_string(wjson_node2, L"TYPE", node->data.type_assignment->type);
+            wjson_append_string(wjson_node2, L"ASSIGNED_TYPE", node->data.type_assignment->type);
             wjson_list_append_object(wjson_list, wjson_node2);
             return;
 
@@ -234,6 +234,16 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                     argument_count1++;
                 }
 
+                /* Generate JSON for Input Types */
+                struct wjson* wjson_funcdef_arguments = wjson_initialize_list();
+                int argument_count2 = 0;
+                while (program_node->data.function_declaration->arguments[argument_count2] != NULL)
+                {
+                    wjson_list_append_string(wjson_funcdef_arguments, program_node->data.function_declaration->arguments[argument_count2]->data);
+                    argument_count2++;
+                }
+
+
                 struct wjson* wjson_funcdef_body = wjson_initialize_list();
                 /* Generate JSON for body */
 
@@ -249,6 +259,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 wjson_append_list(wjson_funcdef, L"BODY", wjson_funcdef_statements);
                 wjson_append_list(wjson_funcdef, L"DOCSECTION", wjson_funcdef_docsection);
                 wjson_append_list(wjson_funcdef, L"INPUTS", wjson_funcdef_inputs);
+                wjson_append_list(wjson_funcdef, L"ARGUMENTS", wjson_funcdef_arguments);
                 wjson_list_append_object(wjson_commands, wjson_funcdef);
                 break;
 

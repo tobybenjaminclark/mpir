@@ -71,31 +71,29 @@ bool parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
     else return false;
 
+    /* Parse Funcdef */
+    if(psr->peek(psr)->type = keyword_funcdef) (void)psr->get(psr);
+    else return false;
+
     /* Parse Pattern Matching / Inputs */
-    mpir_token_type ntt;
-    while ((ntt = psr->peek(psr)->type) != keyword_suchthat && psr->peek(psr)->type != keyword_end && psr->peek(psr)->type != NEWLINE)
+    mpir_token_type ntt = psr->peek(psr)->type;
+    if(ntt == IDENTIFIER && wcscmp(psr->peek(psr)->lexeme, node->identifier) == 0) (void)psr->get(psr);
+    else return false;
+
+    if(psr->peek(psr)->type == IDENTIFIER)
     {
-        switch (ntt)
-        {
-            case IDENTIFIER:
-                {};
-                struct mpir_ast_identifier** args = PARSE_MULTIPLE_STATEMENTS(struct mpir_ast_identifier, parse_identifier, psr);
-                node->arguments = args;
-                while (psr->peek(psr)->type != NEWLINE) (void)psr->get(psr);
-                break;
-
-            case STRING_LITERAL:
-            case NUMERICAL_LITERAL:
-                /* Pattern Matching case */
-                break;
-
-            default:
-                (void)psr->get(psr);
-        }
+        struct mpir_ast_identifier **args = PARSE_MULTIPLE_STATEMENTS(struct mpir_ast_identifier, parse_identifier, psr);
+        node->arguments = args;
+        while (psr->peek(psr)->type != NEWLINE) (void) psr->get(psr);
+    }
+    else
+    {
+        wprintf(L"\n\n%ls\n", psr->peek(psr)->lexeme);
     }
 
     /* Parse function body */
-    node->body = parse_function_body(psr);
+    struct mpir_command_list* nodes = initialize_command_list();
+    node->body = parse_function_body(psr, nodes);
 
     /* Parse Doc */
     if(psr->peek(psr)->type == keyword_suchthat)

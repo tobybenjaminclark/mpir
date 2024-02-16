@@ -11,7 +11,6 @@ struct mpir_ast_identifier* parse_identifier(mpir_parser* psr)
     struct mpir_ast_identifier* node = malloc(sizeof(struct mpir_ast_identifier));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
         return NULL;
     }
     else
