@@ -49,10 +49,13 @@ else:
     for node in ast["CONTENTS"]:
         print(node["TYPE"])
         if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
-            print("def", node["IDENTIFIER"] + "() ->", node["RETURN_TYPE"] + ":")
+            print("def", node["IDENTIFIER"] + "(", end="")
+            for index, arg in enumerate(node["ARGUMENTS"]):
+                print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
+            print(") ->", node["RETURN_TYPE"] + ":")
             for statement in node["BODY"]:
                 if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-                    print("\t" + statement["IDENTIFIER"] + ":", statement["TYPE"])
+                    print("\t" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
             pass
         elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
             pass
