@@ -30,7 +30,24 @@ struct wjson* mpir_wjsonify_expression(struct mpir_ast_expression* expr)
     {
         case AST_FUNCTION_CALL:
             wjson_append_string(wjson_node, L"TYPE", L"FUNCTION_CALL");
-            // TODO: implement this!
+            wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.function_call->identifier);
+
+            /* Arguments */
+            int argument_count = 0;
+
+            struct wjson* current_argument;
+            struct wjson* arguments = wjson_initialize_list();
+            while (expr->data.function_call->arguments[argument_count] != NULL)
+            {
+                current_argument = wjson_initialize();
+                wjson_append_string(current_argument, L"TYPE", L"FUNCTION_ARGUMENT");
+                wjson_append_numerical(current_argument, L"ARGUMENT_INDEX", (double)argument_count);
+                wjson_append_object(current_argument, L"VALUE", mpir_wjsonify_expression(expr->data.function_call->arguments[argument_count]));
+
+                wjson_list_append_object(arguments, current_argument);
+                argument_count++;
+            }
+            wjson_append_list(wjson_node, L"ARGUMENTS", arguments);
             break;
 
         case AST_IDENTIFIER:

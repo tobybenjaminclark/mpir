@@ -42,8 +42,17 @@ write_arguments_to_file("output.txt", args)
 print("arg1:", args.arg1)
 print("Arguments written to file:", args.output)
 
+def convert_function_call(fcall: dict) -> str:
+    val = fcall["IDENTIFIER"] + "("
+    for index, arg in enumerate(fcall["ARGUMENTS"]):
+        val = val + convert_expression(arg["VALUE"]) + (", " if index < len(fcall["ARGUMENTS"]) - 1 else "")
+    val = val + ")"
+    return val
+
 def convert_expression(expr: dict) -> str:
     match(expr["TYPE"]):
+        case "FUNCTION_CALL":
+            return convert_function_call(expr)
         case "EXPRESSION_IDENTIFIER":
             return expr["IDENTIFIER"]
         case "EXPRESSION_NUMERICAL_LITERAL":
