@@ -82,9 +82,12 @@ else:
                     print("\t" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
                 elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
                     print("\t" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
+                elif(statement["TYPE"] == "FUNCTION_CALL"):
+                    print("\t" + convert_function_call(statement))
             pass
         elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
             pass
         else:
             print(node)
             exit(1)
+
