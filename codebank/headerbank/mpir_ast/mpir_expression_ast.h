@@ -72,7 +72,7 @@ struct mpir_ast_expression
 {
     int type;                                             /** ← Type of expression.                       */
     union {
-        struct mpir_ast_function_call* function_call;     /** ← Data for a expression call expression.      */
+        struct mpir_ast_function_call* function_call;     /** ← Data for a expression call expression.    */
         long double numerical_literal;                    /** ← Data for a numerical literal expression.  */
         wchar_t identifier[128];                          /** ← Data for an identifier expression.        */
         wchar_t string_literal[128];                      /** ← Data for a string literal expression.     */

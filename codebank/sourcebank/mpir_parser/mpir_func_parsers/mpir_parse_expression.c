@@ -196,7 +196,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
             struct mpir_ast_expression* rightOperand = mpir_parse_expression(psr, NEWLINE, 0);
             root = mpir_create_operator_node(op_lexeme, leftOperand, rightOperand);
         }
-        else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide)
+        else if (psr->peek(psr)->type == operator_multiply || psr->peek(psr)->type == operator_divide || psr->peek(psr)->type == operator_eq)
         {
             printf("EXPR: Parsing Left-Associative Operator\n");
             wchar_t op_lexeme[128];

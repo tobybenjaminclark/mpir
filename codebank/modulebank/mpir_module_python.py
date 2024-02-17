@@ -56,7 +56,11 @@ def convert_expression(expr: dict) -> str:
         case "EXPRESSION_IDENTIFIER":
             return expr["IDENTIFIER"]
         case "EXPRESSION_NUMERICAL_LITERAL":
-            return str(expr["VALUE"])
+            try:
+                return str(expr["VALUE"])
+            except:
+                print(expr)
+
         case "EXPRESSION_OPERATOR":
             return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
         case "EXPRESSION_STRING_LITERAL":
@@ -65,6 +69,22 @@ def convert_expression(expr: dict) -> str:
 
     if(expr["TYPE"] == ""):
         pass
+
+def show_statement(statement):
+    if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
+        print("" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
+    elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
+        print("" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
+    elif(statement["TYPE"] == "FUNCTION_CALL"):
+        print("" + convert_function_call(statement))
+    elif(statement["TYPE"] == "TRYCAST_STATEMENT"):
+        print("TRYCAST!")
+    elif(statement["TYPE"] == "DO_STATEMENT"):
+        print("DO STATEMENT!")
+    elif(statement["TYPE"] == "IF_STATEMENT"):
+        print("if (", convert_expression(statement["EXPRESSION"]), "): ", end = "")
+        for statement2 in statement["MATCH_COMMANDS"]:
+            show_statement(statement2)
 
 if "CONTENTS" not in ast:
     print("CONTENTS NOT IN AST!")
@@ -78,12 +98,8 @@ else:
                 print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
             print(") ->", node["RETURN_TYPE"] + ":")
             for statement in node["BODY"]:
-                if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-                    print("\t" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
-                elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
-                    print("\t" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
-                elif(statement["TYPE"] == "FUNCTION_CALL"):
-                    print("\t" + convert_function_call(statement))
+                print("\t", end = "")
+                show_statement(statement)
             pass
         elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
             pass
