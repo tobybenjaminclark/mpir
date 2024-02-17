@@ -178,7 +178,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node5 = wjson_initialize();
 
             wjson_append_string(wjson_node5, L"TYPE", L"DO_STATEMENT");
-
+            wjson_append_object(wjson_node5, L"EXPRESSION", mpir_wjsonify_expression(node->data.do_statement->expression));
 
             int argument_count4 = 0;
             struct wjson* on_statement2;
