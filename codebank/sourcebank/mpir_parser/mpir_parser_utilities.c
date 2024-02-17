@@ -40,7 +40,7 @@ struct mpir_ast_type* parse_returntype(mpir_parser* psr)
     struct mpir_ast_type* node = malloc(sizeof(struct mpir_ast_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function identifier got other.");
+        mpir_error("parse_function_declaration: expected expression identifier got other.");
         return NULL;
     }
     else
@@ -57,7 +57,7 @@ struct mpir_ast_type* parse_type(mpir_parser* psr)
     struct mpir_ast_type* node = malloc(sizeof(struct mpir_ast_type));
     if((psr->peek(psr))->type != IDENTIFIER)
     {
-        mpir_error("parse_function_declaration: expected function type got other.");
+        mpir_error("parse_function_declaration: expected expression type got other.");
         return NULL;
     }
 

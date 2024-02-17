@@ -9,9 +9,9 @@
 /**
  * @brief Matches a sequence of wide characters in the input JSON file stream.
  *
- * This function attempts to match the given sequence of wide characters in the input file stream.
- * If the sequence is found, the file stream position is unchanged, and the function returns 1.
- * If the sequence is not found, the file stream is rewound to its initial position, and the function returns 0.
+ * This expression attempts to match the given sequence of wide characters in the input file stream.
+ * If the sequence is found, the file stream position is unchanged, and the expression returns 1.
+ * If the sequence is not found, the file stream is rewound to its initial position, and the expression returns 0.
  *
  * @param file FILE pointer to the input JSON file.
  * @param sequence Wide character sequence to match in the input file stream.
@@ -66,7 +66,7 @@ int wjson_match_sequence(FILE* file, const wchar_t* sequence)
 /**
  * @brief Parses a JSON string value from the file stream and returns a wchar_t pointer.
  *
- * This function reads characters from the file stream until a closing double quote is encountered,
+ * This expression reads characters from the file stream until a closing double quote is encountered,
  * storing them in a buffer and null-terminating the string. The buffer is then returned as a wchar_t pointer.
  *
  * @param file FILE pointer to the input JSON file.
@@ -91,7 +91,7 @@ wchar_t* wjson_parse_value_string(FILE* file, wint_t wchar)
 /**
  * @brief Parses a JSON numeric value from the file stream and returns a double.
  *
- * This function reads characters from the file stream until a non-numeric character is encountered,
+ * This expression reads characters from the file stream until a non-numeric character is encountered,
  * storing them in a buffer. The buffer is then null-terminated and parsed as a double value.
  *
  * @param file FILE pointer to the input JSON file.
@@ -126,7 +126,7 @@ double wjson_parse_double(FILE* file, wint_t firstChar)
 /**
  * @brief Parses a JSON array from the file stream and returns a wjson pointer.
  *
- * This function reads characters from the file stream, parsing values until the end of the array is reached.
+ * This expression reads characters from the file stream, parsing values until the end of the array is reached.
  * Parsed values are appended to a wjson list. The resulting wjson list is then returned.
  *
  * @param file FILE pointer to the input JSON file.
@@ -197,7 +197,7 @@ struct wjson* wjson_parse_list(FILE* file)
 /**
  * @brief Parses a JSON value from the file stream and appends it to a wjson node.
  *
- * This function reads characters from the file stream, determining the type of JSON value,
+ * This expression reads characters from the file stream, determining the type of JSON value,
  * and appends it to the provided wjson node using the specified key.
  *
  * @param file FILE pointer to the input JSON file.
@@ -266,7 +266,7 @@ void wjson_parse_value(FILE* file, wint_t key[1024], struct wjson* wjson_node)
 /**
  * @brief Parses a JSON key and its associated value from the file stream.
  *
- * This function reads characters from the file stream, parsing a key and its associated value.
+ * This expression reads characters from the file stream, parsing a key and its associated value.
  * The parsed key and value are then appended to the given wjson node.
  *
  * @param file FILE pointer to the input JSON file.
@@ -299,7 +299,7 @@ void wjson_parse_key(FILE* file, wint_t wchar, struct wjson* wjson_node)
 /**
  * @brief Parses a JSON object from the file stream and returns a wjson pointer.
  *
- * This function reads characters from the file stream, parsing key-value pairs until the end of the object is reached.
+ * This expression reads characters from the file stream, parsing key-value pairs until the end of the object is reached.
  * Parsed key-value pairs are appended to a wjson object. The resulting wjson object is then returned.
  *
  * @param file FILE pointer to the input JSON file.
@@ -325,7 +325,7 @@ struct wjson* wjson_parse_subobj(FILE* file)
 /**
  * @brief Parses a JSON file and returns a wjson pointer representing the entire JSON structure.
  *
- * This function opens the specified JSON file, parses its contents, and returns a wjson pointer
+ * This expression opens the specified JSON file, parses its contents, and returns a wjson pointer
  * representing the entire JSON structure. The caller is responsible for freeing the allocated memory.
  *
  * @param filename Name of the JSON file to parse.
@@ -356,7 +356,7 @@ struct wjson* wjson_parse(const char* filename)
 /**
  * @brief Prints indentation spaces based on the specified indentation level.
  *
- * This function prints indentation spaces to the standard output based on the specified indentation level.
+ * This expression prints indentation spaces to the standard output based on the specified indentation level.
  *
  * @param indentation Number of indentation levels to be printed.
  */
@@ -371,7 +371,7 @@ void wjson_print_indentation(int indentation)
 /**
  * @brief Prints a JSON list to the standard output with specified indentation.
  *
- * This function recursively prints the elements of a JSON list to the standard output with proper indentation.
+ * This expression recursively prints the elements of a JSON list to the standard output with proper indentation.
  *
  * @param head Pointer to the head of the wjson list.
  * @param indentation Number of indentation levels for proper formatting.
@@ -426,7 +426,7 @@ void wjson_print_list(struct wjson* head, int indentation)
 /**
  * @brief Prints a JSON object to the standard output with specified indentation.
  *
- * This function recursively prints the key-value pairs of a JSON object to the standard output with proper indentation.
+ * This expression recursively prints the key-value pairs of a JSON object to the standard output with proper indentation.
  *
  * @param head Pointer to the head of the wjson object.
  * @param indentation Number of indentation levels for proper formatting.
@@ -488,7 +488,7 @@ void wjson_print(struct wjson* head, int indentation)
 /*
  * @brief Initializes a new wjson instance and allocates memory for it.
  *
- * This function allocates memory for a new wjson instance, initializes its
+ * This expression allocates memory for a new wjson instance, initializes its
  * members to default values (NULL, 0, false), and returns a pointer to the
  * newly created instance.
  *
@@ -524,7 +524,7 @@ struct wjson* wjson_initialize()
 /* @
  * @brief Appends a new string element to the wjson structure.
  *
- * This function appends a new wjson node with string data to the end of the
+ * This expression appends a new wjson node with string data to the end of the
  * provided wjson_node list. It allocates memory for the key and value, sets
  * the necessary fields, and updates the list pointers accordingly.
  *
@@ -575,10 +575,10 @@ int wjson_append_string(struct wjson* wjson_node, wchar_t* key, wchar_t* value)
     return 1;
 }
 
-/* @function wjson_append_object
+/* @expression wjson_append_object
  * @brief Appends a new object element to the wjson structure.
  *
- * This function appends a new wjson node with object data to the end of the
+ * This expression appends a new wjson node with object data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_object field is
  * updated to point to the provided value.
@@ -623,10 +623,10 @@ int wjson_append_object(struct wjson* wjson_node, wchar_t* key, struct wjson* va
     return 1;
 }
 
-/* @function wjson_append_list
+/* @expression wjson_append_list
  * @brief Appends a new list element to the wjson structure.
  *
- * This function appends a new wjson node with list data to the end of the
+ * This expression appends a new wjson node with list data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_object field is
  * updated to point to the provided value.
@@ -671,10 +671,10 @@ int wjson_append_list(struct wjson* wjson_node, wchar_t* key, struct wjson* valu
     return 1;
 }
 
-/* @function wjson_append_numerical
+/* @expression wjson_append_numerical
  * @brief Appends a new numerical element to the wjson structure.
  *
- * This function appends a new wjson node with numerical data to the end of the
+ * This expression appends a new wjson node with numerical data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_numerical field
  * is updated to the provided value.
@@ -719,10 +719,10 @@ int wjson_append_numerical(struct wjson* wjson_node, wchar_t* key, double value)
     return 1;
 }
 
-/* @function wjson_append_boolean
+/* @expression wjson_append_boolean
  * @brief Appends a new boolean element to the wjson structure.
  *
- * This function appends a new wjson node with boolean data to the end of the
+ * This expression appends a new wjson node with boolean data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_bool field is
  * updated to the provided value.
@@ -774,7 +774,7 @@ int wjson_append_boolean(struct wjson* wjson_node, wchar_t* key, bool value)
 /*
  * @brief Initializes a new wjson list instance and allocates memory for it.
  *
- * This function allocates memory for a new wjson instance, initializes its
+ * This expression allocates memory for a new wjson instance, initializes its
  * members to default values (NULL, 0, false), and returns a pointer to the
  * newly created instance.
  *
@@ -810,7 +810,7 @@ struct wjson* wjson_initialize_list()
 /*
  * @brief Appends a new string element to the wjson list.
  *
- * This function appends a new wjson node with string data to the end of the
+ * This expression appends a new wjson node with string data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_string field is
  * updated to the provided value.
@@ -873,7 +873,7 @@ int wjson_list_append_string(struct wjson* wjson_node, wchar_t* value)
 /*
  * @brief Appends a new object element to the wjson list.
  *
- * This function appends a new wjson node with object data to the end of the
+ * This expression appends a new wjson node with object data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_object field is
  * updated to point to the provided value.
@@ -929,7 +929,7 @@ int wjson_list_append_object(struct wjson* wjson_node, struct wjson* value)
 /*
  * @brief Appends a new numerical element to the wjson list.
  *
- * This function appends a new wjson node with numerical data to the end of the
+ * This expression appends a new wjson node with numerical data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_numerical field
  * is updated to the provided value.
@@ -985,7 +985,7 @@ int wjson_list_append_numerical(struct wjson* wjson_node, double value)
 /* t
  * @brief Appends a new list element to the wjson list.
  *
- * This function appends a new wjson node with list data to the end of the
+ * This expression appends a new wjson node with list data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_list field is
  * updated to point to the provided value.
@@ -1041,7 +1041,7 @@ int wjson_list_append_list(struct wjson* wjson_node, struct wjson* value)
 /*
  * @brief Appends a new boolean element to the wjson list.
  *
- * This function appends a new wjson node with boolean data to the end of the
+ * This expression appends a new wjson node with boolean data to the end of the
  * provided wjson_node list. It allocates memory for the key, sets the necessary
  * fields, and updates the list pointers accordingly. The data_bool field is
  * updated to the provided value.
@@ -1097,7 +1097,7 @@ int wjson_list_append_boolean(struct wjson* wjson_node, bool value)
 /**
  * @brief Prints indentation spaces based on the specified indentation level.
  *
- * This function prints indentation spaces to the specified file based on the specified indentation level.
+ * This expression prints indentation spaces to the specified file based on the specified indentation level.
  *
  * @param file Pointer to the file where indentation is printed.
  * @param indentation Number of indentation levels to be printed.
@@ -1113,7 +1113,7 @@ void wjson_fprint_indentation(FILE* file, int indentation)
 /**
  * @brief Prints a JSON list to the specified file with specified indentation.
  *
- * This function recursively prints the elements of a JSON list to the specified file with proper indentation.
+ * This expression recursively prints the elements of a JSON list to the specified file with proper indentation.
  *
  * @param file Pointer to the file where the JSON list is printed.
  * @param head Pointer to the head of the wjson list.
@@ -1164,7 +1164,7 @@ void wjson_fprint_list(FILE* file, struct wjson* head, int indentation)
 /**
  * @brief Prints a JSON object to the specified file with specified indentation.
  *
- * This function recursively prints the key-value pairs of a JSON object to the specified file with proper indentation.
+ * This expression recursively prints the key-value pairs of a JSON object to the specified file with proper indentation.
  *
  * @param file Pointer to the file where the JSON object is printed.
  * @param head Pointer to the head of the wjson object.

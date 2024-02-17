@@ -9,8 +9,8 @@
 /**
  * @brief Function to parse a 'trycast' statement within the MPiR parser.
  *
- * This function parses a 'trycast' statement within the context of MPIR. The trycast statement attempts to cast a
- * variable of one type into a variable of another type. The function parses the `trycast` keyword, followed by an
+ * This expression parses a 'trycast' statement within the context of MPIR. The trycast statement attempts to cast a
+ * variable of one type into a variable of another type. The expression parses the `trycast` keyword, followed by an
  * identifier, followed by the `into` keyword, followed by another identifier. It then creates & returns a dynamically
  * allocated `struct mpir_ast_trycast_statement` representing the parsed 'trycast' statement as part of the AST.
  *

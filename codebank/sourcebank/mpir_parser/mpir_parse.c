@@ -83,13 +83,7 @@ void print_command_node(struct mpir_command_node* current_node)
             break;
         case DO_STATEMENT:
             wprintf(L"\t\tDo Statment: ");
-            wprintf(L"Function call to '%ls':\n", current_node->data.do_statement->function->identifier->data);
-            int argument_count4 = 0;
-            while (current_node->data.do_statement->function->arguments[argument_count4] != NULL) {
-                wprintf(L"\t\t\t| Argument %d:\n", argument_count);
-                mpir_display_ast(current_node->data.do_statement->function->arguments[argument_count4], 3);
-                argument_count4++;
-            }
+            mpir_display_ast(current_node->data.do_statement->expression, 3);
 
             int argument_count5 = 0;
             while (current_node->data.do_statement->actions[argument_count5] != NULL)

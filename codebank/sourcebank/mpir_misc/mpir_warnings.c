@@ -8,7 +8,7 @@
 
 /** @brief Displays a formatted message to the specified output stream with the given prefix.
  *
- * This function formats the input message with the provided format string and arguments, adds
+ * This expression formats the input message with the provided format string and arguments, adds
  * the specified prefix, and prints the resulting message to the specified output stream.
  * It ensures that there is no lexeme overflow and handles error cases appropriately.
  *
@@ -43,7 +43,7 @@ void display_message(FILE* stream, const char* prefix, const char* format, va_li
 
 /** @brief Prints an informational message to the standard output stream.
  *
- * This function formats the input message with the provided format string and arguments,
+ * This expression formats the input message with the provided format string and arguments,
  * adds the information prefix, and prints the resulting message to the standard output stream.
  *
  * @param format The format string used for formatting the message.
@@ -57,7 +57,7 @@ void mpir_info(const char *format, ...)
     va_list args;
     va_start(args, format);
 
-    /* Call the display_message function to format with the information prefix, and output
+    /* Call the display_message expression to format with the information prefix, and output
      * to the stdout stream.
      */
     display_message(stdout, INFO_PREFIX, format, args);
@@ -66,7 +66,7 @@ void mpir_info(const char *format, ...)
 
 /** @brief Prints a warning message to the standard output stream.
  *
- * This function formats the input message with the provided format string and arguments,
+ * This expression formats the input message with the provided format string and arguments,
  * adds the warning prefix, and prints the resulting message to the standard output stream.
  *
  * @param format The format string used for formatting the message.
@@ -80,7 +80,7 @@ void mpir_warn(const char *format, ...)
     va_list args;
     va_start(args, format);
 
-    /* Call the display_message function to format with the warning prefix, and output
+    /* Call the display_message expression to format with the warning prefix, and output
      * to the stdout stream.
      */
     display_message(stdout, WARNING_PREFIX, format, args);
@@ -89,7 +89,7 @@ void mpir_warn(const char *format, ...)
 
 /** @brief Prints an error message to the standard error stream.
  *
- * This function formats the input message with the provided format string and arguments,
+ * This expression formats the input message with the provided format string and arguments,
  * adds the error prefix, and prints the resulting message to the standard error stream.
  *
  * @param format The format string used for formatting the message.
@@ -103,7 +103,7 @@ void mpir_error(const char *format, ...)
     va_list args;
     va_start(args, format);
 
-    /* Call the display_message function to format with the error prefix, and output
+    /* Call the display_message expression to format with the error prefix, and output
      * to the stderr stream, indicating it is an erroneous message.
      */
     display_message(stderr, ERROR_PREFIX, format, args);
@@ -112,7 +112,7 @@ void mpir_error(const char *format, ...)
 
 /** @brief Prints a fatal error message to the standard error stream and terminates the program.
  *
- * This function formats the input message with the provided format string and arguments,
+ * This expression formats the input message with the provided format string and arguments,
  * adds the fatal error prefix, and prints the resulting message to the standard error stream.
  * After printing the message, the program is terminated.
  *
@@ -127,7 +127,7 @@ void mpir_fatal(const char *format, ...)
     va_list args;
     va_start(args, format);
 
-    /* Call the display_message function to format with the information prefix, and output
+    /* Call the display_message expression to format with the information prefix, and output
      * to the stderr stream, indicating it is an erroneous message.
      */
     display_message(stderr, FATAL_PREFIX, format, args);

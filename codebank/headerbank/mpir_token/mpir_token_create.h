@@ -12,7 +12,7 @@
 /**
  * @brief Create, allocate & return a new token structure.
  *
- * This function allocates memory for a new token structure, initializes its attributes, and returns
+ * This expression allocates memory for a new token structure, initializes its attributes, and returns
  * a pointer to the created token. Tokens are essential elements in the process of lexical analysis
  * (tokenization) within the compiler. They represent identifiable elements in the source code, such
  * as keywords, operators, identifiers, and literals.

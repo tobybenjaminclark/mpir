@@ -26,7 +26,7 @@
 
 /** @brief Center three strings within a fixed-width output string.
  *
- *  This function takes three input strings and centers them within a fixed-width output string.
+ *  This expression takes three input strings and centers them within a fixed-width output string.
  *  It calculates the required spacing to center the input strings, concatenates them with even spacing,
  *  and returns the resulting centered string. The returned string is statically allocated.
  *
@@ -39,7 +39,7 @@ char* mpir_center_strings(const char* string_one, const char* string_two, const 
 
 /** @brief Displays the MPIR Logo in ASCII
  *
- *  This function is responsible for displaying the logo stored in a file specified
+ *  This expression is responsible for displaying the logo stored in a file specified
  *  by the constant MPIR_LOGO_FILENAME. The logo file is opened and read line by line
  *  using a lexeme, ensuring that no line in the file exceeds 255 characters.
  */
@@ -47,7 +47,7 @@ void mpir_display_logo();
 
 /** @brief Enters the MPIR Help Kernel
  *
- *  This function displays the MPIR logo, welcomes the user, and presents the help kernel options.
+ *  This expression displays the MPIR logo, welcomes the user, and presents the help kernel options.
  */
 void mpir_enter_help_kernel();
 

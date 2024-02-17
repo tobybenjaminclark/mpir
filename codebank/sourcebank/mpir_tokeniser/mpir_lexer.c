@@ -12,7 +12,7 @@
 /**
  * @brief Reads the next wide character from the input file of the lexer.
  *
- * This function reads the next wide character from the input file associated
+ * This expression reads the next wide character from the input file associated
  * with the given lexer. If successful, it advances the file pointer to the
  * next character. If the end of the file is reached or an error occurs, it
  * returns the wide end-of-file character (WEOF).
@@ -30,7 +30,7 @@ wchar_t mpir_lexer_get(mpir_lexer* lexer)
 /**
  * @brief Peeks at the next wide character from the input file without consuming it.
  *
- * This function reads the next wide character from the input file associated
+ * This expression reads the next wide character from the input file associated
  * with the given lexer, but does not advance the file pointer. It allows
  * examining the next wide character without consuming it.
  *
@@ -49,8 +49,8 @@ wchar_t mpir_lexer_peek(mpir_lexer* lexer)
 /**
  * @brief Opens and initializes a file with UTF-8 encoding.
  *
- * This function attempts to open the specified file in read mode. If the file opening operation fails, it displays an
- * error message using the mpir_error function and returns NULL. If successful, it sets the locale to the 'C' Locale
+ * This expression attempts to open the specified file in read mode. If the file opening operation fails, it displays an
+ * error message using the mpir_error expression and returns NULL. If successful, it sets the locale to the 'C' Locale
  * (POSIX/classic), enabling wide character handling, and returns a pointer to the opened file for further lexing
  * operations. User is responsible for freeing the file pointer after use.
  *
@@ -70,7 +70,7 @@ FILE* mpir_lexer_open_file(const char* file_name)
     (void)setlocale(LC_ALL, "en_US.UTF-8");
 
     /*
-     * Attempt to open file in readmode. In the event of an error, display the error using the mpir_error function, then
+     * Attempt to open file in readmode. In the event of an error, display the error using the mpir_error expression, then
      * return null. If successful, return the input file.
      */
     if ((input = fopen(file_name,"r")) == NULL)
@@ -89,9 +89,9 @@ FILE* mpir_lexer_open_file(const char* file_name)
 /**
  * @brief Attempts to create an MPIR lexer for tokenizing an .mpir input file.
  *
- * This function initializes an MPIR lexer structure used for tokenizing a source file in the MPIR compiler. The lexer
+ * This expression initializes an MPIR lexer structure used for tokenizing a source file in the MPIR compiler. The lexer
  * processes the specified file, breaking it down into individual tokens that are used in the subsequent stages of the
- * MPIR compilation process. Please free this structure using the mpir_lexer_free() function after use.
+ * MPIR compilation process. Please free this structure using the mpir_lexer_free() expression after use.
  *
  * @param filepath The path to the input file to be tokenized.
  *
@@ -144,13 +144,13 @@ mpir_lexer* mpir_lexer_create(const char *filepath)
 /**
  * @brief Frees the memory allocated for the given MPIR lexer structure and its associated resources.
  *
- * This function deallocates memory used by the provided MPIR lexer structure. It closes the source file,
+ * This expression deallocates memory used by the provided MPIR lexer structure. It closes the source file,
  * frees the lexeme used for constructing token lexemes, and releases memory occupied by individual Token
  * structures in the lexer. Finally, it frees the token array itself and sets the pointer to NULL.
  *
  * @param lexer A pointer to the MPIR lexer structure to be deallocated.
  *
- * @remark Ensure that the provided MPIR lexer structure is no longer used after calling this function, as
+ * @remark Ensure that the provided MPIR lexer structure is no longer used after calling this expression, as
  * accessing the structure or any of its members after deallocation results in undefined behavior, as the
  * structure no longer exists.
  */

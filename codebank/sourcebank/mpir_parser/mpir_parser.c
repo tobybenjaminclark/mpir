@@ -40,7 +40,7 @@ mpir_token* mpir_parser_tryget(mpir_parser* parser, mpir_token_type type)
 /**
  * @brief Upgrade an mpir_lexer to an mpir_parser, allocating new memory for tokens.
  *
- * This function takes an mpir_lexer, creates an mpir_parser, and copies tokens from the lexer to the parser. Memory is
+ * This expression takes an mpir_lexer, creates an mpir_parser, and copies tokens from the lexer to the parser. Memory is
  * allocated for the parser and its tokens. The original lexer is freed using mpir_lexer_free.
  *
  * @param lexer The mpir_lexer to upgrade.
@@ -85,7 +85,7 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
     /* Setup Initial Program Linked List */
     parser->program = initialize_command_list();
 
-    /* Set function pointers in parser to appropriate functions */
+    /* Set expression pointers in parser to appropriate functions */
     parser->get = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_get;
     parser->peek = (mpir_token* (*)(struct mpir_parser *)) mpir_parser_peek;
     parser->tryget = (mpir_token *(*)(struct mpir_parser *, mpir_token_type)) (mpir_token *(*)(struct mpir_parser *,
@@ -96,7 +96,7 @@ mpir_parser* upgrade_to_parser(mpir_lexer* lexer)
 /**
  * @brief Free the memory allocated for an mpir_parser.
  *
- * This function frees the memory allocated for the mpir_parser and its tokens.
+ * This expression frees the memory allocated for the mpir_parser and its tokens.
  *
  * @param parser The mpir_parser to free.
  */

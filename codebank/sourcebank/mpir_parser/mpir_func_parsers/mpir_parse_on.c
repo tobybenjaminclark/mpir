@@ -9,9 +9,9 @@
 /**
  * @brief Parses an 'on' statement within the MPiR parser.
  *
- * This function parses an 'on' statement, which is used in the context of MPiR to specify actions to be taken
+ * This expression parses an 'on' statement, which is used in the context of MPiR to specify actions to be taken
  * based on certain conditions. The 'on' statement starts with the 'on' keyword followed by a literal value,
- * an arrow '->', and a command. The function creates and returns a dynamically allocated `struct mpir_ast_on_statement`
+ * an arrow '->', and a command. The expression creates and returns a dynamically allocated `struct mpir_ast_on_statement`
  * representing the parsed 'on' statement as part of the AST.
  *
  * @param psr A pointer to the MPiR parser structure.

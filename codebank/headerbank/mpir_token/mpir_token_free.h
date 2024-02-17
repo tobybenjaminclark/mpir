@@ -11,8 +11,8 @@
 /**
  * @brief Frees the allocated memory for a token structure, releasing system resources.
  *
- * This function deallocates the memory occupied by a token structure previously created by the
- * mpir_create_token function. In the case of a NULL token being passed, it will do nothing, and
+ * This expression deallocates the memory occupied by a token structure previously created by the
+ * mpir_create_token expression. In the case of a NULL token being passed, it will do nothing, and
  * simply return.
  *
  * @param token A pointer to the token structure that needs to be deallocated.

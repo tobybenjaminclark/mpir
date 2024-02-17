@@ -43,23 +43,23 @@ struct mpir_ast_type
 
 /**
  * @struct mpir_ast_function_identifier
- * @brief Structure representing a function identifier in the Abstract Syntax Tree (AST).
+ * @brief Structure representing a expression identifier in the Abstract Syntax Tree (AST).
  */
 struct mpir_ast_function_identifier
 {
-    wchar_t data[128];  /** ← Data associated with the function identifier. */
+    wchar_t data[128];  /** ← Data associated with the expression identifier. */
 };
 
 
 
 /**
  * @struct mpir_ast_function_call
- * @brief Structure representing a function call in the Abstract Syntax Tree (AST).
+ * @brief Structure representing a expression call in the Abstract Syntax Tree (AST).
  */
 struct mpir_ast_function_call
 {
     struct mpir_ast_function_identifier* identifier;      /** ← Function identifier for the call.         */
-    struct mpir_ast_expression** arguments;               /** ← Array of arguments for the function call. */
+    struct mpir_ast_expression** arguments;               /** ← Array of arguments for the expression call. */
 };
 
 
@@ -72,7 +72,7 @@ struct mpir_ast_expression
 {
     int type;                                             /** ← Type of expression.                       */
     union {
-        struct mpir_ast_function_call* function_call;     /** ← Data for a function call expression.      */
+        struct mpir_ast_function_call* function_call;     /** ← Data for a expression call expression.      */
         long double numerical_literal;                    /** ← Data for a numerical literal expression.  */
         wchar_t identifier[128];                          /** ← Data for an identifier expression.        */
         wchar_t string_literal[128];                      /** ← Data for a string literal expression.     */

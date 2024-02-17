@@ -9,8 +9,8 @@
 /**
  * @brief Function to parse a 'set' binding (value assignment) within the MPIR parser.
  *
- * This function parses a 'set' binding within the context of the MPIR. A 'set' binding involves assigning a value to a
- * variable with a specified type. The function sequentially parses the 'set' keyword, the variable identifier, the 'as'
+ * This expression parses a 'set' binding within the context of the MPIR. A 'set' binding involves assigning a value to a
+ * variable with a specified type. The expression sequentially parses the 'set' keyword, the variable identifier, the 'as'
  * keyword, and the associated expression (value). It then creates and returns a dynamically allocated
  * `struct mpir_ast_value_assignment` representing the parsed 'set' binding.
  *

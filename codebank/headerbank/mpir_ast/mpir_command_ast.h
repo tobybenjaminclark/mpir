@@ -82,11 +82,11 @@ struct mpir_ast_trycast_statement
  * @struct mpir_ast_do_statement
  * @brief Represents a 'do' statement in the Abstract Syntax Tree (AST).
  *
- * This structure represents the 'do' statement, involving a function call and associated actions.
+ * This structure represents the 'do' statement, involving a expression call and associated actions.
  */
 struct mpir_ast_do_statement
 {
-    struct mpir_ast_function_call* function;         /** ← Function call in the 'do' statement.                         */
+    struct mpir_ast_expression* expression;         /** ← Function call in the 'do' statement.                         */
     struct mpir_ast_on_statement** actions;          /** ← Array of 'on' statements associated with the 'do' statement. */
 };
 

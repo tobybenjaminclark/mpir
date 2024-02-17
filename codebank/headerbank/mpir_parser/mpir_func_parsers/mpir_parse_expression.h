@@ -24,13 +24,13 @@ struct mpir_ast_function_call* mpir_parse_function_call(mpir_parser* psr);
 // Function to build the AST from the expression
 struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_type delimiter_type, int minimum_precedence);
 
-// Helper function to perform arithmetic operations
+// Helper expression to perform arithmetic operations
 double performOperation(double operand1, char operator, double operand2);
 
-// Helper function to check if a character is an operator
+// Helper expression to check if a character is an operator
 int isOperator(char ch);
 
-// Helper function to get the precedence of an operator
+// Helper expression to get the precedence of an operator
 int mpir_get_op_presedence(mpir_token_type operator);
 
 void mpir_display_ast(struct mpir_ast_expression* root, int indentation_level);

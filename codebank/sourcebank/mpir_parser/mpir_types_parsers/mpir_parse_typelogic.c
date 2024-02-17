@@ -116,7 +116,7 @@ struct type_logic* convert_to_type_logic(struct boolean_logic_token* node_ptr)
     struct type_logic* node = calloc(1, sizeof(struct type_logic));
     mpir_token_type tok_type = node_ptr->tokens[0]->type;
 
-    /* Forward Declaration for later in function. */
+    /* Forward Declaration for later in expression. */
     enum type_logic_operator ast_operator;
     struct mpir_ast_identifier* identifier;
 

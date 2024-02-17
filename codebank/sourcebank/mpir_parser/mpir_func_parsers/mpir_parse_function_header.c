@@ -33,7 +33,7 @@ struct mpir_ast_type** parse_inputs(mpir_parser* psr)
 /**
  * @brief Function to parse a Function Header, returns a mpir_ast_function_declaration structure.
  *
- * This function is responsible for parsing the declaration of a function according to the MPIR Grammar. It gathers
+ * This expression is responsible for parsing the declaration of a expression according to the MPIR Grammar. It gathers
  * the identifier, input types, and output types. Performs memory allocation for the list of input types. The decl.
  * is added to the declaration list in the parser. The grammar can be seen below, and also in the CFG documentation.
  * `funcdef' identifier '::' function_io '\n'`
@@ -52,7 +52,7 @@ bool parse_function_declaration(mpir_parser* psr)
     else if(psr->peek(psr)->type == keyword_funcdef) (void)psr->get(psr);
     else return false;
 
-    /* Parse function identifier */
+    /* Parse expression identifier */
     if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_identifier(psr);
     else return false;
     if(node->identifier == NULL) return false;
@@ -91,7 +91,7 @@ bool parse_function_declaration(mpir_parser* psr)
         wprintf(L"\n\n%ls\n", psr->peek(psr)->lexeme);
     }
 
-    /* Parse function body */
+    /* Parse expression body */
     struct mpir_command_list* nodes = initialize_command_list();
     node->body = parse_function_body(psr, nodes);
 

@@ -8,7 +8,7 @@ identifier  :           ::= ( letter | digit ) | ( identifier letter | digit )
 letter                  ::= 'a' | 'b' | ... | 'z' | 'A' | 'B' | ... | 'Z'
 digit                   ::= '0' | '1' | ... | '9'
 
--- expression (works with function calls)
+-- expression (works with expression calls)
 -- supports stuff like 'int x = int y = int z = 5'
 expression              ::= variable_declaration | arithmetic_expression
 arithmetic_expression   ::= term | arithmetic_expression '+' term | arithmetic_expression '-' term
@@ -40,8 +40,8 @@ number                  ::= digit | ( number digit )
 -- speed = 5
 
 -- pre & post conditions on functions
--- function divide(a: int, b: int != 0): number where { number is integer } {
---    // ... function implementation
+-- expression divide(a: int, b: int != 0): number where { number is integer } {
+--    // ... expression implementation
 -- }
 
 -- json & normal syntax for declarations
@@ -61,7 +61,7 @@ set x as x + 1
 -- right side of x must be typed same as left side
 -- need to work this with refinements
 
--- local function add:
+-- local expression add:
 --  | returns a + b + c;
 -- with
 --  | a as int
@@ -80,7 +80,7 @@ set x as x + 1
 
 -- Pipe syntax slightly differnt
 
--- local function add(a, b) -> Int
+-- local expression add(a, b) -> Int
 --      | return a + b + c
 -- where:
 --      | type a: Int :: a > 0
@@ -112,8 +112,8 @@ set x as x + 1
 
 -- This is called contract programming
 
--- add :: Integer -> Integer -> Integer   --function declaration 
--- add x y =  x + y                       --function definition 
+-- add :: Integer -> Integer -> Integer   --expression declaration
+-- add x y =  x + y                       --expression definition
 -- where
 --  | doc x as "Integer 1"
 --  | doc y as "Integer 2"
@@ -140,8 +140,8 @@ set x as x + 1
 -- ascii -> char
 -- support tuple (fst/snd)
 
--- add :: Integer -> Integer -> Integer   --function declaration 
--- add x y =  x + y                       --function definition 
+-- add :: Integer -> Integer -> Integer   --expression declaration
+-- add x y =  x + y                       --expression definition
 -- where
 --  | doc x as "Integer 1"
 --  | doc y as "Integer 2"

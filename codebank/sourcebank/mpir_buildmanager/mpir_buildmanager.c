@@ -15,7 +15,7 @@ int mpir_build(char* input_ast, char* output_file)
     char command[100];
     snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "output.py");
 
-    // Use the system function to run the command
+    // Use the system expression to run the command
     int result = system(command);
 
     // Check the result of the system call

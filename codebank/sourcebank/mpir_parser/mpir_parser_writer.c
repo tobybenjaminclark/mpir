@@ -176,7 +176,40 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
         case DO_STATEMENT:
             printf("");
             struct wjson* wjson_node5 = wjson_initialize();
+
             wjson_append_string(wjson_node5, L"TYPE", L"DO_STATEMENT");
+
+
+            int argument_count4 = 0;
+            struct wjson* on_statement2;
+            struct wjson* on_statements2 = wjson_initialize_list();
+            while (node->data.do_statement->actions[argument_count4] != NULL)
+            {
+                on_statement2 = wjson_initialize();
+                wjson_append_string(on_statement2, L"TYPE", L"ON_STATEMENT");
+                if(node->data.do_statement->actions[argument_count4]->stored_type == string_literal)
+                {
+                    wjson_append_string(on_statement2, L"MATCH_TYPE", L"STRING_LITERAL");
+                    wjson_append_string(on_statement2, L"MATCH_VALUE",
+                                        node->data.do_statement->actions[argument_count4]->literal.mpir_string_literal);
+                }
+                else if(node->data.do_statement->actions[argument_count4]->stored_type == numerical_literal)
+                {
+                    wjson_append_string(on_statement2, L"MATCH_TYPE", L"NUMERICAL_LITERAL");
+                    wjson_append_numerical(on_statement2, L"MATCH_VALUE", node->data.do_statement->actions[argument_count4]->literal.mpir_numerical_literal);
+
+                }
+
+                struct wjson* wjson_do_commands  = wjson_initialize_list();
+                mpir_wjsonify_command_list(node->data.do_statement->actions[argument_count4]->commands, wjson_do_commands);
+
+                wjson_append_list(on_statement2, L"MATCH_COMMANDS", wjson_do_commands);
+
+                wjson_list_append_object(on_statements2, on_statement2);
+                argument_count4++;
+            }
+
+            wjson_append_list(wjson_node5, L"ON_STATEMENTS", on_statements2);
             wjson_list_append_object(wjson_list, wjson_node5);
             return;
     }

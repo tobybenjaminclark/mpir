@@ -112,7 +112,7 @@ struct mpir_ast_expression* mpir_create_identifier_node(struct mpir_ast_identifi
     return node;
 }
 
-// Function to create a new function call node
+// Function to create a new expression call node
 struct mpir_ast_expression* mpir_create_function_call_node(struct mpir_ast_function_call* call)
 {
     struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
@@ -150,7 +150,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         }
         else if(psr->peek(psr)->type == IDENTIFIER)
         {
-            /* Term is function call */
+            /* Term is expression call */
             if(mpir_parser_peek_k(psr,1)->type == open_bracket)
             {
                 /* Parse Function call */

@@ -17,7 +17,7 @@
 /**
  * @brief Parses a do statement within the MPIR parser.
  *
- * This function parses a `do` statement from the provided MPIR parser, including the associated function call
+ * This expression parses a `do` statement from the provided MPIR parser, including the associated expression call
  * and the following list of `on` statements. It creates, allocates and returns a `mpir_ast_do_statement` structure,
  * which gets returned. The statement is parsed in accoradance with the MPIR grammar.
  *

@@ -12,8 +12,8 @@
 /**
  * @brief Function to parse a 'let' binding (type assignment) within the MPIR parser.
  *
- * This function parses a 'let' binding within the context of MPIR. A 'let' binding involves declaring a variable
- * with a specified type. The function sequentially parses the 'let' keyword, the variable identifier, the 'as' keyword,
+ * This expression parses a 'let' binding within the context of MPIR. A 'let' binding involves declaring a variable
+ * with a specified type. The expression sequentially parses the 'let' keyword, the variable identifier, the 'as' keyword,
  * and the associated type identifier. It then creates and returns a dynamically allocated `struct mpir_ast_type_assignment`
  * representing the parsed 'let' binding as part of the AST.
  *

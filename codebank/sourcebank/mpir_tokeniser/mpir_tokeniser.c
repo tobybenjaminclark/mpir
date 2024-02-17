@@ -11,14 +11,14 @@
 /**
  * @brief Null-terminates a wide-character string (the lexeme in this use case)
  *
- * This function takes a wide character string as input and adds a null terminator at the end of the string to ensure it
+ * This expression takes a wide character string as input and adds a null terminator at the end of the string to ensure it
  * is properly null-terminated. The input string must be allocated with enough memory to accommodate a null terminator.
  *
  * @param input A pointer to the wide character string to be null-terminated.
  * @return A pointer to the null-terminated wide character string.
  *
  * @warning The input string must have enough allocated memory to accommodate the null terminator. Otherwise, this
- * function may result in undefined behavior by writing beyond the allocated memory.
+ * expression may result in undefined behavior by writing beyond the allocated memory.
  */
 wchar_t* mpir_terminate_lexeme(wchar_t* input)
 {
@@ -35,7 +35,7 @@ wchar_t* mpir_terminate_lexeme(wchar_t* input)
 /**
  * @brief Processes & resets the current lexeme buffer and creates a token of the specified type.
  *
- * This function creates a token of the given type using the content of the current lexeme buffer. The lexeme buffer is
+ * This expression creates a token of the given type using the content of the current lexeme buffer. The lexeme buffer is
  * null-terminated, and the token is created with the null-terminated string. The created token is then appended to the
  * lexer's token list, and the lexeme buffer is reset for the next token.
  *
@@ -63,9 +63,9 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
 /**
  * @brief Attempts to consume the expected character from the input stream.
  *
- * This function checks if the next character in the input stream matches the expected character. If the characters
+ * This expression checks if the next character in the input stream matches the expected character. If the characters
  * match, it consumes the character, appends it to the lexeme, and increments the current index. If the next character
- * does not match the expected character, the function returns false. If the buffer is full, shows a fatal error.
+ * does not match the expected character, the expression returns false. If the buffer is full, shows a fatal error.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
  * @param expected_character The character expected to be present in the input stream.
@@ -117,7 +117,7 @@ int mpir_wchar_in_list(wchar_t item, const wchar_t* list)
 /**
  * @brief Checks if a given character is an identifiable symbol for creating identifiers.
  *
- * This function compares the input character with a list of non-identifiable symbols to determine if it is an
+ * This expression compares the input character with a list of non-identifiable symbols to determine if it is an
  * identifiable symbol using a basic implementation of linear search.
  *
  * @param target The character to be checked for identifiability.
@@ -145,7 +145,7 @@ bool mpir_is_identifiable_char(wchar_t target)
 /**
  * @brief Checks if a given string matches any keyword in the keyword list.
  *
- * This function compares the input string with a list of predefined keywords, defined as a macro in the header file.
+ * This expression compares the input string with a list of predefined keywords, defined as a macro in the header file.
  * Implements a basic linear search algorithm.
  *
  * @param target The string to be checked against the keyword list.
@@ -173,15 +173,15 @@ int mpir_is_keyword(const wchar_t* target)
 /**
  * @brief Consumes the next character in the input stream of the lexer and appends it to the buffer.
  *
- * This function consumes the next character in the input stream and proxies the call to mpir_lexer_tryconsume function,
- * anticipating the next character using the lexer->peek(lexer) function.
+ * This expression consumes the next character in the input stream and proxies the call to mpir_lexer_tryconsume expression,
+ * anticipating the next character using the lexer->peek(lexer) expression.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
  * @return true on successful consumption, false on failure.
  */
 bool mpir_lexer_consume(mpir_lexer* lexer)
 {
-    /* Consumes any character, proxys to the mpir_lexer_tryconsume function */
+    /* Consumes any character, proxys to the mpir_lexer_tryconsume expression */
     return mpir_lexer_tryconsume(lexer, lexer->peek(lexer));
 }
 
@@ -190,7 +190,7 @@ bool mpir_lexer_consume(mpir_lexer* lexer)
 /**
  * @brief Tokenizes division operator ('/') and code comments ('//') in the input stream.
  *
- * This function tokenizes the division operator ('/') and code comments ('//') in the input stream. It checks for the
+ * This expression tokenizes the division operator ('/') and code comments ('//') in the input stream. It checks for the
  * presence of a '/', and if the next character is also '/', it consumes characters until the end of the line or end of
  * file, treating them as a code comment. If the next character is not '/', it tokenizes as division operator.
  *
@@ -223,7 +223,7 @@ int mpir_tokenise_comment_and_division(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise string literals ("str" and 'str') from the input stream.
  *
- * This function tokenizes string literals enclosed in double quotes ("str") or single quotes ('str') in the input
+ * This expression tokenizes string literals enclosed in double quotes ("str") or single quotes ('str') in the input
  * stream. It identifies the opening quote character, consumes characters until a matching closing quote is found.
  * The characters within the quotes are tokenized as a string literal.
  *
@@ -267,7 +267,7 @@ int mpir_tokenise_string_literal(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise colon operators (':' and '::') in the input stream.
  *
- * This function tokenizes the colon operator ':' and the double colon operator '::' in the input stream. It verifies
+ * This expression tokenizes the colon operator ':' and the double colon operator '::' in the input stream. It verifies
  * the presence of the operator and consumes the appropriate characters. If there are two consecutive colons, they are
  * both consumed and tokenized as a keyword.
  *
@@ -289,7 +289,7 @@ int mpir_tokenise_colon(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise equality operators ('==' and '=' ) in the input stream.
  *
- * This function tokenizes the equality operators '=='/'=' in the input stream. It verifies the presence of the operator
+ * This expression tokenizes the equality operators '=='/'=' in the input stream. It verifies the presence of the operator
  * and consumes the appropriate characters. The equality operator is then tokenized as a keyword.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -312,7 +312,7 @@ int mpir_tokenise_equality(mpir_lexer* lexer)
 /**
  * @brief Attempst to tokenise boolean comparator operators ('>', '<', '>=', and '<=') in the input stream.
  *
- * This function tokenizes boolean comparators such as '>', '<', '>=', and '<=' in the input stream. It verifies the
+ * This expression tokenizes boolean comparators such as '>', '<', '>=', and '<=' in the input stream. It verifies the
  * presence of these operators and consumes the appropriate characters. If the next character is '=', it is also
  * consumed and the operator is tokenized. The comparator operators are then tokenized as operators.
  *
@@ -341,7 +341,7 @@ int mpir_tokenise_comparator(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise negation operators ('!','!=','¬' and '¬=') in the input stream.
  *
- * This function tokenizes negation operators such as '!', '¬' in the input stream. It verifies the
+ * This expression tokenizes negation operators such as '!', '¬' in the input stream. It verifies the
  * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -363,7 +363,7 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise operators (+ - * / ^ ∃ ∀) from the input stream.
  *
- * This function tokenizes operators such as '+' '/' '-' '*' and '^' in the input stream. It verifies the
+ * This expression tokenizes operators such as '+' '/' '-' '*' and '^' in the input stream. It verifies the
  * presence of these operators and consumes the appropriate characters. The negation operators are then tokenized.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -405,7 +405,7 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise brackets/braces ( ) { } from the input stream.
  *
- * This function tokenizes brackets such as ( ) { } in the input stream. It verifies the
+ * This expression tokenizes brackets such as ( ) { } in the input stream. It verifies the
  * presence of the bracket and consumes the appropriate characters. The negation operators are then tokenized.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -441,7 +441,7 @@ int mpir_tokenise_brackets(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise boolean connectives from the input stream.
  *∂
- * This function tokenizes boolean connectives in the input stream. It verifies the
+ * This expression tokenizes boolean connectives in the input stream. It verifies the
  * presence of the connective and consumes the appropriate characters. The negation operators are then tokenized.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
@@ -464,7 +464,7 @@ int mpir_tokenise_connectives(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise numerical literals e.g. (5, 32.1) in the input stream.
  *
- * This function processes the input stream as a numerical literal, recognizing both integers and decimals.
+ * This expression processes the input stream as a numerical literal, recognizing both integers and decimals.
  * It checks for a sequence of digits representing the integral part, followed by an optional decimal point ('.' or '·'),
  * and then scans for digits representing the fractional part.
  *
@@ -497,7 +497,7 @@ int mpir_tokenise_numerical_literal(mpir_lexer* lexer)
 /**
  * @brief Attempts to tokenise negative numerical literals and arrow symbols (->) in the input stream.
  *
- * This function checks if the next character in the input stream after '-' represents an arrow symbol or a negative
+ * This expression checks if the next character in the input stream after '-' represents an arrow symbol or a negative
  * numerical literal. If the next character is '>', it tokenizes "->" as a keyword. If it is a digit, it tokenizes it as
  * a negative numerical literal. If the next character is neither '>', nor a digit, it returns an error.
  *
@@ -549,9 +549,9 @@ mpir_token_type mpir_match_keyword(wchar_t* lexeme)
 /**
  * @brief Attempts to tokenise a keyword/identifier from the input stream.
  *
- * This function examines the characters in the input stream starting from the current position
+ * This expression examines the characters in the input stream starting from the current position
  * and processes them as an identifier or a keyword until a non-identifiable character is encountered.
- * Identifiable characters are determined using the mpir_is_identifiable_char() function.
+ * Identifiable characters are determined using the mpir_is_identifiable_char() expression.
  *
  * @param lexer A pointer to the lexer structure that provides access to the input stream.
  * @return 0 on failure to tokenise, 1 in the event of a token being successfully created.
@@ -603,12 +603,12 @@ int mpir_tokenise_space(mpir_lexer* lexer, int count)
 /**
  * @brief Attempts to tokenise MPIR source code from a lexer input stream.
  *
- * This function tokenizes characters from the given lexer `lxr` based on various rules and states. It handles spaces,
+ * This expression tokenizes characters from the given lexer `lxr` based on various rules and states. It handles spaces,
  * newline characters, complex tokenization states for comments, string literals, operators, identifiers, and specials.
  *
  * If a space is detected, it is voided/ignored. If a newline character '\n' is detected, it is tokenized as a newline.
  * Complex tokenization states such ascomments, string literals, operators, and identifiers are handled using specific
- * functions. Unidentifiable characters are tokenized as keywords. If an error occurs during tokenization, the function
+ * functions. Unidentifiable characters are tokenized as keywords. If an error occurs during tokenization, the expression
  * returns 0 (Failure). Otherwise, it returns 1 (Success).
  *
  * @param lxr Pointer to the lexer structure containing the input stream.

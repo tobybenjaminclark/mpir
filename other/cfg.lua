@@ -32,7 +32,7 @@ lines_of_code               ::=         line_of_code | (line_of_code lines_of_co
 
 import_directive            ::=         "using " "'" relative_file_path "'" "\n"
 
--- function KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
+-- expression KEYWORD IDENTIFIER KEYWORD (IDENTIFIER "->" IDENTIFIER)*
 function_declaration        ::=         "funcdef" function_identifier "::" function_io '\n'
 function_identifier         ::=         ( letter | digit | symbol ) | ( identifier letter | digit | symbol) '\n'
 function_io                 ::=         ( type_identifiers ("->"|"→") type_identifiers )

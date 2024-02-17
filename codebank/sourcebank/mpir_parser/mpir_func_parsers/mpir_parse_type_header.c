@@ -51,7 +51,7 @@ bool parse_type_header(mpir_parser* psr)
     else if(psr->peek(psr)->type == keyword_typedef) (void)psr->get(psr);
     else return false;
 
-    /* Parse function identifier */
+    /* Parse expression identifier */
     if(psr->peek(psr)->type == IDENTIFIER) node.identifier = node.identifier = parse_identifier(psr);
     else return false;
     if(node.identifier == NULL) return false;

@@ -14,19 +14,19 @@
 
 /**
  * @struct mpir_ast_function_declaration
- * @brief Represents a function declaration in the Abstract Syntax Tree (AST).
+ * @brief Represents a expression declaration in the Abstract Syntax Tree (AST).
  *
- * This structure captures information about a function declaration, including its identifier, input types,
+ * This structure captures information about a expression declaration, including its identifier, input types,
  * return type, body, and associated documentation section.
  */
 struct mpir_ast_function_declaration
 {
-    struct mpir_ast_identifier* identifier;    /** ← Identifier of the function.                                        */
+    struct mpir_ast_identifier* identifier;    /** ← Identifier of the expression.                                        */
     struct mpir_ast_identifier** arguments;    /** ← Identifiers of Arguments (Types sequential to input_types          */
-    struct mpir_ast_type** input_types;        /** ← Array of input types for the function.                             */
-    struct mpir_ast_type* return_type;         /** ← Return type of the function.                                       */
-    struct mpir_command_list* body;            /** ← Pointer to the body of the function.                               */
-    struct mpir_ast_docsection* docsection;    /** ← Pointer to the documentation section associated with the function. */
+    struct mpir_ast_type** input_types;        /** ← Array of input types for the expression.                             */
+    struct mpir_ast_type* return_type;         /** ← Return type of the expression.                                       */
+    struct mpir_command_list* body;            /** ← Pointer to the body of the expression.                               */
+    struct mpir_ast_docsection* docsection;    /** ← Pointer to the documentation section associated with the expression. */
 };
 
 /**
