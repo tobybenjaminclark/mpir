@@ -9,6 +9,54 @@
 #include <stdio.h>
 
 /*
+ * enum type_logic_operator
+{
+    GT,         /** ← Greater than              /
+GTEQ,       /** ← Greater than or equal to  *
+LT,         /** ← Less than                 *
+LTEQ,       /** ← Less than or equal to     *
+EQ,         /** ← Equal to                  *
+AND,        /** ← Logical AND               *
+OR,         /** ← Logical OR                *
+NOT,        /** ← Logical NOT               *
+FORALL,     /** ← Universal quantifier      *
+EXISTS,     /** ← Existential quantifier    *
+INVALID     /** ← Invalid operator          *
+};
+
+/**
+ * @enum type_logic_type
+ * @brief Enumeration of types in type logic expressions.
+ *
+enum type_logic_type
+{
+    type_OPERATOR,      /** ← Operator type          *
+    type_IDENTIFIER,    /** ← Identifier type        *
+    type_NUMERICAL,     /** ← Numerical literal type *
+    type_STRING         /** ← String literal type    *
+};
+ *
+ * struct type_logic
+{
+    enum type_logic_type type; /**< Type of the logic node.
+union {
+    enum type_logic_operator op;        * ← Logic operator data.                                   *
+    struct mpir_ast_identifier* id;     ** ← Identifier data.                                       *
+    wchar_t* str_literal;               ** ← String literal data.                                   *
+    double num_literal;                 ** ← Numerical literal data.                                *
+} data;                                 ** ← Union of possible data associated with the logic node. *
+struct type_logic* left;                ** ← Pointer to the left subexpression.                     *
+struct type_logic* right;               ** ← Pointer to the right subexpression.                    *
+};
+
+*/
+struct wjson* mpir_wjsonify_type_logic(struct type_logic* expr)
+{
+    /* Do stuff */
+    return NULL;
+}
+
+/*
    struct mpir_ast_expression
     {
         int type;
