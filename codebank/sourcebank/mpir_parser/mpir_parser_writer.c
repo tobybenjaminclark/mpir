@@ -9,9 +9,9 @@
 #include <stdio.h>
 
 /*
- * enum type_logic_operator
+enum type_logic_operator
 {
-    GT,         /** ← Greater than              /
+GT,         /** ← Greater than              /
 GTEQ,       /** ← Greater than or equal to  *
 LT,         /** ← Less than                 *
 LTEQ,       /** ← Less than or equal to     *
@@ -50,10 +50,57 @@ struct type_logic* right;               ** ← Pointer to the right subexpressio
 };
 
 */
-struct wjson* mpir_wjsonify_type_logic(struct type_logic* expr)
+const wchar_t* get_str_from_logic_operator(enum type_logic_operator op)
 {
-    /* Do stuff */
-    return NULL;
+    switch (op) {
+        case GT:
+            return L">";
+        case GTEQ:
+            return L"≥";
+        case LT:
+            return L"<";
+        case LTEQ:
+            return L"≤";
+        case EQ:
+            return L"=";
+        case AND:
+            return L"∧";
+        case OR:
+            return L"∨";
+        case NOT:
+            return L"¬";
+        case FORALL:
+            return L"∀";
+        case EXISTS:
+            return L"∃";
+        default:
+            return L"Invalid operator";
+    }
+}
+
+struct wjson* mpir_wjsonify_type_logic(struct type_logic* logic)
+{
+    struct wjson* wjson_node = wjson_initialize();
+
+    switch(logic->type)
+    {
+        case type_OPERATOR:
+            wjson_append_string(wjson_node, L"DATA", get_str_from_logic_operator(logic->data.op));
+            break;
+        case type_IDENTIFIER:
+            wjson_append_string(wjson_node, L"DATA", logic->data.id->data);
+            break;
+        case type_STRING:
+            wjson_append_string(wjson_node, L"DATA", logic->data.str_literal);
+            break;
+        case type_NUMERICAL:
+            wjson_append_numerical(wjson_node, L"DATA", logic->data.num_literal);
+            break;
+    }
+
+    if(logic->left != NULL) wjson_append_object(wjson_node, L"LEFT", mpir_wjsonify_type_logic(logic->left));
+    if(logic->right != NULL) wjson_append_object(wjson_node, L"RIGHT", mpir_wjsonify_type_logic(logic->right));
+    return wjson_node;
 }
 
 /*
@@ -379,6 +426,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
 
                 wjson_append_list(wjson_typedef, L"INPUTS", wjson_typedef_inputs);
                 wjson_append_string(wjson_typedef, L"BASE_TYPE", program_node->data.type_declaration->base_type->data);
+                wjson_append_object(wjson_typedef, L"LOGIC", mpir_wjsonify_type_logic(program_node->data.type_declaration->refinement));
                 wjson_list_append_object(wjson_commands, wjson_typedef);
                 break;
             default:
