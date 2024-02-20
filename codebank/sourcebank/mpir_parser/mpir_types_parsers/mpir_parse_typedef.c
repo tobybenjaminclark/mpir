@@ -27,7 +27,7 @@ bool parse_type_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse Base Type */
-    if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_identifier(psr);
+    if(psr->peek(psr)->type == IDENTIFIER) node->base_type = parse_identifier(psr);
     else return false;
 
     /* Parse Type Logic */
