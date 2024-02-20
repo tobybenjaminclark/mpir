@@ -316,6 +316,22 @@ int mpir_write_ast(mpir_parser* psr, char path[])
 
             case NEW_TYPE_DECLARATION:
                 fprintf(file, "TYPE_DECLARATION\n");
+                /* Generate JSON for Type, Identifier & Return Type */
+                struct wjson* wjson_typedef = wjson_initialize();
+                wjson_append_string(wjson_typedef, L"TYPE", L"TYPE_DECLARATION");
+                wjson_append_string(wjson_typedef, L"IDENTIFIER", program_node->data.type_declaration->identifier->data);
+
+                struct wjson* wjson_typedef_inputs = wjson_initialize_list();
+                int type_dec_count1 = 0;
+                while (program_node->data.type_declaration->inputs[type_dec_count1] != NULL)
+                {
+                    wjson_list_append_string(wjson_typedef_inputs, program_node->data.type_declaration->inputs[type_dec_count1]->data);
+                    type_dec_count1++;
+                }
+
+                wjson_append_list(wjson_typedef, L"INPUTS", wjson_typedef_inputs);
+                wjson_append_string(wjson_typedef, L"BASE_TYPE", program_node->data.type_declaration->base_type->data);
+                wjson_list_append_object(wjson_commands, wjson_typedef);
                 break;
             default:
                 break;
