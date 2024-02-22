@@ -1,0 +1,247 @@
+{
+  "CONTENTS" : [
+    {
+      "TYPE" : "FUNCTION_DECLARATION",
+      "IDENTIFIER" : "multiply_show",
+      "RETURN_TYPE" : "Integer",
+      "BODY" : [
+        {
+          "TYPE" : "TYPE_ASSIGNMENT",
+          "IDENTIFIER" : "z",
+          "ASSIGNED_TYPE" : "Integer"
+        },
+        {
+          "TYPE" : "VALUE_ASSIGNMENT",
+          "IDENTIFIER" : "z",
+          "EXPRESSION" : {
+            "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+            "VALUE" : 5.000000
+          }
+        },
+        {
+          "TYPE" : "TYPE_ASSIGNMENT",
+          "IDENTIFIER" : "x",
+          "ASSIGNED_TYPE" : "Integer"
+        },
+        {
+          "TYPE" : "VALUE_ASSIGNMENT",
+          "IDENTIFIER" : "x",
+          "EXPRESSION" : {
+            "TYPE" : "EXPRESSION_OPERATOR",
+            "IDENTIFIER" : "+",
+            "LEFT" : {
+              "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+              "VALUE" : 5.000000
+            },
+            "RIGHT" : {
+              "TYPE" : "EXPRESSION_OPERATOR",
+              "IDENTIFIER" : "+",
+              "LEFT" : {
+                "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                "VALUE" : 1.000000
+              },
+              "RIGHT" : {
+                "TYPE" : "FUNCTION_CALL",
+                "IDENTIFIER" : "double",
+                "ARGUMENTS" : [
+                  {
+                    "TYPE" : "FUNCTION_ARGUMENT",
+                    "ARGUMENT_INDEX" : 0.000000,
+                    "VALUE" : {
+                      "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                      "VALUE" : 2.000000
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "TYPE" : "TRYCAST_STATEMENT",
+          "DOMINANT_IDENTIFIER" : "z",
+          "CASTED_IDENTIFIER" : "x",
+          "ON_STATEMENTS" : [
+            {
+              "TYPE" : "ON_STATEMENT",
+              "MATCH_TYPE" : "NUMERICAL_LITERAL",
+              "MATCH_VALUE" : 1.000000,
+              "MATCH_COMMANDS" : [
+                {
+                  "TYPE" : "VALUE_ASSIGNMENT",
+                  "IDENTIFIER" : "z",
+                  "EXPRESSION" : {
+                    "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                    "VALUE" : 1.000000
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "TYPE" : "DO_STATEMENT",
+          "EXPRESSION" : {
+            "TYPE" : "EXPRESSION_OPERATOR",
+            "IDENTIFIER" : "==",
+            "LEFT" : {
+              "TYPE" : "EXPRESSION_IDENTIFIER",
+              "IDENTIFIER" : "a"
+            },
+            "RIGHT" : {
+              "TYPE" : "EXPRESSION_IDENTIFIER",
+              "IDENTIFIER" : "b"
+            }
+          },
+          "ON_STATEMENTS" : [
+            {
+              "TYPE" : "ON_STATEMENT",
+              "MATCH_TYPE" : "NUMERICAL_LITERAL",
+              "MATCH_VALUE" : 5.000000,
+              "MATCH_COMMANDS" : [
+                {
+                  "TYPE" : "VALUE_ASSIGNMENT",
+                  "IDENTIFIER" : "z",
+                  "EXPRESSION" : {
+                    "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                    "VALUE" : 2.000000
+                  }
+                }
+              ]
+            },
+            {
+              "TYPE" : "ON_STATEMENT",
+              "MATCH_TYPE" : "NUMERICAL_LITERAL",
+              "MATCH_VALUE" : 6.000000,
+              "MATCH_COMMANDS" : [
+                {
+                  "TYPE" : "VALUE_ASSIGNMENT",
+                  "IDENTIFIER" : "z",
+                  "EXPRESSION" : {
+                    "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                    "VALUE" : 3.000000
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "TYPE" : "FUNCTION_CALL",
+          "IDENTIFIER" : "return",
+          "ARGUMENTS" : [
+            {
+              "TYPE" : "FUNCTION_ARGUMENT",
+              "ARGUMENT_INDEX" : 0.000000,
+              "VALUE" : {
+                "TYPE" : "EXPRESSION_IDENTIFIER",
+                "IDENTIFIER" : "z"
+              }
+            }
+          ]
+        }
+      ],
+      "DOCSECTION" : [
+        {
+          "FLAG" : "doc",
+          "IDENTIFIER" : "x",
+          "STRING" : "First Integer"
+        },
+        {
+          "FLAG" : "doc",
+          "IDENTIFIER" : "y",
+          "STRING" : "Second Integer"
+        },
+        {
+          "FLAG" : "doc",
+          "IDENTIFIER" : "z",
+          "STRING" : "Product of X & Y"
+        },
+        {
+          "FLAG" : "doc",
+          "STRING" : "Function to show product of 2 integers"
+        }
+      ],
+      "INPUTS" : [
+        "Integer",
+        "NewInt"
+      ],
+      "ARGUMENTS" : [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "TYPE" : "TYPE_DECLARATION",
+      "IDENTIFIER" : "PosUnder100",
+      "INPUTS" : [
+        "a"
+      ],
+      "BASE_TYPE" : "Integer",
+      "LOGIC" : {
+        "DATATYPE" : "OPERATOR",
+        "DATA" : "∧",
+        "LEFT" : {
+          "DATATYPE" : "OPERATOR",
+          "DATA" : ">",
+          "LEFT" : {
+            "DATATYPE" : "IDENTIFIER",
+            "DATA" : "a"
+          },
+          "RIGHT" : {
+            "DATATYPE" : "NUMERICAL_LITERAL",
+            "DATA" : 0.000000
+          }
+        },
+        "RIGHT" : {
+          "DATATYPE" : "OPERATOR",
+          "DATA" : "<",
+          "LEFT" : {
+            "DATATYPE" : "IDENTIFIER",
+            "DATA" : "a"
+          },
+          "RIGHT" : {
+            "DATATYPE" : "NUMERICAL_LITERAL",
+            "DATA" : 100.000000
+          }
+        }
+      }
+    },
+    {
+      "TYPE" : "TYPE_DECLARATION",
+      "IDENTIFIER" : "NegOver100",
+      "INPUTS" : [
+        "a"
+      ],
+      "BASE_TYPE" : "Integer",
+      "LOGIC" : {
+        "DATATYPE" : "OPERATOR",
+        "DATA" : "∧",
+        "LEFT" : {
+          "DATATYPE" : "OPERATOR",
+          "DATA" : "<",
+          "LEFT" : {
+            "DATATYPE" : "IDENTIFIER",
+            "DATA" : "a"
+          },
+          "RIGHT" : {
+            "DATATYPE" : "NUMERICAL_LITERAL",
+            "DATA" : 0.000000
+          }
+        },
+        "RIGHT" : {
+          "DATATYPE" : "OPERATOR",
+          "DATA" : ">",
+          "LEFT" : {
+            "DATATYPE" : "IDENTIFIER",
+            "DATA" : "a"
+          },
+          "RIGHT" : {
+            "DATATYPE" : "NUMERICAL_LITERAL",
+            "DATA" : 100.000000
+          }
+        }
+      }
+    }
+  ]
+}
