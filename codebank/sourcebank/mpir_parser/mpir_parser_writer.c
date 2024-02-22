@@ -85,15 +85,19 @@ struct wjson* mpir_wjsonify_type_logic(struct type_logic* logic)
     switch(logic->type)
     {
         case type_OPERATOR:
+            wjson_append_string(wjson_node, L"DATATYPE", L"OPERATOR");
             wjson_append_string(wjson_node, L"DATA", get_str_from_logic_operator(logic->data.op));
             break;
         case type_IDENTIFIER:
+            wjson_append_string(wjson_node, L"DATATYPE", L"IDENTIFIER");
             wjson_append_string(wjson_node, L"DATA", logic->data.id->data);
             break;
         case type_STRING:
+            wjson_append_string(wjson_node, L"DATATYPE", L"STRING_LITERAL");
             wjson_append_string(wjson_node, L"DATA", logic->data.str_literal);
             break;
         case type_NUMERICAL:
+            wjson_append_string(wjson_node, L"DATATYPE", L"NUMERICAL_LITERAL");
             wjson_append_numerical(wjson_node, L"DATA", logic->data.num_literal);
             break;
     }
