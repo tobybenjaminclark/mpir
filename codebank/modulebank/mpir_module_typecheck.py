@@ -46,10 +46,13 @@ class TypeCheck():
         # Validate AST
         if not validate_ast(ast): raise Exception("Invalid AST")
         self.types: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
-        self.types_logic: list = [None for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
+        self.types_logic: dict[str:z3] = {}
         self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARLATION"]
 
         self.validate_types()
+
+    def validate_functions(self) -> None:
+        pass
 
     def validate_types(self) -> None:
         
@@ -58,8 +61,8 @@ class TypeCheck():
 
             # Create Solver for Curernt Type
             type_solver: z3.Solver = z3.Solver()
-            self.types_logic[type_index] = form_expression(type_solver, type["LOGIC"])
-            type_solver.add(self.types_logic[type_index])
+            self.types_logic[type["IDENTIFIER"]] = form_expression(type_solver, type["LOGIC"])
+            type_solver.add(self.types_logic[type["IDENTIFIER"]])
 
             # Check Solver to make ensure type satisfiability
             if type_solver.check() == z3.sat: print(f"  → Type " + type["IDENTIFIER"] + " is satisfiable")
