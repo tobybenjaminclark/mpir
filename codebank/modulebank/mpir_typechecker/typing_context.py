@@ -1,6 +1,10 @@
 from z3 import *
 from typing import NewType, Union
 
+#
+# Type Contexts
+#
+
 # Typing Context Type is list[str, dict[str: z3.Bool]]
 typing_context = NewType('typing_context', tuple[str, dict[str: z3.Bool]])
 
@@ -28,42 +32,18 @@ def context_search(contexts: list[typing_context]|typing_context, identifier: st
 
 
 
+#
+# Subtype Relations
+#
 
-
-def is_exact_subtype(subtype: z3.Bool, basetype: z3.Bool):
-    x = z3.Real('x')  # Use the same variable in both predicates
-    implication_solver = z3.Solver()
-    implication_solver.add(z3.ForAll(x, z3.Implies(subtype, basetype)))
-    return implication_solver.check() == z3.sat
-
-x = z3.Real('x')
-
-# Example 1: 5 < x < 10 is an exact subtype of 0 < x < 20
-print("a", is_exact_subtype(
-    z3.And(x > 5, x < 10),
-    z3.And(x > 0, x < 20)
-))  # Output: True
-
-# Example 2: 5 < x < 10 is not an exact subtype of 0 < x < 15
-print("b", is_exact_subtype(
-    z3.And(x > 0, x < 20),
-    z3.And(x > 5, x < 10)
-))  # Output: False
-
-
-
-
-def is_subtype(subtype: z3.Bool, basetype: z3.Bool) -> True|False:
+# Checks if one type definition has intersection with another type definition
+def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True|False:
     type_solver = z3.Solver()
     type_solver.add(And(subtype, basetype))
-    return True if type_solver.check() == z3.sat else False
+    return type_solver.check() == z3.sat
 
-x = z3.Real('x')
-print(is_subtype(
-    z3.And(x > 15, x < 25),
-    z3.And(x > 10, x < 20)
-))
-
-
-
-
+# Check if one type definition is a subtype of another type definition
+def is_subtype(subtype: z3.Bool, basetype: z3.Bool, type_variable: z3.Real = Real('σ')) -> True | False:  
+    implication_solver = z3.Solver()
+    implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype, basetype)))
+    return implication_solver.check() == z3.sat
