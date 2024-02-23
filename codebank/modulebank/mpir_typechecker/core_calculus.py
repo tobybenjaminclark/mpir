@@ -4,15 +4,15 @@ from functools import wraps
 
 Numerical = True
 
-def inject_variables(context):
-    def variable_injector(func: Function):
+def inject_variables(context: dict[str, any]) -> callable:
+    def variable_injector(func: callable) -> callable:
         @wraps(func)
-        def decorator(*args, **kwargs):
-            func_globals = func.__globals__
-            saved_values = {key: func_globals[key] for key in context if key in func_globals}
+        def decorator(*args: any, **kwargs: any) -> any:
+            func_globals: dict[str, any] = func.__globals__
+            saved_values: dict[str, any] = {key: func_globals[key] for key in context if key in func_globals}
             func_globals.update(context)
-            try: result = func(*args, **kwargs)
-            finally: func_globals.update(saved_values) 
+            try: result: any = func(*args, **kwargs)
+            finally: func_globals.update(saved_values)
             return result
         return decorator
     return variable_injector
