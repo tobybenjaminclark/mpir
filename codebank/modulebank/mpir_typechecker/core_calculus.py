@@ -19,6 +19,7 @@ def inject_variables(context):
 
 base_types = dict(Numerical=True)
 
+# Function to verify the T-Add Rule (Addition of Types)
 @inject_variables(base_types)
-def t_add(t1: z3.Bool, t2: z3.Bool) -> True|False:
-    return get_relation(t1, Numerical, Real('σ')) and get_relation(t2, Numerical, Real('σ'))
+def T_Add(τ1: z3.Bool, τ2: z3.Bool) -> True|False:
+    return get_relation(τ1, Numerical, Real('σ')) and get_relation(τ2, Numerical, Real('σ'))
