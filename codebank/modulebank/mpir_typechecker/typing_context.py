@@ -1,11 +1,7 @@
 from z3 import *
 from typing import NewType, Union
 
-#
-# Type Contexts
-#
-
-# Typing Context Type is list[str, dict[str: z3.Bool]].
+# Type Definition for Typing Context as list[str, dict[str: z3.Bool]].
 typing_context = NewType('typing_context', tuple[str, dict[str: z3.Bool]])
 
 # Creates a new typing context.
@@ -28,13 +24,6 @@ def context_search_multiple(contexts: list[typing_context], identifier: str) -> 
 # Overload that can search either multiple contexts, or a singular context dependent on argument type.
 def context_search(contexts: list[typing_context]|typing_context, identifier: str) -> Union[z3.Bool, None]:
     return context_search_multiple([contexts] if type(contexts[0]) == str else contexts, identifier)
-
-
-
-
-#
-# Subtype Relations
-#
 
 # Checks if one type definition has intersection with another type definition.
 def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True | False:
