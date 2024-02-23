@@ -47,12 +47,23 @@ class TypeCheck():
         if not validate_ast(ast): raise Exception("Invalid AST")
         self.types: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
         self.types_logic: dict[str:z3] = {}
-        self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARLATION"]
+        self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
 
         self.validate_types()
+        self.validate_functions()
 
     def validate_functions(self) -> None:
-        pass
+        for function_index, func in enumerate(self.functions):        
+            
+            # Setup Typing Context for this Function & Populate it with input types
+            # context: dict[str:z3] = {arg: self.types_logic[func["INPUTS"][index]] for index, arg in enumerate(func["ARGUMENTS"])}
+            context: dict[str:z3] = {}
+
+            for index, statement in enumerate(func["BODY"]):
+                if(statement["TYPE"] == "TYPE_ASSIGNMENT"): context[statement["IDENTIFIER"]] = statement["ASSIGNED_TYPE"]
+                continue    
+            print(context)
+        return None
 
     def validate_types(self) -> None:
         
