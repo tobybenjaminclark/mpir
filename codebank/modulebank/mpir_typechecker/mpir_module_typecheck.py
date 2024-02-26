@@ -53,10 +53,5 @@ def parse_json_file(filename: str) -> dict|None:
 
 
 
-def validate_ast(ast) -> bool:
-    return True
-
-
-
 ast = parse_json_file("testj.json")
 a = TypeCheck(ast)
