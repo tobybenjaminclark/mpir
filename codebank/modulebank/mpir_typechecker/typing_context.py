@@ -32,11 +32,11 @@ def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True | False:
     return type_solver.check() == z3.sat
 
 # Check if one type definition is a subtype of another type definition.
-def is_subtype(subtype: z3.Bool, basetype: z3.Bool, type_variable: z3.Real = Real('σ')) -> True | False:  
+def is_subtype(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> True | False:  
     implication_solver = z3.Solver()
-    implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype, basetype)))
+    implication_solver.add(z3.ForAll(type_variable, z3.Implies(P, Q)))
     return implication_solver.check() == z3.sat
 
-# Gets the relation between 2 types. 1 means no intersection, 2 means intersecting, 3 means subtype relation.
-def get_relation(subtype: z3.Bool, basetype: z3.Bool, type_variable: z3.Real = Real('σ')) -> 1|2|3:
-    return 3 if(is_subtype(subtype, basetype, type_variable)) else 2 if is_intersecting(subtype, basetype) else 1
+# Gets the relation between 2 types. 1: no intersection, 2: intersecting, 3: subtype relation.
+def get_relation(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> 1|2|3:
+    return 3 if(is_subtype(P, Q, type_variable)) else 2 if is_intersecting(P, Q) else 1
