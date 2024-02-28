@@ -65,15 +65,18 @@ def get_operator(operator_str):
 
     return operators.get(operator_str, None)
 
-def type_ast_expression(ast) -> bool:
+def type_ast_expression(ast, context) -> bool:
     x = Real('σ')
     match ast["TYPE"]:
+        case "EXPRESSION_IDENTIFIER":
+            print("this: ", context[1][ast["IDENTIFIER"]])
+            return lambda: context[1][ast["IDENTIFIER"]]()
         case "EXPRESSION_NUMERICAL_LITERAL":
             return lambda: x == ast["VALUE"]
         case "EXPRESSION_OPERATOR":
             if ast["IDENTIFIER"] == "+":
-                l =type_ast_expression(ast["LEFT"])
-                r = type_ast_expression(ast["RIGHT"])
+                l =type_ast_expression(ast["LEFT"], context)
+                r = type_ast_expression(ast["RIGHT"], context)
                 return T_Add(l(), r())
 
 expression_dict = {
@@ -90,15 +93,13 @@ expression_dict = {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
                 "VALUE": 1.000000
             },
-            "RIGHT": {
-                "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
-                "VALUE": 10.000
+            "RIGHT" : {
+              "TYPE" : "EXPRESSION_IDENTIFIER",
+              "IDENTIFIER" : "a"
             }
         }
     }
-print(type_ast_expression(expression_dict)())
-print("\n\n\n")
-            
+
 
 
 class TypeCheck():
@@ -107,11 +108,18 @@ class TypeCheck():
         # Validate AST
         if not validate_ast(ast): raise Exception("Invalid AST")
         self.types: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
-        self.types_logic: dict[str:z3] = {}
+        self.types_logic = context_create()
         self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
 
         self.validate_types()
         self.validate_functions()
+
+        global expression_dict
+        x = Real('σ')
+        context_add(self.types_logic, "a", lambda: z3.And(x > 10, x < 20))
+        print(type_ast_expression(expression_dict, self.types_logic)())
+        print("\n\n\n")
+            
 
     def validate_functions(self) -> None:
         for function_index, func in enumerate(self.functions):        
@@ -139,11 +147,11 @@ class TypeCheck():
 
             # Create Solver for Curernt Type
             type_solver: z3.Solver = z3.Solver()
-            self.types_logic[type["IDENTIFIER"]] = form_expression(type_solver, type["LOGIC"])
-            type_solver.add(self.types_logic[type["IDENTIFIER"]])
+            context_add(self.types_logic, type["IDENTIFIER"], form_expression(type_solver, type["LOGIC"]))
+            type_solver.add(context_search(self.types_logic, type["IDENTIFIER"]))
 
             # Check Solver to make ensure type satisfiability
-            if type_solver.check() == z3.sat: print(f"  → Type " + type["IDENTIFIER"] + " is satisfiable")
+            if type_solver.check() == z3.sat: print(f"  → Type " + type["IDENTIFIER"] + " is satisfiable ", context_search(self.types_logic, type["IDENTIFIER"]))
             else: print(f"  → Type " + type["IDENTIFIER"] + " is unsatisfiable")
                 
             continue
