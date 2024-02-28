@@ -18,19 +18,23 @@ def inject_variables(context: dict[str, any]) -> callable:
 
 base_types = dict(Numerical = True)
 
+def amber():
+    print("hello\n\n\n")        
 
 # Function to verify the T-Add Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 + τ2): {Numerical|ε}]
-
 def T_Add(τ1: z3.Bool, τ2: z3.Bool, σ: z3.Real = Real('σ')) -> Union[bool, z3.Bool]:
     Numerical = True
-    print(τ1, τ2)
+    print("Types: t1:'{}'  t2:'{}'".format(τ1, τ2))
     τ1_i, τ1_s, τ2_i, τ2_s = get_infimum(τ1), get_supremum(τ1), get_infimum(τ2), get_supremum(τ2)
-    print("infs and sups: ",τ1_i, τ1_s, τ2_i, τ2_s)
+    print("Infs and Sups: t1i:{} t1s:{}\nt2i:{} t2s:{}".format(τ1_i, τ1_s, τ2_i, τ2_s))
+
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     else:
-        greatest_lower_bound = z3.RealVal(τ1_i + τ2_i)
-        greatest_upper_bound = z3.RealVal(τ1_i + τ2_s)
-        return lambda: z3.And(greatest_lower_bound <= σ, σ <= greatest_upper_bound)
+        greatest_lower_bound = τ1_i + τ2_i
+        greatest_upper_bound = τ1_i + τ2_s
+        expr = lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ)
+        print("T-Add returned: ", expr(), "INF & SUP are: ", get_infimum(expr()), get_supremum(expr()))
+        return expr
 
 
 # Function to verify the T-Subtract Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 - τ2): {Numerical|ε}]

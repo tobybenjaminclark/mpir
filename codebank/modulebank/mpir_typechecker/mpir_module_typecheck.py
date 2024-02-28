@@ -66,13 +66,15 @@ def get_operator(operator_str):
     return operators.get(operator_str, None)
 
 def type_ast_expression(ast) -> bool:
-    x = Real('α')
+    x = Real('σ')
     match ast["TYPE"]:
         case "EXPRESSION_NUMERICAL_LITERAL":
             return lambda: x == ast["VALUE"]
         case "EXPRESSION_OPERATOR":
             if ast["IDENTIFIER"] == "+":
-                return T_Add(type_ast_expression(ast["LEFT"])(), type_ast_expression(ast["RIGHT"])())
+                l =type_ast_expression(ast["LEFT"])
+                r = type_ast_expression(ast["RIGHT"])
+                return T_Add(l(), r())
 
 expression_dict = {
         "TYPE": "EXPRESSION_OPERATOR",
@@ -82,11 +84,20 @@ expression_dict = {
             "VALUE": 5.000000
         },
         "RIGHT": {
+            "TYPE": "EXPRESSION_OPERATOR",
+            "IDENTIFIER": "+",
+            "LEFT": {
+                "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
+                "VALUE": 1.000000
+            },
+            "RIGHT": {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
                 "VALUE": 10.000
             }
+        }
     }
 print(type_ast_expression(expression_dict)())
+print("\n\n\n")
             
 
 
