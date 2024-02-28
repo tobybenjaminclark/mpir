@@ -3,6 +3,7 @@ import json
 import os
 import z3
 from mpir_module_context import *
+from core_calculus import *
 
 def convert_operator_to_z3(solver, operator: str, left, right):
     operator_mapping = {
@@ -70,7 +71,8 @@ def type_ast_expression(ast) -> bool:
         case "EXPRESSION_NUMERICAL_LITERAL":
             return lambda: x == ast["VALUE"]
         case "EXPRESSION_OPERATOR":
-            return get_operator(ast["IDENTIFIER"])(type_ast_expression(ast["LEFT"]), type_ast_expression(ast["RIGHT"]))
+            if ast["IDENTIFIER"] == "+":
+                return T_Add(type_ast_expression(ast["LEFT"])(), type_ast_expression(ast["RIGHT"])())
 
 expression_dict = {
         "TYPE": "EXPRESSION_OPERATOR",
@@ -80,19 +82,11 @@ expression_dict = {
             "VALUE": 5.000000
         },
         "RIGHT": {
-            "TYPE": "EXPRESSION_OPERATOR",
-            "IDENTIFIER": "+",
-            "LEFT": {
-                "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
-                "VALUE": 1.000000
-            },
-            "RIGHT": {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
                 "VALUE": 10.000
             }
-        }
     }
-print(type_ast_expression(expression_dict))
+print(type_ast_expression(expression_dict)())
             
 
 
