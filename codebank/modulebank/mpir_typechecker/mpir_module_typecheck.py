@@ -110,6 +110,9 @@ class TypeCheck():
         self.types: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
         self.types_logic = context_create()
         self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
+        self.function_io = [(node["IDENTIFIER"], node["INPUTS"], node["RETURN_TYPE"]) for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
+        for n in self.function_io:
+            print(n[0], "::" ,n[1], "->", n[2])
 
         self.validate_types()
         self.validate_functions()
