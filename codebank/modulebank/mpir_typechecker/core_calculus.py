@@ -18,9 +18,6 @@ def inject_variables(context: dict[str, any]) -> callable:
 
 base_types = dict(Numerical = True)
 
-def amber():
-    print("hello\n\n\n")        
-
 # Function to verify the T-Add Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 + τ2): {Numerical|ε}]
 def T_Add(τ1: z3.Bool, τ2: z3.Bool, σ: z3.Real = Real('σ')) -> Union[bool, z3.Bool]:
     Numerical = True
