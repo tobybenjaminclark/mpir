@@ -15,6 +15,9 @@ _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint}" if isinstance(v.logic, _singular_type) else
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: [{', '.join(map(str, v.logic.input_constraints))}] → {v.logic.output_constraint}" for k, v in self.bindings.items()])
 
+# Override the `in` method
+_context.__contains__ = lambda self, item: item in self.bindings
+        
 # Creates a singular variable type 
 def type_create_singular(constraint: z3.Bool) -> _type:
     return _type(type_variants._variable, _singular_type(constraint))
@@ -30,6 +33,9 @@ def context_create(identifier: str = 'Γ') -> _context:
 # Binds a type within a typing context to an identifier
 def add_type_to_context(context: _context, identifier: str, type_value: _type) -> _context:
     return _context(context.identifier, {**context.bindings, identifier: type_value} if type_value.type in {type_variants._variable, type_variants._function} else None)
+
+def get_type_from_context(context: _context, identifier: str) -> _type|None:
+    return context.bindings.get(identifier, None)
 
 # Checks if one type definition has intersection with another type definition.
 def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True | False:

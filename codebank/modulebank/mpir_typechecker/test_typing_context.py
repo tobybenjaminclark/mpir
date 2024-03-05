@@ -14,6 +14,12 @@ def test_type_function():
     assert τ.logic.output_constraint == True
     assert τ.type == type_variants._function
 
+# Function to test adding to a Typing Context.
+def test_typing_context():
+    Γ = context_create()
+    Γ = add_type_to_context(Γ, "τ", type_create_singular(True))
+    assert "τ" in Γ
+
 # Execute all defined tests.
 if __name__ == "__main__":
     pytest.main()
