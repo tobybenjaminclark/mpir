@@ -6,14 +6,14 @@ from z3 import *
 # Defining Named Tuples to represent singular types, function types and typing contexts.
 type_variants     = Enum('type_variants', ['_function', '_variable'])
 _singular_type    = NamedTuple("_singular_type", constraint = z3.Bool)
-_function_type    = NamedTuple("_function_type", input_types = list[z3.Bool], output_type = z3.Bool)
+_function_type    = NamedTuple("_function_type", input_constraints = list[z3.Bool], output_constraint = z3.Bool)
 _type             = NamedTuple("_type"         , type = type_variants, logic = _singular_type | _function_type)
 _context          = NamedTuple("_context"      , identifier = str, bindings = dict[str: _type])
 
 # Defining a function to show a command line representation of the current typing context.
 _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n".join([
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint}" if isinstance(v.logic, _singular_type) else
-    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: [{', '.join(map(str, v.logic.input_types))}] → {v.logic.output_type}" for k, v in self.bindings.items()])
+    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: [{', '.join(map(str, v.logic.input_constraints))}] → {v.logic.output_constraint}" for k, v in self.bindings.items()])
 
 # Creates a singular variable type 
 def type_create_singular(constraint: z3.Bool) -> _type:
@@ -30,7 +30,6 @@ def context_create(identifier: str = 'Γ') -> _context:
 # Binds a type within a typing context to an identifier
 def add_type_to_context(context: _context, identifier: str, type_value: _type) -> _context:
     return _context(context.identifier, {**context.bindings, identifier: type_value} if type_value.type in {type_variants._variable, type_variants._function} else None)
-
 
 # Checks if one type definition has intersection with another type definition.
 def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True | False:
