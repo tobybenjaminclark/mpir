@@ -2,6 +2,9 @@ from typing_context import *
 from typing_context import _type, _function_type, _singular_type, _context
 import pytest
 
+
+# Testing Type Context
+
 # Function to test a singular type definition.
 def test_type_singular():
     τ = type_create_singular(True)
@@ -65,3 +68,17 @@ def test_typing_types():
     assert type(τ2) == _type and type(τ2.logic) == _function_type
     assert type(Γ) == _context
 
+
+
+
+
+
+# Testing Type Intersections
+    
+def test_variable_type_intersect():
+    σ = Real('σ')
+    τ1 = type_create_singular(σ > 10)
+    τ2 = type_create_singular(σ > 15)
+    τ3 = type_create_singular(σ < 9)
+    assert is_intersecting(τ1, τ2) == True
+    assert is_intersecting(τ1, τ3) == False

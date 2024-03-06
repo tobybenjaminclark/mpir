@@ -46,9 +46,10 @@ def get_type_from_context(context: _context, identifier: str) -> _type|None:
 
 
 
+
 # Function to check if a variable type intersects with another variable type.
 def is_intersecting_variable(subtype: _type, basetype: _type) -> bool | TypeError:
-    if subtype.type != basetype.type or subtype.type != _singular_type: return TypeError("is_intersecting_variable :: subtype or base type isn't of type _variable")
+    if subtype.type != basetype.type or subtype.type != type_variants._variable: return TypeError("is_intersecting_variable :: subtype or base type isn't of type _variable")
     type_solver = z3.Solver()
     type_solver.add(And(subtype.logic.constraint, basetype.logic.constraint))
     return type_solver.check() == z3.sat   
@@ -68,6 +69,8 @@ def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
     if subtype.type != basetype.type: return TypeError("Invalid Intersection between Var Type and Func Type")
     if subtype.type == type_variants._function: return is_intersecting_function(subtype, basetype)
     if subtype.type == type_variants._variable: return is_intersecting_variable(subtype, basetype)
+
+
 
 
 
