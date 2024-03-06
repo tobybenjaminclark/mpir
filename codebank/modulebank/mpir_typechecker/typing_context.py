@@ -17,8 +17,9 @@ _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n
 
 # Override the `in` method
 _context.__contains__ = lambda self, item: item in self.bindings
+_context.__add__ = lambda self, other: add_type_to_context(self, other[0], other[1])
         
-# Creates a singular variable type 
+# Creates a singular variable type
 def type_create_singular(constraint: z3.Bool) -> _type:
     return _type(type_variants._variable, _singular_type(constraint))
 

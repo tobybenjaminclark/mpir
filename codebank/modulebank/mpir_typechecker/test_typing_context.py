@@ -27,6 +27,13 @@ def test_typing_context_getter():
     Γ = add_type_to_context(Γ, "τ", τ)  
     assert get_type_from_context(Γ, "τ") == τ
 
+# Function to test addition override.
+def test_typing_context_addition_override():
+    Γ = context_create()
+    τ = type_create_singular(True)
+    Γ =  Γ + ("τ", τ) 
+    assert get_type_from_context(Γ, "τ") == τ
+
 # Execute all defined tests.
 if __name__ == "__main__":
     pytest.main()
