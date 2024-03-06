@@ -15,7 +15,7 @@ _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint}" if isinstance(v.logic, _singular_type) else
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: [{', '.join(map(str, v.logic.input_constraints))}] → {v.logic.output_constraint}" for k, v in self.bindings.items()])
 
-# Override the `in` method
+# Override the `in`, `add` and `subtract` methods/operators
 _context.__contains__ = lambda self, item: item in self.bindings
 _context.__add__ = lambda self, other: add_type_to_context(self, other[0], other[1])
 _context.__sub__ = lambda self, other: remove_type_from_context(self, other)
@@ -40,14 +40,47 @@ def add_type_to_context(context: _context, identifier: str, type_value: _type) -
 def remove_type_from_context(context: _context, identifier: str) -> _context:
     return _context(context.identifier, {k: v for k, v in context.bindings.items() if k != identifier})
 
+# Function to get a type from a context, accessed using it's identifier.
 def get_type_from_context(context: _context, identifier: str) -> _type|None:
     return context.bindings.get(identifier, None)
 
-# Checks if one type definition has intersection with another type definition.
-def is_intersecting(subtype: z3.Bool, basetype: z3.Bool) -> True | False:
+
+
+# Function to check if a variable type intersects with another variable type.
+def is_intersecting_variable(subtype: _type, basetype: _type) -> bool | TypeError:
+    if subtype.type != basetype.type or subtype.type != _singular_type: return TypeError("is_intersecting_variable :: subtype or base type isn't of type _variable")
     type_solver = z3.Solver()
-    type_solver.add(And(subtype, basetype))
-    return type_solver.check() == z3.sat
+    type_solver.add(And(subtype.logic.constraint, basetype.logic.constraint))
+    return type_solver.check() == z3.sat   
+
+# Function to check if a function type intersects with another function type.
+def is_intersecting_function(subtype: _type, basetype: _type) -> bool | TypeError:
+    if subtype.type != basetype.type or subtype.type != _function_type: return TypeError("is_intersecting_variable :: subtype or base type isn't of type _variable")
+    if len(subtype.logic.input_constriants) != len(basetype.logic.input_constriants): return TypeError("is_intersecting_variable :: subtype argument count inequivalent to basetype argument count")
+    if (output := is_intersecting(subtype.logic.output_constraint, basetype.logic.output_constraint)) == TypeError: return output
+    if TypeError in (input_mapping := [is_intersecting(subtype.logic.input_constriants[index], basetype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))]): return map(lambda v: type(v) == TypeError, input_mapping)
+    if len(map(lambda v: v == True, input_mapping)) == 0 or output == False: return False
+    return True
+
+# Function to check if a type intersects with another type.
+def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
+    if subtype.type != basetype.type: return TypeError("Invalid Intersection between Var Type and Func Type")
+    if subtype.type == type_variants._function: return is_intersecting_function(subtype, basetype)
+    if subtype.type == type_variants._variable: return is_intersecting_variable(subtype, basetype)
+
+
+
+
+def is_subtype_function(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
+    pass
+
+
+# Check if one type definition is a
+def is_subtype_variable(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
+    if subtype.type != basetype.type or subtype.type != _singular_type: return TypeError("is_subtype_variable :: subtype or base type isn't of type _variable")
+    implication_solver = z3.Solver()
+    implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype.logic.constraint, basetype.logic.constraint)))
+    return implication_solver.check() == z3.sat
 
 # Check if one type definition is a subtype of another type definition.
 def is_subtype(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> True | False:  
@@ -58,16 +91,3 @@ def is_subtype(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> T
 # Gets the relation between 2 types. 1: no intersection, 2: intersecting, 3: subtype relation.
 def get_relation(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> 1 | 2 | 3:
     return 3 if(is_subtype(P, Q, type_variable)) else 2 if is_intersecting(P, Q) else 1
-
-# Example usage
-def test():
-    a = context_create()
-    s = z3.Real('s')
-    b = type_create_singular(True)
-    c = type_create_singular(s > 10)
-    d = type_create_function([True, s > 5], s > 10)
-    a = add_type_to_context(a, "var", b)
-    a = add_type_to_context(a, "var2", c)
-    a = add_type_to_context(a, "var2", d)
-    print(a)
-if __name__ == "__main__": test()
