@@ -58,9 +58,10 @@ def is_intersecting_function(subtype: _type, basetype: _type) -> bool | TypeErro
     if subtype.type != basetype.type or subtype.type != _function_type: return TypeError("is_intersecting_variable :: subtype or base type isn't of type _variable")
     if len(subtype.logic.input_constriants) != len(basetype.logic.input_constriants): return TypeError("is_intersecting_variable :: subtype argument count inequivalent to basetype argument count")
     if (output := is_intersecting(subtype.logic.output_constraint, basetype.logic.output_constraint)) == TypeError: return output
-    if TypeError in (input_mapping := [is_intersecting(subtype.logic.input_constriants[index], basetype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))]): return map(lambda v: type(v) == TypeError, input_mapping)
-    if len(map(lambda v: v == True, input_mapping)) == 0 or output == False: return False
-    return True
+    if TypeError in (input_mapping := [is_intersecting(subtype.logic.input_constriants[index], basetype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))]): return filter(lambda v: type(v) == TypeError, input_mapping)
+
+    if len(filter(lambda v: v == True, input_mapping)) == 0 or output == False: return False
+    else: return True
 
 # Function to check if a type intersects with another type.
 def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
@@ -70,23 +71,25 @@ def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
 
 
 
-
-def is_subtype_function(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
-    pass
-
-
-# Check if one type definition is a
+# Function to check if one type definition is a subtype of another. [T-Sub]
 def is_subtype_variable(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
     if subtype.type != basetype.type or subtype.type != _singular_type: return TypeError("is_subtype_variable :: subtype or base type isn't of type _variable")
     implication_solver = z3.Solver()
     implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype.logic.constraint, basetype.logic.constraint)))
     return implication_solver.check() == z3.sat
 
+# Function to check if one function type definition is a subtype of another function type definition. [T-FuncSub]
+def is_subtype_function(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
+    if len(subtype.logic.input_constriants) != len(basetype.logic.input_constriants): return TypeError("is_subtype_function :: subtype argument count inequivalent to basetype argument count")
+    if (not is_subtype(subtype.logic.output_constraint, basetype.logic.output_constraint)): return False
+    return not (len(filter(lambda v: v == False or v == TypeError, [is_subtype(basetype.logic.input_constriants[index], subtype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))])) > 0)
+
 # Check if one type definition is a subtype of another type definition.
-def is_subtype(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> True | False:  
-    implication_solver = z3.Solver()
-    implication_solver.add(z3.ForAll(type_variable, z3.Implies(P, Q)))
-    return implication_solver.check() == z3.sat
+def is_subtype(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> True | False:  
+    if subtype.type != basetype.type: return TypeError("Invalid Intersection between Var Type and Func Type")
+    if subtype.type == type_variants._function: return is_subtype_function(subtype, basetype, type_variable)
+    if subtype.type == type_variants._variable: return is_subtype_variable(subtype, basetype, type_variable)
+
 
 # Gets the relation between 2 types. 1: no intersection, 2: intersecting, 3: subtype relation.
 def get_relation(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> 1 | 2 | 3:
