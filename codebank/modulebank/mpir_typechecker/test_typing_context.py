@@ -75,6 +75,7 @@ def test_typing_types():
 
 # Testing Type Intersections & Subtypes
     
+# Function to test the intersect of 2 types
 def test_variable_type_intersect():
     σ = Real('σ')
     τ1 = type_create_singular(σ > 10)
@@ -83,6 +84,16 @@ def test_variable_type_intersect():
     assert is_intersecting(τ1, τ2) == True
     assert is_intersecting(τ1, τ3) == False
 
+# Function to test the intersect override `/` of 2 types
+def test_variable_type_intersect_override():
+    σ = Real('σ')
+    τ1 = type_create_singular(σ > 10)
+    τ2 = type_create_singular(σ > 15)
+    τ3 = type_create_singular(σ < 9)
+    assert (τ1 / τ2) == True
+    assert (τ1 / τ3) == False
+
+# Function to test the subtype relationship between 2 types
 def test_variable_type_subtype():
     σ = Real('σ')
     τ1 = type_create_singular(z3.And(σ > 10, σ < 20))
@@ -90,3 +101,10 @@ def test_variable_type_subtype():
     assert is_subtype(τ2, τ1) == True
     assert is_subtype(τ1, τ2) == False
 
+# Function to test the subtype relationship override `<` between 2 types
+def test_variable_type_subtype_override():
+    σ = Real('σ')
+    τ1 = type_create_singular(z3.And(σ > 10, σ < 20))
+    τ2 = type_create_singular(z3.And(σ > 10, σ < 15))
+    assert (τ2 < τ1) == True
+    assert (τ1 < τ2) == False
