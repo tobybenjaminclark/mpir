@@ -73,7 +73,7 @@ def test_typing_types():
 
 
 
-# Testing Type Intersections
+# Testing Type Intersections & Subtypes
     
 def test_variable_type_intersect():
     σ = Real('σ')
@@ -82,3 +82,11 @@ def test_variable_type_intersect():
     τ3 = type_create_singular(σ < 9)
     assert is_intersecting(τ1, τ2) == True
     assert is_intersecting(τ1, τ3) == False
+
+def test_variable_type_subtype():
+    σ = Real('σ')
+    τ1 = type_create_singular(z3.And(σ > 10, σ < 20))
+    τ2 = type_create_singular(z3.And(σ > 10, σ < 15))
+    assert is_subtype(τ2, τ1) == True
+    assert is_subtype(τ1, τ2) == False
+
