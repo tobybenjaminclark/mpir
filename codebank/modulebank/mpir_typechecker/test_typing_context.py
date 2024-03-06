@@ -1,11 +1,13 @@
 from typing_context import *
 import pytest
 
+
 # Function to test a singular type definition.
 def test_type_singular():
     τ = type_create_singular(True)
     assert τ.logic.constraint == True
     assert τ.type == type_variants._variable
+
 
 # Function to test a function type definition.
 def test_type_function():
@@ -14,11 +16,13 @@ def test_type_function():
     assert τ.logic.output_constraint == True
     assert τ.type == type_variants._function
 
+
 # Function to test adding to a Typing Context and fetching using container, `in`.
 def test_typing_context_container():
     Γ = context_create()
     Γ = add_type_to_context(Γ, "τ", type_create_singular(True))
     assert "τ" in Γ
+
 
 # Function to test adding to a Typing Context and fetching using getter.
 def test_typing_context_getter():
@@ -27,12 +31,22 @@ def test_typing_context_getter():
     Γ = add_type_to_context(Γ, "τ", τ)  
     assert get_type_from_context(Γ, "τ") == τ
 
-# Function to test addition override.
+
+# Function to test addition override for typing context.
 def test_typing_context_addition_override():
     Γ = context_create()
     τ = type_create_singular(True)
     Γ =  Γ + ("τ", τ) 
     assert get_type_from_context(Γ, "τ") == τ
+
+
+# Function to test removal from typing context.
+def test_typing_context_removal():
+    Γ = context_create()
+    τ = type_create_singular(True)
+    Γ = remove_type_from_context(Γ, "τ")
+    assert get_type_from_context(Γ, "τ") is None
+
 
 # Execute all defined tests.
 if __name__ == "__main__":

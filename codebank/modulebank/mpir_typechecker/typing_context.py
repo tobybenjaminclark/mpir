@@ -18,6 +18,7 @@ _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n
 # Override the `in` method
 _context.__contains__ = lambda self, item: item in self.bindings
 _context.__add__ = lambda self, other: add_type_to_context(self, other[0], other[1])
+_context.__sub__ = lambda self, other: remove_type_from_context(self, other)
         
 # Creates a singular variable type
 def type_create_singular(constraint: z3.Bool) -> _type:
@@ -34,6 +35,10 @@ def context_create(identifier: str = 'Γ') -> _context:
 # Binds a type within a typing context to an identifier
 def add_type_to_context(context: _context, identifier: str, type_value: _type) -> _context:
     return _context(context.identifier, {**context.bindings, identifier: type_value} if type_value.type in {type_variants._variable, type_variants._function} else None)
+
+# Removes a identifier, type binding from within a typing context.
+def remove_type_from_context(context: _context, identifier: str) -> _context:
+    return _context(context.identifier, {k: v for k, v in context.bindings.items() if k != identifier})
 
 def get_type_from_context(context: _context, identifier: str) -> _type|None:
     return context.bindings.get(identifier, None)
