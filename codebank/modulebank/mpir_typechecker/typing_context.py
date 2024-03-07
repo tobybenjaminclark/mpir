@@ -70,7 +70,6 @@ def is_intersecting_function(subtype: _type, basetype: _type) -> bool | TypeErro
     if len(subtype.logic.input_constriants) != len(basetype.logic.input_constriants): return TypeError
     if (output := is_intersecting(subtype.logic.output_constraint, basetype.logic.output_constraint)) == TypeError: return output
     if TypeError in (input_mapping := [is_intersecting(subtype.logic.input_constriants[index], basetype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))]): return filter(lambda v: type(v) == TypeError, input_mapping)
-
     if len(filter(lambda v: v == True, input_mapping)) == 0 or output == False: return False
     else: return True
 
