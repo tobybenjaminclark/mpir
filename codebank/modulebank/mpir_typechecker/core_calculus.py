@@ -1,5 +1,6 @@
 from z3 import *
 from typing_context import *
+from typing_context import _type, _context
 from functools import wraps
 from bound_check import *
 
@@ -16,13 +17,13 @@ def inject_variables(context: dict[str, any]) -> callable:
         return decorator
     return variable_injector
 
-base_types = dict(Numerical = True)
+base_types = dict(Numerical = type_create_singular(True))
 
 # Function to verify the T-Add Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 + τ2): {Numerical|ε}]
-def T_Add(τ1: z3.Bool, τ2: z3.Bool, σ: z3.Real = Real('σ')) -> Union[bool, z3.Bool]:
-    Numerical = True
+@inject_variables(base_types)
+def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
     print("Types: t1:'{}'  t2:'{}'".format(τ1, τ2))
-    τ1_i, τ1_s, τ2_i, τ2_s = get_infimum(τ1), get_supremum(τ1), get_infimum(τ2), get_supremum(τ2)
+    τ1_i, τ1_s, τ2_i, τ2_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint), get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
     print("Infs and Sups: t1i:{} t1s:{}\nt2i:{} t2s:{}".format(τ1_i, τ1_s, τ2_i, τ2_s))
 
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
@@ -34,6 +35,8 @@ def T_Add(τ1: z3.Bool, τ2: z3.Bool, σ: z3.Real = Real('σ')) -> Union[bool, z
         return expr
 
 
+
+"""
 # Function to verify the T-Subtract Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 - τ2): {Numerical|ε}]
 @inject_variables(base_types)
 def T_Sub(τ1: z3.Bool, τ2: z3.Bool) -> Union[bool, z3.Bool]:
@@ -62,4 +65,4 @@ def T_FuncCall(ψ: tuple[list[z3.Bool], z3.Bool], α: z3.Bool) -> Union[bool, z3
 @inject_variables(base_types)
 def T_SetCall(σ: z3.Bool, e: z3.Bool) -> Union[bool, z3.Bool]:
     return is_subtype(e, σ)
-    
+"""

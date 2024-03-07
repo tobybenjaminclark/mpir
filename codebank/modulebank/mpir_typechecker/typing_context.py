@@ -109,5 +109,5 @@ def is_subtype(subtype: _type, basetype: _type, type_variable: z3.Real = Real('�
 
 
 # Gets the relation between 2 types. 1: no intersection, 2: intersecting, 3: subtype relation.
-def get_relation(P: z3.Bool, Q: z3.Bool, type_variable: z3.Real = Real('σ')) -> 1 | 2 | 3:
-    return 3 if(is_subtype(P, Q, type_variable)) else 2 if is_intersecting(P, Q) else 1
+def get_relation(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> 1 | 2 | 3:
+    return 3 if(is_subtype(subtype, basetype, type_variable)) else 2 if is_intersecting(subtype, basetype) else 1
