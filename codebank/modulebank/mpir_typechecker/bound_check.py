@@ -3,8 +3,8 @@ from functools import partial
 
 # Higher-Order Function that returns a min\max application dependent on the passed index.
 def _get_combine_func(index: int) -> partial:
-    if index == 1:  return partial(max, default=float(-2147483647))
-    elif index == 2: return partial(min, default=float(2147483647))
+    if index == 2:  return partial(max, default=float(-2147483647))
+    elif index == 1: return partial(min, default=float(2147483647))
         
 # Function to get the GLB/GUB of a given predicate, dependent on `combine_func_index`
 def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> float:
@@ -42,7 +42,9 @@ def get_supremum(predicate) -> float:
 # Test expression
 σ = z3.Real('σ')
 # bool_expression = z3.And(z3.And(x > 5, 10 > 2), z3.And(x > 0, 15 > x))
-bool_expression = lambda: z3.And(11 <= σ, 11 >= σ)
+
+bool_expression = lambda: z3.And(10 <= σ, σ <= 20)
+
 print(bool_expression, ":", bool_expression())
 # Calculate and print the infimum
 infimum_value = get_infimum(bool_expression())

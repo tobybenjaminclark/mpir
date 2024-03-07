@@ -6,10 +6,11 @@ import pytest
 
 def test_t_add():
     σ = z3.Real('σ')
-    τ1 = type_create_singular(z3.And(10 < σ, σ < 20))
-    τ2 = type_create_singular(z3.And(20 < σ, σ < 30))
-
-    print("TYPES: ", τ1.type, τ2.type)
-    print(T_Add(τ1, τ2))
+    τ1 = type_create_singular(z3.And(10 <= σ, σ <= 20))
+    τ2 = type_create_singular(z3.And(20 <= σ, σ <= 30))
+    
+    solver = z3.Solver()
+    solver.add(T_Add(τ1, τ2)() == z3.And(30 <= σ, 50 >= σ))
+    assert solver.check() == sat
 
 test_t_add()

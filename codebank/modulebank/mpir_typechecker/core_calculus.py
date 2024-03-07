@@ -22,17 +22,16 @@ base_types = dict(Numerical = type_create_singular(True))
 # Function to verify the T-Add Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 + τ2): {Numerical|ε}]
 @inject_variables(base_types)
 def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
-    print("Types: t1:'{}'  t2:'{}'".format(τ1, τ2))
-    τ1_i, τ1_s, τ2_i, τ2_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint), get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
+    τ1_i, τ1_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint)
+    τ2_i, τ2_s = get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
     print("Infs and Sups: t1i:{} t1s:{}\nt2i:{} t2s:{}".format(τ1_i, τ1_s, τ2_i, τ2_s))
 
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     else:
-        greatest_lower_bound = τ1_i + τ2_i
-        greatest_upper_bound = τ1_i + τ2_s
-        expr = lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ)
-        print("T-Add returned: ", expr(), "INF & SUP are: ", get_infimum(expr()), get_supremum(expr()))
-        return expr
+        greatest_lower_bound, greatest_upper_bound = τ1_i + τ2_i, τ1_s + τ2_s
+        print(greatest_lower_bound, "<= sigma <=", greatest_upper_bound)
+        return lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ)
+        
 
 
 
