@@ -86,8 +86,8 @@ def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
 # Function to check if one singular type definition is a subtype of another singular type definition. [T-Sub]
 def is_subtype_variable(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
     if subtype.type != basetype.type or subtype.type != type_variants._variable: return TypeError
-    implication_solver, P, Q = z3.Solver(), subtype.logic.constraint, basetype.logic.constraint
-    implication_solver.add(z3.ForAll(type_variable, z3.Implies(P, Q)))
+    implication_solver = z3.Solver()
+    implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype.logic.constraint(), basetype.logic.constraint())))
     return implication_solver.check() == z3.sat
 
 # Function to check if one function type definition is a subtype of another function type definition. [T-FuncSub]

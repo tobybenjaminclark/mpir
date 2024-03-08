@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 import z3
-from mpir_module_context import *
+from typing_context import *
 from core_calculus import *
 
 def convert_operator_to_z3(solver, operator: str, left, right):
@@ -20,6 +20,8 @@ def convert_operator_to_z3(solver, operator: str, left, right):
     else:
         # Handle the case where the operator is not recognized
         raise ValueError(f"Unsupported operator: {operator}")
+
+# SSA
 
 def form_expression(solver, type_logic: dict):
 
@@ -67,17 +69,22 @@ def get_operator(operator_str):
 
 def type_ast_expression(ast, context) -> bool:
     x = Real('σ')
+
     match ast["TYPE"]:
         case "EXPRESSION_IDENTIFIER":
-            print("this: ", context[1][ast["IDENTIFIER"]])
-            return lambda: context[1][ast["IDENTIFIER"]]()
+            return get_type_from_context(context, ast["IDENTIFIER"])
         case "EXPRESSION_NUMERICAL_LITERAL":
-            return lambda: x == ast["VALUE"]
+            y = ast["VALUE"]
+            return type_create_singular(lambda: x == y)
         case "EXPRESSION_OPERATOR":
             if ast["IDENTIFIER"] == "+":
-                l =type_ast_expression(ast["LEFT"], context)
+                l = type_ast_expression(ast["LEFT"], context)
                 r = type_ast_expression(ast["RIGHT"], context)
-                return T_Add(l(), r())
+                print(l, "\n\n\n\n", r)
+                t3 = T_Add(l, "\n\n\n", r)
+                return t3
+        case _:
+            print("Error!")
 
 expression_dict = {
         "TYPE": "EXPRESSION_OPERATOR",
@@ -102,64 +109,32 @@ expression_dict = {
 
 
 
-class TypeCheck():
-    def __init__(self, ast:dict) -> None:
-
-        # Validate AST
-        if not validate_ast(ast): raise Exception("Invalid AST")
-        self.types: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "TYPE_DECLARATION"]
-        self.types_logic = context_create()
-        self.functions: list[dict] = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
-        self.function_io = [(node["IDENTIFIER"], node["INPUTS"], node["RETURN_TYPE"]) for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
-        for n in self.function_io:
-            print(n[0], "::" ,n[1], "->", n[2])
-
-        self.validate_types()
-        self.validate_functions()
-
-        global expression_dict
-        x = Real('σ')
-        context_add(self.types_logic, "a", lambda: z3.And(x > 10, x < 20))
-        print(type_ast_expression(expression_dict, self.types_logic)())
-        print("\n\n\n")
-            
-
-    def validate_functions(self) -> None:
-        for function_index, func in enumerate(self.functions):        
-            
-            # Setup Typing Context for this Function & Populate it with input types
-            # context: dict[str:z3] = {arg: self.types_logic[func["INPUTS"][index]] for index, arg in enumerate(func["ARGUMENTS"])}
-            context: dict[str:z3] = {}
-
-            for index, statement in enumerate(func["BODY"]):
-                if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-                    context[statement["IDENTIFIER"]] = statement["ASSIGNED_TYPE"]
-                    print("Type Assignment to " + statement["IDENTIFIER"] + " ( has type: " + str(context[statement["IDENTIFIER"]]) + ")")
-                if(statement["TYPE"] == "VALUE_ASSIGNMENT"):
-                    print("Value Assignment to " + statement["IDENTIFIER"] + " ( has type: " + str(context[statement["IDENTIFIER"]]) + ")")
-                    if(statement["EXPRESSION"]["TYPE"] == "EXPRESSION_NUMERICAL_LITERAL"):
-                        print("Literal!")
-                continue    
-            print(context)
-        return None
-
-    def validate_types(self) -> None:
-        
-        print("Validating Types")
-        for type_index, type in enumerate(self.types):
-
-            # Create Solver for Curernt Type
-            type_solver: z3.Solver = z3.Solver()
-            context_add(self.types_logic, type["IDENTIFIER"], form_expression(type_solver, type["LOGIC"]))
-            type_solver.add(context_search(self.types_logic, type["IDENTIFIER"]))
-
-            # Check Solver to make ensure type satisfiability
-            if type_solver.check() == z3.sat: print(f"  → Type " + type["IDENTIFIER"] + " is satisfiable ", context_search(self.types_logic, type["IDENTIFIER"]))
-            else: print(f"  → Type " + type["IDENTIFIER"] + " is unsatisfiable")
-                
-            continue
-        return None
 
 
+x = z3.Real('x')
+y = z3.Real('y')
+
+# define refinements on x and y
+x_constraint = z3.And(x >= 5, x <= 10)
+y_constraint = z3.And(y >= 10, y <= 15)
+
+# add implication (for subtype)
+solver = Solver()
+solver.add(z3.Implies(z3.And(x_constraint, y_constraint), z3.And(10 <= (x+y), (x+y) <= 25)))
+
+# check
+if solver.check() == 'sat':
+    model = solver.model()
+    print("Satisfiable. x =", model.eval(x), "y =", model.eval(y))
+else:
+    print("Not satisfiable.")
+
+"""
 ast = parse_json_file("testj.json")
-a = TypeCheck(ast)
+c = context_create()
+
+x = Real('σ')
+t = type_create_singular(lambda: z3.And(x > 10, x < 20))
+c = c + ('a', t)
+type_ast_expression(expression_dict, c)
+"""
