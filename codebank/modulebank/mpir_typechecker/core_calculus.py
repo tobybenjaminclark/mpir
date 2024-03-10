@@ -30,7 +30,7 @@ def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
     greatest_lower_bound, greatest_upper_bound = τ1_i + τ2_i, τ1_s + τ2_s
-    return lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ)
+    return type_create_singular(lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ))
 
 
 
@@ -57,7 +57,7 @@ def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
     greatest_lower_bound, greatest_upper_bound = τ1_i - τ2_s, τ1_s - τ2_i
-    return lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ)
+    return type_create_singular(lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ))
 
 
 
