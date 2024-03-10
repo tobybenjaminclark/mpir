@@ -17,7 +17,7 @@ def inject_variables(context: dict[str, any]) -> callable:
         return decorator
     return variable_injector
 
-base_types = dict(Numerical = type_create_singular(True))
+base_types = dict(Numerical = type_create_singular(lambda: True))
 
 
 
