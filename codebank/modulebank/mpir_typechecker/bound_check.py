@@ -39,17 +39,18 @@ def get_infimum(predicate) -> float:
 def get_supremum(predicate) -> float: 
     return get_bound(predicate, 2, float(2147483647))
 
-# Test expression
-σ = z3.Real('σ')
-# bool_expression = z3.And(z3.And(x > 5, 10 > 2), z3.And(x > 0, 15 > x))
+if __name__ == "__main__":
+    # Test expression
+    σ = z3.Real('σ')
+    # bool_expression = z3.And(z3.And(x > 5, 10 > 2), z3.And(x > 0, 15 > x))
 
-bool_expression = lambda: z3.And(10 <= σ, σ <= 20)
+    bool_expression = lambda: z3.And(10 <= σ, σ <= 20)
 
-print(bool_expression, ":", bool_expression())
-# Calculate and print the infimum
-infimum_value = get_infimum(bool_expression())
-print(f"The infimum of the expression is: {infimum_value}")
+    print(bool_expression, ":", bool_expression())
+    # Calculate and print the infimum
+    infimum_value = get_infimum(bool_expression())
+    print(f"The infimum of the expression is: {infimum_value}")
 
-# Calculate and print the supremum
-supremum = get_supremum(bool_expression())
-print(f"The supremum of the expression is: {supremum}")
+    # Calculate and print the supremum
+    supremum = get_supremum(bool_expression())
+    print(f"The supremum of the expression is: {supremum}")
