@@ -42,14 +42,14 @@ expression_dict = {
         },
         "RIGHT": {
             "TYPE": "EXPRESSION_OPERATOR",
-            "IDENTIFIER": "/",
+            "IDENTIFIER": "+",
             "LEFT": {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
                 "VALUE": 4.000000
             },
             "RIGHT" : {
-              "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-              "VALUE" : 2.000000
+              "TYPE" : "EXPRESSION_IDENTIFIER",
+              "IDENTIFIER" : "a"
             }
         }
     }
