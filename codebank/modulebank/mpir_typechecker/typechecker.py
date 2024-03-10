@@ -110,25 +110,6 @@ expression_dict = {
 
 
 
-
-x = z3.Real('x')
-y = z3.Real('y')
-
-# define refinements on x and y
-x_constraint = z3.And(x >= 5, x <= 10)
-y_constraint = z3.And(y >= 10, y <= 15)
-
-# add implication (for subtype)
-solver = Solver()
-solver.add(z3.Implies(z3.And(x_constraint, y_constraint), z3.And(10 <= (x+y), (x+y) <= 25)))
-
-# check
-if solver.check() == 'sat':
-    model = solver.model()
-    print("Satisfiable. x =", model.eval(x), "y =", model.eval(y))
-else:
-    print("Not satisfiable.")
-
 """
 ast = parse_json_file("testj.json")
 c = context_create()

@@ -73,7 +73,7 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
     greatest_upper_bound = max(τ1_i / τ2_i, τ1_i / τ2_s, τ1_s / τ2_i, τ1_s / τ2_s)
     return type_create_singular(lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ))
 
-"""
+""" 
 # Function to verify the T-Subtract Rule [τ1 ≤ {Numerical|P} ^ τ2 ≤ {Numerical|P} → (τ1 - τ2): {Numerical|ε}]
 @inject_variables(base_types)
 def T_Sub(τ1: z3.Bool, τ2: z3.Bool) -> Union[bool, z3.Bool]:
