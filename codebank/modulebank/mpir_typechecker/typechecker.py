@@ -3,33 +3,26 @@ from typing_context import *
 from typing_context import _type, _context
 from core_calculus import *
 
-def type_ast_expression(ast, context) -> _type:
-    x = Real('σ')
-    match ast["TYPE"]:
-        case "EXPRESSION_IDENTIFIER":
-            return get_type_from_context(context, ast["IDENTIFIER"])
-        case "EXPRESSION_NUMERICAL_LITERAL":
-            y = ast["VALUE"]
-            return type_create_singular(lambda: x == y)
-        case "EXPRESSION_OPERATOR":
-            if ast["IDENTIFIER"] == "+":
-                l = type_ast_expression(ast["LEFT"], context)
-                r = type_ast_expression(ast["RIGHT"], context)
-                return T_Add(l, r)
-            elif ast["IDENTIFIER"] == "*":
-                l = type_ast_expression(ast["LEFT"], context)
-                r = type_ast_expression(ast["RIGHT"], context)
-                return T_Mult(l, r)
-            elif ast["IDENTIFIER"] == "-":
-                l = type_ast_expression(ast["LEFT"], context)
-                r = type_ast_expression(ast["RIGHT"], context)
-                return T_Sub(l, r)
-            elif ast["IDENTIFIER"] == "/":
-                l = type_ast_expression(ast["LEFT"], context)
-                r = type_ast_expression(ast["RIGHT"], context)
-                return T_Div(l, r)
-        case _:
-            print("Error!")
+def type_ast_expression(ast, context, σ = z3.Real('σ')) -> _type:
+    ast_type = ast["TYPE"]
+    if ast_type == "EXPRESSION_IDENTIFIER":
+        return get_type_from_context(context, ast["IDENTIFIER"])
+    if ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
+        y = ast["VALUE"]
+        return type_create_singular(lambda: σ == y)
+    if ast_type == "EXPRESSION_OPERATOR":
+        left = type_ast_expression(ast["LEFT"], context)
+        right = type_ast_expression(ast["RIGHT"], context)
+        if ast["IDENTIFIER"] == "+":
+            return T_Add(left, right)
+        elif ast["IDENTIFIER"] == "*":
+            return T_Mult(left, right)
+        elif ast["IDENTIFIER"] == "-":
+            return T_Sub(left, right)
+        elif ast["IDENTIFIER"] == "/":
+            return T_Div(left, right)
+    else:
+        print("Error!")
 
 
 
