@@ -15,8 +15,11 @@ def type_ast_expression(ast, context) -> _type:
             if ast["IDENTIFIER"] == "+":
                 l = type_ast_expression(ast["LEFT"], context)
                 r = type_ast_expression(ast["RIGHT"], context)
-                t3 = T_Add(l, r)
-                return t3
+                return T_Add(l, r)
+            elif ast["IDENTIFIER"] == "*":
+                l = type_ast_expression(ast["LEFT"], context)
+                r = type_ast_expression(ast["RIGHT"], context)
+                return T_Mult(l, r)
         case _:
             print("Error!")
 
@@ -31,14 +34,14 @@ expression_dict = {
         },
         "RIGHT": {
             "TYPE": "EXPRESSION_OPERATOR",
-            "IDENTIFIER": "+",
+            "IDENTIFIER": "*",
             "LEFT": {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
-                "VALUE": 1.000000
+                "VALUE": 2.000000
             },
             "RIGHT" : {
               "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-              "VALUE" : 1.000000
+              "VALUE" : 2.000000
             }
         }
     }

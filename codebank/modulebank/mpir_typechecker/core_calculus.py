@@ -24,8 +24,8 @@ base_types = dict(Numerical = type_create_singular(lambda: True))
 # Function to verify the [T-Add] Rule
 @inject_variables(base_types)
 def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
-    τ1_i, τ1_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint)
-    τ2_i, τ2_s = get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
+    τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
+    τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
@@ -37,8 +37,8 @@ def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 # Function to verify the [T-Mult] Rule
 @inject_variables(base_types)
 def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
-    τ1_i, τ1_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint)
-    τ2_i, τ2_s = get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
+    τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
+    τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
@@ -51,8 +51,8 @@ def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 # Function to verify the [T-Sub] Rule
 @inject_variables(base_types)
 def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
-    τ1_i, τ1_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint)
-    τ2_i, τ2_s = get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
+    τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
+    τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
@@ -64,8 +64,8 @@ def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 # Function to verify the [T-Mult] Rule
 @inject_variables(base_types)
 def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
-    τ1_i, τ1_s = get_infimum(τ1.logic.constraint), get_supremum(τ1.logic.constraint)
-    τ2_i, τ2_s = get_infimum(τ2.logic.constraint), get_supremum(τ2.logic.constraint)
+    τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
+    τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
