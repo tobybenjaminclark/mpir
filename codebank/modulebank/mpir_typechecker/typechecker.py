@@ -3,26 +3,26 @@ from typing_context import *
 from typing_context import _type, _context
 from core_calculus import *
 
+# Function to infer the type of an expression operator node, from the types of it's constituents.
+def type_ast_expression_operator(ast, context, σ=z3.Real('σ')) -> _type:
+    op_mapping = {"+": T_Add, "*": T_Mult, "-": T_Sub, "/": T_Div}
+    return op_mapping.get(ast["IDENTIFIER"], lambda: print("Error!"))(
+        type_ast_expression(ast["LEFT"], context),
+        type_ast_expression(ast["RIGHT"], context)
+    )
+
+# Function to infer the type of a numerical literal.
+def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
+    return type_create_singular(lambda: σ == ast["VALUE"])
+
+# Function to infer the type of an ast expression.
 def type_ast_expression(ast, context, σ = z3.Real('σ')) -> _type:
     ast_type = ast["TYPE"]
-    if ast_type == "EXPRESSION_IDENTIFIER":
-        return get_type_from_context(context, ast["IDENTIFIER"])
-    if ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
-        y = ast["VALUE"]
-        return type_create_singular(lambda: σ == y)
-    if ast_type == "EXPRESSION_OPERATOR":
-        left = type_ast_expression(ast["LEFT"], context)
-        right = type_ast_expression(ast["RIGHT"], context)
-        if ast["IDENTIFIER"] == "+":
-            return T_Add(left, right)
-        elif ast["IDENTIFIER"] == "*":
-            return T_Mult(left, right)
-        elif ast["IDENTIFIER"] == "-":
-            return T_Sub(left, right)
-        elif ast["IDENTIFIER"] == "/":
-            return T_Div(left, right)
-    else:
-        print("Error!")
+    if ast_type   == "EXPRESSION_IDENTIFIER":         return get_type_from_context(context, ast["IDENTIFIER"])
+    elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL": return type_ast_numerical_literal(ast, context)
+    elif ast_type == "EXPRESSION_OPERATOR":           return type_ast_expression_operator(ast, context)
+    else:                                             print("Error!")
+        
 
 
 
