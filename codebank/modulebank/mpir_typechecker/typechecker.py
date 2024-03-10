@@ -20,6 +20,14 @@ def type_ast_expression(ast, context) -> _type:
                 l = type_ast_expression(ast["LEFT"], context)
                 r = type_ast_expression(ast["RIGHT"], context)
                 return T_Mult(l, r)
+            elif ast["IDENTIFIER"] == "-":
+                l = type_ast_expression(ast["LEFT"], context)
+                r = type_ast_expression(ast["RIGHT"], context)
+                return T_Sub(l, r)
+            elif ast["IDENTIFIER"] == "/":
+                l = type_ast_expression(ast["LEFT"], context)
+                r = type_ast_expression(ast["RIGHT"], context)
+                return T_Div(l, r)
         case _:
             print("Error!")
 
@@ -34,14 +42,14 @@ expression_dict = {
         },
         "RIGHT": {
             "TYPE": "EXPRESSION_OPERATOR",
-            "IDENTIFIER": "*",
+            "IDENTIFIER": "-",
             "LEFT": {
                 "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
                 "VALUE": 2.000000
             },
             "RIGHT" : {
               "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-              "VALUE" : 2.000000
+              "VALUE" : 1.000000
             }
         }
     }
