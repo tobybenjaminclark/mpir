@@ -29,7 +29,7 @@ def form_expression(type_logic: dict):
             right = form_expression(type_logic["RIGHT"])
             return convert_operator_to_z3(type_logic["DATA"], left, right)
         case "IDENTIFIER":
-            return z3.Real('x')
+            return z3.Real('σ')
         case "STRING_LITERAL":
             pass
         case "NUMERICAL_LITERAL":
@@ -53,7 +53,7 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
 # Function to infer the type of an ast expression.
 def type_ast_expression(ast, context, σ = z3.Real('σ')) -> _type:
     ast_type = ast["TYPE"]
-    if ast_type   == "EXPRESSION_IDENTIFIER":         return t
+    if ast_type   == "EXPRESSION_IDENTIFIER":         return get_type_from_context(context, ast["IDENTIFIER"])
     elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL": return type_ast_numerical_literal(ast, context)
     elif ast_type == "EXPRESSION_OPERATOR":           return type_ast_expression_operator(ast, context)
     else:                                             print("Error!")
@@ -84,14 +84,6 @@ expression_dict = {
 
 
 c = context_create()
-x = Real('σ')
-t = type_create_singular(lambda: z3.And(0 < x, 100 > x))
-c = c + ('z', t)
-t2 = type_ast_expression(expression_dict, c)
-print(t2.logic.constraint())
-
-t3 = type_create_singular(lambda: True)
-print(t3 < t2)
 
 def parse_json_file(filename: str) -> dict|None:
     try:
@@ -121,10 +113,12 @@ for node in ast["CONTENTS"]:
                     # TODO: Fix!
                     typ1 = types[statement["ASSIGNED_TYPE"]]
                     typ = form_expression(typ1)
-                    print("LET", statement["IDENTIFIER"], " :: ", typ)
-                    c += (statement["IDENTIFIER"], type_create_singular(lambda: typ))
+                    print("Let", statement["IDENTIFIER"], " :: ", typ)
+                    singular_type = type_create_singular(lambda: typ)
+                    identifier = statement["IDENTIFIER"]
+                    c = c + (identifier, singular_type)
                 if statement["TYPE"] == "VALUE_ASSIGNMENT":
                     expr = type_ast_expression(statement["EXPRESSION"], c)
-                    print("SET", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+                    print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
                 
 

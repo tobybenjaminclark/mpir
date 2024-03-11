@@ -102,14 +102,14 @@
 				"DATA" : "∧",
 				"LEFT" : {
 					"DATATYPE" : "OPERATOR",
-					"DATA" : ">",
+					"DATA" : "<",
 					"LEFT" : {
-						"DATATYPE" : "IDENTIFIER",
-						"DATA" : "a"
-					},
-					"RIGHT" : {
 						"DATATYPE" : "NUMERICAL_LITERAL",
 						"DATA" : 0.000000
+					},
+					"RIGHT" : {
+						"DATATYPE" : "IDENTIFIER",
+						"DATA" : "a"
 					}
 				},
 				"RIGHT" : {
