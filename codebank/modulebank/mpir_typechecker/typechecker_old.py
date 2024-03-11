@@ -5,7 +5,7 @@ import z3
 from typing_context import *
 from core_calculus import *
 
-def convert_operator_to_z3(solver, operator: str, left, right):
+def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
         ">": lambda: left > right, ">=": lambda: left >= right, "<": lambda: left < right, "<=": lambda: left <= right, "=": lambda: left == right,
@@ -23,12 +23,12 @@ def convert_operator_to_z3(solver, operator: str, left, right):
 
 # SSA
 
-def form_expression(solver, type_logic: dict):
+def form_expression(type_logic: dict):
     match type_logic["DATATYPE"]:
         case "OPERATOR":
-            left = form_expression(solver, type_logic["LEFT"])
-            right = form_expression(solver, type_logic["RIGHT"])
-            return convert_operator_to_z3(solver, type_logic["DATA"], left, right)
+            left = form_expression(type_logic["LEFT"])
+            right = form_expression(type_logic["RIGHT"])
+            return convert_operator_to_z3(type_logic["DATA"], left, right)
         case "IDENTIFIER":
             return z3.Real('x')
         case "STRING_LITERAL":
