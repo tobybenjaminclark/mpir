@@ -22,9 +22,8 @@ def form_expression(type_logic: dict):
     match type_logic["DATATYPE"]:
         case "OPERATOR":            return convert_operator_to_z3(type_logic["DATA"], form_expression(type_logic["LEFT"]), form_expression(type_logic["RIGHT"]))
         case "IDENTIFIER":          return z3.Real('σ')
-        case "STRING_LITERAL":      pass
         case "NUMERICAL_LITERAL":   return z3.RealVal(type_logic["DATA"]) 
-            
+        case _:                     return None
 
 
 
