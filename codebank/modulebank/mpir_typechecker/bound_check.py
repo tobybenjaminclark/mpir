@@ -10,23 +10,16 @@ def _get_combine_func(index: int) -> partial:
 def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> float:
     
     if z3.is_and(t):
-        print("t is and")
         bounds = [get_bound(arg, 1 if combine_func_index == 2 else 2, default_value) for arg in t.children()]
         return _get_combine_func(combine_func_index)(bounds)
     
     elif z3.is_or(t):
-        print("t is or")
         bounds = [get_bound(arg, combine_func_index, default_value) for arg in t.children()]
         return _get_combine_func(combine_func_index)(bounds)
     
     elif z3.is_lt(t) or z3.is_le(t):
-        print("t is lt/lteq")
-
         bound_value_0 = z3.simplify(t.children()[0])
         bound_value_1 = z3.simplify(t.children()[1])
-
-        print("\t bv0:", bound_value_0, " bv1: ", bound_value_1)
-        print("\t bvt0t:", type(bound_value_0), "bvt1t:", type(bound_value_1))
 
         if(type(bound_value_0) == z3.ArithRef):
             return float(bound_value_1.as_long())
@@ -36,8 +29,6 @@ def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> floa
         return default_value
     
     elif z3.is_gt(t) or z3.is_ge(t):
-        print("t is gt\gteq")
-
         bound_value_0 = z3.simplify(t.children()[0])
         bound_value_1 = z3.simplify(t.children()[1])
 
@@ -49,7 +40,6 @@ def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> floa
         return default_value    
     
     elif z3.is_eq(t):
-        print("t is eq")
         bound_value_0 = z3.simplify(t.children()[0])
         bound_value_1 = z3.simplify(t.children()[1])
         try: float(bound_value_0.as_long()) 
@@ -61,10 +51,8 @@ def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> floa
         return default_value
 
 def get_infimum(predicate) -> float: 
-    print("getting infimum of", predicate)
     return get_bound(predicate, 1, float(-2147483647))
 def get_supremum(predicate) -> float: 
-    print("getting supremum of", predicate)
     return get_bound(predicate, 2, float(2147483647))
 
 if __name__ == "__main__":

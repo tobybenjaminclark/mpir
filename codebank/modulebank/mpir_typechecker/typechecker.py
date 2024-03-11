@@ -5,6 +5,7 @@ from core_calculus import *
 import json
 
 
+# Converts an operator node to Z3 logic.
 def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
@@ -14,26 +15,16 @@ def convert_operator_to_z3(operator: str, left, right):
         # Predicates (Forall, Exists)
         "∀": lambda: z3.ForAll(left, right), "∃": lambda: z3.Exists(left, right),
     }
+    return operator_mapping.get(operator, lambda: None)()
 
-    if operator in operator_mapping:
-        return operator_mapping[operator]()
-    else:
-        # Handle the case where the operator is not recognized
-        raise ValueError(f"Unsupported operator: {operator}")
-
+# Converts an expression to Z3 logic.
 def form_expression(type_logic: dict):
-
     match type_logic["DATATYPE"]:
-        case "OPERATOR":
-            left = form_expression(type_logic["LEFT"])
-            right = form_expression(type_logic["RIGHT"])
-            return convert_operator_to_z3(type_logic["DATA"], left, right)
-        case "IDENTIFIER":
-            return z3.Real('σ')
-        case "STRING_LITERAL":
-            pass
-        case "NUMERICAL_LITERAL":
-            return z3.RealVal(type_logic["DATA"])  # Convert to Z3 Real value
+        case "OPERATOR":            return convert_operator_to_z3(type_logic["DATA"], form_expression(type_logic["LEFT"]), form_expression(type_logic["RIGHT"]))
+        case "IDENTIFIER":          return z3.Real('σ')
+        case "STRING_LITERAL":      pass
+        case "NUMERICAL_LITERAL":   return z3.RealVal(type_logic["DATA"]) 
+            
 
 
 
@@ -120,5 +111,9 @@ for node in ast["CONTENTS"]:
                 if statement["TYPE"] == "VALUE_ASSIGNMENT":
                     expr = type_ast_expression(statement["EXPRESSION"], c)
                     print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+                    if(expr < get_type_from_context(c, statement["IDENTIFIER"])):
+                        print("\t Valid")
+                    else:
+                        print("\t Not valid")
                 
 
