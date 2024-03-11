@@ -99,8 +99,8 @@ def test_variable_type_intersect_override():
 # Function to test the subtype relationship between 2 types
 def test_variable_type_subtype():
     σ = Real('σ')
-    τ1 = type_create_singular(z3.And(σ > 10, σ < 20))
-    τ2 = type_create_singular(z3.And(σ > 10, σ < 15))
+    τ1 = type_create_singular(lambda: z3.And(σ > 10, σ < 20))
+    τ2 = type_create_singular(lambda: z3.And(σ > 10, σ < 15))
     assert is_subtype(τ2, τ1) == True
     assert is_subtype(τ1, τ2) == False
 
@@ -108,7 +108,7 @@ def test_variable_type_subtype():
 # Function to test the subtype relationship override `<` between 2 types
 def test_variable_type_subtype_override():
     σ = Real('σ')
-    τ1 = type_create_singular(z3.And(σ > 10, σ < 20))
-    τ2 = type_create_singular(z3.And(σ > 10, σ < 15))
+    τ1 = type_create_singular(lambda: z3.And(σ > 10, σ < 20))
+    τ2 = type_create_singular(lambda: z3.And(σ > 10, σ < 15))
     assert (τ2 < τ1) == True
     assert (τ1 < τ2) == False

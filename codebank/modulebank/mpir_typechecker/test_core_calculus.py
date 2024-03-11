@@ -7,8 +7,8 @@ import pytest
 # Function to test the [T-Add] Typing Rule
 def test_t_add():
     σ = z3.Real('σ')
-    τ1 = type_create_singular(z3.And(10 <= σ, σ <= 20))
-    τ2 = type_create_singular(z3.And(20 <= σ, σ <= 30))
+    τ1 = type_create_singular(lambda: z3.And(10 <= σ, σ <= 20))
+    τ2 = type_create_singular(lambda: z3.And(20 <= σ, σ <= 30))
     solver = z3.Solver()
     solver.add(T_Mult(τ1, τ2).logic.constraint() == z3.And(30 <= σ, 50 >= σ))
     assert solver.check() == sat
@@ -16,8 +16,8 @@ def test_t_add():
 # Function to test the [T-Mult] Typing Rule
 def test_t_mult():
     σ = z3.Real('σ')
-    τ1 = type_create_singular(z3.And(10 <= σ, σ <= 20))
-    τ2 = type_create_singular(z3.And(20 <= σ, σ <= 30))
+    τ1 = type_create_singular(lambda: z3.And(10 <= σ, σ <= 20))
+    τ2 = type_create_singular(lambda: z3.And(20 <= σ, σ <= 30))
     solver = z3.Solver()
     print(T_Mult(τ1, τ2))
     solver.add(T_Mult(τ1, τ2).logic.constraint() == z3.And(200 <= σ, 600 >= σ))
@@ -26,8 +26,8 @@ def test_t_mult():
 # Function to test the [T-Sub] Typing Rule
 def test_t_sub():
     σ = z3.Real('σ')
-    τ1 = type_create_singular(z3.And(10 <= σ, σ <= 20))
-    τ2 = type_create_singular(z3.And(0 <= σ, σ <= 5))
+    τ1 = type_create_singular(lambda: z3.And(10 <= σ, σ <= 20))
+    τ2 = type_create_singular(lambda: z3.And(0 <= σ, σ <= 5))
     solver = z3.Solver()
     solver.add(T_Mult(τ1, τ2).logic.constraint() == z3.And(5 <= σ, 20 >= σ))
     assert solver.check() == sat
