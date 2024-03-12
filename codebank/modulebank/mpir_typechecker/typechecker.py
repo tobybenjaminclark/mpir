@@ -71,23 +71,34 @@ def parse_json_file(filename: str) -> dict|None:
 ast = parse_json_file("testj.json")
 
 
-def process_type_declarations(ast: dict[str:any]) -> dict[str:_type]:
-    return {node["IDENTIFIER"]: node["LOGIC"] for node in filter(lambda node: node["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])}
+# Function to process type declarations and add them to the typing context (Γ)
+def process_type_declarations(ast: dict[str:any], context: _context) -> dict[str:_type]:
+    types = {node["IDENTIFIER"]: node["LOGIC"] for node in filter(lambda node: node["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])}
+    for k, v in types.items(): context += (k, type_create_singular(lambda: form_expression(v)))
+    return context
+
+# Function to type check an AST
+def typecheck_ast(ast: dict[str:any]):
+    Γ = context_create('Γ')
+    Γ = process_type_declarations(ast)
+    function_declarations = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
+    for function in function_declarations:
+        print(function)
 
 
-types = process_type_declarations(ast)
+c = process_type_declarations(ast, c)
 
 for node in ast["CONTENTS"]:
         if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
             for statement in node["BODY"]:
                 if statement["TYPE"] == "TYPE_ASSIGNMENT":
                     # TODO: Fix!
-                    typ1 = types[statement["ASSIGNED_TYPE"]]
-                    typ = form_expression(typ1)
-                    print("Let", statement["IDENTIFIER"], " :: ", typ)
-                    singular_type = type_create_singular(lambda: typ)
+                    typ = get_type_from_context(c, statement["ASSIGNED_TYPE"])
+                    if(typ == None):
+                        raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",c)
+                    print("Let", statement["IDENTIFIER"], " :: ", typ.logic.constraint())
                     identifier = statement["IDENTIFIER"]
-                    c = c + (identifier, singular_type)
+                    c = c + (identifier, typ)
                 if statement["TYPE"] == "VALUE_ASSIGNMENT":
                     expr = type_ast_expression(statement["EXPRESSION"], c)
                     print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
