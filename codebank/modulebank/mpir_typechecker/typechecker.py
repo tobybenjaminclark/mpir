@@ -77,24 +77,31 @@ def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_typ
     for k, v in types.items(): Γ += (k, type_create_singular(lambda: form_expression(v)))
     return Γ
 
+
+def typecheck_type_assignment(statement: dict[str:any], context: _context) -> _context:
+    typ = get_type_from_context(context, statement["ASSIGNED_TYPE"])
+    if(typ == None):
+        raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",context)
+    print("Let", statement["IDENTIFIER"], " :: ", typ.logic.constraint())
+    identifier = statement["IDENTIFIER"]
+    context = context + (identifier, typ)
+    return context
+
+def typecheck_value_assignment(statement: dict[str:any], context: _context) -> _context:
+    expr = type_ast_expression(statement["EXPRESSION"], context)
+    print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+    if(expr < get_type_from_context(context, statement["IDENTIFIER"])):
+        print("\t Valid")
+    else:
+        print("\t Not valid")
+    return context
+
 # Function to type check a Function Declaration
 def typecheck_function(function: dict[str:any], context: _context):
     for statement in function["BODY"]:
-        if statement["TYPE"] == "TYPE_ASSIGNMENT":
-            # TODO: Fix!
-            typ = get_type_from_context(context, statement["ASSIGNED_TYPE"])
-            if(typ == None):
-                raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",context)
-            print("Let", statement["IDENTIFIER"], " :: ", typ.logic.constraint())
-            identifier = statement["IDENTIFIER"]
-            context = context + (identifier, typ)
-        if statement["TYPE"] == "VALUE_ASSIGNMENT":
-            expr = type_ast_expression(statement["EXPRESSION"], context)
-            print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
-            if(expr < get_type_from_context(context, statement["IDENTIFIER"])):
-                print("\t Valid")
-            else:
-                print("\t Not valid")
+        if statement["TYPE"] == "TYPE_ASSIGNMENT": context = typecheck_type_assignment(statement, context)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT": context = typecheck_value_assignment(statement, context)
+
 
 # Function to type check an AST
 def typecheck_ast(ast: dict[str:any]):
