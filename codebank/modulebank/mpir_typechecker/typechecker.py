@@ -2,8 +2,13 @@ import z3
 from typing_context import *
 from typing_context import _type, _context
 from core_calculus import *
+from typing import Literal, IO
 import json
 
+DEBUG_MODE = True
+
+def debug(*args, sep: str | None = " ", end: str | None = "\n", flush: Literal[False] = False) -> None:
+    return print(">>",*args, sep = sep, end = end, flush = flush) if DEBUG_MODE else None
 
 # Converts an operator node to Z3 logic.
 def convert_operator_to_z3(operator: str, left, right):
@@ -78,29 +83,31 @@ def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_typ
     return Γ
 
 
-def typecheck_type_assignment(statement: dict[str:any], context: _context) -> _context:
-    typ = get_type_from_context(context, statement["ASSIGNED_TYPE"])
-    if(typ == None):
-        raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",context)
-    print("Let", statement["IDENTIFIER"], " :: ", typ.logic.constraint())
-    identifier = statement["IDENTIFIER"]
-    context = context + (identifier, typ)
-    return context
+# Function to typecheck a type assignment/let statement
+def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Σ: _context) -> tuple[_context, _context]:
+    assigned_type = get_type_from_context(Γ, statement["ASSIGNED_TYPE"])
 
-def typecheck_value_assignment(statement: dict[str:any], context: _context) -> _context:
-    expr = type_ast_expression(statement["EXPRESSION"], context)
-    print("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
-    if(expr < get_type_from_context(context, statement["IDENTIFIER"])):
-        print("\t Valid")
-    else:
-        print("\t Not valid")
-    return context
+    if(assigned_type == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
+    debug("Let", statement["IDENTIFIER"], " :: ", assigned_type.logic.constraint())
+
+    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), Σ
+
+# Function to typecheck a value assignment/set statement
+def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Σ: _context) -> tuple[_context, _context]:
+    expr = type_ast_expression(statement["EXPRESSION"], Γ)
+
+    debug("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+    if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])): debug("\t Valid")  
+    else: debug("\t Not valid")
+
+    return Γ, Σ
 
 # Function to type check a Function Declaration
-def typecheck_function(function: dict[str:any], context: _context):
+def typecheck_function(function: dict[str:any], Γ: _context):
+    Σ = context_create('Σ')
     for statement in function["BODY"]:
-        if statement["TYPE"] == "TYPE_ASSIGNMENT": context = typecheck_type_assignment(statement, context)
-        if statement["TYPE"] == "VALUE_ASSIGNMENT": context = typecheck_value_assignment(statement, context)
+        if statement["TYPE"] == "TYPE_ASSIGNMENT": Γ, Σ = typecheck_type_assignment(statement, Γ, Σ)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Σ = typecheck_value_assignment(statement, Γ, Σ)
 
 
 # Function to type check an AST
