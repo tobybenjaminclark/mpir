@@ -56,6 +56,10 @@ def remove_type_from_context(context: _context, identifier: str) -> _context:
 def get_type_from_context(context: _context, identifier: str) -> _type|None:
     return context.bindings.get(identifier, None)
 
+# Function to duplicate a typing context (instead of duplicating the reference).
+def duplicate_context(original_context: _context) -> _context:
+    return _context(original_context.identifier, {k: v for k, v in original_context.bindings.items()})
+
 
 
 
