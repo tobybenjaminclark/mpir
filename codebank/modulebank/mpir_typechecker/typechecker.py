@@ -76,40 +76,58 @@ def parse_json_file(filename: str) -> dict|None:
 ast = parse_json_file("testj.json")
 
 
-# Function to process type declarations and add them to the typing context (Γ)
+# Function to process type declarations and add them to the typing context (Γ).
 def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_type]:
     types = {node["IDENTIFIER"]: node["LOGIC"] for node in filter(lambda node: node["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])}
     for k, v in types.items(): Γ += (k, type_create_singular(lambda: form_expression(v)))
     return Γ
 
 
-# Function to typecheck a type assignment/let statement
-def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Σ: _context) -> tuple[_context, _context]:
+
+# Function to typecheck a type assignment/let statement.
+def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     assigned_type = get_type_from_context(Γ, statement["ASSIGNED_TYPE"])
 
     if(assigned_type == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
     debug("Let", statement["IDENTIFIER"], " :: ", assigned_type.logic.constraint())
 
-    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Σ, statement["IDENTIFIER"], assigned_type)
+    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Ψ, statement["IDENTIFIER"], assigned_type)
 
-# Function to typecheck a value assignment/set statement
-def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Σ: _context) -> tuple[_context, _context]:
-    expr = type_ast_expression(statement["EXPRESSION"], Σ)
+
+
+# Function to typecheck a value assignment/set statement.
+def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
+    expr = type_ast_expression(statement["EXPRESSION"], Ψ)
 
     debug("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+
+    # Set Statement is valid
     if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])):
         debug("\t Valid")  
-        Σ += (statement["IDENTIFIER"], expr)
-    else: debug("\t Not valid")
+        Ψ += (statement["IDENTIFIER"], expr)
+    
+    # Set Statement is not valid
+    else:
+        raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee.")
 
-    return Γ, Σ
+    return Γ, Ψ
 
-# Function to type check a Function Declaration
+
+
+# Function to typecheck a function call.
+def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
+    return Γ, Ψ 
+
+
+
+# Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
-    Σ = context_create('Σ')
+    Ψ = context_create('Ψ')
     for statement in function["BODY"]:
-        if statement["TYPE"] == "TYPE_ASSIGNMENT": Γ, Σ = typecheck_type_assignment(statement, Γ, Σ)
-        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Σ = typecheck_value_assignment(statement, Γ, Σ)
+        if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
+
 
 
 # Function to type check an AST

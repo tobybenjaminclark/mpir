@@ -24,7 +24,7 @@ base_types = dict(Numerical = type_create_singular(lambda: True))
 
 # Function to verify the [T-Add] Rule
 @inject_variables(base_types)
-def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
+def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
     τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
@@ -37,7 +37,7 @@ def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 
 # Function to verify the [T-Mult] Rule
 @inject_variables(base_types)
-def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
+def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
     τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
@@ -51,7 +51,7 @@ def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 
 # Function to verify the [T-Sub] Rule
 @inject_variables(base_types)
-def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
+def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
     τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
@@ -64,7 +64,7 @@ def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
 
 # Function to verify the [T-Mult] Rule
 @inject_variables(base_types)
-def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
+def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
     τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
@@ -73,3 +73,11 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> bool:
     greatest_lower_bound = min(τ1_i / τ2_i, τ1_i / τ2_s, τ1_s / τ2_i, τ1_s / τ2_s)
     greatest_upper_bound = max(τ1_i / τ2_i, τ1_i / τ2_s, τ1_s / τ2_i, τ1_s / τ2_s)
     return type_create_singular(lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ))
+
+
+
+# Function to verify the [T-Mult] Rule
+@inject_variables(base_types)
+def T_FuncCall(inputs: list[_type], output: _type, function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
+    if function.type != type_variants._function_type: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
+    
