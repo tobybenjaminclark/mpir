@@ -16,7 +16,7 @@ def parse_json_file(filename: str) -> dict|None:
         print(f"Error decoding AST in '{filename}': {e}")
         return None
 
-ast = parse_json_file("Desktop/test5.json")
+ast = parse_json_file("testj.json")
 
 def desugar_do_statement(statement):
     statements = []

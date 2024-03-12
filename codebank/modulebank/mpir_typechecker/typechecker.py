@@ -10,12 +10,15 @@ def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
         ">": lambda: left > right, ">=": lambda: left >= right, "<": lambda: left < right, "<=": lambda: left <= right, "=": lambda: left == right,
+        
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left),
+
         # Predicates (Forall, Exists)
         "∀": lambda: z3.ForAll(left, right), "∃": lambda: z3.Exists(left, right),
     }
     return operator_mapping.get(operator, lambda: None)()
+
 
 # Converts an expression to Z3 logic.
 def form_expression(type_logic: dict):
@@ -24,8 +27,6 @@ def form_expression(type_logic: dict):
         case "IDENTIFIER":          return z3.Real('σ')
         case "NUMERICAL_LITERAL":   return z3.RealVal(type_logic["DATA"]) 
         case _:                     return None
-
-
 
 
 # Function to infer the type of an expression operator node, from the types of it's constituents.
@@ -51,27 +52,6 @@ def type_ast_expression(ast, context, σ = z3.Real('σ')) -> _type:
 
 
 
-expression_dict = {
-    "TYPE" : "EXPRESSION_OPERATOR",
-    "IDENTIFIER" : "+",
-    "LEFT" : {
-        "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-        "VALUE" : 5.000000
-    },
-    "RIGHT" : {
-        "TYPE" : "EXPRESSION_OPERATOR",
-        "IDENTIFIER" : "+",
-        "LEFT" : {
-            "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-            "VALUE" : 1.000000
-        },
-        "RIGHT" : {
-            "TYPE" : "EXPRESSION_IDENTIFIER",
-            "IDENTIFIER" : "z"
-        }
-    }}
-
-
 
 c = context_create()
 
@@ -90,11 +70,12 @@ def parse_json_file(filename: str) -> dict|None:
     
 ast = parse_json_file("testj.json")
 
-types = {}
-for node in ast["CONTENTS"]:
-    if(node["TYPE"] == "TYPE_DECLARATION"):
-        iden = node["IDENTIFIER"]
-        types[iden] = node["LOGIC"]
+
+def process_type_declarations(ast: dict[str:any]) -> dict[str:_type]:
+    return {node["IDENTIFIER"]: node["LOGIC"] for node in filter(lambda node: node["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])}
+
+
+types = process_type_declarations(ast)
 
 for node in ast["CONTENTS"]:
         if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":

@@ -1,130 +1,130 @@
 {
-	"CONTENTS" : [
-		{
-			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "multiply_show",
-			"RETURN_TYPE" : "Integer",
-			"BODY" : [
-				{
-					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "z",
-					"ASSIGNED_TYPE" : "SmallInt"
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "z",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : 5.000000
-					}
-				},
-				{
-					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "x",
-					"ASSIGNED_TYPE" : "SmallInt"
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "x",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : "+",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 5.000000
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_OPERATOR",
-							"IDENTIFIER" : "+",
-							"LEFT" : {
-								"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-								"VALUE" : 1.000000
-							},
-							"RIGHT" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "z"
-							}
-						}
-					}
-				},
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "z"
-							}
-						}
-					]
-				}
-			],
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"IDENTIFIER" : "x",
-					"STRING" : "First Integer"
-				},
-				{
-					"FLAG" : "doc",
-					"IDENTIFIER" : "y",
-					"STRING" : "Second Integer"
-				},
-				{
-					"FLAG" : "doc",
-					"IDENTIFIER" : "z",
-					"STRING" : "Product of X & Y"
-				},
-				{
-					"FLAG" : "doc",
-					"STRING" : "Function to show product of 2 integers"
-				}
-			],
-			"INPUTS" : [
-				"SmallInt"
-			],
-			"ARGUMENTS" : [
-				"x"
-			]
-		},
-		{
-			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "SmallInt",
-			"INPUTS" : [
-				"a"
-			],
-			"BASE_TYPE" : "Integer",
-			"LOGIC" : {
-				"DATATYPE" : "OPERATOR",
-				"DATA" : "∧",
-				"LEFT" : {
-					"DATATYPE" : "OPERATOR",
-					"DATA" : ">",
-					"LEFT" : {
-						"DATATYPE" : "IDENTIFIER",
-						"DATA" : "a"
-					},
-					"RIGHT" : {
-						"DATATYPE" : "NUMERICAL_LITERAL",
-						"DATA" : 0.000000
-					}
-				},
-				"RIGHT" : {
-					"DATATYPE" : "OPERATOR",
-					"DATA" : "<",
-					"LEFT" : {
-						"DATATYPE" : "IDENTIFIER",
-						"DATA" : "a"
-					},
-					"RIGHT" : {
-						"DATATYPE" : "NUMERICAL_LITERAL",
-						"DATA" : 100.000000
-					}
-				}
-			}
-		}
-	]
+    "CONTENTS": [
+        {
+            "TYPE": "FUNCTION_DECLARATION",
+            "IDENTIFIER": "multiply_show",
+            "RETURN_TYPE": "Integer",
+            "BODY": [
+                {
+                    "TYPE": "TYPE_ASSIGNMENT",
+                    "IDENTIFIER": "z",
+                    "ASSIGNED_TYPE": "SmallInt"
+                },
+                {
+                    "TYPE": "VALUE_ASSIGNMENT",
+                    "IDENTIFIER": "z",
+                    "EXPRESSION": {
+                        "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
+                        "VALUE": 5.0
+                    }
+                },
+                {
+                    "TYPE": "TYPE_ASSIGNMENT",
+                    "IDENTIFIER": "x",
+                    "ASSIGNED_TYPE": "SmallInt"
+                },
+                {
+                    "TYPE": "VALUE_ASSIGNMENT",
+                    "IDENTIFIER": "x",
+                    "EXPRESSION": {
+                        "TYPE": "EXPRESSION_OPERATOR",
+                        "IDENTIFIER": "+",
+                        "LEFT": {
+                            "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
+                            "VALUE": 5.0
+                        },
+                        "RIGHT": {
+                            "TYPE": "EXPRESSION_OPERATOR",
+                            "IDENTIFIER": "+",
+                            "LEFT": {
+                                "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
+                                "VALUE": 1.0
+                            },
+                            "RIGHT": {
+                                "TYPE": "EXPRESSION_IDENTIFIER",
+                                "IDENTIFIER": "z"
+                            }
+                        }
+                    }
+                },
+                {
+                    "TYPE": "FUNCTION_CALL",
+                    "IDENTIFIER": "return",
+                    "ARGUMENTS": [
+                        {
+                            "TYPE": "FUNCTION_ARGUMENT",
+                            "ARGUMENT_INDEX": 0.0,
+                            "VALUE": {
+                                "TYPE": "EXPRESSION_IDENTIFIER",
+                                "IDENTIFIER": "z"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "DOCSECTION": [
+                {
+                    "FLAG": "doc",
+                    "IDENTIFIER": "x",
+                    "STRING": "First Integer"
+                },
+                {
+                    "FLAG": "doc",
+                    "IDENTIFIER": "y",
+                    "STRING": "Second Integer"
+                },
+                {
+                    "FLAG": "doc",
+                    "IDENTIFIER": "z",
+                    "STRING": "Product of X & Y"
+                },
+                {
+                    "FLAG": "doc",
+                    "STRING": "Function to show product of 2 integers"
+                }
+            ],
+            "INPUTS": [
+                "SmallInt"
+            ],
+            "ARGUMENTS": [
+                "x"
+            ]
+        },
+        {
+            "TYPE": "TYPE_DECLARATION",
+            "IDENTIFIER": "SmallInt",
+            "INPUTS": [
+                "a"
+            ],
+            "BASE_TYPE": "Integer",
+            "LOGIC": {
+                "DATATYPE": "OPERATOR",
+                "DATA": "\u2227",
+                "LEFT": {
+                    "DATATYPE": "OPERATOR",
+                    "DATA": "<",
+                    "LEFT": {
+                        "DATATYPE": "NUMERICAL_LITERAL",
+                        "DATA": 0.0
+                    },
+                    "RIGHT": {
+                        "DATATYPE": "IDENTIFIER",
+                        "DATA": "a"
+                    }
+                },
+                "RIGHT": {
+                    "DATATYPE": "OPERATOR",
+                    "DATA": "<",
+                    "LEFT": {
+                        "DATATYPE": "IDENTIFIER",
+                        "DATA": "a"
+                    },
+                    "RIGHT": {
+                        "DATATYPE": "NUMERICAL_LITERAL",
+                        "DATA": 100.0
+                    }
+                }
+            }
+        }
+    ]
 }

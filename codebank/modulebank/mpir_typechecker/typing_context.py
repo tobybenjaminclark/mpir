@@ -29,11 +29,11 @@ _type.__and__ = lambda self, other: is_intersecting(self, other)
 
 
 
-# Creates a singular variable type
+# Function to create a singular type instance (τ: B|P).
 def type_create_singular(constraint: z3.Bool) -> _type:
     return _type(type_variants._variable, _singular_type(constraint))
 
-# Creates a function type
+# Function to create a function type instance (τ1 x ... x τn → τ0)
 def type_create_function(input_constraints: list[z3.Bool], output_constraint: z3.Bool) -> _type:
     return _type(type_variants._function, _function_type(input_constraints, output_constraint))
 
@@ -43,8 +43,11 @@ def context_create(identifier: str = 'Γ') -> _context:
 
 # Binds a type within a typing context to an identifier
 def add_type_to_context(context: _context, identifier: str, type_value: _type) -> _context:
-    return _context(context.identifier, {**context.bindings, identifier: type_value} if type_value.type in {type_variants._variable, type_variants._function} else None)
-
+    if type_value.type in {type_variants._variable, type_variants._function}:
+        new_bindings = {**context.bindings, identifier: type_value}
+        return _context(context.identifier, new_bindings)
+    else: return _context(context.identifier, context.bindings)
+        
 # Removes a identifier, type binding from within a typing context.
 def remove_type_from_context(context: _context, identifier: str) -> _context:
     return _context(context.identifier, {k: v for k, v in context.bindings.items() if k != identifier})
@@ -57,8 +60,8 @@ def get_type_from_context(context: _context, identifier: str) -> _type|None:
 
 
 
-# Function to check if a variable type intersects with another variable type.
-def is_intersecting_variable(subtype: _type, basetype: _type) -> bool | TypeError:
+# Function to check if a singular type intersects with another singular type.
+def is_intersecting_singular(subtype: _type, basetype: _type) -> bool | TypeError:
     if subtype.type != basetype.type or subtype.type != type_variants._variable: return TypeError
     type_solver = z3.Solver()
     type_solver.add(And(subtype.logic.constraint, basetype.logic.constraint))
@@ -77,7 +80,7 @@ def is_intersecting_function(subtype: _type, basetype: _type) -> bool | TypeErro
 def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
     if subtype.type != basetype.type: return TypeError
     if subtype.type == type_variants._function: return is_intersecting_function(subtype, basetype)
-    if subtype.type == type_variants._variable: return is_intersecting_variable(subtype, basetype)
+    if subtype.type == type_variants._variable: return is_intersecting_singular(subtype, basetype)
 
 
 

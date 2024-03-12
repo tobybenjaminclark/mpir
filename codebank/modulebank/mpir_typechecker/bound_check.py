@@ -21,10 +21,9 @@ def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> floa
         bound_value_0 = z3.simplify(t.children()[0])
         bound_value_1 = z3.simplify(t.children()[1])
 
-        if(type(bound_value_0) == z3.ArithRef):
-            return float(bound_value_1.as_long())
-        elif (type(bound_value_1) == z3.ArithRef):
-            return float(bound_value_0.as_long())
+        if(type(bound_value_0) == z3.ArithRef): return float(bound_value_1.as_long())
+        elif (type(bound_value_1) == z3.ArithRef): return float(bound_value_0.as_long())
+            
 
         return default_value
     
@@ -32,12 +31,11 @@ def get_bound(t: z3.Bool, combine_func_index: int, default_value: float) -> floa
         bound_value_0 = z3.simplify(t.children()[0])
         bound_value_1 = z3.simplify(t.children()[1])
 
-        if(type(bound_value_0) == z3.ArithRef):
-            return float(bound_value_1.as_long())
-        elif (type(bound_value_1) == z3.ArithRef):
-            return float(bound_value_0.as_long())
+        if(type(bound_value_0) == z3.ArithRef): return float(bound_value_1.as_long())
+        elif (type(bound_value_1) == z3.ArithRef): return float(bound_value_0.as_long())
+            
 
-        return default_value    
+        return default_value        
     
     elif z3.is_eq(t):
         bound_value_0 = z3.simplify(t.children()[0])
