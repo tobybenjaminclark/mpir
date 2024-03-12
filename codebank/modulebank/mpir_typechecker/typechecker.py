@@ -90,14 +90,16 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Σ: _conte
     if(assigned_type == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
     debug("Let", statement["IDENTIFIER"], " :: ", assigned_type.logic.constraint())
 
-    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), Σ
+    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Σ, statement["IDENTIFIER"], assigned_type)
 
 # Function to typecheck a value assignment/set statement
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Σ: _context) -> tuple[_context, _context]:
-    expr = type_ast_expression(statement["EXPRESSION"], Γ)
+    expr = type_ast_expression(statement["EXPRESSION"], Σ)
 
     debug("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
-    if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])): debug("\t Valid")  
+    if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])):
+        debug("\t Valid")  
+        Σ += (statement["IDENTIFIER"], expr)
     else: debug("\t Not valid")
 
     return Γ, Σ
