@@ -118,19 +118,8 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     print("Function Call to", statement["IDENTIFIER"])
 
-    # Validating function call is correct.
-    if statement["IDENTIFIER"] not in Γ: raise Exception("Use of an undeclared function!")
-    if get_type_from_context(Γ, statement["IDENTIFIER"]).type != type_variants._function: raise Exception("Using a non-function type as a function type.")
-    function = get_type_from_context(Γ, statement["IDENTIFIER"])
+    x = T_FuncCall([type_ast_expression(arg["VALUE"], Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
 
-    # Validate Inputs
-    for index, passed_argument in enumerate(statement["ARGUMENTS"]):
-        argument_type =  type_create_singular(function.logic.input_constraints[index])
-        passed_type = type_ast_expression(passed_argument["VALUE"], Ψ)
-        if not (passed_type < argument_type):
-            raise Exception("Argument type not subtype of required type")
-        else:
-            print("Valid Argument")
     
     return Γ, Ψ 
 

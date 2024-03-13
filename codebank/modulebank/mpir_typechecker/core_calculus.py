@@ -78,6 +78,10 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 
 # Function to verify the [T-Mult] Rule
 @inject_variables(base_types)
-def T_FuncCall(inputs: list[_type], output: _type, function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
-    if function.type != type_variants._function_type: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
-    
+def T_FuncCall(inputs: list[_type], function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
+    if function.type != type_variants._function: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
+    input_validation = [inputs[index] < (type_create_singular(function.logic.input_constraints[index])) for index in range(0, len(inputs))]
+    if False in input_validation:
+        raise Exception("Passed non-subtype arg.")
+    else:
+        return type_create_singular(function.logic.output_constraint)
