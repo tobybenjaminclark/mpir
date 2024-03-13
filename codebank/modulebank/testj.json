@@ -2,6 +2,39 @@
 	"CONTENTS" : [
 		{
 			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "two",
+			"RETURN_TYPE" : "TwoInt",
+			"BODY" : [
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+								"VALUE" : 2.000000
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "returns two"
+				}
+			],
+			"INPUTS" : [
+				"Integer"
+			],
+			"ARGUMENTS" : [
+				"x"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
 			"IDENTIFIER" : "multiply_show",
 			"RETURN_TYPE" : "Integer",
 			"BODY" : [
@@ -37,12 +70,22 @@
 							"TYPE" : "EXPRESSION_OPERATOR",
 							"IDENTIFIER" : "+",
 							"LEFT" : {
-								"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-								"VALUE" : 1.000000
-							},
-							"RIGHT" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
 								"IDENTIFIER" : "z"
+							},
+							"RIGHT" : {
+								"TYPE" : "FUNCTION_CALL",
+								"IDENTIFIER" : "two",
+								"ARGUMENTS" : [
+									{
+										"TYPE" : "FUNCTION_ARGUMENT",
+										"ARGUMENT_INDEX" : 0.000000,
+										"VALUE" : {
+											"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+											"VALUE" : 1.000000
+										}
+									}
+								]
 							}
 						}
 					}
@@ -53,7 +96,7 @@
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 1.000000,
+							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
 								"IDENTIFIER" : "z"
@@ -122,6 +165,42 @@
 					"RIGHT" : {
 						"DATATYPE" : "NUMERICAL_LITERAL",
 						"DATA" : 100.000000
+					}
+				}
+			}
+		},
+		{
+			"TYPE" : "TYPE_DECLARATION",
+			"IDENTIFIER" : "TwoInt",
+			"INPUTS" : [
+				"a"
+			],
+			"BASE_TYPE" : "Integer",
+			"LOGIC" : {
+				"DATATYPE" : "OPERATOR",
+				"DATA" : "∧",
+				"LEFT" : {
+					"DATATYPE" : "OPERATOR",
+					"DATA" : "<",
+					"LEFT" : {
+						"DATATYPE" : "NUMERICAL_LITERAL",
+						"DATA" : 1.000000
+					},
+					"RIGHT" : {
+						"DATATYPE" : "IDENTIFIER",
+						"DATA" : "a"
+					}
+				},
+				"RIGHT" : {
+					"DATATYPE" : "OPERATOR",
+					"DATA" : "<",
+					"LEFT" : {
+						"DATATYPE" : "IDENTIFIER",
+						"DATA" : "a"
+					},
+					"RIGHT" : {
+						"DATATYPE" : "NUMERICAL_LITERAL",
+						"DATA" : 3.000000
 					}
 				}
 			}

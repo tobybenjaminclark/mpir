@@ -151,7 +151,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         else if(psr->peek(psr)->type == IDENTIFIER)
         {
             /* Term is expression call */
-            if(mpir_parser_peek_k(psr,2)->type == open_bracket)
+            if(mpir_parser_peek_k(psr,1)->type == open_bracket)
             {
                 /* Parse Function call */
                 printf("EXPR: Parsing Function Call\n");
@@ -188,7 +188,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         }
         else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract)
         {
-            printf("EXPR: Parsing Right-Associative Operator\n");
+            wprintf(L"EXPR: Parsing Right-Associative Operator (%ls)\n", psr->peek(psr)->lexeme);
             wchar_t op_lexeme[128];
             wcscpy(op_lexeme, psr->get(psr)->lexeme);
 

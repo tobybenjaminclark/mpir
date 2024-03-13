@@ -1,30 +1,20 @@
 
 using "anothertest.mpir"
 
-funcdef divide :: TypeInt, TypeInt → TypeInt
-funcdef divide 🔥, y = 🔥 / y
+funcdef two :: Integer → TwoInt
+funcdef two x
+    return(2)
 suchthat:
-    |    doc 🔥 as "First Integer"
-    |    doc y as "Second Integer"
-    |    doc as "Function to divide 2 numbers"
+    |    doc as "returns two"
 end
 
-funcdef multiply_show :: TypeInt, TypeInt  → TypeInt
-funcdef multiply_show x y
-    let z as TypeInt
+funcdef multiply_show :: SmallInt → Integer
+funcdef multiply_show x
+    let z as SmallInt
     set z as 5
-
-    let x as TypeInt2
-    set x as 0
-
-    trycast z into x
-    on 1 -> set z as 1
-
-    do call(z, a)
-    on 5 -> set z as 2
-
+    let x as SmallInt
+    set x as 5 + z + two(1)
     return(z)
-
 suchthat:
     |    doc x as "First Integer"
     |    doc y as "Second Integer"
@@ -32,4 +22,6 @@ suchthat:
     |    doc as "Function to show product of 2 integers"
 end
 
-typedef NewInt a :: Int {a > 5 ^ a == 10}
+typedef SmallInt a :: Integer {0 < a ^ a < 100}
+
+typedef TwoInt a :: Integer {1 < a ^ a < 3}

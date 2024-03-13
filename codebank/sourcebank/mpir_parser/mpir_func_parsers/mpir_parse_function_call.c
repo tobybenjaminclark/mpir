@@ -47,9 +47,13 @@ struct mpir_ast_function_call* mpir_parse_function_call(mpir_parser* psr)
     if(psr->peek(psr)->type == IDENTIFIER) identifier = parse_function_identifier(psr);
     else return NULL;
 
+    printf("PARSED FUNCTION CALL!\n");
+
     /* Parse `(` */
     if(psr->peek(psr)->type == open_bracket) (void)psr->get(psr);
     else return NULL;
+
+    printf("PARSED OPEN BRACKET!\n");
 
     struct mpir_ast_function_call* node = malloc(sizeof(struct mpir_ast_function_call));
     node->identifier = identifier;
@@ -58,9 +62,7 @@ struct mpir_ast_function_call* mpir_parse_function_call(mpir_parser* psr)
     node->arguments = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_arg, psr);
     if(node->arguments == NULL) return NULL;
 
-    /* Parse `\n` */
-    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
-    else return NULL;
+    printf("PARSED ARGS!\n");
 
     return node;
 }
