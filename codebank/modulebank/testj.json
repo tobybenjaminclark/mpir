@@ -53,7 +53,7 @@
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
+							"ARGUMENT_INDEX" : 1.000000,
 							"VALUE" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
 								"IDENTIFIER" : "z"

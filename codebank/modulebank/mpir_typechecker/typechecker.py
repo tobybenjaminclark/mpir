@@ -116,12 +116,34 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
+    print("Function Call to", statement["IDENTIFIER"])
+
+    # Validating function call is correct.
+    if statement["IDENTIFIER"] not in Γ: raise Exception("Use of an undeclared function!")
+    if get_type_from_context(Γ, statement["IDENTIFIER"]).type != type_variants._function: raise Exception("Using a non-function type as a function type.")
+    function = get_type_from_context(Γ, statement["IDENTIFIER"])
+
+    # Validate Inputs
+    for index, passed_argument in enumerate(statement["ARGUMENTS"]):
+        argument_type =  type_create_singular(function.logic.input_constraints[index])
+        passed_type = type_ast_expression(passed_argument["VALUE"], Ψ)
+        if not (passed_type < argument_type):
+            raise Exception("Argument type not subtype of required type")
+        else:
+            print("Valid Argument")
+    
     return Γ, Ψ 
 
 
 
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
+    print(function)
+
+    # Binding Base Types and `return` function type.
+    Γ = Γ + ("Integer", type_create_singular(True)) 
+    Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, type_identifier).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
+
     Ψ = context_create('Ψ')
     for statement in function["BODY"]:
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
