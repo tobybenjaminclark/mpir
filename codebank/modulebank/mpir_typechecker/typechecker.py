@@ -49,8 +49,8 @@ def type_ast_expression_operator(ast, context, propagation, σ=z3.Real('σ')) ->
 
 
 # Function to infer the type of a numerical literal.
-def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
-    return type_create_singular(lambda: σ == ast["VALUE"])
+def type_ast_numerical_literal(ast, context, σ = z3.Real('σ')) -> _type:
+    return type_create_singular(lambda : σ == ast["VALUE"])
 
 
 
@@ -64,7 +64,7 @@ def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type
 # Function to infer the type of an ast expression.
 def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
     ast_type = ast["TYPE"]
-    if ast_type   == "EXPRESSION_IDENTIFIER":         return get_type_from_context(context, ast["IDENTIFIER"])
+    if ast_type   == "EXPRESSION_IDENTIFIER":         return get_type_from_context(propagation, ast["IDENTIFIER"])
     elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL": return type_ast_numerical_literal(ast, context, propagation)
     elif ast_type == "EXPRESSION_OPERATOR":           return type_ast_expression_operator(ast, context, propagation)
     elif ast_type == "FUNCTION_CALL":                 return type_ast_function_call(ast, context, propagation)
@@ -116,14 +116,13 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
 
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
 
-    debug("Set", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
+    expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
+    debug("\n\n\nSet", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
 
     # Set Statement is valid
-    if(expr < get_type_from_context(Ψ, statement["IDENTIFIER"])):
-        debug("\t Valid")  
-        Ψ += (statement["IDENTIFIER"], expr)
+    if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])):
+        Ψ = Ψ + (statement["IDENTIFIER"], expr)
     
     # Set Statement is not valid
     else:
@@ -153,6 +152,9 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
+        print(Γ)
+        print(Ψ)
+
 
 
 

@@ -28,6 +28,8 @@ def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
     τ2_i, τ2_s = get_infimum(τ2.logic.constraint()), get_supremum(τ2.logic.constraint())
     if get_relation(τ1, Numerical, σ) == 1 or get_relation(τ2, Numerical, σ) == 1: return False
+
+    print("[T-Add] Called with ", τ1.logic.constraint(), " and ", τ2.logic.constraint())
     
     # Calculate new infimum and supremum and constrain returned type within that raqnge.
     greatest_lower_bound, greatest_upper_bound = τ1_i + τ2_i, τ1_s + τ2_s
