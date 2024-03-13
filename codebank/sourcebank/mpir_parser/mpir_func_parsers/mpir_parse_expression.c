@@ -151,7 +151,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         else if(psr->peek(psr)->type == IDENTIFIER)
         {
             /* Term is expression call */
-            if(mpir_parser_peek_k(psr,1)->type == open_bracket)
+            if(mpir_parser_peek_k(psr,2)->type == open_bracket)
             {
                 /* Parse Function call */
                 printf("EXPR: Parsing Function Call\n");
