@@ -49,9 +49,8 @@ def type_ast_expression_operator(ast, context, propagation, σ=z3.Real('σ')) ->
 
 
 # Function to infer the type of a numerical literal.
-def type_ast_numerical_literal(ast, context, σ = z3.Real('σ')) -> _type:
-    return type_create_singular(lambda : σ == ast["VALUE"])
-
+def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
+    return type_create_singular(lambda: σ == ast["VALUE"])
 
 
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
@@ -65,7 +64,7 @@ def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type
 def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
     ast_type = ast["TYPE"]
     if ast_type   == "EXPRESSION_IDENTIFIER":         return get_type_from_context(propagation, ast["IDENTIFIER"])
-    elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL": return type_ast_numerical_literal(ast, context, propagation)
+    elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL": return type_ast_numerical_literal(ast, context)
     elif ast_type == "EXPRESSION_OPERATOR":           return type_ast_expression_operator(ast, context, propagation)
     elif ast_type == "FUNCTION_CALL":                 return type_ast_function_call(ast, context, propagation)
     else:                                             print("Error!")
