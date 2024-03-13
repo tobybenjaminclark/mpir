@@ -13,7 +13,7 @@ _context       = NamedTuple("_context"      , identifier = str, bindings = dict[
 # Defining a function to show a command line representation of the current typing context.
 _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n".join([
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint()}" if isinstance(v.logic, _singular_type) else
-    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: [{', '.join(map(str, v.logic.input_constraints))}] → {v.logic.output_constraint()}" for k, v in self.bindings.items()])
+    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {', '.join(map(lambda x: str(x()), v.logic.input_constraints))} → {v.logic.output_constraint()}" for k, v in self.bindings.items()])
 
 # Override the `in`, `add` and `subtract` methods/operators
 _context.__contains__ = lambda self, item: item in self.bindings

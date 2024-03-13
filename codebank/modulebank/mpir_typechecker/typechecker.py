@@ -73,8 +73,6 @@ def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
 
 c = context_create()
 
-
-
 def parse_json_file(filename: str) -> dict|None:
     try:
         file = open(filename, 'r')
@@ -117,7 +115,6 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
 
     expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
-    debug("\n\n\nSet", statement["IDENTIFIER"], " :: ", expr.logic.constraint())
 
     # Set Statement is valid
     if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])):
