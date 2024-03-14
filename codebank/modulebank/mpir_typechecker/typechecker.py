@@ -109,19 +109,8 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
 
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-
-    expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
-
-    # Set Statement is valid
-    if(expr < get_type_from_context(Γ, statement["IDENTIFIER"])):
-        Ψ = Ψ + (statement["IDENTIFIER"], expr)
-    
-    # Set Statement is not valid
-    else:
-        raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee.")
-
-    return Γ, Ψ
-
+    if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])): return Γ, Ψ + (statement["IDENTIFIER"], expr)
+    else: raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee.")
 
 
 # Function to typecheck a function call.
