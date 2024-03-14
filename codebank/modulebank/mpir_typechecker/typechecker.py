@@ -146,17 +146,11 @@ def process_function_declarations(ast: dict[str:any], context: _context) -> _con
 # Function to type check an AST
 def typecheck_ast(ast: dict[str:any]):
     Γ = context_create('Γ')
-
     Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
-
     Γ = process_type_declarations(ast, Γ)
     Γ = process_function_declarations(ast, Γ)
 
-    print(Γ)
-
-    function_declarations = [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]
-
-    for function in function_declarations:
+    for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
         typecheck_function(function, duplicate_context(Γ))
 
 
