@@ -79,42 +79,41 @@ def show_statement(statement):
 if "CONTENTS" not in ast:
     print("CONTENTS NOT IN AST!")
     exit(1)
-else:
-    for node in ast["CONTENTS"]:
-        if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
-            
-            # Start LaTeX Segment
-            print("\n\\subsection{\\texttt{" + node["IDENTIFIER"].replace("_", "\\_") + "}}")
-
-            # Print Docs
-            if len(node["DOCSECTION"]) > 0:
-                print("\\begin{itemize}")
-                print("\t\\setlength{\\itemsep}{5pt}")
-                print("\t\\setlength{\\parskip}{0pt}")
-                print("\t\\setlength{\\parsep}{0pt}")
-            
-                for index, doc in enumerate(node["DOCSECTION"]):
-                    if "IDENTIFIER" in doc:
-                        print("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
-                    else:
-                        print("\t\\item " + doc["STRING"].replace("&", "\&"))
-                print("\\end{itemize}\n")
 
 
-            # Print Pseudocode
-            print("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
-            print("FUNCTION ", node["IDENTIFIER"] + "(", end="")
-            for index, arg in enumerate(node["ARGUMENTS"]):
-                print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
-            print(") ->", node["RETURN_TYPE"] + ":")
-            for statement in node["BODY"]:
-                print("    ", end = "")
-                show_statement(statement)
-            print("\\end{minted}\n")
+print("\n\\section{\\textsc{Function Declarations}}")
+for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
+    # Start LaTeX Segment
+    print("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
 
-        elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
-            pass
-        else:
-            print(node)
-            exit(1)
+    # Print Docs
+    if len(node["DOCSECTION"]) > 0:
+        print("\\begin{itemize}")
+        print("\t\\setlength{\\itemsep}{5pt}")
+        print("\t\\setlength{\\parskip}{0pt}")
+        print("\t\\setlength{\\parsep}{0pt}")
+    
+        for index, doc in enumerate(node["DOCSECTION"]):
+            if "IDENTIFIER" in doc:
+                print("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
+            else:
+                print("\t\\item " + doc["STRING"].replace("&", "\&"))
+        print("\\end{itemize}\n")
+
+
+    # Print Pseudocode
+    print("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+    print("FUNCTION ", node["IDENTIFIER"] + "(", end="")
+    for index, arg in enumerate(node["ARGUMENTS"]):
+        print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
+    print(") ->", node["RETURN_TYPE"] + ":")
+    for statement in node["BODY"]:
+        print("    ", end = "")
+        show_statement(statement)
+    print("\\end{minted}\n")
+
+print("\n\\section{\\textsc{Type Declarations}}")
+for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
+    print(node["IDENTIFIER"])
+    
 
