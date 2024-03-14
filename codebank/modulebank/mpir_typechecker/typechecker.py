@@ -5,11 +5,25 @@ from core_calculus import *
 from typing import Literal, IO
 import json
 
+def parse_json_file(filename: str) -> dict|None:
+    try:
+        file = open(filename, 'r')
+        data = json.load(file)
+        file.close()
+        return data
+    except FileNotFoundError:
+        print(f"File '{filename}' not found.")
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding AST in '{filename}': {e}")
+        return None
+
+
+
 DEBUG_MODE = True
 
 def debug(*args, sep: str | None = " ", end: str | None = "\n", flush: Literal[False] = False) -> None:
     return print(">>",*args, sep = sep, end = end, flush = flush) if DEBUG_MODE else None
-
 
 
 # Converts an operator node to Z3 logic.
@@ -68,27 +82,6 @@ def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
     elif ast_type == "EXPRESSION_OPERATOR":           return type_ast_expression_operator(ast, context, propagation)
     elif ast_type == "FUNCTION_CALL":                 return type_ast_function_call(ast, context, propagation)
     else:                                             print("Error!")
-        
-
-
-c = context_create()
-
-def parse_json_file(filename: str) -> dict|None:
-    try:
-        file = open(filename, 'r')
-        data = json.load(file)
-        file.close()
-        return data
-    except FileNotFoundError:
-        print(f"File '{filename}' not found.")
-        return None
-    except json.JSONDecodeError as e:
-        print(f"Error decoding AST in '{filename}': {e}")
-        return None
-    
-
-
-ast = parse_json_file("testj.json")
 
 
 
@@ -154,4 +147,5 @@ def typecheck_ast(ast: dict[str:any]):
         typecheck_function(function, duplicate_context(Γ))
 
 
+ast = parse_json_file("testj.json")
 typecheck_ast(ast)

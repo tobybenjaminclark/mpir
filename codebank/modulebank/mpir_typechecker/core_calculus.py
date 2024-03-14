@@ -22,7 +22,7 @@ base_types = dict(Numerical = type_create_singular(lambda: True))
 
 
 
-# Function to verify the [T-Add] Rule
+# [T-Add] :: Validates & Infers Refinement of the Addition of 2 types.
 @inject_variables(base_types)
 def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
@@ -37,7 +37,7 @@ def T_Add(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 
 
 
-# Function to verify the [T-Mult] Rule
+# [T-Mult] :: Validates & Infers Refinement of the Product of 2 types.
 @inject_variables(base_types)
 def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
@@ -51,7 +51,7 @@ def T_Mult(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
         
 
 
-# Function to verify the [T-Sub] Rule
+# [T-Sub] :: Validates & Infers Refinement of the Subtraction of 2 types.
 @inject_variables(base_types)
 def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
@@ -64,7 +64,7 @@ def T_Sub(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 
 
 
-# Function to verify the [T-Mult] Rule
+# [T-Div] :: Validates & Infers Refinement of the Division of 2 types.
 @inject_variables(base_types)
 def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     τ1_i, τ1_s = get_infimum(τ1.logic.constraint()), get_supremum(τ1.logic.constraint())
@@ -78,7 +78,7 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 
 
 
-# Function to verify the [T-Mult] Rule
+# [T-FuncCall] :: Validates a Function Call and provides a return type.
 @inject_variables(base_types)
 def T_FuncCall(inputs: list[_type], function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
     if function.type != type_variants._function: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
