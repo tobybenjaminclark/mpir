@@ -53,11 +53,11 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
     return type_create_singular(lambda: σ == ast["VALUE"])
 
 
+
+# Function to Type Check a Function Call as part of an expression.
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
-    print("function call to ", ast["IDENTIFIER"])
-    typ = T_FuncCall([type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"]], get_type_from_context(context, ast["IDENTIFIER"]))
-    print(typ.logic.constraint())
-    return typ
+    return T_FuncCall([type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"]], get_type_from_context(context, ast["IDENTIFIER"]))
+
 
 
 # Function to infer the type of an ast expression.
@@ -102,11 +102,7 @@ def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_typ
 
 # Function to typecheck a type assignment/let statement.
 def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    assigned_type = get_type_from_context(Γ, statement["ASSIGNED_TYPE"])
-
-    if(assigned_type == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
-    debug("Let", statement["IDENTIFIER"], " :: ", assigned_type.logic.constraint())
-
+    if((assigned_type := get_type_from_context(Γ, statement["ASSIGNED_TYPE"])) == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
     return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Ψ, statement["IDENTIFIER"], assigned_type)
 
 
@@ -147,8 +143,6 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-        print(Γ)
-        print(Ψ)
 
 
 
