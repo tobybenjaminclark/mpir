@@ -130,7 +130,6 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    print("Function Call to", statement["IDENTIFIER"])
     T_FuncCall([type_ast_expression(arg["VALUE"], Γ, Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
     return Γ, Ψ 
 
