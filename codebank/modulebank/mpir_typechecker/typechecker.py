@@ -123,18 +123,18 @@ def typecheck_function(function: dict[str:any], Γ: _context):
     # Binding Base Types and `return` function type.
     Ψ = context_create('Ψ')
     Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
-    Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, type_identifier).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
+    Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
+
     
     for index, input in enumerate(function["INPUTS"]):
         Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
         Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
-        
-
     
     for statement in function["BODY"]:
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
+        if statement["TYPE"] == "DO_STATEMENT":     print("do statement")
 
 
 

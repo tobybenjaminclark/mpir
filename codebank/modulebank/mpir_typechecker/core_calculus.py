@@ -81,7 +81,8 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 def T_FuncCall(inputs: list[_type], function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
     if function.type != type_variants._function: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
     input_validation = [inputs[index] < (type_create_singular(function.logic.input_constraints[index])) for index in range(0, len(inputs))]
+
     if False in input_validation:
-        raise Exception("Passed non-subtype arg.")
+        raise Exception("Passed non-subtype arg. ", input_validation)
     else:
         return type_create_singular(function.logic.output_constraint)
