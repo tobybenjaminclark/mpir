@@ -73,7 +73,5 @@ else:
             print(node)
             exit(1)
 
-
 pretty_json = json.dumps(ast, indent=4)
-
 print(pretty_json)

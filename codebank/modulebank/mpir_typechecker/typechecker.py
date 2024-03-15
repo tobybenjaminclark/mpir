@@ -95,14 +95,18 @@ def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_typ
 
 # Function to typecheck a type assignment/let statement.
 def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
+    if(statement["IDENTIFIER"] in Γ): raise Exception("Type Assignment (identifier already has a type!)")
     if((assigned_type := get_type_from_context(Γ, statement["ASSIGNED_TYPE"])) == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
+    debug(f"Let ::", statement["IDENTIFIER"], "is valid.")
     return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Ψ, statement["IDENTIFIER"], assigned_type)
 
 
 
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])): return Γ, Ψ + (statement["IDENTIFIER"], expr)
+    if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])):
+        debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
+        return Γ, Ψ + (statement["IDENTIFIER"], expr)
     else: raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee.")
 
 
@@ -117,10 +121,16 @@ def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context
 def typecheck_function(function: dict[str:any], Γ: _context):
 
     # Binding Base Types and `return` function type.
+    Ψ = context_create('Ψ')
     Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
     Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, type_identifier).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
+    
+    for index, input in enumerate(function["INPUTS"]):
+        Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
+        Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
+        
 
-    Ψ = context_create('Ψ')
+    
     for statement in function["BODY"]:
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)

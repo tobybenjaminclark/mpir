@@ -33,14 +33,9 @@ def parse_json_file(filename: str) -> dict|None:
         return None
 
 
-args = parse_arguments()
-ast = parse_json_file(args.arg1)
+ast = parse_json_file("testj.json")
 print(ast)
-# Write the arguments to the specified file
-write_arguments_to_file("output.txt", args)
-# Access the arguments
-print("arg1:", args.arg1)
-print("Arguments written to file:", args.output)
+
 
 def convert_function_call(fcall: dict) -> str:
     val = fcall["IDENTIFIER"] + "("
@@ -65,6 +60,8 @@ def convert_expression(expr: dict) -> str:
             return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
         case "EXPRESSION_STRING_LITERAL":
             return expr["IDENTIFIER"]
+        case "FUNCTION_CALL":
+            return "func"
 
 
     if(expr["TYPE"] == ""):
