@@ -41,31 +41,44 @@
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
 					"IDENTIFIER" : "z",
-					"ASSIGNED_TYPE" : "Integer"
+					"ASSIGNED_TYPE" : "SmallInt"
 				},
 				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "z",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_IDENTIFIER",
-						"IDENTIFIER" : "x"
-					}
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "z",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : "+",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "z"
+					"TYPE" : "TRYCAST_STATEMENT",
+					"DOMINANT_IDENTIFIER" : "x",
+					"CASTED_IDENTIFIER" : "z",
+					"ON_STATEMENTS" : [
+						{
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 1.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "z",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 5.000000
+									}
+								}
+							]
 						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 5.000000
+						{
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 2.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "z",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 5.000000
+									}
+								}
+							]
 						}
-					}
+					]
 				},
 				{
 					"TYPE" : "DO_STATEMENT",

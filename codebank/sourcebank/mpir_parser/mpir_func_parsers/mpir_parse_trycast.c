@@ -26,25 +26,43 @@ struct mpir_ast_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_c
     if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);
     else return NULL;
 
+    printf("Parsed trycast keyword\n");
+
     /* Parse Dominant Variable */
     node->dominant_variable = parse_identifier(psr);
     if(node->dominant_variable == NULL) return NULL;
+
+    printf("dominant trycast\n");
 
     /* Parse & Discard `into` keyword */
     if(psr->peek(psr)->type == keyword_into) (void)psr->get(psr);
     else return NULL;
 
+    printf("into trycast\n");
+
     /* Parse 2nd Identifier (casted variable) */
     node->casted_variable = parse_identifier(psr);
     if(node->casted_variable == NULL) return NULL;
 
-    /* Parse `\n` */
-    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
-    else return NULL;
+    printf("dominated trycast\n");
+
+    /* Parse & discard newline. (if exists) */
+    while (psr->peek(psr)->type == indentation) (void) psr->get(psr);
+    if (psr->peek(psr)->type == NEWLINE) (void) psr->get(psr);
+    while (psr->peek(psr)->type == indentation) (void) psr->get(psr);
+
+
+    printf("newline trycast\n");
 
     /* Parse `on` statements */
     node->actions = PARSE_MULTIPLE_STATEMENTS(struct mpir_on_statement, parse_on_statement, psr);
-    if(node->actions == NULL) return NULL;
+    if(node->actions == NULL)
+    {
+        printf("on :: failed to parse multiple on statements for trycast\n");
+        return NULL;
+    }
+
+    printf("parsed on statements successfully!\n");
 
     append_command(nodes, (union mpir_command_data){.trycast_statement = node}, TRYCAST_STATEMENT);
     return node;

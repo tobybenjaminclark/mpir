@@ -22,8 +22,12 @@ struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr)
     /* Parse Indentation then parse `on` keyword */
     while(psr->peek(psr)->type == indentation)(void)psr->get(psr);
 
+    printf("on :: parsed indentation!\n");
+
     if(psr->peek(psr)->type == keyword_on) (void)psr->get(psr);
     else return NULL;
+
+    printf("on :: parsed on!\n");
 
     /* Parse & discard `on` keyword */
     struct mpir_ast_on_statement* node = calloc(1, sizeof(struct mpir_ast_on_statement));
@@ -34,10 +38,12 @@ struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr)
         case NUMERICAL_LITERAL:
             node->stored_type = numerical_literal;
             node->literal.mpir_numerical_literal = wcstod(psr->get(psr)->lexeme, NULL);
+            printf("on :: parsed numerical literal!\n");
             break;
         case STRING_LITERAL:
             node->stored_type = string_literal;
             wcscpy(node->literal.mpir_string_literal, psr->get(psr)->lexeme);
+            printf("on :: parsed string literal!\n");
             break;
         default:
             return NULL;
@@ -72,5 +78,7 @@ struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr)
     else return NULL;
 
     node->commands = command;
+
+    printf("on :: parsed on statement and returning!\n");
     return node;
 }

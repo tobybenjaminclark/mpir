@@ -164,6 +164,12 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
 
 
 
+def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ: _context):
+    print("DESUGAR TRYCAST")
+    pass
+
+
+
 def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _context):
 
     print(if_statement["EXPRESSION"])
@@ -172,13 +178,20 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
     index = 0
     while index < len(if_statement["MATCH_COMMANDS"]):
         statement = if_statement["MATCH_COMMANDS"][index]
+
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
+
         if statement["TYPE"] == "DO_STATEMENT":
             if_statement["MATCH_COMMANDS"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
             continue
+
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
+
+        if statement["TYPE"] == "TRYCAST_STATEMENT":
+            desugar_trycast_statement(statement, Γ, Ψ)
+
         index = index + 1
 
 
@@ -207,6 +220,8 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
             continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
+        if statement["TYPE"] == "TRYCAST_STATEMENT":
+            desugar_trycast_statement(statement, Γ, Ψ)
         index = index + 1
 
             

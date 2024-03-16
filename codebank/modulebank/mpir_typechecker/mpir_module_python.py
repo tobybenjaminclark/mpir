@@ -93,7 +93,7 @@ def build_python(ast: dict[str:any]):
         exit(1)
     else:
         for node in ast["CONTENTS"]:
-            print(node["TYPE"])
+            print("\n\n")
             if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
                 print("def", node["IDENTIFIER"] + "(", end="")
                 for index, arg in enumerate(node["ARGUMENTS"]):
