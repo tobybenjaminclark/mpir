@@ -30,7 +30,7 @@ def debug(*args, sep: str | None = " ", end: str | None = "\n", flush: Literal[F
 def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
-        ">": lambda: left > right, ">=": lambda: left >= right, "<": lambda: left < right, "<=": lambda: left <= right, "=": lambda: left == right,
+        ">": lambda: left > right, ">=": lambda: left >= right, "<": lambda: left < right, "<=": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right,
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left),
@@ -138,9 +138,6 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         "EXPRESSION" : statement["EXPRESSION"]
     }
     
-
-
-
     statements.append(assignment)
     statements.append(assignment2)
 
@@ -148,22 +145,43 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
-                "TYPE" : "EXPRESSION_OPERATOR",
-                "IDENTIFIER" : "==",
+                "DATATYPE" : "OPERATOR",
+                "DATA" : "==",
                 "LEFT" : {
-                    "TYPE" : "EXPRESSION_IDENTIFIER",
-                    "IDENTIFIER" : identifier
+                    "DATATYPE" : "IDENTIFIER",
+                    "DATA" : identifier
                 },
                 "RIGHT" : {
-                    "TYPE" : ("EXPRESSION_" + on_statement["MATCH_TYPE"]),
-                    ("VALUE" if on_statement["MATCH_TYPE"] == "NUMERICAL_LITERAL" else "IDENTIFIER") : on_statement["MATCH_VALUE"]
+                    "DATATYPE" : ("NUMERICAL_LITERAL"),
+                    "DATA" : on_statement["MATCH_VALUE"]
                 }},
             "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
         }
         statements.append(if_statement)
+        
     return statements
 
 
+
+def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _context):
+
+    print(if_statement["EXPRESSION"])
+    expr = form_expression(if_statement["EXPRESSION"])
+    
+    index = 0
+    while index < len(if_statement["MATCH_COMMANDS"]):
+        statement = if_statement["MATCH_COMMANDS"][index]
+        if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
+        if statement["TYPE"] == "DO_STATEMENT":
+            if_statement["MATCH_COMMANDS"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
+            continue
+        if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
+        index = index + 1
+
+
+    return Γ, Ψ 
 
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
@@ -187,7 +205,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         if statement["TYPE"] == "DO_STATEMENT":
             function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
             continue
-        if statement["TYPE"] == "IF_STATEMENT":     print("IF STATEMENT")
+        if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
         index = index + 1
 
             
