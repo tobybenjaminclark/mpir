@@ -33,8 +33,6 @@ def parse_json_file(filename: str) -> dict|None:
         return None
 
 
-ast = parse_json_file("testj.json")
-print(ast)
 
 
 def convert_function_call(fcall: dict) -> str:
@@ -44,7 +42,13 @@ def convert_function_call(fcall: dict) -> str:
     val = val + ")"
     return val
 
+
+def convert_expression_type(expr) -> str:
+    if expr["DATATYPE"] == "OPERATOR": return str(convert_expression_type(expr["LEFT"])) + " " + " " + expr["DATA"] + str(convert_expression_type(expr["RIGHT"]))
+    return expr["DATA"]
+
 def convert_expression(expr: dict) -> str:
+    if "TYPE" not in expr: return convert_expression_type(expr)
     match(expr["TYPE"]):
         case "FUNCTION_CALL":
             return convert_function_call(expr)
@@ -83,24 +87,25 @@ def show_statement(statement):
         for statement2 in statement["MATCH_COMMANDS"]:
             show_statement(statement2)
 
-if "CONTENTS" not in ast:
-    print("CONTENTS NOT IN AST!")
-    exit(1)
-else:
-    for node in ast["CONTENTS"]:
-        print(node["TYPE"])
-        if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
-            print("def", node["IDENTIFIER"] + "(", end="")
-            for index, arg in enumerate(node["ARGUMENTS"]):
-                print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
-            print(") ->", node["RETURN_TYPE"] + ":")
-            for statement in node["BODY"]:
-                print("\t", end = "")
-                show_statement(statement)
-            pass
-        elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
-            pass
-        else:
-            print(node)
-            exit(1)
+def build_python(ast: dict[str:any]):
+    if "CONTENTS" not in ast:
+        print("CONTENTS NOT IN AST!")
+        exit(1)
+    else:
+        for node in ast["CONTENTS"]:
+            print(node["TYPE"])
+            if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
+                print("def", node["IDENTIFIER"] + "(", end="")
+                for index, arg in enumerate(node["ARGUMENTS"]):
+                    print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
+                print(") ->", node["RETURN_TYPE"] + ":")
+                for statement in node["BODY"]:
+                    print("\t", end = "")
+                    show_statement(statement)
+                pass
+            elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
+                pass
+            else:
+                print(node)
+                exit(1)
 

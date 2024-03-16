@@ -2,6 +2,7 @@ import z3
 from typing_context import *
 from typing_context import _type, _context
 from core_calculus import *
+from mpir_module_python import build_python
 from typing import Literal, IO
 import json
 
@@ -231,6 +232,8 @@ def typecheck_ast(ast: dict[str:any]):
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
         typecheck_function(function, duplicate_context(Γ))
+
+    build_python(ast)
 
 
 ast = parse_json_file("testj.json")
