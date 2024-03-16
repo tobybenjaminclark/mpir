@@ -113,6 +113,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     T_FuncCall([type_ast_expression(arg["VALUE"], Γ, Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
+    debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
     return Γ, Ψ 
 
 
@@ -131,7 +132,7 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         "ASSIGNED_TYPE" : "Numerical"
     }
 
-    assignment = {
+    assignment2 = {
         "TYPE" : "VALUE_ASSIGNMENT",
         "IDENTIFIER" : identifier,
         "EXPRESSION" : statement["EXPRESSION"]
@@ -141,6 +142,7 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
 
 
     statements.append(assignment)
+    statements.append(assignment2)
 
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
         if_statement = {
@@ -159,8 +161,6 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
             "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
         }
         statements.append(if_statement)
-    for r in statements:
-        print(r)
     return statements
 
 
@@ -177,13 +177,19 @@ def typecheck_function(function: dict[str:any], Γ: _context):
     for index, input in enumerate(function["INPUTS"]):
         Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
         Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
-    
-    for index, statement in enumerate(function["BODY"]):
+
+    index = 0
+    while index < len(function["BODY"]):
+        statement = function["BODY"][index]
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-        if statement["TYPE"] == "DO_STATEMENT":     function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
+        if statement["TYPE"] == "DO_STATEMENT":
+            function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
+            continue
         if statement["TYPE"] == "IF_STATEMENT":     print("IF STATEMENT")
+        index = index + 1
+
             
 
 
