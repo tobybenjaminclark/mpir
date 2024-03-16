@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar, QTextBrowser, QStackedWidget, QLabel
 from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap
 from PyQt5.QtCore import Qt, QRegExp, QSize
-
+import webbrowser
 
 class MPIRHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
@@ -67,23 +67,41 @@ class WikiPage(QWidget):
         layout = QVBoxLayout()
         topbar_layout = QHBoxLayout()
 
-
         self.button1 = QPushButton()
+        self.button2 = QPushButton()
+
         icon_size = QSize(40, 40)  # Adjust the size as needed
-        self.button1.setIcon(QIcon(QPixmap('planet.png').scaled(icon_size.width(), icon_size.height())))
+        self.button1.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button1.setIconSize(icon_size)
+        self.button2.setIcon(QIcon(QPixmap('github.png').scaled(icon_size.width(), icon_size.height())))
+        self.button2.setIconSize(icon_size)
+
         button_size = 64  # Adjust the size as needed
         self.button1.setFixedSize(button_size, button_size)
+        self.button2.setFixedSize(button_size, button_size)
+
         topbar_layout.addWidget(self.button1)
+        topbar_layout.addStretch(1)
+        topbar_layout.addWidget(self.button2)
 
         layout.addLayout(topbar_layout)
-        label = QLabel("This is the Wiki Page")
-        layout.addWidget(label)
+
+        # Create a QTextBrowser to display the HTML content
+        self.text_browser = QTextBrowser()
+        self.load_wiki_page()  # Load the wiki page content
+        layout.addWidget(self.text_browser)
 
         # Create button to switch back to main page
         self.button1.clicked.connect(self.switch_to_main_page)
+        self.button2.clicked.connect(lambda: webbrowser.open("https://www.github.com/tobybenjaminclark/mpir/wiki"))
 
         self.setLayout(layout)
+
+    def load_wiki_page(self):
+        # Load the HTML content from the file
+        with open('wiki_page.html', 'r') as f:
+            html_content = f.read()
+        self.text_browser.setHtml(html_content)
 
     def switch_to_main_page(self):
         self.parent().switch_to_main_page()  # Call the parent's method to switch pages
@@ -193,6 +211,8 @@ class MyApp(QMainWindow):
 
         # Connect button signals to slots
         self.button8.clicked.connect(self.switch_to_wiki_page)
+        self.button4.clicked.connect(self.build_python)
+        self.button5.clicked.connect(self.build_tex)
         
     def switch_to_main_page(self):
         self.stacked_widget.setCurrentIndex(0)  # Index 0 is the main page
@@ -200,6 +220,17 @@ class MyApp(QMainWindow):
     def switch_to_wiki_page(self):
         self.stacked_widget.setCurrentIndex(1)  # Index 1 is the wiki page
 
+    def build_python(self):
+        self.right_textbox.setPlainText("python")
+
+    def build_tex(self):
+        self.right_textbox.setPlainText("tex")
+
+    def build_pseudocode(self):
+        self.right_textbox.setPlainText("pseudocode")
+
+    def build_tests(self):
+        self.right_textbox.setPlainText("tests")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
