@@ -117,6 +117,54 @@ def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context
 
 
 
+def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
+    statements = []
+    identifier = "anon"
+
+    expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
+    print(expr.logic.constraint())
+
+
+    assignment = {
+        "TYPE" : "TYPE_ASSIGNMENT",
+        "IDENTIFIER" : identifier,
+        "ASSIGNED_TYPE" : "Numerical"
+    }
+
+    assignment = {
+        "TYPE" : "VALUE_ASSIGNMENT",
+        "IDENTIFIER" : identifier,
+        "EXPRESSION" : statement["EXPRESSION"]
+    }
+    
+
+
+
+    statements.append(assignment)
+
+    for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
+        if_statement = {
+            "TYPE" : "IF_STATEMENT",
+            "EXPRESSION" : {
+                "TYPE" : "EXPRESSION_OPERATOR",
+                "IDENTIFIER" : "==",
+                "LEFT" : {
+                    "TYPE" : "EXPRESSION_IDENTIFIER",
+                    "IDENTIFIER" : identifier
+                },
+                "RIGHT" : {
+                    "TYPE" : ("EXPRESSION_" + on_statement["MATCH_TYPE"]),
+                    ("VALUE" if on_statement["MATCH_TYPE"] == "NUMERICAL_LITERAL" else "IDENTIFIER") : on_statement["MATCH_VALUE"]
+                }},
+            "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
+        }
+        statements.append(if_statement)
+    for r in statements:
+        print(r)
+    return statements
+
+
+
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
 
@@ -130,11 +178,13 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
         Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
     
-    for statement in function["BODY"]:
+    for index, statement in enumerate(function["BODY"]):
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-        if statement["TYPE"] == "DO_STATEMENT":     print("do statement")
+        if statement["TYPE"] == "DO_STATEMENT":     function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
+        if statement["TYPE"] == "IF_STATEMENT":     print("IF STATEMENT")
+            
 
 
 
@@ -150,6 +200,8 @@ def process_function_declarations(ast: dict[str:any], context: _context) -> _con
 def typecheck_ast(ast: dict[str:any]):
     Γ = context_create('Γ')
     Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
+    Γ = Γ + ("Numerical", type_create_singular(lambda: True)) 
+
     Γ = process_type_declarations(ast, Γ)
     Γ = process_function_declarations(ast, Γ)
 

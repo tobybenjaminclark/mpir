@@ -70,30 +70,26 @@
 				{
 					"TYPE" : "DO_STATEMENT",
 					"EXPRESSION" : {
-						"TYPE" : "FUNCTION_CALL",
-						"IDENTIFIER" : "two",
-						"ARGUMENTS" : [
-							{
-								"TYPE" : "FUNCTION_ARGUMENT",
-								"ARGUMENT_INDEX" : 0.000000,
-								"VALUE" : {
-									"TYPE" : "EXPRESSION_IDENTIFIER",
-									"IDENTIFIER" : "z"
-								}
-							},
-							{
-								"TYPE" : "FUNCTION_ARGUMENT",
-								"ARGUMENT_INDEX" : 1.000000,
-								"VALUE" : {
-									"TYPE" : "EXPRESSION_OPERATOR",
-									"IDENTIFIER" : "*",
-									"RIGHT" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : "*",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "z"
+						},
+						"RIGHT" : {
+							"TYPE" : "FUNCTION_CALL",
+							"IDENTIFIER" : "two",
+							"ARGUMENTS" : [
+								{
+									"TYPE" : "FUNCTION_ARGUMENT",
+									"ARGUMENT_INDEX" : 0.000000,
+									"VALUE" : {
 										"TYPE" : "EXPRESSION_IDENTIFIER",
 										"IDENTIFIER" : "z"
 									}
 								}
-							}
-						]
+							]
+						}
 					},
 					"ON_STATEMENTS" : [
 						{
