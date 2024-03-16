@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QText
 from PyQt5.QtCore import Qt, QRegExp, QSize
 
 
-class PythonHighlighter(QSyntaxHighlighter):
+class MPIRHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
         super(QSyntaxHighlighter, self).__init__(parent)
 
@@ -74,7 +74,7 @@ class MyApp(QMainWindow):
         self.right_textbox = QTextEdit()
 
         # Create Python syntax highlighter and associate it with the left_textbox
-        self.highlighter = PythonHighlighter(self.left_textbox.document())
+        self.highlighter = MPIRHighlighter(self.left_textbox.document())
 
         # Create buttons with icons
         self.button1 = QPushButton()
