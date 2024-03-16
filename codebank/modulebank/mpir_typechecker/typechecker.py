@@ -193,8 +193,6 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
             desugar_trycast_statement(statement, Γ, Ψ)
 
         index = index + 1
-
-
     return Γ, Ψ 
 
 # Function to type check a Function Declaration.

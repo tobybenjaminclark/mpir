@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar
-from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument
-from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap
+from PyQt5.QtCore import Qt, QRegExp, QSize
 
 
 class PythonHighlighter(QSyntaxHighlighter):
@@ -12,7 +12,7 @@ class PythonHighlighter(QSyntaxHighlighter):
         keywordFormat.setForeground(Qt.cyan)
         keywordFormat.setFontWeight(QFont.Bold)
 
-        keywordPatterns = ["funcdef", "suchthat", "end", "let", "trycast", "on", "return", "typedef"]
+        keywordPatterns = ["funcdef", "suchthat", "end", "let", "trycast", "on", "return", "typedef", "into", "as", "set", "let"]
         self.highlightingRules = [(QRegExp(pattern), keywordFormat)
                                    for pattern in keywordPatterns]
 
@@ -73,33 +73,63 @@ class MyApp(QMainWindow):
         self.left_textbox = QTextEdit()
         self.right_textbox = QTextEdit()
 
-        # Create Python syntax highlighter
+        # Create Python syntax highlighter and associate it with the left_textbox
         self.highlighter = PythonHighlighter(self.left_textbox.document())
 
         # Create buttons with icons
-        self.button1 = QPushButton(QIcon('icon1.png'), '')
-        self.button2 = QPushButton(QIcon('icon2.png'), '')
-        self.button3 = QPushButton(QIcon('icon3.png'), '')
-        self.button4 = QPushButton(QIcon('icon4.png'), '')
-        self.button5 = QPushButton(QIcon('icon5.png'), '')
+        self.button1 = QPushButton()
+        self.button2 = QPushButton()
+        self.button3 = QPushButton()
+        self.button4 = QPushButton()
+        self.button5 = QPushButton()
+        self.button6 = QPushButton()
+        self.button7 = QPushButton()
 
+        # Set icons and adjust their size
+        icon_size = QSize(40, 40)  # Adjust the size as needed
+        self.button1.setIcon(QIcon(QPixmap('planet.png').scaled(icon_size.width(), icon_size.height())))
+        self.button1.setIconSize(icon_size)
+        self.button2.setIcon(QIcon(QPixmap('save.png').scaled(icon_size.width(), icon_size.height())))
+        self.button2.setIconSize(icon_size)
+        self.button3.setIcon(QIcon(QPixmap('folder.png').scaled(icon_size.width(), icon_size.height())))
+        self.button3.setIconSize(icon_size)
+        self.button4.setIcon(QIcon(QPixmap('python.png').scaled(icon_size.width(), icon_size.height())))
+        self.button4.setIconSize(icon_size)
+        self.button5.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button5.setIconSize(icon_size)
+        self.button6.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button6.setIconSize(icon_size)
+        self.button7.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button7.setIconSize(icon_size)
+        
         # Set fixed size for buttons to make them square
-        button_size = 50  # Adjust the size as needed
+        button_size = 64  # Adjust the size as needed
         self.button1.setFixedSize(button_size, button_size)
         self.button2.setFixedSize(button_size, button_size)
         self.button3.setFixedSize(button_size, button_size)
         self.button4.setFixedSize(button_size, button_size)
         self.button5.setFixedSize(button_size, button_size)
+        self.button6.setFixedSize(button_size, button_size)
+        self.button7.setFixedSize(button_size, button_size)
 
         # Add buttons to top bar
-        topbar_layout = QHBoxLayout()
-        topbar_layout.addWidget(self.button1)
-        topbar_layout.addWidget(self.button2)
-        topbar_layout.addWidget(self.button3)
-        topbar_layout.addWidget(self.button4)
-        topbar_layout.addWidget(self.button5)
+        left_buttons_layout = QHBoxLayout()
+        left_buttons_layout.addWidget(self.button1)
+        left_buttons_layout.addWidget(self.button2)
+        left_buttons_layout.addWidget(self.button3)
+
+        right_buttons_layout = QHBoxLayout()
+        right_buttons_layout.addWidget(self.button4)
+        right_buttons_layout.addWidget(self.button5)
+        right_buttons_layout.addWidget(self.button6)
+        right_buttons_layout.addWidget(self.button7)
 
         # Set up layout
+        topbar_layout = QHBoxLayout()
+        topbar_layout.addLayout(left_buttons_layout)
+        topbar_layout.addStretch(1)  # Add stretchable space to push right-aligned buttons to the right
+        topbar_layout.addLayout(right_buttons_layout)
+
         vbox = QVBoxLayout(central_widget)
         vbox.addLayout(topbar_layout)  # Add buttons layout first
         hbox = QHBoxLayout()
@@ -112,9 +142,8 @@ class MyApp(QMainWindow):
         self.setStatusBar(self.statusBar)
 
         self.setWindowTitle('PyQt5 App')
-        self.setGeometry(100, 100, 600, 400)
+        self.setGeometry(100, 100, 800, 600)
         self.show()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
