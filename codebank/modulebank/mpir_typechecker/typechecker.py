@@ -166,8 +166,16 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
     
 
 def z3_to_python(expr, identifier):
+    print(expr, str(type(expr)))
     if isinstance(expr, bool):
         return expr
+    elif type(expr) == z3.RatNumRef:
+            return {
+                "EXPRESSION": {
+                    "TYPE": "EXPRESSION_NUMERICAL_LITERAL",
+                    "VALUE": str(expr)
+                }
+            }
     elif is_not(expr):
         return f"not {z3_to_python(expr.children()[0], identifier)}"
 
