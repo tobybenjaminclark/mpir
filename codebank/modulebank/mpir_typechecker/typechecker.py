@@ -56,7 +56,7 @@ def form_expression(type_logic: dict):
 # Function to infer the type of an expression operator node, from the types of it's constituents.
 def type_ast_expression_operator(ast, context, propagation, σ=z3.Real('σ')) -> _type:
     op_mapping = {"+": T_Add, "*": T_Mult, "-": T_Sub, "/": T_Div,
-                  ">": T_Comp, ">=": T_Comp, "<": T_Comp, "<=": T_Comp, }
+                  ">": T_Comp, ">=": T_Comp, "<": T_Comp, "<=": T_Comp, "^": T_Comp, "v": T_Comp}
     return op_mapping.get(ast["IDENTIFIER"], lambda: print("Error!"))(
         type_ast_expression(ast["LEFT"], context, propagation),
         type_ast_expression(ast["RIGHT"], context, propagation)
@@ -191,9 +191,9 @@ def z3_to_python(expr, identifier):
         return {
             "EXPRESSION": {
                 "TYPE": "EXPRESSION_OPERATOR",
-                "OPERATOR": operator,
-                "LEFT": z3_to_python(expr.children()[0], identifier),
-                "RIGHT": z3_to_python(expr.children()[1], identifier)
+                "IDENTIFIER": operator,
+                "LEFT": z3_to_python(expr.children()[0], identifier)["EXPRESSION"],
+                "RIGHT": z3_to_python(expr.children()[1], identifier)["EXPRESSION"]
             }
         }
 
@@ -210,8 +210,47 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
     dom, cast = trycast_statement["DOMINANT_IDENTIFIER"], trycast_statement["CASTED_IDENTIFIER"]
     dom_t, cast_t = get_type_from_context(Γ, dom), get_type_from_context(Γ, cast)
     debug(f"Trycast {(dom_t.logic.constraint())} into {(cast_t.logic.constraint())}")
-    debug("Expression: {}".format(z3_to_python(cast_t.logic.constraint(), trycast_statement["DOMINANT_IDENTIFIER"])))
-    pass
+    statements = []
+    identifier = "anon2"
+
+    assignment = {
+        "TYPE" : "TYPE_ASSIGNMENT",
+        "IDENTIFIER" : "anon2",
+        "ASSIGNED_TYPE" : "Numerical"
+    }
+
+    expr = z3_to_python(cast_t.logic.constraint(), trycast_statement["DOMINANT_IDENTIFIER"])["EXPRESSION"]
+
+    assignment2 = {
+        "TYPE" : "VALUE_ASSIGNMENT",
+        "IDENTIFIER" : "anon2",
+        "EXPRESSION" :  expr
+    }
+
+    print(json.dumps(assignment2, indent=4))
+    
+    statements.append(assignment)
+    statements.append(assignment2)
+
+    for index, on_statement in enumerate(trycast_statement["ON_STATEMENTS"]):
+        if_statement = {
+            "TYPE" : "IF_STATEMENT",
+            "EXPRESSION" : {
+                "DATATYPE" : "OPERATOR",
+                "DATA" : "==",
+                "LEFT" : {
+                    "DATATYPE" : "IDENTIFIER",
+                    "DATA" : identifier
+                },
+                "RIGHT" : {
+                    "DATATYPE" : ("NUMERICAL_LITERAL"),
+                    "DATA" : on_statement["MATCH_VALUE"]
+                }},
+            "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
+        }
+        statements.append(if_statement)
+    
+    return statements
 
 
 
@@ -235,7 +274,8 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
 
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            desugar_trycast_statement(statement, Γ, Ψ)
+            if_statement["MATCH_COMMANDS"][index:index + 1] = desugar_trycast_statement(statement, Γ, Ψ)
+            continue
 
         index = index + 1
     return Γ, Ψ 
@@ -264,7 +304,8 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            desugar_trycast_statement(statement, Γ, Ψ)
+            function["BODY"][index:index + 1] = desugar_trycast_statement(statement, Γ, Ψ)
+            continue
         index = index + 1
     return Ψ, Γ
 

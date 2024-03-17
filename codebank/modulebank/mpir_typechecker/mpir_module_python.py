@@ -71,22 +71,6 @@ def convert_expression(expr: dict) -> str:
     if(expr["TYPE"] == ""):
         pass
 
-def z3_to_python(expr):
-    if isinstance(expr, bool):
-        return expr
-    elif is_not(expr):
-        return f"not {z3_to_python(expr.children()[0])}"
-    elif is_and(expr):
-        children = expr.children()
-        return "(" + " and ".join(z3_to_python(child) for child in children) + ")"
-    elif is_or(expr):
-        children = expr.children()
-        return "(" + " or ".join(z3_to_python(child) for child in children) + ")"
-    elif is_implies(expr):
-        return f"({z3_to_python(expr.children()[0])} <= {z3_to_python(expr.children()[1])})"
-    else:
-        return str(expr)
-
 def show_statement(statement):
     if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
         print("" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
