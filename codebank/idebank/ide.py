@@ -205,7 +205,7 @@ class MyApp(QMainWindow):
         # Add stacked widget to main window
         self.setCentralWidget(self.stacked_widget)
 
-        self.setWindowTitle('PyQt5 App')
+        self.setWindowTitle('Compiler')
         self.setGeometry(100, 100, 800, 600)
         self.show()
 
