@@ -55,7 +55,8 @@ def form_expression(type_logic: dict):
 
 # Function to infer the type of an expression operator node, from the types of it's constituents.
 def type_ast_expression_operator(ast, context, propagation, σ=z3.Real('σ')) -> _type:
-    op_mapping = {"+": T_Add, "*": T_Mult, "-": T_Sub, "/": T_Div}
+    op_mapping = {"+": T_Add, "*": T_Mult, "-": T_Sub, "/": T_Div,
+                  ">": T_Comp, ">=": T_Comp, "<": T_Comp, "<=": T_Comp, }
     return op_mapping.get(ast["IDENTIFIER"], lambda: print("Error!"))(
         type_ast_expression(ast["LEFT"], context, propagation),
         type_ast_expression(ast["RIGHT"], context, propagation)
@@ -162,10 +163,54 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         
     return statements
 
+    
+
+def z3_to_python(expr, identifier):
+    if isinstance(expr, bool):
+        return expr
+    elif is_not(expr):
+        return f"not {z3_to_python(expr.children()[0], identifier)}"
+
+    elif is_gt(expr) or is_ge(expr) or is_lt(expr) or is_le(expr) or is_or(expr) or is_and(expr) or is_implies(expr):
+        operator = ""
+        if is_gt(expr):
+            operator = ">"
+        elif is_ge(expr):
+            operator = ">="
+        elif is_lt(expr):
+            operator = "<"
+        elif is_le(expr):
+            operator = "<="
+        elif is_or(expr):
+            operator = "v"
+        elif is_and(expr):
+            operator = "^"
+        elif is_implies(expr):
+            operator = "==>"
+            
+        return {
+            "EXPRESSION": {
+                "TYPE": "EXPRESSION_OPERATOR",
+                "OPERATOR": operator,
+                "LEFT": z3_to_python(expr.children()[0], identifier),
+                "RIGHT": z3_to_python(expr.children()[1], identifier)
+            }
+        }
+
+    else:
+        return {
+                "EXPRESSION" : {
+						"TYPE" : "EXPRESSION_IDENTIFIER",
+						"IDENTIFIER" : identifier
+                        }
+        }   
 
 
 def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ: _context):
-    print("DESUGAR TRYCAST")
+    dom, cast = trycast_statement["DOMINANT_IDENTIFIER"], trycast_statement["CASTED_IDENTIFIER"]
+    dom_t, cast_t = get_type_from_context(Γ, dom), get_type_from_context(Γ, cast)
+    debug(f"Trycast {(dom_t.logic.constraint())} into {(cast_t.logic.constraint())}")
+    debug("Expression: {}".format(z3_to_python(cast_t.logic.constraint(), trycast_statement["DOMINANT_IDENTIFIER"])))
     pass
 
 
@@ -221,6 +266,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         if statement["TYPE"] == "TRYCAST_STATEMENT":
             desugar_trycast_statement(statement, Γ, Ψ)
         index = index + 1
+    return Ψ, Γ
 
             
 

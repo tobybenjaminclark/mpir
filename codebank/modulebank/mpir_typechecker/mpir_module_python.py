@@ -1,7 +1,7 @@
 import argparse
 import json
-
 import os
+from z3 import *
 
 # get the current working directory
 current_working_directory = os.getcwd()
@@ -71,6 +71,22 @@ def convert_expression(expr: dict) -> str:
     if(expr["TYPE"] == ""):
         pass
 
+def z3_to_python(expr):
+    if isinstance(expr, bool):
+        return expr
+    elif is_not(expr):
+        return f"not {z3_to_python(expr.children()[0])}"
+    elif is_and(expr):
+        children = expr.children()
+        return "(" + " and ".join(z3_to_python(child) for child in children) + ")"
+    elif is_or(expr):
+        children = expr.children()
+        return "(" + " or ".join(z3_to_python(child) for child in children) + ")"
+    elif is_implies(expr):
+        return f"({z3_to_python(expr.children()[0])} <= {z3_to_python(expr.children()[1])})"
+    else:
+        return str(expr)
+
 def show_statement(statement):
     if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
         print("" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
@@ -85,7 +101,8 @@ def show_statement(statement):
     elif(statement["TYPE"] == "IF_STATEMENT"):
         print("if (", convert_expression(statement["EXPRESSION"]), "): ", end = "")
         for statement2 in statement["MATCH_COMMANDS"]:
-            show_statement(statement2)
+            show_statement(statement2)  
+        
 
 def build_python(ast: dict[str:any]):
     if "CONTENTS" not in ast:

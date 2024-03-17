@@ -75,6 +75,15 @@ def T_Div(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
     return type_create_singular(lambda: z3.And(greatest_lower_bound <= σ, greatest_upper_bound >= σ))
 
 
+
+# TODO: Add some interval arithmetic
+# [T-Comp] :: Validates & Infers Refinement of the Division of 2 types.
+@inject_variables(base_types)
+def T_Comp(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
+    return type_create_singular(lambda: True)
+
+
+
 # [T-FuncCall] :: Validates a Function Call and provides a return type.
 @inject_variables(base_types)
 def T_FuncCall(inputs: list[_type], function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:

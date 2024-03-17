@@ -186,7 +186,8 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
             return root;
             printf("This shouldn't be reached.");
         }
-        else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract)
+        else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract || psr->peek(psr)->type == operator_gt ||
+        psr->peek(psr)->type == operator_gteq || psr->peek(psr)->type == operator_lt || psr->peek(psr)->type == operator_lteq )
         {
             wprintf(L"EXPR: Parsing Right-Associative Operator (%ls)\n", psr->peek(psr)->lexeme);
             wchar_t op_lexeme[128];
