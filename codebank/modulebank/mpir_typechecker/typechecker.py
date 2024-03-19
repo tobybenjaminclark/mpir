@@ -31,7 +31,7 @@ def debug(*args, sep: str | None = " ", end: str | None = "\n", flush: Literal[F
 def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
-        ">": lambda: left > right, ">=": lambda: left >= right, "<": lambda: left < right, "<=": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right,
+        ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right,
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left),
@@ -109,7 +109,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])):
         debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
         return Γ, Ψ + (statement["IDENTIFIER"], expr)
-    else: raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee.")
+    else: raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee. - ", statement["IDENTIFIER"])
 
 
 # Function to typecheck a function call.
@@ -241,6 +241,12 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
     statements.append(assignment2)
 
     for index, on_statement in enumerate(trycast_statement["ON_STATEMENTS"]):
+
+        if(on_statement["MATCH_VALUE"] not in [0, 1]):
+            print("Invalid Trycast")
+        else:
+            print("Valid trycast")
+
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
@@ -251,11 +257,16 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                     "DATA" : identifier
                 },
                 "RIGHT" : {
-                    "DATATYPE" : ("NUMERICAL_LITERAL"),
+                    "DATATYPE" : "NUMERICAL_LITERAL",
                     "DATA" : on_statement["MATCH_VALUE"]
                 }},
             "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
         }
+        
+        Γi, Ψi = duplicate_context(Γ), duplicate_context(Ψ)
+        
+        typecheck_if_statement(if_statement, Γi, Ψi)
+
         statements.append(if_statement)
     
     return statements
@@ -346,3 +357,4 @@ def typecheck_ast(ast: dict[str:any]):
 
 ast = parse_json_file("testj.json")
 typecheck_ast(ast)
+        

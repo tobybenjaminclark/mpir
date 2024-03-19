@@ -93,20 +93,21 @@ def build_python(ast: dict[str:any]):
         print("CONTENTS NOT IN AST!")
         exit(1)
     else:
-        for node in ast["CONTENTS"]:
-            print("\n\n")
-            if "TYPE" in node and node["TYPE"] == "FUNCTION_DECLARATION":
-                print("def", node["IDENTIFIER"] + "(", end="")
-                for index, arg in enumerate(node["ARGUMENTS"]):
-                    print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
-                print(") ->", node["RETURN_TYPE"] + ":")
-                for statement in node["BODY"]:
-                    print("\t", end = "")
-                    show_statement(statement)
-                pass
-            elif "TYPE" in node and node["TYPE"] == "TYPE_DECLARATION":
-                pass
-            else:
-                print(node)
-                exit(1)
+        print("# Generated using the MPIR Compiler.\n")
 
+        # build types
+        for node in list(filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
+            identifier = node["IDENTIFIER"]
+            print(f"{identifier} = type('{identifier}', (), {{}})\n")
+            
+
+        # build functions
+        for node in list(filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
+            print("def", node["IDENTIFIER"] + "(", end="")
+            for index, arg in enumerate(node["ARGUMENTS"]):
+                print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
+            print(") ->", node["RETURN_TYPE"] + ":")
+            for statement in node["BODY"]:
+                print("\t", end = "")
+                show_statement(statement)
+            print("\n\n")

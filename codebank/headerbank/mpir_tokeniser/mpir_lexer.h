@@ -33,20 +33,20 @@ struct mpir_lexer;
  */
 struct mpir_lexer
 {
-    unsigned long int current_index;
-    unsigned long int buffer_size;
-    unsigned long int token_count;
-    unsigned long int line_number;
-    unsigned int column_number;
+    unsigned long int current_index;                    /* Stores the index of the current token.   */
+    unsigned long int buffer_size;                      /* Stores the size of the current buffer.   */
+    unsigned long int token_count;                      /* Stores the current number of tokens.     */
+    unsigned long int line_number;                      /* Stores the current line number.          */
+    unsigned int column_number;                         /* Stores the current column number.        */
 
-    FILE *source_file;
-    mpir_token **tokens;
-    wchar_t current_character;
-    wchar_t lexeme[BUFFER_SIZE];
+    FILE *source_file;                                  /* Pointer to the current source file.      */
+    mpir_token **tokens;                                /* Current array of token structures.       */
+    wchar_t current_character;                          /* Current character in source file.        */
+    wchar_t lexeme[BUFFER_SIZE];                        /* Currently processing lexeme              */
 
     /* Function Pointers */
-    wchar_t (*get)(struct mpir_lexer *lexer);
-    wchar_t (*peek)(struct mpir_lexer *lexer);
+    wchar_t (*get)(struct mpir_lexer *lexer);           /* Function pointer to get next character.  */
+    wchar_t (*peek)(struct mpir_lexer *lexer);          /* Function pointer to peek next character. */
 } ;
 
 typedef struct mpir_lexer mpir_lexer;
