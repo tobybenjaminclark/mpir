@@ -109,7 +109,8 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])):
         debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
         return Γ, Ψ + (statement["IDENTIFIER"], expr)
-    else: raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee. - ", statement["IDENTIFIER"])
+    else:
+        raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee:", statement["IDENTIFIER"], " (", expr.logic.constraint()," : ", get_type_from_context(Γ, statement["IDENTIFIER"]).logic.constraint(), ")")
 
 
 # Function to typecheck a function call.
@@ -247,6 +248,8 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         else:
             print("Valid trycast")
 
+
+
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
@@ -264,9 +267,16 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         }
         
         Γi, Ψi = duplicate_context(Γ), duplicate_context(Ψ)
-        
-        typecheck_if_statement(if_statement, Γi, Ψi)
 
+        if on_statement["MATCH_VALUE"] == 1:
+            print("TRYCAST :: Success Matching Found!")
+            print("Assigning ", dom, " as type ", cast_t.logic.constraint(), " under psi")
+            Ψi = Ψi + (dom, cast_t)
+            typecheck_if_statement(if_statement, Γi, Ψi)
+
+        if on_statement["MATCH_VALUE"] == 0:
+            print("TRYCAST :: Failure Matching Found!")
+        
         statements.append(if_statement)
     
     return statements
@@ -293,7 +303,7 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
 
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            if_statement["MATCH_COMMANDS"][index:index + 1] = desugar_trycast_statement(statement, Γ, Ψ)
+            desugar_trycast_statement(statement, Γ, Ψ)
             continue
 
         index = index + 1
@@ -323,8 +333,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            function["BODY"][index:index + 1] = desugar_trycast_statement(statement, Γ, Ψ)
-            continue
+            desugar_trycast_statement(statement, Γ, Ψ)
         index = index + 1
     return Ψ, Γ
 

@@ -86,16 +86,10 @@ typedef enum
 
 typedef struct
 {
-    /* Type of the token (e.g., number, operator, identifier, etc.) */
-    mpir_token_type type;
-
-    /* Lexeme of the token (actual value as a string) */
-    wchar_t lexeme[128];
-
-    /* Line number in the source code where the token appears */
-    unsigned long int line_index;
-    unsigned long int column_index;
-
+    mpir_token_type type;                   /* Enumeration type of the token instance.      */
+    wchar_t lexeme[128];                    /* String of the token instance.                */
+    unsigned long int line_index;           /* Line index of the token instance.            */
+    unsigned long int column_index;         /* Column index of the token instance.          */
 } mpir_token;
 
 #endif
