@@ -248,8 +248,6 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         else:
             print("Valid trycast")
 
-
-
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
@@ -279,7 +277,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         
         statements.append(if_statement)
     
-    return statements
+    return statements, Γ, Ψ
 
 
 
@@ -333,7 +331,9 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            desugar_trycast_statement(statement, Γ, Ψ)
+            statements, Γ, Ψ = desugar_trycast_statement(statement, Γ, Ψ)
+            function["BODY"][index:index + 1] = statements
+            index += len(statements)
         index = index + 1
     return Ψ, Γ
 
