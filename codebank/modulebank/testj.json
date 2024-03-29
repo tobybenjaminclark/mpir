@@ -80,10 +80,24 @@
 									"IDENTIFIER" : "bal",
 									"EXPRESSION" : {
 										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 0.000000
+										"VALUE" : 1.000000
 									}
 								}
 							]
+						}
+					]
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "new_bal"
+							}
 						}
 					]
 				}
@@ -91,7 +105,7 @@
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "returns two"
+					"STRING" : "Creates an empty bank balance."
 				}
 			],
 			"INPUTS" : [
@@ -99,6 +113,49 @@
 			],
 			"ARGUMENTS" : [
 				"bal"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "addToBalance",
+			"RETURN_TYPE" : "Balance",
+			"BODY" : [
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_OPERATOR",
+								"IDENTIFIER" : "+",
+								"LEFT" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "new_bal"
+								},
+								"RIGHT" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "amount"
+								}
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Adds an amount to a bank balance."
+				}
+			],
+			"INPUTS" : [
+				"Balance",
+				"Numerical"
+			],
+			"ARGUMENTS" : [
+				"bal",
+				"amount"
 			]
 		},
 		{

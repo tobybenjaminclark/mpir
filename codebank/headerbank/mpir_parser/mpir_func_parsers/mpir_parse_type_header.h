@@ -10,5 +10,6 @@
 #include "../mpir_parser.h"
 #include "../mpir_parser_utilities.h"
 #include "mpir_parse_function_body.h"
+#include "../mpir_doc_parsers/mpir_parse_docsection.h"
 
 #endif

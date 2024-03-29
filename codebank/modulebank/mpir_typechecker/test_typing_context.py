@@ -112,3 +112,4 @@ def test_variable_type_subtype_override():
     τ2 = type_create_singular(lambda: z3.And(σ > 10, σ < 15))
     assert (τ2 < τ1) == True
     assert (τ1 < τ2) == False
+    

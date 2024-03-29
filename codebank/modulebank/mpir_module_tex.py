@@ -32,9 +32,6 @@ def parse_json_file(filename: str) -> dict|None:
         print(f"Error decoding AST in '{filename}': {e}")
         return None
 
-
-ast = parse_json_file("testj.json")
-
 def convert_function_call(fcall: dict) -> str:
     val = fcall["IDENTIFIER"] + "("
     for index, arg in enumerate(fcall["ARGUMENTS"]):
@@ -62,58 +59,66 @@ def convert_expression(expr: dict) -> str:
 
 def show_statement(statement):
     if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-        print("" + statement["ASSIGNED_TYPE"] + " " + statement["IDENTIFIER"] + ";")
+        return ("" + statement["ASSIGNED_TYPE"] + " " + statement["IDENTIFIER"] + ";")
     elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
-        print("" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
+        return ("" + statement["IDENTIFIER"] + " = " + convert_expression(statement["EXPRESSION"]))
     elif(statement["TYPE"] == "FUNCTION_CALL"):
-        print("" + convert_function_call(statement))
+        return ("" + convert_function_call(statement))
     elif(statement["TYPE"] == "TRYCAST_STATEMENT"):
-        print("TRYCAST!")
+        return ("TRYCAST!")
     elif(statement["TYPE"] == "DO_STATEMENT"):
-        print("DO STATEMENT!")
+        return ("DO STATEMENT!")
     elif(statement["TYPE"] == "IF_STATEMENT"):
-        print("if (", convert_expression(statement["EXPRESSION"]), "): ", end = "")
-        for statement2 in statement["MATCH_COMMANDS"]:
-            show_statement(statement2)
+        return ("if (", convert_expression(statement["EXPRESSION"]), "): ")
+        # for statement2 in statement["MATCH_COMMANDS"]:
+        #    show_statement(statement2)
+
+ast = parse_json_file("testj.json")
 
 if "CONTENTS" not in ast:
     print("CONTENTS NOT IN AST!")
     exit(1)
 
+lines = []
+lines.append("\n\\section{\\textsc{Function Declarations}}")
 
-print("\n\\section{\\textsc{Function Declarations}}")
 for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
     # Start LaTeX Segment
-    print("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
+    lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
 
     # Print Docs
     if len(node["DOCSECTION"]) > 0:
-        print("\\begin{itemize}")
-        print("\t\\setlength{\\itemsep}{5pt}")
-        print("\t\\setlength{\\parskip}{0pt}")
-        print("\t\\setlength{\\parsep}{0pt}")
+        lines.append("\\begin{itemize}")
+        lines.append("\t\\setlength{\\itemsep}{5pt}")
+        lines.append("\t\\setlength{\\parskip}{0pt}")
+        lines.append("\t\\setlength{\\parsep}{0pt}")
     
         for index, doc in enumerate(node["DOCSECTION"]):
             if "IDENTIFIER" in doc:
-                print("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
+                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
             else:
-                print("\t\\item " + doc["STRING"].replace("&", "\&"))
-        print("\\end{itemize}\n")
+                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
+        lines.append("\\end{itemize}\n")
 
 
     # Print Pseudocode
-    print("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
-    print("FUNCTION ", node["IDENTIFIER"] + "(", end="")
+    lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+    output_string = "FUNCTION " + node["IDENTIFIER"] + "("
     for index, arg in enumerate(node["ARGUMENTS"]):
-        print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
-    print(") ->", node["RETURN_TYPE"] + ":")
+        output_string += arg + ": " + node["INPUTS"][index]
+        if index < len(node["ARGUMENTS"]) - 1:
+            output_string += ", "
+    output_string += ") -> " + node["RETURN_TYPE"] + ":"
+    lines.append(output_string)
+    
     for statement in node["BODY"]:
         print("    ", end = "")
-        show_statement(statement)
-    print("\\end{minted}\n")
+        lines.append("\t" + show_statement(statement))
+    lines.append("\\end{minted}\n")
 
-print("\n\\section{\\textsc{Type Declarations}}")
-for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
-    print(node["IDENTIFIER"])
-    
+lines.append("\n\\section{\\textsc{Type Declarations}}")
+for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
+    lines.append(node["IDENTIFIER"])
 
+for l in lines:
+    print(l)

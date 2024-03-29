@@ -93,5 +93,6 @@ struct mpir_ast_type_declaration
     struct mpir_ast_type** inputs;          /** ← Array of input types for the type.    */
     struct mpir_ast_type* base_type;        /** ← Base type of the type.                */
     struct type_logic* refinement;          /** ← Pointer to the type refinement logic. */
+    struct mpir_ast_docsection* docsection; /** ← Pointer to the documentation section associated with the expression. */
 };
 #endif

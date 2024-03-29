@@ -33,6 +33,34 @@ bool parse_type_declaration(mpir_parser* psr)
     /* Parse Type Logic */
     node->refinement = parse_type_logic(psr);
 
+    printf("Going to try and docsection for type declaration!\n");
+    if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
+
+    /* Parse Doc */
+    if(psr->peek(psr)->type == keyword_suchthat)
+    {
+        /* Consume Suchthat */
+        (void)psr->get(psr);
+        if(psr->peek(psr)->type == colon) (void)psr->get(psr);
+        else
+        {
+            printf("Expected :");
+            return NULL;
+        }
+        printf("Parsing docsection for type declaration!\n");
+        node -> docsection = mpir_parse_docsection(psr);
+    }
+    else if(psr->peek(psr)->type == keyword_end)
+    {
+        printf("See END!");
+        (void)psr->get(psr);
+        node -> docsection = NULL;
+        printf("Failed Parsing docsection for type declaration!\n");
+    }
+    else
+    {
+        wprintf(L"Expected Suchthat, got %ls \n", psr->peek(psr)->lexeme);
+    }
     append_command(psr->program, (union mpir_command_data){.type_declaration = node}, NEW_TYPE_DECLARATION);
 
     return true;

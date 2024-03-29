@@ -417,8 +417,10 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 fprintf(file, "TYPE_DECLARATION\n");
                 /* Generate JSON for Type, Identifier & Return Type */
                 struct wjson* wjson_typedef = wjson_initialize();
+                struct wjson* wjson_typedef_docsection = wjson_initialize_list();
                 wjson_append_string(wjson_typedef, L"TYPE", L"TYPE_DECLARATION");
                 wjson_append_string(wjson_typedef, L"IDENTIFIER", program_node->data.type_declaration->identifier->data);
+                mpir_wjsonify_docsection(program_node->data.type_declaration->docsection, wjson_typedef_docsection);
 
                 struct wjson* wjson_typedef_inputs = wjson_initialize_list();
                 int type_dec_count1 = 0;
@@ -428,6 +430,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                     type_dec_count1++;
                 }
 
+                wjson_append_list(wjson_typedef, L"DOCSECTION", wjson_typedef_docsection);
                 wjson_append_list(wjson_typedef, L"INPUTS", wjson_typedef_inputs);
                 wjson_append_string(wjson_typedef, L"BASE_TYPE", program_node->data.type_declaration->base_type->data);
                 wjson_append_object(wjson_typedef, L"LOGIC", mpir_wjsonify_type_logic(program_node->data.type_declaration->refinement));
