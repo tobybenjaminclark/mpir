@@ -118,7 +118,20 @@ for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONT
 
 lines.append("\n\\section{\\textsc{Type Declarations}}")
 for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
-    lines.append(node["IDENTIFIER"])
+    lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
+
+    if len(node["DOCSECTION"]) > 0:
+        lines.append("\\begin{itemize}")
+        lines.append("\t\\setlength{\\itemsep}{5pt}")
+        lines.append("\t\\setlength{\\parskip}{0pt}")
+        lines.append("\t\\setlength{\\parsep}{0pt}")
+    
+        for index, doc in enumerate(node["DOCSECTION"]):
+            if "IDENTIFIER" in doc:
+                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
+            else:
+                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
+        lines.append("\\end{itemize}\n")
 
 for l in lines:
     print(l)

@@ -161,6 +161,12 @@
 		{
 			"TYPE" : "TYPE_DECLARATION",
 			"IDENTIFIER" : "Balance",
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Stores financial balance greater than 0"
+				}
+			],
 			"INPUTS" : [
 				"a"
 			],
