@@ -174,7 +174,7 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         }
         statements.append(if_statement)
         
-    return statements
+    return statements, Γ, Ψ
 
     
 
@@ -301,21 +301,17 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
     index = 0
     while index < len(if_statement["MATCH_COMMANDS"]):
         statement = if_statement["MATCH_COMMANDS"][index]
-
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-
         if statement["TYPE"] == "DO_STATEMENT":
-            if_statement["MATCH_COMMANDS"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
+            statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
+            if_statement["MATCH_COMMANDS"][index:index + 1] = statements
             continue
-
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
-
         if statement["TYPE"] == "TRYCAST_STATEMENT":
             desugar_trycast_statement(statement, Γ, Ψ)
             continue
-
         index = index + 1
     return Γ, Ψ 
 
@@ -335,17 +331,23 @@ def typecheck_function(function: dict[str:any], Γ: _context):
     index = 0
     while index < len(function["BODY"]):
         statement = function["BODY"][index]
+        print("Validating Statement of type: " + statement["TYPE"])
+
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-        if statement["TYPE"] == "DO_STATEMENT":
-            function["BODY"][index:index + 1] = desugar_do_statement(statement, Γ, Ψ)
-            continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
+
+        if statement["TYPE"] == "DO_STATEMENT":
+            statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
+            function["BODY"][index:index+1] = statements
+            index += len(statements) - 1
+
         if statement["TYPE"] == "TRYCAST_STATEMENT":
             statements, Γ, Ψ = desugar_trycast_statement(statement, Γ, Ψ)
-            function["BODY"][index:index + 1] = statements
-            index += len(statements)
+            function["BODY"][index:index+1] = statements
+            index += len(statements) - 1
+
         index = index + 1
     return Ψ, Γ
 
@@ -380,6 +382,7 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
+        print("Typechecking", function["IDENTIFIER"])
         typecheck_function(function, duplicate_context(Γ))
 
     build_python(ast)
