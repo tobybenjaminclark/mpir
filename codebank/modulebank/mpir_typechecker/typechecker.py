@@ -74,9 +74,13 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
 
 # Function to Type Check a Function Call as part of an expression.
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
-    return T_FuncCall([type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"]], get_type_from_context(context, ast["IDENTIFIER"]))
-
-
+    try:
+        typ = T_FuncCall([type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"]], get_type_from_context(context, ast["IDENTIFIER"]))
+        return typ
+    except:
+        print("Function Call Type Failure")
+        print(type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"])
+    
 
 # Function to infer the type of an ast expression.
 def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
@@ -117,12 +121,18 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    T_FuncCall([type_ast_expression(arg["VALUE"], Γ, Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
-    debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
+    try:
+        T_FuncCall([type_ast_expression(arg["VALUE"], Γ, Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
+        debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
+    except:
+        print("Function Call to", statement["IDENTIFIER"]," :: Parameter Type Failure")
+        for arg in statement["ARGUMENTS"]:
+            print("\t" + arg["VALUE"]["IDENTIFIER"] + " : " + str(type_ast_expression(arg["VALUE"], Γ, Ψ).logic.constraint()))
+
     return Γ, Ψ 
 
 
-
+ 
 def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
     statements = []
     identifier = "anon"

@@ -128,16 +128,26 @@
 							"TYPE" : "FUNCTION_ARGUMENT",
 							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
-								"TYPE" : "EXPRESSION_OPERATOR",
-								"IDENTIFIER" : "+",
-								"LEFT" : {
-									"TYPE" : "EXPRESSION_IDENTIFIER",
-									"IDENTIFIER" : "bal"
-								},
-								"RIGHT" : {
-									"TYPE" : "EXPRESSION_IDENTIFIER",
-									"IDENTIFIER" : "amount"
-								}
+								"TYPE" : "FUNCTION_CALL",
+								"IDENTIFIER" : "createBalance",
+								"ARGUMENTS" : [
+									{
+										"TYPE" : "FUNCTION_ARGUMENT",
+										"ARGUMENT_INDEX" : 0.000000,
+										"VALUE" : {
+											"TYPE" : "EXPRESSION_OPERATOR",
+											"IDENTIFIER" : "+",
+											"LEFT" : {
+												"TYPE" : "EXPRESSION_IDENTIFIER",
+												"IDENTIFIER" : "bal"
+											},
+											"RIGHT" : {
+												"TYPE" : "EXPRESSION_IDENTIFIER",
+												"IDENTIFIER" : "amount"
+											}
+										}
+									}
+								]
 							}
 						}
 					]
