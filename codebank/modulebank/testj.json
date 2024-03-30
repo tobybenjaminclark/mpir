@@ -132,7 +132,7 @@
 								"IDENTIFIER" : "+",
 								"LEFT" : {
 									"TYPE" : "EXPRESSION_IDENTIFIER",
-									"IDENTIFIER" : "new_bal"
+									"IDENTIFIER" : "bal"
 								},
 								"RIGHT" : {
 									"TYPE" : "EXPRESSION_IDENTIFIER",
@@ -147,6 +147,64 @@
 				{
 					"FLAG" : "doc",
 					"STRING" : "Adds an amount to a bank balance."
+				}
+			],
+			"INPUTS" : [
+				"Balance",
+				"Numerical"
+			],
+			"ARGUMENTS" : [
+				"bal",
+				"amount"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "setBalance",
+			"RETURN_TYPE" : "Balance",
+			"BODY" : [
+				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"ASSIGNED_TYPE" : "Balance"
+				},
+				{
+					"TYPE" : "VALUE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"EXPRESSION" : {
+						"TYPE" : "FUNCTION_CALL",
+						"IDENTIFIER" : "createBalance",
+						"ARGUMENTS" : [
+							{
+								"TYPE" : "FUNCTION_ARGUMENT",
+								"ARGUMENT_INDEX" : 0.000000,
+								"VALUE" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "amount"
+								}
+							}
+						]
+					}
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "new_bal"
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Sets a balance to a specific amount."
 				}
 			],
 			"INPUTS" : [

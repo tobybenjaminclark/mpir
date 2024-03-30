@@ -57,6 +57,21 @@ def convert_expression(expr: dict) -> str:
     if(expr["TYPE"] == ""):
         pass
 
+def build_docsection(node):
+    lines = []
+    if len(node["DOCSECTION"]) > 0:
+        lines.append("\\begin{itemize}")
+        lines.append("\t\\setlength{\\itemsep}{5pt}")
+        lines.append("\t\\setlength{\\parskip}{0pt}")
+        lines.append("\t\\setlength{\\parsep}{0pt}")
+        for index, doc in enumerate(node["DOCSECTION"]):
+            if "IDENTIFIER" in doc:
+                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
+            else:
+                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
+        lines.append("\\end{itemize}\n")
+    return lines
+
 def show_statement(statement):
     if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
         return ("" + statement["ASSIGNED_TYPE"] + " " + statement["IDENTIFIER"] + ";")
@@ -86,21 +101,7 @@ for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONT
     # Start LaTeX Segment
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
 
-    # Print Docs
-    if len(node["DOCSECTION"]) > 0:
-        lines.append("\\begin{itemize}")
-        lines.append("\t\\setlength{\\itemsep}{5pt}")
-        lines.append("\t\\setlength{\\parskip}{0pt}")
-        lines.append("\t\\setlength{\\parsep}{0pt}")
-    
-        for index, doc in enumerate(node["DOCSECTION"]):
-            if "IDENTIFIER" in doc:
-                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
-            else:
-                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
-        lines.append("\\end{itemize}\n")
-
-
+    lines += build_docsection(node)
     # Print Pseudocode
     lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
     output_string = "FUNCTION " + node["IDENTIFIER"] + "("
@@ -119,19 +120,7 @@ for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONT
 lines.append("\n\\section{\\textsc{Type Declarations}}")
 for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
-
-    if len(node["DOCSECTION"]) > 0:
-        lines.append("\\begin{itemize}")
-        lines.append("\t\\setlength{\\itemsep}{5pt}")
-        lines.append("\t\\setlength{\\parskip}{0pt}")
-        lines.append("\t\\setlength{\\parsep}{0pt}")
-    
-        for index, doc in enumerate(node["DOCSECTION"]):
-            if "IDENTIFIER" in doc:
-                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
-            else:
-                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
-        lines.append("\\end{itemize}\n")
+    lines += build_docsection(node)
 
 for l in lines:
     print(l)

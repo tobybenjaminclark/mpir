@@ -57,6 +57,8 @@ def form_expression(type_logic: dict):
 def type_ast_expression_operator(ast, context, propagation, σ=z3.Real('σ')) -> _type:
     op_mapping = {"+": T_Add, "*": T_Mult, "-": T_Sub, "/": T_Div,
                   ">": T_Comp, ">=": T_Comp, "<": T_Comp, "<=": T_Comp, "^": T_Comp, "v": T_Comp}
+    if ast["LEFT"]["TYPE"] == "EXPRESSION_IDENTIFIER" and ast["LEFT"]["IDENTIFIER"] not in propagation: raise Exception(f"Undeclared Identifier " + ast["LEFT"]["IDENTIFIER"])
+    if ast["RIGHT"]["TYPE"] == "EXPRESSION_IDENTIFIER" and ast["RIGHT"]["IDENTIFIER"] not in propagation: raise Exception(f"Undeclared Identifier " + ast["RIGHT"]["IDENTIFIER"])
     return op_mapping.get(ast["IDENTIFIER"], lambda: print("Error!"))(
         type_ast_expression(ast["LEFT"], context, propagation),
         type_ast_expression(ast["RIGHT"], context, propagation)
@@ -345,6 +347,15 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 def process_function_declarations(ast: dict[str:any], context: _context) -> _context:
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
         context = context + (function["IDENTIFIER"], type_create_function([get_type_from_context(context, type_identifier).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(context, function["RETURN_TYPE"]).logic.constraint))
+        for doc in function["DOCSECTION"]:
+            flags: list[str] = []
+            if "FLAG" in doc: flags.append(doc["FLAG"])
+        file = parse_json_file("config.json")
+        if len(set(file["ENFORCED"]).difference(set(flags))) > 0:
+            print("Failed enforced!")
+        else:
+            print("Passed Enforced Flags!")
+
     return context
 
 
