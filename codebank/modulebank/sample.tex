@@ -1,0 +1,77 @@
+
+\section{\textsc{Function Declarations}}
+
+\subsection{createBalance}
+\textbf{Test Cases}
+\begin{itemize}
+	\setlength{\itemsep}{5pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item (10) -> 10
+	\item (15) -> 15
+\end{itemize}
+
+\textbf{Function Information}
+\begin{itemize}
+	\setlength{\itemsep}{5pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item Creates an empty bank balance.
+	\item \textbf{bal} \\ Starting Balance (Numerical)
+\end{itemize}
+
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+FUNCTION createBalance(bal: Numerical) -> Balance:
+	Balance new_bal;
+	new_bal = 0.0
+	TRYCAST!
+	DO STATEMENT!
+	return(new_bal)
+\end{minted}
+
+
+\subsection{addToBalance}
+\textbf{Function Information}
+\begin{itemize}
+	\setlength{\itemsep}{5pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item Adds an amount to a bank balance.
+\end{itemize}
+
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
+	return(createBalance(bal + amount))
+\end{minted}
+
+
+\subsection{setBalance}
+\textbf{Function Information}
+\begin{itemize}
+	\setlength{\itemsep}{5pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item Sets a balance to a specific amount.
+	\item \textbf{bal} \\ Balance to set
+	\item \textbf{amount} \\ Amount to set balance to.
+\end{itemize}
+
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+FUNCTION setBalance(bal: Balance, amount: Numerical) -> Balance:
+	Balance new_bal;
+	new_bal = createBalance(amount)
+	return(new_bal)
+\end{minted}
+
+
+\section{\textsc{Type Declarations}}
+
+\subsection{Balance}
+\textbf{Function Information}
+\begin{itemize}
+	\setlength{\itemsep}{5pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item Stores financial balance greater than 0
+\end{itemize}
+

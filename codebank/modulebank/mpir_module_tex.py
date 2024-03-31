@@ -59,7 +59,19 @@ def convert_expression(expr: dict) -> str:
 
 def build_docsection(node):
     lines = []
+    if len(list(filter(lambda l: l["FLAG"] == "testcase", node["DOCSECTION"]))) > 0:
+        lines.append("\\textbf{Test Cases}")
+        lines.append("\\begin{itemize}")
+        lines.append("\t\\setlength{\\itemsep}{5pt}")
+        lines.append("\t\\setlength{\\parskip}{0pt}")
+        lines.append("\t\\setlength{\\parsep}{0pt}")
+        for line in filter(lambda l: l["FLAG"] == "testcase", node["DOCSECTION"]):
+            lines.append("\t\\item " + line["STRING"].replace("&", "\&"))
+        lines.append("\\end{itemize}\n")
+    
+    node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "testcase", node["DOCSECTION"]))
     if len(node["DOCSECTION"]) > 0:
+        lines.append("\\textbf{Function Information}")
         lines.append("\\begin{itemize}")
         lines.append("\t\\setlength{\\itemsep}{5pt}")
         lines.append("\t\\setlength{\\parskip}{0pt}")
@@ -94,14 +106,19 @@ if "CONTENTS" not in ast:
     print("CONTENTS NOT IN AST!")
     exit(1)
 
+x = 0
+
 lines = []
 lines.append("\n\\section{\\textsc{Function Declarations}}")
 
 for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
     # Start LaTeX Segment
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
+    print("1 ", len(lines))
 
-    lines += build_docsection(node)
+    lines.extend(build_docsection(node))
+
+    
     # Print Pseudocode
     lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
     output_string = "FUNCTION " + node["IDENTIFIER"] + "("
@@ -111,16 +128,24 @@ for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONT
             output_string += ", "
     output_string += ") -> " + node["RETURN_TYPE"] + ":"
     lines.append(output_string)
+    print("3 ",len(lines))
     
     for statement in node["BODY"]:
-        print("    ", end = "")
         lines.append("\t" + show_statement(statement))
     lines.append("\\end{minted}\n")
+    print("4 ",len(lines))
 
 lines.append("\n\\section{\\textsc{Type Declarations}}")
 for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
-    lines += build_docsection(node)
+    docsec = build_docsection(node)
+    lines.extend(build_docsection(node))
 
-for l in lines:
-    print(l)
+# Open file for writing
+with open('sample.tex', 'w') as file:
+    # Write each line to the file
+    for l in lines:
+        file.write(l + "\n")  # Add a newline character at the end of each line
+
+print(" ")
+print(len(lines))

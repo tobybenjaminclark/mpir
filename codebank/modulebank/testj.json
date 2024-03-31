@@ -106,6 +106,19 @@
 				{
 					"FLAG" : "doc",
 					"STRING" : "Creates an empty bank balance."
+				},
+				{
+					"FLAG" : "doc",
+					"IDENTIFIER" : "bal",
+					"STRING" : "Starting Balance (Numerical)"
+				},
+				{
+					"FLAG" : "testcase",
+					"STRING" : "(10) -> 10"
+				},
+				{
+					"FLAG" : "testcase",
+					"STRING" : "(15) -> 15"
 				}
 			],
 			"INPUTS" : [
@@ -215,6 +228,16 @@
 				{
 					"FLAG" : "doc",
 					"STRING" : "Sets a balance to a specific amount."
+				},
+				{
+					"FLAG" : "doc",
+					"IDENTIFIER" : "bal",
+					"STRING" : "Balance to set"
+				},
+				{
+					"FLAG" : "doc",
+					"IDENTIFIER" : "amount",
+					"STRING" : "Amount to set balance to."
 				}
 			],
 			"INPUTS" : [
