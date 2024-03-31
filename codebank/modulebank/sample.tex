@@ -14,7 +14,7 @@ Creates an empty bank balance.
 
 \textbf{ \\ Example Usage of \texttt{createBalance}}
 \begin{enumerate}
-	\setlength{\itemsep}{5pt}
+	\setlength{\itemsep}{0pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
 	\item \verb|createBalance(10) -> 10|
@@ -23,7 +23,7 @@ Creates an empty bank balance.
 
 \textbf{ \\ Function Information}
 \begin{itemize}
-	\setlength{\itemsep}{5pt}
+	\setlength{\itemsep}{0pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
 	\item \textbf{bal} \\ Starting Balance (Numerical)
@@ -31,11 +31,11 @@ Creates an empty bank balance.
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION createBalance(bal: Numerical) -> Balance:
-	Balance new_bal;
-	new_bal = 0.0
-	TRYCAST!
-	DO STATEMENT!
-	return(new_bal)
+Balance new_bal;
+new_bal = 0.0
+TRYCAST!
+DO STATEMENT!
+return(new_bal)
 \end{minted}
 
 \clearpage
@@ -45,7 +45,7 @@ Adds an amount to a bank balance.
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
-	return(createBalance(bal + amount))
+return(createBalance(bal + amount))
 \end{minted}
 
 \clearpage
@@ -55,7 +55,7 @@ Sets a balance to a specific amount.
 
 \textbf{ \\ Function Information}
 \begin{itemize}
-	\setlength{\itemsep}{5pt}
+	\setlength{\itemsep}{0pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
 	\item \textbf{bal} \\ Balance to set
@@ -64,9 +64,9 @@ Sets a balance to a specific amount.
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION setBalance(bal: Balance, amount: Numerical) -> Balance:
-	Balance new_bal;
-	new_bal = createBalance(amount)
-	return(new_bal)
+Balance new_bal;
+new_bal = createBalance(amount)
+return(new_bal)
 \end{minted}
 
 

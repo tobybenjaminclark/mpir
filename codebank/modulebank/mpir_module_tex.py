@@ -99,34 +99,37 @@ def build_pseudocode_statement(statement):
         case "IF_STATEMENT":        return [f"if ({convert_expression(statement['EXPRESSION'])}):"]
 
 
-
-# Builds function declarations
+# Builds function declarationS text
 def build_function_declarations(ast, lines):
     lines.append("\n\\section{\\textsc{Function Declarations}}")
-    for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
-        # Start LaTeX Segment
-        lines.append("\\clearpage")
-        lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
-        print("1 ", len(lines))
+    for node in filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
+        lines.extend(build_function_declaration(node))
 
-        lines.extend(build_docsection(node))
-        # Print Pseudocode
-        lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
-        output_string = "FUNCTION " + node["IDENTIFIER"] + "("
-        for index, arg in enumerate(node["ARGUMENTS"]):
-            output_string += arg + ": " + node["INPUTS"][index]
-            if index < len(node["ARGUMENTS"]) - 1:
-                output_string += ", "
-        output_string += ") -> " + node["RETURN_TYPE"] + ":"
-        lines.append(output_string)
-        print("3 ",len(lines))
-        
-        for statement in node["BODY"]:
-            for statement_ in build_pseudocode_statement(statement):
-                lines.append("\t" + statement_)
-        lines.append("\\end{minted}\n")
-        print("4 ",len(lines))
+# Builds function declaration tex
+def build_function_declaration(node):
+    lines = ["\\clearpage"]
+    lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
+    lines.extend(build_docsection(node))
+    lines.extend(build_pseudocode(node))
+    return lines
 
+# Builds psuedocode Tex
+def build_pseudocode(node):
+    pseudocode_lines = []
+    pseudocode_lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+    output_string = "FUNCTION " + node["IDENTIFIER"] + "(" + build_arguments(node) + ") -> " + node["RETURN_TYPE"] + ":"
+    pseudocode_lines.append(output_string)
+    for statement in node["BODY"]:
+        pseudocode_lines.extend(build_pseudocode_statement(statement))
+    pseudocode_lines.append("\\end{minted}\n")
+    return pseudocode_lines
+
+# Builds function arguments
+def build_arguments(node):
+    arguments = []
+    for index, arg in enumerate(node["ARGUMENTS"]):
+        arguments.append(arg + ": " + node["INPUTS"][index])
+    return ", ".join(arguments)
 
 
 # Build type declarations
