@@ -113,11 +113,11 @@
 					"STRING" : "Starting Balance (Numerical)"
 				},
 				{
-					"FLAG" : "testcase",
+					"FLAG" : "example",
 					"STRING" : "(10) -> 10"
 				},
 				{
-					"FLAG" : "testcase",
+					"FLAG" : "example",
 					"STRING" : "(15) -> 15"
 				}
 			],
