@@ -62,19 +62,25 @@ def build_general(node, lines):
 
 # Builds web links from docsection
 def build_websites(node, lines):
-    if len(list(filter(lambda l: l["FLAG"] == "website", node["DOCSECTION"]))) == 0: return
+    if len(list(filter(lambda l: l["FLAG"] == "web", node["DOCSECTION"]))) == 0: return
 
     web_count = 1
-    lines.append("\n\\textbf{Useful Links \& Resources}\n")
-    for doc in list(filter(lambda l: l["FLAG"] == "website", node["DOCSECTION"])):
+    lines.append("\n \\textbf{ \\\\ Useful Links \& Resources}\n")
+    for doc in list(filter(lambda l: l["FLAG"] == "web", node["DOCSECTION"])):
         identifier = f"Website {web_count}" if "IDENTIFIER" not in doc else doc["IDENTIFIER"].replace("_", " ")
         lines.append("\\href{" + doc["STRING"] + "}{" + identifier + "} \\hfill \\url{" + doc["STRING"] + "} \n")
-    node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "website", node["DOCSECTION"]))
+    node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "web", node["DOCSECTION"]))
+
+def build_description(node, lines):
+    if len(list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"]))) == 0: return
+    for doc in list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"])):
+        lines.append(doc["STRING"] + "\n")
+    node["DOCSECTION"] = list(filter(lambda l: False if l["FLAG"] == "doc" and "IDENTIFIER" not in l else True, node["DOCSECTION"]))
 
 # Builds docsection
 def build_docsection(node):
     lines = []
-    
+    build_description(node, lines)
     build_websites(node, lines)
     build_examples(node, lines)
     build_general(node, lines)

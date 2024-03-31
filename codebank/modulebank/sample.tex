@@ -3,12 +3,14 @@
 \clearpage
 
 \subsection{createBalance}
+Creates an empty bank balance.
 
-\textbf{Useful Links \& Resources}
 
-\href{https://en.wikipedia.org/wiki/Bank_account}{Website 1} \hfill \verb|https://en.wikipedia.org/wiki/Bank_account| 
+ \textbf{ \\ Useful Links \& Resources}
 
-\href{https://en.wikipedia.org/wiki/Currency}{Currency Site} \hfill \verb|https://en.wikipedia.org/wiki/Currency| 
+\href{https://en.wikipedia.org/wiki/Bank_account}{Website 1} \hfill \url{https://en.wikipedia.org/wiki/Bank_account} 
+
+\href{https://en.wikipedia.org/wiki/Currency}{Currency Site} \hfill \url{https://en.wikipedia.org/wiki/Currency} 
 
 \textbf{ \\ Example Usage of \texttt{createBalance}}
 \begin{enumerate}
@@ -24,7 +26,6 @@
 	\setlength{\itemsep}{5pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
-	\item Creates an empty bank balance.
 	\item \textbf{bal} \\ Starting Balance (Numerical)
 \end{itemize}
 
@@ -40,13 +41,7 @@ FUNCTION createBalance(bal: Numerical) -> Balance:
 \clearpage
 
 \subsection{addToBalance}
-\textbf{ \\ Function Information}
-\begin{itemize}
-	\setlength{\itemsep}{5pt}
-	\setlength{\parskip}{0pt}
-	\setlength{\parsep}{0pt}
-	\item Adds an amount to a bank balance.
-\end{itemize}
+Adds an amount to a bank balance.
 
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
@@ -56,12 +51,13 @@ FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
 \clearpage
 
 \subsection{setBalance}
+Sets a balance to a specific amount.
+
 \textbf{ \\ Function Information}
 \begin{itemize}
 	\setlength{\itemsep}{5pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
-	\item Sets a balance to a specific amount.
 	\item \textbf{bal} \\ Balance to set
 	\item \textbf{amount} \\ Amount to set balance to.
 \end{itemize}
@@ -77,11 +73,3 @@ FUNCTION setBalance(bal: Balance, amount: Numerical) -> Balance:
 \section{\textsc{Type Declarations}}
 
 \subsection{Balance}
-\textbf{ \\ Function Information}
-\begin{itemize}
-	\setlength{\itemsep}{5pt}
-	\setlength{\parskip}{0pt}
-	\setlength{\parsep}{0pt}
-	\item Stores financial balance greater than 0
-\end{itemize}
-

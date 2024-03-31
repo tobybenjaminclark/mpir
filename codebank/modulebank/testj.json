@@ -113,21 +113,21 @@
 					"STRING" : "Starting Balance (Numerical)"
 				},
 				{
+					"FLAG" : "web",
+					"STRING" : "https://en.wikipedia.org/wiki/Bank_account"
+				},
+				{
+					"FLAG" : "web",
+					"IDENTIFIER" : "Currency_Site",
+					"STRING" : "https://en.wikipedia.org/wiki/Currency"
+				},
+				{
 					"FLAG" : "example",
 					"STRING" : "(10) -> 10"
 				},
 				{
 					"FLAG" : "example",
 					"STRING" : "(15) -> 15"
-				},
-				{
-					"FLAG" : "website",
-					"STRING" : "https://en.wikipedia.org/wiki/Bank_account"
-				},
-				{
-					"FLAG" : "website",
-					"IDENTIFIER" : "Currency_Site",
-					"STRING" : "https://en.wikipedia.org/wiki/Currency"
 				}
 			],
 			"INPUTS" : [
