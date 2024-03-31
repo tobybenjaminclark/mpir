@@ -5,6 +5,17 @@
 \subsection{createBalance}
 Creates an empty bank balance.
 
+\textbf{ \\ Documented Variables in createBalance}
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		Identifier & Description 2 \\
+		\hline
+		 \texttt{bal} & Starting Balance (Numerical) \\
+		\hline
+	\end{tabular}
+\end{table}
 
  \textbf{ \\ Useful Links \& Resources}
 
@@ -29,13 +40,14 @@ Creates an empty bank balance.
 	\item \textbf{bal} \\ Starting Balance (Numerical)
 \end{itemize}
 
+\textbf{\\ Pseudocode for } \texttt{createBalance}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION createBalance(bal: Numerical) -> Balance:
-Balance new_bal;
-new_bal = 0.0
-TRYCAST!
-DO STATEMENT!
-return(new_bal)
+	Balance new_bal;
+	new_bal = 0.0
+	TRYCAST!
+	DO STATEMENT!
+	return(new_bal)
 \end{minted}
 
 \clearpage
@@ -43,9 +55,10 @@ return(new_bal)
 \subsection{addToBalance}
 Adds an amount to a bank balance.
 
+\textbf{\\ Pseudocode for } \texttt{addToBalance}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
-return(createBalance(bal + amount))
+	return(createBalance(bal + amount))
 \end{minted}
 
 \clearpage
@@ -53,6 +66,19 @@ return(createBalance(bal + amount))
 \subsection{setBalance}
 Sets a balance to a specific amount.
 
+\textbf{ \\ Documented Variables in setBalance}
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		Identifier & Description 2 \\
+		\hline
+		 \texttt{bal} & Balance to set \\
+		\hline
+		 \texttt{amount} & Amount to set balance to. \\
+		\hline
+	\end{tabular}
+\end{table}
 \textbf{ \\ Function Information}
 \begin{itemize}
 	\setlength{\itemsep}{0pt}
@@ -62,11 +88,12 @@ Sets a balance to a specific amount.
 	\item \textbf{amount} \\ Amount to set balance to.
 \end{itemize}
 
+\textbf{\\ Pseudocode for } \texttt{setBalance}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 FUNCTION setBalance(bal: Balance, amount: Numerical) -> Balance:
-Balance new_bal;
-new_bal = createBalance(amount)
-return(new_bal)
+	Balance new_bal;
+	new_bal = createBalance(amount)
+	return(new_bal)
 \end{minted}
 
 

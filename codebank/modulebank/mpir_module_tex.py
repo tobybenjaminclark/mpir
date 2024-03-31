@@ -77,6 +77,12 @@ def build_description(node, lines):
         lines.append(doc["STRING"] + "\n")
     node["DOCSECTION"] = list(filter(lambda l: False if l["FLAG"] == "doc" and "IDENTIFIER" not in l else True, node["DOCSECTION"]))
 
+    if(len(list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" in l, node["DOCSECTION"])))) == 0: return
+    lines.extend(["\\textbf{ \\\\ Documented Variables in " + node["IDENTIFIER"] + "}", "\\begin{table}[htbp]", "\t\\centering", "\t\\begin{tabular}{|l|l|}", "\t\t\\hline", "\t\tIdentifier & Description 2 \\\\"])
+    for doc in list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" in l, node["DOCSECTION"])):
+        lines.extend(["\t\t\\hline", "\t\t \\texttt{" + doc["IDENTIFIER"] + "} & " + doc["STRING"] + " \\\\"])
+    lines.extend(["\t\t\\hline", "\t\\end{tabular}", "\\end{table}"])
+
 # Builds docsection
 def build_docsection(node):
     lines = []
@@ -115,12 +121,12 @@ def build_function_declaration(node):
 
 # Builds psuedocode Tex
 def build_pseudocode(node):
-    pseudocode_lines = []
+    pseudocode_lines = ["\\textbf{\\\\ Pseudocode for } \\texttt{" + node["IDENTIFIER"] + "}"]
     pseudocode_lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
     output_string = "FUNCTION " + node["IDENTIFIER"] + "(" + build_arguments(node) + ") -> " + node["RETURN_TYPE"] + ":"
     pseudocode_lines.append(output_string)
     for statement in node["BODY"]:
-        pseudocode_lines.extend(build_pseudocode_statement(statement))
+        pseudocode_lines.extend("\t" + pseudo for pseudo in build_pseudocode_statement(statement))
     pseudocode_lines.append("\\end{minted}\n")
     return pseudocode_lines
 
