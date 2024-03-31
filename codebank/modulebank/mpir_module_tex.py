@@ -34,7 +34,7 @@ def build_examples(node, lines):
 
     lines.append("\\textbf{ \\\\ Example Usage of \\texttt{" + node["IDENTIFIER"] + "}}")
     lines.append("\\begin{enumerate}")
-    lines.append("\t\\setlength{\\itemsep}{5pt}")
+    lines.append("\t\\setlength{\\itemsep}{0pt}")
     lines.append("\t\\setlength{\\parskip}{0pt}")
     lines.append("\t\\setlength{\\parsep}{0pt}")
     lines.extend(["\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|" for line in filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"])])
@@ -49,7 +49,7 @@ def build_general(node, lines):
 
     lines.append("\\textbf{ \\\\ Function Information}")
     lines.append("\\begin{itemize}")
-    lines.append("\t\\setlength{\\itemsep}{5pt}")
+    lines.append("\t\\setlength{\\itemsep}{0pt}")
     lines.append("\t\\setlength{\\parskip}{0pt}")
     lines.append("\t\\setlength{\\parsep}{0pt}")
     for index, doc in enumerate(node["DOCSECTION"]):
@@ -91,12 +91,12 @@ def build_docsection(node):
 # Builds pseudocode statement
 def build_pseudocode_statement(statement):
     match statement["TYPE"]:
-        case "TYPE_ASSIGNMENT":     return f"{statement['ASSIGNED_TYPE']} {statement['IDENTIFIER']};"
-        case "VALUE_ASSIGNMENT":    return f"{statement['IDENTIFIER']} = {convert_expression(statement['EXPRESSION'])}"
-        case "FUNCTION_CALL":       return convert_function_call(statement)
-        case "TRYCAST_STATEMENT":   return "TRYCAST!"
-        case "DO_STATEMENT":        return "DO STATEMENT!"
-        case "IF_STATEMENT":        return f"if ({convert_expression(statement['EXPRESSION'])}): "
+        case "TYPE_ASSIGNMENT":     return [f"{statement['ASSIGNED_TYPE']} {statement['IDENTIFIER']};"]
+        case "VALUE_ASSIGNMENT":    return [f"{statement['IDENTIFIER']} = {convert_expression(statement['EXPRESSION'])}"]
+        case "FUNCTION_CALL":       return [convert_function_call(statement)]
+        case "TRYCAST_STATEMENT":   return ["TRYCAST!"]
+        case "DO_STATEMENT":        return ["DO STATEMENT!"]
+        case "IF_STATEMENT":        return [f"if ({convert_expression(statement['EXPRESSION'])}):"]
 
 
 
@@ -122,7 +122,8 @@ def build_function_declarations(ast, lines):
         print("3 ",len(lines))
         
         for statement in node["BODY"]:
-            lines.append("\t" + build_pseudocode_statement(statement))
+            for statement_ in build_pseudocode_statement(statement):
+                lines.append("\t" + statement_)
         lines.append("\\end{minted}\n")
         print("4 ",len(lines))
 
@@ -135,6 +136,8 @@ def build_type_declarations(ast, lines):
         lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
         docsec = build_docsection(node)
         lines.extend(build_docsection(node))
+
+
 
 # General Build TeX from ast FUNCTION
 def build_tex(ast):
