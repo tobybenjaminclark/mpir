@@ -8,9 +8,13 @@ def parse_json_file(filename: str) -> dict|None:
     except FileNotFoundError as e: print(f"File '{filename}' not found."); return None
     except json.JSONDecodeError as e: print(f"Error decoding AST in '{filename}': {e}"); return None
 
+
+
 # Function to convert a function call to pseudocode string.
 def convert_function_call(fcall: dict) -> str:
     return fcall["IDENTIFIER"] + "(" + ", ".join([convert_expression(arg["VALUE"]) for arg in fcall["ARGUMENTS"]]) + ")"
+
+
 
 # Function to convert an expression to pseudocode string.
 def convert_expression(expr: dict) -> str:
@@ -22,6 +26,9 @@ def convert_expression(expr: dict) -> str:
         case "EXPRESSION_STRING_LITERAL":       return expr["IDENTIFIER"]
         case "":                                pass
 
+
+
+# Converts AST examples into an enumerated TeX list.
 def build_examples(node, lines):
     if len(list(filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"]))) > 0:
         lines.append("\\textbf{Test Cases}")
@@ -34,6 +41,9 @@ def build_examples(node, lines):
         lines.append("\\end{enumerate}\n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "example", node["DOCSECTION"]))
 
+
+
+# Converts AST general docs to a bulletpoint list.
 def build_general(node, lines):
     if len(node["DOCSECTION"]) > 0:
         lines.append("\\textbf{Function Information}")
@@ -48,32 +58,29 @@ def build_general(node, lines):
                 lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
         lines.append("\\end{itemize}\n")
 
+
+# Builds docsection
 def build_docsection(node):
     lines = []
     build_examples(node, lines)
     build_general(node, lines)
     return lines
 
-def show_statement(statement):
-    if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-        return ("" + statement["ASSIGNED_TYPE"] + " " + statement["IDENTIFIER"] + ";")
-    elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
-        return ("" + statement["IDENTIFIER"] + " = " + convert_expression(statement["EXPRESSION"]))
-    elif(statement["TYPE"] == "FUNCTION_CALL"):
-        return ("" + convert_function_call(statement))
-    elif(statement["TYPE"] == "TRYCAST_STATEMENT"):
-        return ("TRYCAST!")
-    elif(statement["TYPE"] == "DO_STATEMENT"):
-        return ("DO STATEMENT!")
-    elif(statement["TYPE"] == "IF_STATEMENT"):
-        return ("if (", convert_expression(statement["EXPRESSION"]), "): ")
-        # for statement2 in statement["MATCH_COMMANDS"]:
-        #    show_statement(statement2)
 
-def build_tex(ast):
-    lines = []
+# Builds pseudocode statement
+def build_pseudocode_statement(statement):
+    match statement["TYPE"]:
+        case "TYPE_ASSIGNMENT":     return f"{statement['ASSIGNED_TYPE']} {statement['IDENTIFIER']};"
+        case "VALUE_ASSIGNMENT":    return f"{statement['IDENTIFIER']} = {convert_expression(statement['EXPRESSION'])}"
+        case "FUNCTION_CALL":       return convert_function_call(statement)
+        case "TRYCAST_STATEMENT":   return "TRYCAST!"
+        case "DO_STATEMENT":        return "DO STATEMENT!"
+        case "IF_STATEMENT":        return f"if ({convert_expression(statement['EXPRESSION'])}): "
+
+
+# Builds function declarations
+def build_function_declarations(ast, lines):
     lines.append("\n\\section{\\textsc{Function Declarations}}")
-
     for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
         # Start LaTeX Segment
         lines.append("\\clearpage")
@@ -81,8 +88,6 @@ def build_tex(ast):
         print("1 ", len(lines))
 
         lines.extend(build_docsection(node))
-
-        
         # Print Pseudocode
         lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
         output_string = "FUNCTION " + node["IDENTIFIER"] + "("
@@ -95,16 +100,25 @@ def build_tex(ast):
         print("3 ",len(lines))
         
         for statement in node["BODY"]:
-            lines.append("\t" + show_statement(statement))
+            lines.append("\t" + build_pseudocode_statement(statement))
         lines.append("\\end{minted}\n")
         print("4 ",len(lines))
 
+
+
+# Build type declarations
+def build_type_declarations(ast, lines):
     lines.append("\n\\section{\\textsc{Type Declarations}}")
     for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
         lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
         docsec = build_docsection(node)
         lines.extend(build_docsection(node))
 
+# General Build TeX from ast FUNCTION
+def build_tex(ast):
+    lines = []
+    build_function_declarations(ast, lines)
+    build_type_declarations(ast, lines)
     return lines
 
 ast = parse_json_file("testj.json")
