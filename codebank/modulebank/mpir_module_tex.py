@@ -68,7 +68,7 @@ def build_websites(node, lines):
     lines.append("\n\\textbf{Useful Links \& Resources}\n")
     for doc in list(filter(lambda l: l["FLAG"] == "website", node["DOCSECTION"])):
         identifier = f"Website {web_count}" if "IDENTIFIER" not in doc else doc["IDENTIFIER"].replace("_", " ")
-        lines.append("\\href{" + doc["STRING"] + "}{" + identifier + "} \\hfill \\verb|" + doc["STRING"] + "| \n")
+        lines.append("\\href{" + doc["STRING"] + "}{" + identifier + "} \\hfill \\url{" + doc["STRING"] + "} \n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "website", node["DOCSECTION"]))
 
 # Builds docsection
