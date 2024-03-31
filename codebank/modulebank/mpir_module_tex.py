@@ -93,6 +93,15 @@ def build_docsection(node):
     return lines
 
 
+# Builds pseudocode for trycast
+def convert_trycast_statement(statement):
+    print(json.dumps(statement, indent = 2))
+    lines = []
+    lines.append("DOES " + statement["DOMINANT_IDENTIFIER"] + " SATISFY " + statement["CASTED_IDENTIFIER"] + "?")
+    lines.append("YES -> " + build_pseudocode_statement(statement["ON_STATEMENTS"][0]["MATCH_COMMANDS"][0])[0])
+    lines.append("NO -> " + build_pseudocode_statement(statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0])[0])
+    return lines
+
 
 # Builds pseudocode statement
 def build_pseudocode_statement(statement):
@@ -100,7 +109,7 @@ def build_pseudocode_statement(statement):
         case "TYPE_ASSIGNMENT":     return [f"{statement['ASSIGNED_TYPE']} {statement['IDENTIFIER']};"]
         case "VALUE_ASSIGNMENT":    return [f"{statement['IDENTIFIER']} = {convert_expression(statement['EXPRESSION'])}"]
         case "FUNCTION_CALL":       return [convert_function_call(statement)]
-        case "TRYCAST_STATEMENT":   return ["TRYCAST!"]
+        case "TRYCAST_STATEMENT":   return convert_trycast_statement(statement)
         case "DO_STATEMENT":        return ["DO STATEMENT!"]
         case "IF_STATEMENT":        return [f"if ({convert_expression(statement['EXPRESSION'])}):"]
 

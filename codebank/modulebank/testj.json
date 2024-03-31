@@ -105,7 +105,7 @@
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Creates an empty bank balance."
+					"STRING" : "Initializes a bank balance variable, with the passed amount as the starting balance (Assuming above 0)"
 				},
 				{
 					"FLAG" : "doc",

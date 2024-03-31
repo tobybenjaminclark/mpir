@@ -3,7 +3,7 @@
 \clearpage
 
 \subsection{createBalance}
-Creates an empty bank balance.
+Initializes a bank balance variable, with the passed amount as the starting balance (Assuming above 0)
 
 \textbf{ \\ Documented Variables in createBalance}
 \begin{table}[htbp]
@@ -45,7 +45,9 @@ Creates an empty bank balance.
 FUNCTION createBalance(bal: Numerical) -> Balance:
 	Balance new_bal;
 	new_bal = 0.0
-	TRYCAST!
+	DOES bal SATISFY new_bal?
+	YES -> new_bal = bal
+	NO -> bal = -1.0
 	DO STATEMENT!
 	return(new_bal)
 \end{minted}

@@ -13,7 +13,7 @@ funcdef createBalance bal
 
     return(new_bal)
 suchthat:
-    |   doc as "Creates an empty bank balance."
+    |   doc as "Initializes a bank balance variable, with the passed amount as the starting balance (Assuming above 0)"
     |   doc bal as "Starting Balance (Numerical)"
     |   web as "https://en.wikipedia.org/wiki/Bank_account"
     |   web Currency_Site as "https://en.wikipedia.org/wiki/Currency"
