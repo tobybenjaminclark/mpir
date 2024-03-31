@@ -165,13 +165,30 @@ def build_tex(ast):
     build_type_declarations(ast, lines)
     return lines
 
-ast = parse_json_file("testj.json")
-lines = build_tex(ast)
-# Open file for writing
-with open('sample.tex', 'w') as file:
-    # Write each line to the file
-    for l in lines:
-        file.write(l + "\n")  # Add a newline character at the end of each line
 
-print(" ")
-print(len(lines))
+def main():
+    parser = argparse.ArgumentParser(description='Description of your program')
+    parser.add_argument('input_file', metavar='input_file', type=str, nargs='?', help='Input file path', default='testj.json')
+    parser.add_argument('--o', dest='output_file', metavar='output_file', type=str, help='Output file path', default='default_output.tex')
+    args = parser.parse_args()
+
+    input_file = args.input_file
+    output_file = args.output_file
+
+    # Your code to process input_file and output_file goes here
+    print("Input file:", input_file)
+    print("Output file:", output_file)
+
+    ast = parse_json_file(input_file)
+    lines = build_tex(ast)
+    # Open file for writing
+    with open(output_file, 'w') as file:
+        # Write each line to the file
+        for l in lines:
+            file.write(l + "\n")  # Add a newline character at the end of each line
+
+    print(" ")
+    print(len(lines))
+
+if __name__ == "__main__":
+    main()
