@@ -60,9 +60,22 @@ def build_general(node, lines):
     lines.append("\\end{itemize}\n")
 
 
+# Builds web links from docsection
+def build_websites(node, lines):
+    if len(list(filter(lambda l: l["FLAG"] == "website", node["DOCSECTION"]))) == 0: return
+
+    web_count = 1
+    lines.append("\n\\textbf{Useful Links \& Resources}\n")
+    for doc in list(filter(lambda l: l["FLAG"] == "website", node["DOCSECTION"])):
+        identifier = f"Website {web_count}" if "IDENTIFIER" not in doc else doc["IDENTIFIER"].replace("_", " ")
+        lines.append("\\href{" + doc["STRING"] + "}{" + identifier + "} \\hfill \\verb|" + doc["STRING"] + "| \n")
+    node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "website", node["DOCSECTION"]))
+
 # Builds docsection
 def build_docsection(node):
     lines = []
+    
+    build_websites(node, lines)
     build_examples(node, lines)
     build_general(node, lines)
     return lines
@@ -119,6 +132,7 @@ def build_type_declarations(ast, lines):
 
 # General Build TeX from ast FUNCTION
 def build_tex(ast):
+    # lines = ["\\usepackage{minted}", "\\usepackage{hyperref}"]
     lines = []
     build_function_declarations(ast, lines)
     build_type_declarations(ast, lines)

@@ -119,6 +119,15 @@
 				{
 					"FLAG" : "example",
 					"STRING" : "(15) -> 15"
+				},
+				{
+					"FLAG" : "website",
+					"STRING" : "https://en.wikipedia.org/wiki/Bank_account"
+				},
+				{
+					"FLAG" : "website",
+					"IDENTIFIER" : "Currency_Site",
+					"STRING" : "https://en.wikipedia.org/wiki/Currency"
 				}
 			],
 			"INPUTS" : [
