@@ -66,7 +66,7 @@ def build_docsection(node):
         lines.append("\t\\setlength{\\parskip}{0pt}")
         lines.append("\t\\setlength{\\parsep}{0pt}")
         for line in filter(lambda l: l["FLAG"] == "testcase", node["DOCSECTION"]):
-            lines.append("\t\\item " + line["STRING"].replace("&", "\&"))
+            lines.append("\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|")
         lines.append("\\end{itemize}\n")
     
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "testcase", node["DOCSECTION"]))
@@ -113,6 +113,7 @@ lines.append("\n\\section{\\textsc{Function Declarations}}")
 
 for node in list(filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
     # Start LaTeX Segment
+    lines.append("\\clearpage")
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
     print("1 ", len(lines))
 

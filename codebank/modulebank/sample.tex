@@ -1,5 +1,6 @@
 
 \section{\textsc{Function Declarations}}
+\clearpage
 
 \subsection{createBalance}
 \textbf{Test Cases}
@@ -7,8 +8,8 @@
 	\setlength{\itemsep}{5pt}
 	\setlength{\parskip}{0pt}
 	\setlength{\parsep}{0pt}
-	\item (10) -> 10
-	\item (15) -> 15
+	\item \verb|createBalance(10) -> 10|
+	\item \verb|createBalance(15) -> 15|
 \end{itemize}
 
 \textbf{Function Information}
@@ -29,6 +30,7 @@ FUNCTION createBalance(bal: Numerical) -> Balance:
 	return(new_bal)
 \end{minted}
 
+\clearpage
 
 \subsection{addToBalance}
 \textbf{Function Information}
@@ -44,6 +46,7 @@ FUNCTION addToBalance(bal: Balance, amount: Numerical) -> Balance:
 	return(createBalance(bal + amount))
 \end{minted}
 
+\clearpage
 
 \subsection{setBalance}
 \textbf{Function Information}
