@@ -30,33 +30,34 @@ def convert_expression(expr: dict) -> str:
 
 # Converts AST examples into an enumerated TeX list.
 def build_examples(node, lines):
-    if len(list(filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"]))) > 0:
-        lines.append("\\textbf{Test Cases}")
-        lines.append("\\begin{enumerate}")
-        lines.append("\t\\setlength{\\itemsep}{5pt}")
-        lines.append("\t\\setlength{\\parskip}{0pt}")
-        lines.append("\t\\setlength{\\parsep}{0pt}")
-        for line in filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"]):
-            lines.append("\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|")
-        lines.append("\\end{enumerate}\n")
+    if len(list(filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"]))) == 0: return
+
+    lines.append("\\textbf{ \\\\ Example Usage of \\texttt{" + node["IDENTIFIER"] + "}}")
+    lines.append("\\begin{enumerate}")
+    lines.append("\t\\setlength{\\itemsep}{5pt}")
+    lines.append("\t\\setlength{\\parskip}{0pt}")
+    lines.append("\t\\setlength{\\parsep}{0pt}")
+    lines.extend(["\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|" for line in filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"])])
+    lines.append("\\end{enumerate}\n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "example", node["DOCSECTION"]))
 
 
 
 # Converts AST general docs to a bulletpoint list.
 def build_general(node, lines):
-    if len(node["DOCSECTION"]) > 0:
-        lines.append("\\textbf{Function Information}")
-        lines.append("\\begin{itemize}")
-        lines.append("\t\\setlength{\\itemsep}{5pt}")
-        lines.append("\t\\setlength{\\parskip}{0pt}")
-        lines.append("\t\\setlength{\\parsep}{0pt}")
-        for index, doc in enumerate(node["DOCSECTION"]):
-            if "IDENTIFIER" in doc:
-                lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
-            else:
-                lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
-        lines.append("\\end{itemize}\n")
+    if len(node["DOCSECTION"]) == 0: return
+
+    lines.append("\\textbf{ \\\\ Function Information}")
+    lines.append("\\begin{itemize}")
+    lines.append("\t\\setlength{\\itemsep}{5pt}")
+    lines.append("\t\\setlength{\\parskip}{0pt}")
+    lines.append("\t\\setlength{\\parsep}{0pt}")
+    for index, doc in enumerate(node["DOCSECTION"]):
+        if "IDENTIFIER" in doc:
+            lines.append("\t\\item \\textbf{" + doc["IDENTIFIER"] + "} \\\\ " + doc["STRING"].replace("&", "\&"))
+        else:
+            lines.append("\t\\item " + doc["STRING"].replace("&", "\&"))
+    lines.append("\\end{itemize}\n")
 
 
 # Builds docsection
@@ -65,6 +66,7 @@ def build_docsection(node):
     build_examples(node, lines)
     build_general(node, lines)
     return lines
+
 
 
 # Builds pseudocode statement
@@ -76,6 +78,7 @@ def build_pseudocode_statement(statement):
         case "TRYCAST_STATEMENT":   return "TRYCAST!"
         case "DO_STATEMENT":        return "DO STATEMENT!"
         case "IF_STATEMENT":        return f"if ({convert_expression(statement['EXPRESSION'])}): "
+
 
 
 # Builds function declarations
