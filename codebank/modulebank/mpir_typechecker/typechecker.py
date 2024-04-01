@@ -1,4 +1,5 @@
 import z3
+import argparse
 from typing_context import *
 from typing_context import _type, _context
 from core_calculus import *
@@ -385,9 +386,31 @@ def typecheck_ast(ast: dict[str:any]):
         print("Typechecking", function["IDENTIFIER"])
         typecheck_function(function, duplicate_context(Γ))
 
-    build_python(ast)
+    
 
 
-ast = parse_json_file("testj.json")
-typecheck_ast(ast)
-        
+def main():
+    parser = argparse.ArgumentParser(description='Program to compile MPIR AST File (JSON) to LaTeX.')
+
+    # Add support for version option
+    parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
+    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
+    parser.add_argument('-o', '--output', dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.py')
+    parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
+    args = parser.parse_args()
+
+    input_file = args.input
+    output_file = args.output_file
+    config_file = args.config
+
+    # Your code to process input_file and output_file goes here
+    print("Input file:", input_file)
+    print("Output file:", output_file)
+
+    ast = parse_json_file(input_file)
+    typecheck_ast(ast)
+    build_python(ast, output_file)
+
+
+if __name__ == "__main__":
+    main()

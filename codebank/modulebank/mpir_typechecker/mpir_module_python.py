@@ -3,21 +3,6 @@ import json
 import os
 from z3 import *
 
-# get the current working directory
-current_working_directory = os.getcwd()
-
-# print output to the console
-print(current_working_directory)
-
-def parse_arguments() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description='Build MPiR AST to Python3 Code')
-    parser.add_argument('arg1', type=str, help='Input File')
-    parser.add_argument('--output', type=str, help='Output File', default = "output.py")
-    return parser.parse_args()
-
-def write_arguments_to_file(filename: str, args: argparse.Namespace):
-    with open(filename, 'w') as file:
-        file.write("arg1: {}\n".format(args.arg1))
 
 def parse_json_file(filename: str) -> dict|None:
     try:
@@ -31,9 +16,6 @@ def parse_json_file(filename: str) -> dict|None:
     except json.JSONDecodeError as e:
         print(f"Error decoding AST in '{filename}': {e}")
         return None
-
-
-
 
 def convert_function_call(fcall: dict) -> str:
     val = fcall["IDENTIFIER"] + "("
@@ -71,43 +53,45 @@ def convert_expression(expr: dict) -> str:
     if(expr["TYPE"] == ""):
         pass
 
-def show_statement(statement):
-    if(statement["TYPE"] == "TYPE_ASSIGNMENT"):
-        print("" + statement["IDENTIFIER"] + ":", statement["ASSIGNED_TYPE"])
-    elif(statement["TYPE"] == "VALUE_ASSIGNMENT"):
-        print("" + statement["IDENTIFIER"], "=", convert_expression(statement["EXPRESSION"]))
-    elif(statement["TYPE"] == "FUNCTION_CALL"):
-        print("" + convert_function_call(statement))
-    elif(statement["TYPE"] == "TRYCAST_STATEMENT"):
-        print("TRYCAST!")
-    elif(statement["TYPE"] == "DO_STATEMENT"):
-        print("DO STATEMENT!")
-    elif(statement["TYPE"] == "IF_STATEMENT"):
-        print("if (", convert_expression(statement["EXPRESSION"]), "): ", end = "")
+def show_statement(statement, output_file):
+    if statement["TYPE"] == "TYPE_ASSIGNMENT":
+        output_file.write(statement["IDENTIFIER"] + ": " + statement["ASSIGNED_TYPE"] + "\n")
+    elif statement["TYPE"] == "VALUE_ASSIGNMENT":
+        output_file.write(statement["IDENTIFIER"] + " = " + convert_expression(statement["EXPRESSION"]) + "\n")
+    elif statement["TYPE"] == "FUNCTION_CALL":
+        output_file.write(convert_function_call(statement) + "\n")
+    elif statement["TYPE"] == "TRYCAST_STATEMENT":
+        output_file.write("TRYCAST!\n")
+    elif statement["TYPE"] == "DO_STATEMENT":
+        output_file.write("DO STATEMENT!\n")
+    elif statement["TYPE"] == "IF_STATEMENT":
+        output_file.write("if (" + convert_expression(statement["EXPRESSION"]) + "):\n")
         for statement2 in statement["MATCH_COMMANDS"]:
-            show_statement(statement2)  
+            output_file.write("\t\t")
+            show_statement(statement2, output_file)
+
         
 
-def build_python(ast: dict[str:any]):
+def build_python(ast: dict[str, any], output_file_path: str):
     if "CONTENTS" not in ast:
         print("CONTENTS NOT IN AST!")
         exit(1)
-    else:
-        print("# Generated using the MPIR Compiler.\n")
+
+    with open(output_file_path, 'w') as output_file:
+        output_file.write("# Generated using the MPIR Compiler.\n\n")
 
         # build types
-        for node in list(filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
+        for node in filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"]):
             identifier = node["IDENTIFIER"]
-            print(f"{identifier} = type('{identifier}', (), {{}})\n")
-            
+            output_file.write(f"{identifier} = type('{identifier}', (), {{}})\n\n")
 
         # build functions
-        for node in list(filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"])):
-            print("def", node["IDENTIFIER"] + "(", end="")
+        for node in filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
+            output_file.write("def " + node["IDENTIFIER"] + "(")
             for index, arg in enumerate(node["ARGUMENTS"]):
-                print(arg + ":", node["INPUTS"][index], end=", " if index < len(node["ARGUMENTS"]) - 1 else "")
-            print(") ->", node["RETURN_TYPE"] + ":")
+                output_file.write(arg + ": " + node["INPUTS"][index] + ", " if index < len(node["ARGUMENTS"]) - 1 else "")
+            output_file.write(") -> " + node["RETURN_TYPE"] + ":\n")
             for statement in node["BODY"]:
-                print("\t", end = "")
-                show_statement(statement)
-            print("\n\n")
+                output_file.write("\t")
+                show_statement(statement, output_file)
+            output_file.write("\n\n")
