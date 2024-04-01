@@ -414,7 +414,7 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
 int mpir_tokenise_brackets(mpir_lexer* lexer)
 {
     /* Guard Clause to reject if the next character is not a negation. */
-    if (mpir_wchar_in_list(lexer->peek(lexer), L"(){}")) NULL;
+    if (mpir_wchar_in_list(lexer->peek(lexer), L"(){}[]")) NULL;
     else return 0;
 
     switch(lexer -> peek(lexer))
@@ -431,6 +431,12 @@ int mpir_tokenise_brackets(mpir_lexer* lexer)
         case(L'}'):
             (void) mpir_lexer_tryconsume(lexer, '}');
             return mpir_tokenise_process_buffer(lexer, close_brace);
+        case(L'['):
+            (void) mpir_lexer_tryconsume(lexer, '[');
+            return mpir_tokenise_process_buffer(lexer, open_sqbracket);
+        case(L']'):
+            (void) mpir_lexer_tryconsume(lexer, ']');
+            return mpir_tokenise_process_buffer(lexer, close_sqbracket);
         default:
             return 0;
     }

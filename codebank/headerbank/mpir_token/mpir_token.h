@@ -33,10 +33,10 @@ typedef enum
     /* Brackets */
     open_bracket,
     close_bracket,
-    open_brace,
-    close_brace,
     open_sqbracket,
     close_sqbracket,
+    open_brace,
+    close_brace,
 
     /* Quantifiers */
     quantifier_universal,

@@ -43,7 +43,7 @@ struct mpir_ast_type* parse_returntype(mpir_parser* psr)
     while(psr->peek(psr)->type == open_sqbracket)
     {
         list_indentation++;
-        psr->get(psr);
+        (void)psr->get(psr);
     }
 
     if (psr->peek(psr)->type == IDENTIFIER) {
@@ -51,11 +51,16 @@ struct mpir_ast_type* parse_returntype(mpir_parser* psr)
         wcscpy((wchar_t *) node->data, (psr->get(psr))->lexeme);
         node->list = list_indentation;
     }
+    else
+    {
+        mpir_error("Expected Identifier, got:");
+        wprintf(L"%ls\n", psr->peek(psr)->lexeme);
+    }
 
     while(psr->peek(psr)->type == close_sqbracket)
     {
         list_indentation--;
-        psr->get(psr);
+        (void)psr->get(psr);
     }
 
     if(list_indentation != 0)
@@ -63,6 +68,7 @@ struct mpir_ast_type* parse_returntype(mpir_parser* psr)
         mpir_error("Mismatched Indentation!");
     }
 
+    wprintf(L"MPIR_PARSER FOR RETURN TYPE: PARSED RETURN TYPE AS %ls with INDENTATION of %d\n\n", node->data, node->list);
     return node;
 }
 

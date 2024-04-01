@@ -374,6 +374,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 wjson_append_string(wjson_funcdef, L"TYPE", L"FUNCTION_DECLARATION");
                 wjson_append_string(wjson_funcdef, L"IDENTIFIER", program_node->data.function_declaration->identifier->data);
                 wjson_append_string(wjson_funcdef, L"RETURN_TYPE", program_node->data.function_declaration->return_type->data);
+                wjson_append_numerical(wjson_funcdef, L"RETURN_TYPE_LIST", program_node->data.function_declaration->return_type->list);
 
                 /* Generate JSON for Input Types */
                 struct wjson* wjson_funcdef_inputs = wjson_initialize_list();
