@@ -54,7 +54,7 @@ int main(int argc, char** argv)
     mpir_write_ast(psr, "temp.mpirast");
     mpir_parser_free(psr);
 
-    mpir_build("temp.mpirast", "test.py", 1);
+    mpir_build("temp.mpirast", "test.py", configFile, 1);
     return 0;
 }
 

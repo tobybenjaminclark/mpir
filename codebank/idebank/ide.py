@@ -259,7 +259,7 @@ class MyApp(QMainWindow):
     def build_python(self):
         if self.filename is None: return
 
-        command = f"./buildbank/mpir --i {self.filename} --o output.py"
+        command = f"./buildbank/mpir --i {self.filename} --o output.py --c config.json"
         print(command)
 
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

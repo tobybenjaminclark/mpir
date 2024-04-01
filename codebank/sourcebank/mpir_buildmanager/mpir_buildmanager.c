@@ -6,7 +6,7 @@
 
 #include "../../headerbank/mpir_buildmanager/mpir_buildmanager.h"
 
-int mpir_build(char* input_ast, char* output_file, int weaveortangle)
+int mpir_build(char* input_ast, char* output_file, char* config_file, int weaveortangle)
 {
     int result;
     char command[100];
@@ -14,7 +14,7 @@ int mpir_build(char* input_ast, char* output_file, int weaveortangle)
         const char *pythonScript = "codebank/modulebank/mpir_module_tex.py";
 
         // Build the command to run the Python script
-        snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "documentation.tex");
+        snprintf(command, sizeof(command), "python3 %s %s --o %s --c %s", pythonScript, input_ast, config_file, "documentation.tex");
 
         // Use the system expression to run the command
         result = system(command);
@@ -28,7 +28,7 @@ int mpir_build(char* input_ast, char* output_file, int weaveortangle)
     }
     else {
         const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
-        snprintf(command, sizeof(command), "python3 %s --i %s --o %s", texScript, input_ast, "python.py");
+        snprintf(command, sizeof(command), "python3 %s --i %s --o %s --c %s", texScript, input_ast, config_file, "python.py");
         result = system(command);
 
         // Check the result of the system call
