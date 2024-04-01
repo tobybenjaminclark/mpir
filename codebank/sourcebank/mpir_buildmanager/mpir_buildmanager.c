@@ -11,7 +11,7 @@ int mpir_build(char* input_ast, char* output_file, int weaveortangle)
     int result;
     char command[100];
     if(weaveortangle == 2) {
-        const char *pythonScript = "mpir_module_tex.py";
+        const char *pythonScript = "codebank/modulebank/mpir_module_tex.py";
 
         // Build the command to run the Python script
         snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "documentation.tex");
@@ -27,7 +27,7 @@ int mpir_build(char* input_ast, char* output_file, int weaveortangle)
         }
     }
     else {
-        const char *texScript = "mpir_typechecker/typechecker.py";
+        const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
         snprintf(command, sizeof(command), "python3 %s --i %s --o %s", texScript, input_ast, "python.py");
         result = system(command);
 

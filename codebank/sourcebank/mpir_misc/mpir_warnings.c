@@ -132,4 +132,5 @@ void mpir_fatal(const char *format, ...)
      */
     display_message(stderr, FATAL_PREFIX, format, args);
     va_end(args);
+    exit(1);
 }

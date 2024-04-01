@@ -39,6 +39,7 @@ int main(int argc, char** argv)
         return 1; // Exit with error
     }
 
+    inputFile = "/Users/tobybenjaminclark/Desktop/test.mpir";
     printf("INPUT FILE: %s \n", inputFile);
     printf("OUTPUT FILE: %s \n", outputFile);
 

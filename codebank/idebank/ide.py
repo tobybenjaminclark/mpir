@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTe
 from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap
 from PyQt5.QtCore import Qt, QRegExp, QSize
 import webbrowser
+import subprocess
 
 class MPIRHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
@@ -118,6 +119,8 @@ class MyApp(QMainWindow):
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
+        self.filename = None
+
         # Create text boxes
         self.left_textbox = QTextEdit()
         self.right_textbox = QTextEdit()
@@ -221,12 +224,14 @@ class MyApp(QMainWindow):
         filename, _ = QFileDialog.getSaveFileName(self, "Save File", "", "MPIR files (*.mpir)")
         if filename:
             with open(filename, 'w') as f:
+                self.filename = filename
                 f.write(self.left_textbox.toPlainText())
 
     def load_text(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "MPIR files (*.mpir)")
         if filename:
             with open(filename, 'r') as f:
+                self.filename = filename
                 self.left_textbox.setText(f.read())
 
     def switch_to_main_page(self):
@@ -236,7 +241,30 @@ class MyApp(QMainWindow):
         self.stacked_widget.setCurrentIndex(1)  # Index 1 is the wiki page
 
     def build_python(self):
-        self.right_textbox.setPlainText("python")
+        if self.filename is None: return
+
+        command = f"./buildbank/mpir --i {self.filename} --o output.py"
+        print(command)
+
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Capture the output and wait for the process to finish
+
+        # Read stdout and stderr line by line as they become available
+        while True:
+            stdout_line = process.stdout.readline()
+            stderr_line = process.stderr.readline()
+            
+            if not stdout_line and not stderr_line:
+                break
+            
+            if stdout_line:
+                print(stdout_line.strip())
+            if stderr_line:
+                print(stderr_line.strip(), file=sys.stderr)
+
+        with open("python.py", 'r') as f:
+            self.right_textbox.setText(f.read())
+
 
     def build_tex(self):
         self.right_textbox.setPlainText("tex")
