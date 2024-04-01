@@ -38,8 +38,7 @@ int main(int argc, char** argv)
         printf("Usage: %s --i <input_file> --o <output_file>\n", argv[0]);
         return 1; // Exit with error
     }
-
-    inputFile = "/Users/tobybenjaminclark/Desktop/test.mpir";
+    
     printf("INPUT FILE: %s \n", inputFile);
     printf("OUTPUT FILE: %s \n", outputFile);
 

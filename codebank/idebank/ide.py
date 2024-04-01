@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar, QTextBrowser, QStackedWidget, QLabel, QMessageBox, QFileDialog
-from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap
+from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap, QColor
 from PyQt5.QtCore import Qt, QRegExp, QSize
 import webbrowser
 import subprocess
@@ -10,7 +10,7 @@ class MPIRHighlighter(QSyntaxHighlighter):
         super(QSyntaxHighlighter, self).__init__(parent)
 
         keywordFormat = QTextCharFormat()
-        keywordFormat.setForeground(Qt.cyan)
+        keywordFormat.setForeground(Qt.blue)
         keywordFormat.setFontWeight(QFont.Bold)
 
         keywordPatterns = ["funcdef", "suchthat", "end", "let", "trycast", "on", "return", "typedef", "into", "as", "set"]
@@ -18,7 +18,8 @@ class MPIRHighlighter(QSyntaxHighlighter):
                                    for pattern in keywordPatterns]
 
         symbolFormat = QTextCharFormat()
-        symbolFormat.setForeground(Qt.cyan)
+        purple_color = QColor(128, 0, 128)  # RGB values for purple
+        symbolFormat.setForeground(purple_color)
         symbolFormat.setFontWeight(QFont.Bold)
 
         symbolPatterns = ["\\+", "-", "/", "\\*", "->", "::", "\\(", "\\)"]
@@ -72,7 +73,7 @@ class WikiPage(QWidget):
         self.button2 = QPushButton()
 
         icon_size = QSize(40, 40)  # Adjust the size as needed
-        self.button1.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button1.setIcon(QIcon(QPixmap('codebank/idebank/code.png').scaled(icon_size.width(), icon_size.height())))
         self.button1.setIconSize(icon_size)
         self.button2.setIcon(QIcon(QPixmap('codebank/idebank/github.png').scaled(icon_size.width(), icon_size.height())))
         self.button2.setIconSize(icon_size)
@@ -214,7 +215,7 @@ class MyApp(QMainWindow):
         self.show()
 
         # Connect button signals to slots
-        self.button8.clicked.connect(self.switch_to_wiki_page)
+        self.button1.clicked.connect(self.switch_to_wiki_page)
         self.button4.clicked.connect(self.build_python)
         self.button5.clicked.connect(self.build_tex)
         self.button2.clicked.connect(self.save_text)
