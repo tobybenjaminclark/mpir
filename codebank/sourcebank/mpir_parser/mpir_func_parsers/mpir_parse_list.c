@@ -28,7 +28,8 @@
 struct mpir_ast_expression* get_list_arg(mpir_parser* psr)
 {
     /* If there is just a closing bracket - we know there are no arguments */
-    if(psr->peek(psr)->type == close_sqbracket) return NULL;
+    wprintf(L"get list arg called with %ls\n", psr->peek(psr)->lexeme);
+    if(psr->peek(psr)->type == close_sqbracket || wcscmp(psr->peek(psr)->lexeme, L"]")) return NULL;
 
     /* If there isn't then, there should be an expression, we can parse this */
     struct mpir_ast_expression* arg = calloc(1, sizeof (struct mpir_ast_expression));
@@ -50,13 +51,18 @@ struct mpir_ast_expression* get_list_arg(mpir_parser* psr)
  */
 struct mpir_ast_expression** mpir_parse_list(mpir_parser* psr)
 {
-    /* Parse expression identifier */
+
     /* Parse `(` */
     if(psr->peek(psr)->type == open_sqbracket) (void)psr->get(psr);
     else return NULL;
 
-    struct mpir_ast_expression** list;
+    printf("PARSED OPEN BRACKET!\n");
+
+    struct mpir_ast_function_call* node = malloc(sizeof(struct mpir_ast_function_call));
+
     /* Parse Arguments */
-    list = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_list_arg, psr);
-    return list;
+    node->arguments = PARSE_MULTIPLE_STATEMENTS(struct mpir_expression, get_list_arg, psr);
+    if(node->arguments == NULL) return NULL;
+
+    return node->arguments;
 }

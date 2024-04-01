@@ -149,6 +149,27 @@ struct wjson* mpir_wjsonify_expression(struct mpir_ast_expression* expr)
             wjson_append_list(wjson_node, L"ARGUMENTS", arguments);
             break;
 
+        case AST_LIST:
+            wjson_append_string(wjson_node, L"TYPE", L"LIST");
+
+            /* Arguments */
+            int argument_countx = 0;
+
+            struct wjson* current_argumentx;
+            struct wjson* argumentsx = wjson_initialize_list();
+            while (expr->data.function_call->arguments[argument_countx] != NULL)
+            {
+                current_argumentx = wjson_initialize();
+                wjson_append_string(current_argumentx, L"TYPE", L"LIST_NODE");
+                wjson_append_numerical(current_argumentx, L"INDEX", (double)argument_count);
+                wjson_append_object(current_argumentx, L"VALUE", mpir_wjsonify_expression(expr->data.function_call->arguments[argument_countx]));
+
+                wjson_list_append_object(argumentsx, current_argumentx);
+                argument_countx++;
+            }
+            wjson_append_list(wjson_node, L"NODES", argumentsx);
+            break;
+
         case AST_IDENTIFIER:
             wjson_append_string(wjson_node, L"TYPE", L"EXPRESSION_IDENTIFIER");
             wjson_append_string(wjson_node, L"IDENTIFIER", expr->data.identifier);

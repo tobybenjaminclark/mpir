@@ -77,6 +77,9 @@ void mpir_display_ast(struct mpir_ast_expression* root, int indentation_level)
         case(AST_OPERATOR):
             wprintf(L"%ls\n", root->data.operator);
             break;
+        case(AST_LIST):
+            wprintf(L"AST LIST\n");
+            break;
     }
 
     if (root->left != NULL || root->right != NULL) {
@@ -161,7 +164,9 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         }
         else if(psr->peek(psr)->type == open_sqbracket)
         {
+            printf("EXPR: Parsing List\n");
             root = mpir_create_list_node(mpir_parse_list(psr));
+            printf("\n\nParsed List!\n\n");
         }
         else if(psr->peek(psr)->type == IDENTIFIER)
         {
@@ -200,6 +205,14 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
             (void)psr->get(psr);
             return root;
             printf("This shouldn't be reached.");
+        }
+        else if (psr->peek(psr)->type == close_sqbracket)
+        {
+            printf("EXPR: Parsing Closed Square Bracket\n");
+            // If a closing parenthesis is encountered, return the root of the current subexpression
+            (void)psr->get(psr);
+            printf("Parsed List (type is %d)", root->type);
+            return root;
         }
         else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract || psr->peek(psr)->type == operator_gt ||
         psr->peek(psr)->type == operator_gteq || psr->peek(psr)->type == operator_lt || psr->peek(psr)->type == operator_lteq )
