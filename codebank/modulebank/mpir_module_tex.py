@@ -171,18 +171,14 @@ def main():
 
     # Add support for version option
     parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
-
-
-    parser.add_argument('input_file', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
-    parser.add_argument('--o', dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.tex')
+    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
+    parser.add_argument('-o', '--output' dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.tex')
+    parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
     args = parser.parse_args()
 
-    input_file = args.input_file
+    input_file = args.input
     output_file = args.output_file
-
-    # Your code to process input_file and output_file goes here
-    print("Input file:", input_file)
-    print("Output file:", output_file)
+    config_file = args.config
 
     # Your code to process input_file and output_file goes here
     print("Input file:", input_file)
