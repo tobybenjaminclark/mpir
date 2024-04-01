@@ -172,7 +172,7 @@ def main():
     # Add support for version option
     parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
     parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
-    parser.add_argument('-o', '--output' dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.tex')
+    parser.add_argument('-o', '--output', dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.tex')
     parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
     args = parser.parse_args()
 
