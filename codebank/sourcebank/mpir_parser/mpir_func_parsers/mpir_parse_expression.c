@@ -165,8 +165,9 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         else if(psr->peek(psr)->type == open_sqbracket)
         {
             printf("EXPR: Parsing List\n");
-            root = mpir_create_list_node(mpir_parse_list(psr));
-            printf("\n\nParsed List!\n\n");
+            struct mpir_ast_expression** list = mpir_parse_list(psr);
+            root = mpir_create_list_node(list);
+            printf("Root %d\n", root->type);
         }
         else if(psr->peek(psr)->type == IDENTIFIER)
         {

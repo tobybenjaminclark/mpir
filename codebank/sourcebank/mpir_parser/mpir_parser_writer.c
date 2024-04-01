@@ -455,6 +455,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 wjson_append_list(wjson_typedef, L"DOCSECTION", wjson_typedef_docsection);
                 wjson_append_list(wjson_typedef, L"INPUTS", wjson_typedef_inputs);
                 wjson_append_string(wjson_typedef, L"BASE_TYPE", program_node->data.type_declaration->base_type->data);
+                wjson_append_numerical(wjson_typedef, L"BASE_TYPE_LIST", program_node->data.type_declaration->base_type->list);
                 wjson_append_object(wjson_typedef, L"LOGIC", mpir_wjsonify_type_logic(program_node->data.type_declaration->refinement));
                 wjson_list_append_object(wjson_commands, wjson_typedef);
                 break;

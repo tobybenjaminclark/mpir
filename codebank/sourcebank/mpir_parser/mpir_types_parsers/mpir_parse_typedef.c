@@ -27,8 +27,12 @@ bool parse_type_declaration(mpir_parser* psr)
     else return false;
 
     /* Parse Base Type */
-    if(psr->peek(psr)->type == IDENTIFIER) node->base_type = parse_identifier(psr);
-    else return false;
+    if(psr->peek(psr)->type == IDENTIFIER || psr->peek(psr)->type == open_sqbracket) node->base_type = parse_returntype(psr);
+    else
+    {
+        wprintf(L"Couldn't parse returntype for %ls \n", node->identifier);
+        return false;
+    }
 
     /* Parse Type Logic */
     node->refinement = parse_type_logic(psr);
@@ -63,5 +67,6 @@ bool parse_type_declaration(mpir_parser* psr)
     }
     append_command(psr->program, (union mpir_command_data){.type_declaration = node}, NEW_TYPE_DECLARATION);
 
+    printf("Found docs!\n");
     return true;
 }
