@@ -38,18 +38,34 @@ struct mpir_ast_function_identifier* parse_function_identifier(mpir_parser* psr)
 struct mpir_ast_type* parse_returntype(mpir_parser* psr)
 {
     struct mpir_ast_type* node = malloc(sizeof(struct mpir_ast_type));
-    if((psr->peek(psr))->type != IDENTIFIER)
+    int list_indentation = 0;
+
+    while(psr->peek(psr)->type == open_sqbracket)
     {
-        mpir_error("parse_function_declaration: expected expression identifier got other.");
-        return NULL;
+        list_indentation++;
+        psr->get(psr);
     }
-    else
-    {
+
+    if (psr->peek(psr)->type == IDENTIFIER) {
         node->data[0] = L'\0';
         wcscpy((wchar_t *) node->data, (psr->get(psr))->lexeme);
+        node->list = list_indentation;
     }
+
+    while(psr->peek(psr)->type == close_sqbracket)
+    {
+        list_indentation--;
+        psr->get(psr);
+    }
+
+    if(list_indentation != 0)
+    {
+        mpir_error("Mismatched Indentation!");
+    }
+
     return node;
 }
+
 
 
 struct mpir_ast_type* parse_type(mpir_parser* psr)

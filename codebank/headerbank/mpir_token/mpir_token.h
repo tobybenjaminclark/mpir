@@ -13,7 +13,7 @@
 #include "../mpir_misc/mpir_warnings.h"
 
 #define TOKEN_NAME_MAP \
-    "*", "/", "+", "-", "^", "=", "(", ")", \
+    "*", "/", "+", "-", "^", "=", "(", ")", "[", "]", \
     "{", "}", "QUANTIFIER_UNIVERSAL", "QUANTIFIER_EXISTENTIAL", "=", ">",    \
     "<", ">=", "<=", "→", "↔", "^", "¬",        \
     "∨", "using", "suchthat", "funcdef", "typedef", "trycast", "into", "do", "on", "let", "set", "in", "as", "end", ",",   \
@@ -35,6 +35,8 @@ typedef enum
     close_bracket,
     open_brace,
     close_brace,
+    open_sqbracket,
+    close_sqbracket,
 
     /* Quantifiers */
     quantifier_universal,

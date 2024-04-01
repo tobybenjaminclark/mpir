@@ -36,7 +36,8 @@ struct mpir_ast_identifier
  */
 struct mpir_ast_type
 {
-    wchar_t data[128];  /** ← Data associated with the type. */
+    wchar_t data[128];  /** ← Data associated with the type.       */
+    int list;           /** ← List Indentaiton, 1 = 1D, 2 = 2D ... */
 };
 
 
