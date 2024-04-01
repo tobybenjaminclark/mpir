@@ -363,11 +363,11 @@ def process_function_declarations(ast: dict[str:any], context: _context) -> _con
         for doc in function["DOCSECTION"]:
             flags: list[str] = []
             if "FLAG" in doc: flags.append(doc["FLAG"])
-        file = parse_json_file("config.json")
-        if len(set(file["ENFORCED"]).difference(set(flags))) > 0:
-            print("Failed enforced!")
-        else:
-            print("Passed Enforced Flags!")
+        # file = parse_json_file("config.json")
+        # if len(set(file["ENFORCED"]).difference(set(flags))) > 0:
+        #    print("Failed enforced!")
+        # else:
+        #    print("Passed Enforced Flags!")
 
     return context
 

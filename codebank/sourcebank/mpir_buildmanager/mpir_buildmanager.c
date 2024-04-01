@@ -27,8 +27,8 @@ int mpir_build(char* input_ast, char* output_file, int weaveortangle)
         }
     }
     else {
-        const char *texScript = "mpir_module_python.py";
-        snprintf(command, sizeof(command), "python3 %s %s --o %s", texScript, input_ast, "python.py");
+        const char *texScript = "mpir_typechecker/typechecker.py";
+        snprintf(command, sizeof(command), "python3 %s --i %s --o %s", texScript, input_ast, "python.py");
         result = system(command);
 
         // Check the result of the system call
