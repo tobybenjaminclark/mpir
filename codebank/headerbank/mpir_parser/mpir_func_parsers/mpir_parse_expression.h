@@ -12,6 +12,7 @@
 #include "../mpir_parser.h"
 #include "../mpir_parser_utilities.h"
 #include "../mpir_parse_multiple.h"
+#include "mpir_parse_list.h"
 
 #include <wchar.h>
 #include <stdio.h>

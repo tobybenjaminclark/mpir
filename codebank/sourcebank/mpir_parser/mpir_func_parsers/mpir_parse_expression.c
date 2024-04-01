@@ -123,6 +123,17 @@ struct mpir_ast_expression* mpir_create_function_call_node(struct mpir_ast_funct
     return node;
 }
 
+// Function to create a new expression call node
+struct mpir_ast_expression* mpir_create_list_node(struct mpir_ast_expression** list)
+{
+    struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
+    node->type = AST_LIST;
+    node->data.list = list;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
 // Function to create a new operator node
 struct mpir_ast_expression* mpir_create_operator_node(const wchar_t* operator, struct mpir_ast_expression* left, struct mpir_ast_expression* right) {
     struct mpir_ast_expression* node = (struct mpir_ast_expression*)malloc(sizeof(struct mpir_ast_expression));
@@ -147,6 +158,10 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
         {
             printf("EXPR: Parsing Numerical Literal\n");
             root = mpir_create_numerical_node(wcstol(psr->get(psr)->lexeme, NULL, 10));
+        }
+        else if(psr->peek(psr)->type == open_sqbracket)
+        {
+            root = mpir_create_list_node(mpir_parse_list(psr));
         }
         else if(psr->peek(psr)->type == IDENTIFIER)
         {

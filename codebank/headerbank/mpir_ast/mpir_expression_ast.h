@@ -16,7 +16,7 @@
 #define AST_STRING_LITERAL 3
 #define AST_FUNCTION_CALL 4
 #define AST_OPERATOR 5
-
+#define AST_LIST 6
 
 
 /**
@@ -71,16 +71,17 @@ struct mpir_ast_function_call
  */
 struct mpir_ast_expression
 {
-    int type;                                             /** ← Type of expression.                       */
+    int type;                                             /** ← Type of expression.                           */
     union {
-        struct mpir_ast_function_call* function_call;     /** ← Data for a expression call expression.    */
-        long double numerical_literal;                    /** ← Data for a numerical literal expression.  */
-        wchar_t identifier[128];                          /** ← Data for an identifier expression.        */
-        wchar_t string_literal[128];                      /** ← Data for a string literal expression.     */
-        wchar_t operator[128];                            /** ← Data for an operator expression.          */
-    } data;                                               /** ← Union of possible expression data.        */
-    struct mpir_ast_expression* left;                     /** ← Pointer to the left subexpression.        */
-    struct mpir_ast_expression* right;                    /** ← Pointer to the right subexpression.       */
+        struct mpir_ast_function_call* function_call;     /** ← Data for a expression call expression.        */
+        struct mpir_ast_expression** list;                /** ← Data for lists, e.g. sequence of expressions  */
+        long double numerical_literal;                    /** ← Data for a numerical literal expression.      */
+        wchar_t identifier[128];                          /** ← Data for an identifier expression.            */
+        wchar_t string_literal[128];                      /** ← Data for a string literal expression.         */
+        wchar_t operator[128];                            /** ← Data for an operator expression.              */
+    } data;                                               /** ← Union of possible expression data.            */
+    struct mpir_ast_expression* left;                     /** ← Pointer to the left subexpression.            */
+    struct mpir_ast_expression* right;                    /** ← Pointer to the right subexpression.           */
 };
 
 
