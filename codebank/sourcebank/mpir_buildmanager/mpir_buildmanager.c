@@ -6,36 +6,39 @@
 
 #include "../../headerbank/mpir_buildmanager/mpir_buildmanager.h"
 
-int mpir_build(char* input_ast, char* output_file)
+int mpir_build(char* input_ast, char* output_file, int weaveortangle)
 {
-    // Replace "test.py" with the actual path to your Python script
-    const char* pythonScript = "mpir_module_tex.py";
-
-    // Build the command to run the Python script
+    int result;
     char command[100];
-    snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "documentation.tex");
+    if(weaveortangle == 2) {
+        const char *pythonScript = "mpir_module_tex.py";
 
-    // Use the system expression to run the command
-    int result = system(command);
+        // Build the command to run the Python script
+        snprintf(command, sizeof(command), "python3 %s %s --o %s", pythonScript, input_ast, "documentation.tex");
 
-    // Check the result of the system call
-    if (result == 0) {
-        printf("Python script executed successfully.\n");
-    } else {
-        printf("Error executing Python script.\n");
+        // Use the system expression to run the command
+        result = system(command);
+
+        // Check the result of the system call
+        if (result == 0) {
+            printf("Python script executed successfully.\n");
+        } else {
+            printf("Error executing Python script.\n");
+        }
+    }
+    else {
+        const char *texScript = "mpir_module_python.py";
+        snprintf(command, sizeof(command), "python3 %s %s --o %s", texScript, input_ast, "python.py");
+        result = system(command);
+
+        // Check the result of the system call
+        if (result == 0) {
+            printf("Python script executed successfully.\n");
+        } else {
+            printf("Error executing Python script.\n");
+        }
     }
 
-    // Replace "test.py" with the actual path to your Python script
-    const char* texScript = "mpir_module_python.py";
-    snprintf(command, sizeof(command), "python3 %s %s --o %s", texScript, input_ast, "python.py");
-    result = system(command);
-
-    // Check the result of the system call
-    if (result == 0) {
-        printf("Python script executed successfully.\n");
-    } else {
-        printf("Error executing Python script.\n");
-    }
 
     return 0;
 }

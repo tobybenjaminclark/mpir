@@ -368,16 +368,6 @@ void mpir_wjsonify_docsection(struct mpir_ast_docsection* docsection, struct wjs
 
 int mpir_write_ast(mpir_parser* psr, char path[])
 {
-    FILE *file = fopen(path, "w");
-
-    if (file == NULL)
-    {
-        fprintf(stderr, "Error opening file %s for writing.\n", path);
-        return 0; // Return 0 to indicate failure
-    }
-
-    fprintf(file, "\nWriting JSON to file.\n");
-    printf("\n");
 
     /* Create wJson node for program */
     struct wjson* wjson_commands = wjson_initialize_list();
@@ -388,8 +378,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
         switch (program_node->type)
         {
             case FUNCTION_DECLARATION:
-                fprintf(file, "FUNCTION_DECLARATION\n");
-
+                {};
                 /* Generate JSON for Type, Identifier & Return Type */
                 struct wjson* wjson_funcdef = wjson_initialize();
                 wjson_append_string(wjson_funcdef, L"TYPE", L"FUNCTION_DECLARATION");
@@ -439,7 +428,7 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 break;
 
             case NEW_TYPE_DECLARATION:
-                fprintf(file, "TYPE_DECLARATION\n");
+                {};
                 /* Generate JSON for Type, Identifier & Return Type */
                 struct wjson* wjson_typedef = wjson_initialize();
                 struct wjson* wjson_typedef_docsection = wjson_initialize_list();
@@ -468,12 +457,11 @@ int mpir_write_ast(mpir_parser* psr, char path[])
         program_node = program_node->next;
     }
 
-    fclose(file); // Close the file
 
     struct wjson* wjson_master = wjson_initialize();
     wjson_append_list(wjson_master, L"CONTENTS", wjson_commands);
 
-    FILE* outputFile = fopen("output.mpirast", "w");
+    FILE* outputFile = fopen(path, "w");
     if (outputFile == NULL)
     {
         wprintf(L"Error opening the file for writing.\n");

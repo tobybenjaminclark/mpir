@@ -10,6 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int mpir_build(char* input_ast, char* output_file);
+int mpir_build(char* input_ast, char* output_file, int weaveortangle);
 
 #endif
