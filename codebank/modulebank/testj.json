@@ -4,6 +4,7 @@
 			"TYPE" : "FUNCTION_DECLARATION",
 			"IDENTIFIER" : "createBalance",
 			"RETURN_TYPE" : "Balance",
+			"RETURN_TYPE_LIST" : 1.000000,
 			"BODY" : [
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
@@ -131,7 +132,10 @@
 				}
 			],
 			"INPUTS" : [
-				"Numerical"
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
+				}
 			],
 			"ARGUMENTS" : [
 				"bal"
@@ -141,6 +145,7 @@
 			"TYPE" : "FUNCTION_DECLARATION",
 			"IDENTIFIER" : "addToBalance",
 			"RETURN_TYPE" : "Balance",
+			"RETURN_TYPE_LIST" : 0.000000,
 			"BODY" : [
 				{
 					"TYPE" : "FUNCTION_CALL",
@@ -182,8 +187,14 @@
 				}
 			],
 			"INPUTS" : [
-				"Balance",
-				"Numerical"
+				{
+					"TYPE" : "Balance",
+					"LIST_INDENTATION" : 0.000000
+				},
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
+				}
 			],
 			"ARGUMENTS" : [
 				"bal",
@@ -194,6 +205,7 @@
 			"TYPE" : "FUNCTION_DECLARATION",
 			"IDENTIFIER" : "setBalance",
 			"RETURN_TYPE" : "Balance",
+			"RETURN_TYPE_LIST" : 0.000000,
 			"BODY" : [
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
@@ -250,8 +262,14 @@
 				}
 			],
 			"INPUTS" : [
-				"Balance",
-				"Numerical"
+				{
+					"TYPE" : "Balance",
+					"LIST_INDENTATION" : 0.000000
+				},
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
+				}
 			],
 			"ARGUMENTS" : [
 				"bal",
@@ -271,6 +289,34 @@
 				"a"
 			],
 			"BASE_TYPE" : "Integer",
+			"BASE_TYPE_LIST" : 0.000000,
+			"LOGIC" : {
+				"DATATYPE" : "OPERATOR",
+				"DATA" : "≤",
+				"LEFT" : {
+					"DATATYPE" : "NUMERICAL_LITERAL",
+					"DATA" : 0.000000
+				},
+				"RIGHT" : {
+					"DATATYPE" : "IDENTIFIER",
+					"DATA" : "a"
+				}
+			}
+		},
+		{
+			"TYPE" : "TYPE_DECLARATION",
+			"IDENTIFIER" : "Accounts",
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Stores a list of accounts"
+				}
+			],
+			"INPUTS" : [
+				"a"
+			],
+			"BASE_TYPE" : "Balance",
+			"BASE_TYPE_LIST" : 1.000000,
 			"LOGIC" : {
 				"DATATYPE" : "OPERATOR",
 				"DATA" : "≤",

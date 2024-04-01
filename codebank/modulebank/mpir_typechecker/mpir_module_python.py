@@ -89,7 +89,7 @@ def build_python(ast: dict[str, any], output_file_path: str):
         for node in filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
             output_file.write("def " + node["IDENTIFIER"] + "(")
             for index, arg in enumerate(node["ARGUMENTS"]):
-                output_file.write(arg + ": " + node["INPUTS"][index] + ", " if index < len(node["ARGUMENTS"]) - 1 else "")
+                output_file.write(arg + ": " + node["INPUTS"][index]["TYPE"] + ", " if index < len(node["ARGUMENTS"]) - 1 else "")
             output_file.write(") -> " + node["RETURN_TYPE"] + ":\n")
             for statement in node["BODY"]:
                 output_file.write("\t")

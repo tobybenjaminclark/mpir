@@ -326,8 +326,8 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
     
     for index, input in enumerate(function["INPUTS"]):
-        Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
-        Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input))
+        Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
+        Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
 
     index = 0
     while index < len(function["BODY"]):
@@ -359,7 +359,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
 def process_function_declarations(ast: dict[str:any], context: _context) -> _context:
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
-        context = context + (function["IDENTIFIER"], type_create_function([get_type_from_context(context, type_identifier).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(context, function["RETURN_TYPE"]).logic.constraint))
+        context = context + (function["IDENTIFIER"], type_create_function([get_type_from_context(context, type_identifier["TYPE"]).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(context, function["RETURN_TYPE"]).logic.constraint))
         for doc in function["DOCSECTION"]:
             flags: list[str] = []
             if "FLAG" in doc: flags.append(doc["FLAG"])
