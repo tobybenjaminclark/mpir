@@ -121,6 +121,7 @@ class MyApp(QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.filename = None
+        self.config_file = None
 
         # Create text boxes
         self.left_textbox = QTextEdit()
@@ -154,7 +155,7 @@ class MyApp(QMainWindow):
         self.button5.setIconSize(icon_size)
         self.button6.setIcon(QIcon(QPixmap('codebank/idebank/save_two.png').scaled(icon_size.width(), icon_size.height())))
         self.button6.setIconSize(icon_size)
-        self.button7.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button7.setIcon(QIcon(QPixmap('codebank/idebank/config.png').scaled(icon_size.width(), icon_size.height())))
         self.button7.setIconSize(icon_size)
         self.button8.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button8.setIconSize(icon_size)
@@ -220,6 +221,7 @@ class MyApp(QMainWindow):
         self.button5.clicked.connect(self.build_tex)
         self.button2.clicked.connect(self.save_text)
         self.button6.clicked.connect(self.save_output)
+        self.button7.clicked.connect(self.load_config)
         self.button3.clicked.connect(self.load_text)
 
     def save_text(self):
@@ -241,6 +243,12 @@ class MyApp(QMainWindow):
             with open(filename, 'r') as f:
                 self.filename = filename
                 self.left_textbox.setText(f.read())
+
+    def load_config(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Config files (*.config)")
+        if filename:
+            with open(filename, 'r') as f:
+                self.config_file = filename
 
     def switch_to_main_page(self):
         self.stacked_widget.setCurrentIndex(0)  # Index 0 is the main page

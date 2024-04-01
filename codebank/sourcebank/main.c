@@ -18,6 +18,7 @@ int main(int argc, char** argv)
 {
     const char* inputFile = NULL;
     const char* outputFile = NULL;
+    const char* configFile = NULL;
 
     // Parse command-line arguments
     for (int i = 1; i < argc; i++) {
@@ -27,6 +28,9 @@ int main(int argc, char** argv)
         } else if (strcmp(argv[i], "--o") == 0 && i + 1 < argc) {
             outputFile = argv[i + 1];
             i++;  // Skip the next argument
+        } else if (strcmp(argv[i], "--c") == 0 && i + 1 < argc) {
+            configFile = argv[i + 1];
+            i++;  // Skip the next argument
         } else {
             printf("Unknown option or missing argument: %s\n", argv[i]);
             return 1; // Exit with error
@@ -34,13 +38,14 @@ int main(int argc, char** argv)
     }
 
     // Ensure both input and output files are provided
-    if (inputFile == NULL || outputFile == NULL) {
+    if (inputFile == NULL || outputFile == NULL || configFile == NULL) {
         printf("Usage: %s --i <input_file> --o <output_file>\n", argv[0]);
         return 1; // Exit with error
     }
-    
+
     printf("INPUT FILE: %s \n", inputFile);
     printf("OUTPUT FILE: %s \n", outputFile);
+    printf("CONFIG FILE: %s \n", configFile);
 
     mpir_lexer* a;
     a = mpir_tokenise(inputFile, "test.md");
