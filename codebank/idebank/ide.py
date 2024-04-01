@@ -121,6 +121,7 @@ class MyApp(QMainWindow):
         # Create text boxes
         self.left_textbox = QTextEdit()
         self.right_textbox = QTextEdit()
+        self.right_textbox.setReadOnly(True)
 
         # Create Python syntax highlighter and associate it with the left_textbox
         self.highlighter = MPIRHighlighter(self.left_textbox.document())
