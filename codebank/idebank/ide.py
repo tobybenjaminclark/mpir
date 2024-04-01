@@ -152,7 +152,7 @@ class MyApp(QMainWindow):
         self.button4.setIconSize(icon_size)
         self.button5.setIcon(QIcon(QPixmap('codebank/idebank/tex.png').scaled(icon_size.width(), icon_size.height())))
         self.button5.setIconSize(icon_size)
-        self.button6.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button6.setIcon(QIcon(QPixmap('codebank/idebank/save_two.png').scaled(icon_size.width(), icon_size.height())))
         self.button6.setIconSize(icon_size)
         self.button7.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button7.setIconSize(icon_size)
@@ -219,6 +219,7 @@ class MyApp(QMainWindow):
         self.button4.clicked.connect(self.build_python)
         self.button5.clicked.connect(self.build_tex)
         self.button2.clicked.connect(self.save_text)
+        self.button6.clicked.connect(self.save_output)
         self.button3.clicked.connect(self.load_text)
 
     def save_text(self):
@@ -227,6 +228,12 @@ class MyApp(QMainWindow):
             with open(filename, 'w') as f:
                 self.filename = filename
                 f.write(self.left_textbox.toPlainText())
+
+    def save_output(self):
+        filename, _ = QFileDialog.getSaveFileName(self, "Save Output", "", "All Files (*)")
+        if filename:
+            with open(filename, 'w') as f:
+                f.write(self.right_textbox.toPlainText())
 
     def load_text(self):
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "MPIR files (*.mpir)")
