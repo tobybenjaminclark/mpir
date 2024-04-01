@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar, QTextBrowser, QStackedWidget, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar, QTextBrowser, QStackedWidget, QLabel, QMessageBox, QFileDialog
 from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap
 from PyQt5.QtCore import Qt, QRegExp, QSize
 import webbrowser
@@ -71,9 +71,9 @@ class WikiPage(QWidget):
         self.button2 = QPushButton()
 
         icon_size = QSize(40, 40)  # Adjust the size as needed
-        self.button1.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button1.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button1.setIconSize(icon_size)
-        self.button2.setIcon(QIcon(QPixmap('github.png').scaled(icon_size.width(), icon_size.height())))
+        self.button2.setIcon(QIcon(QPixmap('codebank/idebank/github.png').scaled(icon_size.width(), icon_size.height())))
         self.button2.setIconSize(icon_size)
 
         button_size = 64  # Adjust the size as needed
@@ -99,7 +99,7 @@ class WikiPage(QWidget):
 
     def load_wiki_page(self):
         # Load the HTML content from the file
-        with open('wiki_page.html', 'r') as f:
+        with open('codebank/idebank/wiki_page.html', 'r') as f:
             html_content = f.read()
         self.text_browser.setHtml(html_content)
 
@@ -137,21 +137,21 @@ class MyApp(QMainWindow):
 
         # Set icons and adjust their size
         icon_size = QSize(40, 40)  # Adjust the size as needed
-        self.button1.setIcon(QIcon(QPixmap('planet.png').scaled(icon_size.width(), icon_size.height())))
+        self.button1.setIcon(QIcon(QPixmap('codebank/idebank/planet.png').scaled(icon_size.width(), icon_size.height())))
         self.button1.setIconSize(icon_size)
-        self.button2.setIcon(QIcon(QPixmap('save.png').scaled(icon_size.width(), icon_size.height())))
+        self.button2.setIcon(QIcon(QPixmap('codebank/idebank/save.png').scaled(icon_size.width(), icon_size.height())))
         self.button2.setIconSize(icon_size)
-        self.button3.setIcon(QIcon(QPixmap('folder.png').scaled(icon_size.width(), icon_size.height())))
+        self.button3.setIcon(QIcon(QPixmap('codebank/idebank/folder.png').scaled(icon_size.width(), icon_size.height())))
         self.button3.setIconSize(icon_size)
-        self.button4.setIcon(QIcon(QPixmap('python.png').scaled(icon_size.width(), icon_size.height())))
+        self.button4.setIcon(QIcon(QPixmap('codebank/idebank/python.png').scaled(icon_size.width(), icon_size.height())))
         self.button4.setIconSize(icon_size)
-        self.button5.setIcon(QIcon(QPixmap('tex.png').scaled(icon_size.width(), icon_size.height())))
+        self.button5.setIcon(QIcon(QPixmap('codebank/idebank/tex.png').scaled(icon_size.width(), icon_size.height())))
         self.button5.setIconSize(icon_size)
-        self.button6.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button6.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button6.setIconSize(icon_size)
-        self.button7.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button7.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button7.setIconSize(icon_size)
-        self.button8.setIcon(QIcon(QPixmap('icon1.png').scaled(icon_size.width(), icon_size.height())))
+        self.button8.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
         self.button8.setIconSize(icon_size)
         
         # Set fixed size for buttons to make them square
@@ -213,7 +213,21 @@ class MyApp(QMainWindow):
         self.button8.clicked.connect(self.switch_to_wiki_page)
         self.button4.clicked.connect(self.build_python)
         self.button5.clicked.connect(self.build_tex)
-        
+        self.button2.clicked.connect(self.save_text)
+        self.button3.clicked.connect(self.load_text)
+
+    def save_text(self):
+        filename, _ = QFileDialog.getSaveFileName(self, "Save File", "", "MPIR files (*.mpir)")
+        if filename:
+            with open(filename, 'w') as f:
+                f.write(self.left_textbox.toPlainText())
+
+    def load_text(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "MPIR files (*.mpir)")
+        if filename:
+            with open(filename, 'r') as f:
+                self.left_textbox.setText(f.read())
+
     def switch_to_main_page(self):
         self.stacked_widget.setCurrentIndex(0)  # Index 0 is the main page
 
