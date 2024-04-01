@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QTextEdit, QPushButton, QMainWindow, QStatusBar, QTextBrowser, QStackedWidget, QLabel, QMessageBox, QFileDialog
-from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap, QColor
+from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QTextDocument, QPixmap, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QRegExp, QSize
 import webbrowser
 import subprocess
@@ -123,10 +123,17 @@ class MyApp(QMainWindow):
         self.filename = None
         self.config_file = None
 
-        # Create text boxes
+
+        # Create the QTextEdit widget
         self.left_textbox = QTextEdit()
         self.right_textbox = QTextEdit()
-        self.right_textbox.setReadOnly(True)
+
+        try:
+            self.left_textbox.setFont(QFont("Monaco"))
+            self.right_textbox.setFont(QFont("Monaco"))
+        except:
+            self.left_textbox.setFont(QFont("Courier New"))
+            self.right_textbox.setFont(QFont("Courier New"))
 
         # Create Python syntax highlighter and associate it with the left_textbox
         self.highlighter = MPIRHighlighter(self.left_textbox.document())
