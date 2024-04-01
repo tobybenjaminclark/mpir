@@ -16,14 +16,40 @@
 
 int main(int argc, char** argv)
 {
+    const char* inputFile = NULL;
+    const char* outputFile = NULL;
+
+    // Parse command-line arguments
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--i") == 0 && i + 1 < argc) {
+            inputFile = argv[i + 1];
+            i++;  // Skip the next argument
+        } else if (strcmp(argv[i], "--o") == 0 && i + 1 < argc) {
+            outputFile = argv[i + 1];
+            i++;  // Skip the next argument
+        } else {
+            printf("Unknown option or missing argument: %s\n", argv[i]);
+            return 1; // Exit with error
+        }
+    }
+
+    // Ensure both input and output files are provided
+    if (inputFile == NULL || outputFile == NULL) {
+        printf("Usage: %s --i <input_file> --o <output_file>\n", argv[0]);
+        return 1; // Exit with error
+    }
+
+    printf("INPUT FILE: %s \n", inputFile);
+    printf("OUTPUT FILE: %s \n", outputFile);
+
     mpir_lexer* a;
-    a = mpir_tokenise("test.mpir", "test.md");
+    a = mpir_tokenise(inputFile, "test.md");
     mpir_parser* psr = upgrade_to_parser(a);
     mpir_parse(psr);
-    mpir_write_ast(psr, "test.mpirast");
+    mpir_write_ast(psr, "temp.mpirast");
     mpir_parser_free(psr);
 
-    mpir_build("test.mpirast", "test.py", 1);
+    mpir_build("temp.mpirast", "test.py", 1);
     return 0;
 }
 
