@@ -402,7 +402,10 @@ int mpir_write_ast(mpir_parser* psr, char path[])
                 int argument_count1 = 0;
                 while (program_node->data.function_declaration->input_types[argument_count1] != NULL)
                 {
-                    wjson_list_append_string(wjson_funcdef_inputs, program_node->data.function_declaration->input_types[argument_count1]->data);
+                    struct wjson* wjson_funcdef_input_i = wjson_initialize();
+                    wjson_append_string(wjson_funcdef_input_i, L"TYPE", program_node->data.function_declaration->input_types[argument_count1]->data);
+                    wjson_append_numerical(wjson_funcdef_input_i, L"LIST_INDENTATION", program_node->data.function_declaration->input_types[argument_count1]->list);
+                    wjson_list_append_object(wjson_funcdef_inputs, wjson_funcdef_input_i);
                     argument_count1++;
                 }
 

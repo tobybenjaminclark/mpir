@@ -96,10 +96,9 @@ struct mpir_ast_type* parse_type(mpir_parser* psr)
 
 struct mpir_ast_type* get_type(mpir_parser* psr)
 {
-    if(psr->peek(psr)->type != IDENTIFIER) return NULL;
+    if(psr->peek(psr)->type != IDENTIFIER && psr->peek(psr)->type != open_sqbracket) return NULL;
 
-    struct mpir_ast_type* arg = calloc(1, sizeof (struct mpir_ast_identifier));
-    wcscpy(arg->data, psr->get(psr)->lexeme);
+    struct mpir_ast_type* arg = parse_returntype(psr);
     if(psr->peek(psr)->type == keyword_comma) (void)psr->get(psr);
     return arg;
 }
