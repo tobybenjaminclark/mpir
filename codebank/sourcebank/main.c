@@ -14,6 +14,16 @@
 #include "../headerbank/mpir_wjson/mpir_wjson.h"
 #include "../headerbank/mpir_buildmanager/mpir_buildmanager.h"
 
+int show_help()
+{
+    printf("Welcome to the MPIR Compiler use --i to specify input file, --c for config, and --o for output.\n");
+}
+
+int show_version()
+{
+    printf("V1.0\n");
+}
+
 int main(int argc, char** argv)
 {
     const char* inputFile = NULL;
@@ -22,15 +32,23 @@ int main(int argc, char** argv)
 
     // Parse command-line arguments
     for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "-h") == 0){
+            show_help();
+            exit(0);
+        }
+        else if (strcmp(argv[i], "-V") == 0){
+            show_version();
+            exit(0);
+        }
         if (strcmp(argv[i], "--i") == 0 && i + 1 < argc) {
             inputFile = argv[i + 1];
-            i++;  // Skip the next argument
+            i++;
         } else if (strcmp(argv[i], "--o") == 0 && i + 1 < argc) {
             outputFile = argv[i + 1];
-            i++;  // Skip the next argument
+            i++;
         } else if (strcmp(argv[i], "--c") == 0 && i + 1 < argc) {
             configFile = argv[i + 1];
-            i++;  // Skip the next argument
+            i++;
         } else {
             printf("Unknown option or missing argument: %s\n", argv[i]);
             return 1; // Exit with error
