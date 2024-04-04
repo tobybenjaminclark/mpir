@@ -7,6 +7,8 @@ from mpir_module_python import build_python
 from typing import Literal, IO
 import json
 
+g_errors = []
+
 def parse_json_file(filename: str) -> dict|None:
     try:
         file = open(filename, 'r')
@@ -323,7 +325,6 @@ def typecheck_function(function: dict[str:any], Γ: _context):
     Ψ = context_create('Ψ')
     Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
     Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
-
     
     for index, input in enumerate(function["INPUTS"]):
         Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
@@ -384,7 +385,10 @@ def typecheck_ast(ast: dict[str:any]):
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
         print("Typechecking", function["IDENTIFIER"])
-        typecheck_function(function, duplicate_context(Γ))
+        try:
+            typecheck_function(function, duplicate_context(Γ))
+        except Exception as e:
+            g_errors.append(str(e))
 
     
 
@@ -407,9 +411,19 @@ def main():
     print("Input file:", input_file)
     print("Output file:", output_file)
 
+    input_file = "codebank/modulebank/testj.json"
+    output_file = "python.py"
     ast = parse_json_file(input_file)
     typecheck_ast(ast)
-    build_python(ast, output_file)
+
+    if len(g_errors) == 0: build_python(ast, output_file)
+    else:
+        # Open the file for writing
+        with open(output_file, 'w') as file:
+            # Write each element of the array to the file
+            for item in g_errors:
+                file.write("# " + str(item) + '\n')
+        print("Array contents written to", output_file)
 
 
 if __name__ == "__main__":

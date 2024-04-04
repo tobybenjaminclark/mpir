@@ -61,9 +61,9 @@ int main(int argc, char** argv)
         return 1; // Exit with error
     }
 
-    printf("INPUT FILE: %s \n", inputFile);
-    printf("OUTPUT FILE: %s \n", outputFile);
-    printf("CONFIG FILE: %s \n", configFile);
+    printf("INPUT FILE  : %s \n", inputFile);
+    printf("OUTPUT FILE : %s \n", outputFile);
+    printf("CONFIG FILE : %s \n", configFile);
 
     mpir_lexer* a;
     a = mpir_tokenise(inputFile, "test.md");
@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     mpir_write_ast(psr, "temp.mpirast");
     mpir_parser_free(psr);
 
-    mpir_build("temp.mpirast", "test.py", configFile, 1);
+    mpir_build("temp.mpirast", outputFile, configFile, 1);
     return 0;
 }
 

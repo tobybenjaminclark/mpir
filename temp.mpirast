@@ -16,77 +16,8 @@
 					"IDENTIFIER" : "new_bal",
 					"EXPRESSION" : {
 						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : 0.000000
+						"VALUE" : -1.000000
 					}
-				},
-				{
-					"TYPE" : "TRYCAST_STATEMENT",
-					"DOMINANT_IDENTIFIER" : "bal",
-					"CASTED_IDENTIFIER" : "new_bal",
-					"ON_STATEMENTS" : [
-						{
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 1.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "new_bal",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_IDENTIFIER",
-										"IDENTIFIER" : "bal"
-									}
-								}
-							]
-						},
-						{
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 0.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "bal",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : -1.000000
-									}
-								}
-							]
-						}
-					]
-				},
-				{
-					"TYPE" : "DO_STATEMENT",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : "<=",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "bal"
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : -1.000000
-						}
-					},
-					"ON_STATEMENTS" : [
-						{
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 1.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "bal",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 1.000000
-									}
-								}
-							]
-						}
-					]
 				},
 				{
 					"TYPE" : "FUNCTION_CALL",
@@ -104,32 +35,7 @@
 				}
 			],
 			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Initializes a bank balance variable, with the passed amount as the starting balance (Assuming above 0)"
-				},
-				{
-					"FLAG" : "doc",
-					"IDENTIFIER" : "bal",
-					"STRING" : "Starting Balance (Numerical)"
-				},
-				{
-					"FLAG" : "web",
-					"STRING" : "https://en.wikipedia.org/wiki/Bank_account"
-				},
-				{
-					"FLAG" : "web",
-					"IDENTIFIER" : "Currency_Site",
-					"STRING" : "https://en.wikipedia.org/wiki/Currency"
-				},
-				{
-					"FLAG" : "example",
-					"STRING" : "(10) -> 10"
-				},
-				{
-					"FLAG" : "example",
-					"STRING" : "(15) -> 15"
-				}
+				
 			],
 			"INPUTS" : [
 				{
@@ -139,66 +45,6 @@
 			],
 			"ARGUMENTS" : [
 				"bal"
-			]
-		},
-		{
-			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "addToBalance",
-			"RETURN_TYPE" : "Balance",
-			"RETURN_TYPE_LIST" : 0.000000,
-			"BODY" : [
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "FUNCTION_CALL",
-								"IDENTIFIER" : "createBalance",
-								"ARGUMENTS" : [
-									{
-										"TYPE" : "FUNCTION_ARGUMENT",
-										"ARGUMENT_INDEX" : 0.000000,
-										"VALUE" : {
-											"TYPE" : "EXPRESSION_OPERATOR",
-											"IDENTIFIER" : "+",
-											"LEFT" : {
-												"TYPE" : "EXPRESSION_IDENTIFIER",
-												"IDENTIFIER" : "bal"
-											},
-											"RIGHT" : {
-												"TYPE" : "EXPRESSION_IDENTIFIER",
-												"IDENTIFIER" : "amount"
-											}
-										}
-									}
-								]
-							}
-						}
-					]
-				}
-			],
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Adds an amount to a bank balance."
-				}
-			],
-			"INPUTS" : [
-				{
-					"TYPE" : "Balance",
-					"LIST_INDENTATION" : 0.000000
-				},
-				{
-					"TYPE" : "Numerical",
-					"LIST_INDENTATION" : 0.000000
-				}
-			],
-			"ARGUMENTS" : [
-				"bal",
-				"amount"
 			]
 		},
 		{
@@ -215,33 +61,6 @@
 			],
 			"BASE_TYPE" : "Integer",
 			"BASE_TYPE_LIST" : 0.000000,
-			"LOGIC" : {
-				"DATATYPE" : "OPERATOR",
-				"DATA" : "≤",
-				"LEFT" : {
-					"DATATYPE" : "NUMERICAL_LITERAL",
-					"DATA" : 0.000000
-				},
-				"RIGHT" : {
-					"DATATYPE" : "IDENTIFIER",
-					"DATA" : "a"
-				}
-			}
-		},
-		{
-			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Accounts",
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Stores a list of accounts"
-				}
-			],
-			"INPUTS" : [
-				"a"
-			],
-			"BASE_TYPE" : "Balance",
-			"BASE_TYPE_LIST" : 1.000000,
 			"LOGIC" : {
 				"DATATYPE" : "OPERATOR",
 				"DATA" : "≤",
