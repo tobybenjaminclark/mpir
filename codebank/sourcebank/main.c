@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     printf("CONFIG FILE : %s \n", configFile);
 
     mpir_lexer* a;
-    a = mpir_tokenise(inputFile, "test.md");
+    a = mpir_tokenise(inputFile, "test2.md");
     mpir_parser* psr = upgrade_to_parser(a);
     mpir_parse(psr);
     mpir_write_ast(psr, "temp.mpirast");

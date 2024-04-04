@@ -50,6 +50,12 @@ int mpir_tokenise_process_buffer(mpir_lexer *lexer, mpir_token_type toktype)
     mpir_token* token = mpir_create_token(toktype, mpir_terminate_lexeme(lexer->lexeme), 0);
     (void)mpir_lexer_append_token(lexer, token);
 
+    /* Increase Line Number, if newline is encountered! */
+    if(toktype == NEWLINE)
+    {
+        lexer->line_number++;
+    }
+
     /* Reset the lexeme and it's associated attributes */
     (void)memset(lexer->lexeme, 0, sizeof(wchar_t) * BUFFER_SIZE);
     lexer->buffer_size = 0;

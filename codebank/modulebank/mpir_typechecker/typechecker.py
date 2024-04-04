@@ -119,7 +119,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
         return Γ, Ψ + (statement["IDENTIFIER"], expr)
     else:
-        raise Exception("Invalid Set Statement :: Expression is not a subtype of asignee:", statement["IDENTIFIER"], " (", expr.logic.constraint()," : ", get_type_from_context(Γ, statement["IDENTIFIER"]).logic.constraint(), ")")
+        raise Exception("Invalid Set Statement (expression is not a subtype of assigned variable type).")
 
 
 # Function to typecheck a function call.

@@ -51,10 +51,10 @@ int mpir_write_token(mpir_token* token, FILE* file, short int indentation, short
     }
     if(token->type == IDENTIFIER)
     {
-        fwprintf(file, L"%ls ", token->lexeme);
+        fwprintf(file, L"%ls (%d) ", token->lexeme, token->line_index);
         return 0;
     }
-    fprintf(file, "%s ", token_names[token->type]);
+    fprintf(file, "%s (%d) ", token_names[token->type], token->line_index);
 
     /*fwprintf(file, L"%*s\"lexeme\": \"%ls\",\n", (indentation*4) + 4, "", token->lexeme);
     //fprintf(file, "%*s\"line_index\": %lu,\n", (indentation*4) + 4, "", token->line_index);
@@ -84,7 +84,7 @@ int mpir_write_token_md(mpir_token* token, FILE* file)
     }
     else if((token->type) == IDENTIFIER)
     {
-        fwprintf(file, L"<code>'%ls'</code> ", token->lexeme);
+        fwprintf(file, L"<code>'%ls (%d)'</code> ", token->lexeme, token->line_index);
         return 0;
     }
     else if((token->type) == indentation)
@@ -92,7 +92,7 @@ int mpir_write_token_md(mpir_token* token, FILE* file)
         fprintf(file, "<code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code>");
         return 0;
     }
-    else fprintf(file, "<code>%s</code> ", token_names[token->type]);
+    else fprintf(file, "<code>%s (%d)</code> ", token_names[token->type], token->line_index);
 
     return 0;
 }

@@ -21,6 +21,7 @@ void mpir_lexer_append_token(mpir_lexer *lexer, mpir_token *token)
     }
 
     /* Add the token to the array */
+    token->line_index = lexer->line_number;
     lexer->tokens[lexer->token_count] = token;
     lexer->token_count++;
 }
