@@ -143,7 +143,7 @@ def build_pseudocode(node):
 def build_arguments(node):
     arguments = []
     for index, arg in enumerate(node["ARGUMENTS"]):
-        arguments.append(arg + ": " + node["INPUTS"][index])
+        arguments.append(arg + ": " + str(node["INPUTS"][index]["TYPE"]))
     return ", ".join(arguments)
 
 
@@ -167,11 +167,12 @@ def build_tex(ast):
 
 
 def main():
+    print("TeX Module Invoked!")
     parser = argparse.ArgumentParser(description='Program to compile MPIR AST File (JSON) to LaTeX.')
 
     # Add support for version option
     parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
-    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
+    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='codebank/modulebank/testj.json')
     parser.add_argument('-o', '--output', dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.tex')
     parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
     args = parser.parse_args()

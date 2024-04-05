@@ -9,7 +9,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
-int mpir_build(char* input_ast, char* output_file, char* config_file, int weaveortangle);
+int mpir_build(char* input_ast, char* output_file, char* config_file);
 
 #endif

@@ -290,7 +290,29 @@ class MyApp(QMainWindow):
 
 
     def build_tex(self):
-        self.right_textbox.setPlainText("tex")
+        if self.filename is None: return
+
+        command = f"./buildbank/mpir --i {self.filename} --o output.tex --c config.json"
+        print(command)
+
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Capture the output and wait for the process to finish
+
+        # Read stdout and stderr line by line as they become available
+        while True:
+            stdout_line = process.stdout.readline()
+            stderr_line = process.stderr.readline()
+            
+            if not stdout_line and not stderr_line:
+                break
+            
+            if stdout_line:
+                print(stdout_line.strip())
+            if stderr_line:
+                print(stderr_line.strip(), file=sys.stderr)
+
+        with open("output.tex", 'r') as f:
+            self.right_textbox.setText(f.read())
 
     def build_pseudocode(self):
         self.right_textbox.setPlainText("pseudocode")

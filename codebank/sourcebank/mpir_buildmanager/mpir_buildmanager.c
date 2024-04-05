@@ -6,29 +6,41 @@
 
 #include "../../headerbank/mpir_buildmanager/mpir_buildmanager.h"
 
-int mpir_build(char* input_ast, char* output_file, char* config_file, int weaveortangle)
+int endsWith(const char *str, const char *suffix)
+{
+    size_t str_len = strlen(str);
+    size_t suffix_len = strlen(suffix);
+
+    if (str_len < suffix_len)
+        return 0;
+    return strcmp(str + str_len - suffix_len, suffix) == 0;
+}
+
+int mpir_build(char* input_ast, char* output_file, char* config_file)
 {
     int result;
     char command[100];
-    if(weaveortangle == 2) {
+    if (strcmp(output_file, ".tex")) {
         const char *pythonScript = "codebank/modulebank/mpir_module_tex.py";
 
         // Build the command to run the Python script
-        snprintf(command, sizeof(command), "python3 %s %s --o %s --c %s", pythonScript, input_ast, config_file, "documentation.tex");
+        printf("Invoking Command: python3 %s --i %s --o %s --c %s", pythonScript, input_ast, output_file, config_file);
+        snprintf(command, sizeof(command), "python3 %s %s --o %s --c %s", pythonScript, input_ast, output_file, config_file);
 
         // Use the system expression to run the command
         result = system(command);
 
         // Check the result of the system call
         if (result == 0) {
-            printf("Python script executed successfully.\n");
+            printf("Tex script executed successfully.\n");
         } else {
-            printf("Error executing Python script.\n");
+            printf("Error executing Tex script.\n");
         }
     }
-    else {
+    else if(strcmp(output_file, ".py"))
+    {
         const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
-        snprintf(command, sizeof(command), "python3 %s --i %s --o %s --c %s", texScript, input_ast, config_file, "python.py");
+        snprintf(command, sizeof(command), "python3 %s --i %s --o %s --c %s", texScript, input_ast, output_file, config_file);
         result = system(command);
 
         // Check the result of the system call
