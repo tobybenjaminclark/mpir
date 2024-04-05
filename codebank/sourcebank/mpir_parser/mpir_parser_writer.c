@@ -207,6 +207,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node, L"TYPE", L"VALUE_ASSIGNMENT");
             wjson_append_string(wjson_node, L"IDENTIFIER", node->data.value_assignment->identifier);
             wjson_append_object(wjson_node, L"EXPRESSION", mpir_wjsonify_expression(node->data.value_assignment->expression));
+            wjson_append_numerical(wjson_node, L"LINE", node->data.value_assignment->line_index);
             wjson_list_append_object(wjson_list, wjson_node);
             return;
 
@@ -219,6 +220,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node2, L"TYPE", L"TYPE_ASSIGNMENT");
             wjson_append_string(wjson_node2, L"IDENTIFIER", node->data.type_assignment->identifier);
             wjson_append_string(wjson_node2, L"ASSIGNED_TYPE", node->data.type_assignment->type);
+            wjson_append_numerical(wjson_node2, L"LINE", node->data.type_assignment->line_index);
             wjson_list_append_object(wjson_list, wjson_node2);
             return;
 
@@ -230,6 +232,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             struct wjson* wjson_node3 = wjson_initialize();
             wjson_append_string(wjson_node3, L"TYPE", L"FUNCTION_CALL");
             wjson_append_string(wjson_node3, L"IDENTIFIER", node->data.function_call->identifier);
+            wjson_append_numerical(wjson_node3, L"LINE", node->data.function_call->line_index);
 
             /* Arguments */
             int argument_count = 0;
@@ -256,6 +259,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             wjson_append_string(wjson_node4, L"TYPE", L"TRYCAST_STATEMENT");
             wjson_append_string(wjson_node4, L"DOMINANT_IDENTIFIER", node->data.trycast_statement->dominant_variable);
             wjson_append_string(wjson_node4, L"CASTED_IDENTIFIER", node->data.trycast_statement->casted_variable);
+            wjson_append_numerical(wjson_node4, L"LINE", node->data.trycast_statement->line_index);
 
             int argument_count3 = 0;
             struct wjson* on_statement;
@@ -299,6 +303,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
 
             wjson_append_string(wjson_node5, L"TYPE", L"DO_STATEMENT");
             wjson_append_object(wjson_node5, L"EXPRESSION", mpir_wjsonify_expression(node->data.do_statement->expression));
+            wjson_append_numerical(wjson_node5, L"LINE", node->data.do_statement->line_index);
 
             int argument_count4 = 0;
             struct wjson* on_statement2;
@@ -306,6 +311,7 @@ void mpir_wjsonify_command(struct mpir_command_node* node, struct wjson* wjson_l
             while (node->data.do_statement->actions[argument_count4] != NULL)
             {
                 on_statement2 = wjson_initialize();
+                wjson_append_numerical(on_statement2, L"LINE", node->data.do_statement->actions[argument_count4]->line_index);
                 wjson_append_string(on_statement2, L"TYPE", L"ON_STATEMENT");
                 if(node->data.do_statement->actions[argument_count4]->stored_type == string_literal)
                 {

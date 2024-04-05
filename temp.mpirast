@@ -9,7 +9,8 @@
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
 					"IDENTIFIER" : "new_bal",
-					"ASSIGNED_TYPE" : "Balance"
+					"ASSIGNED_TYPE" : "Balance",
+					"LINE" : 4.000000
 				},
 				{
 					"TYPE" : "VALUE_ASSIGNMENT",
@@ -17,11 +18,13 @@
 					"EXPRESSION" : {
 						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
 						"VALUE" : -1.000000
-					}
+					},
+					"LINE" : 5.000000
 				},
 				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
+					"LINE" : 6.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",

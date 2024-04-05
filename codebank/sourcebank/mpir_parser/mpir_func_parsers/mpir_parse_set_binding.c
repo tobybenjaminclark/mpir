@@ -23,7 +23,7 @@ struct mpir_ast_value_assignment* parse_set_binding(mpir_parser* psr, struct mpi
     struct mpir_ast_value_assignment* node = calloc(1, sizeof(struct mpir_ast_value_assignment));
 
     /* Parse `set` */
-    if(psr->peek(psr)->type == keyword_set) (void)psr->get(psr);
+    if(psr->peek(psr)->type == keyword_set) node->line_index = psr->get(psr)->line_index;
     else return NULL;
 
     /* Parse variable identifier */

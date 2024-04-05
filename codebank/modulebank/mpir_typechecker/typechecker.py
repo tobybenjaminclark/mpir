@@ -119,7 +119,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
         return Γ, Ψ + (statement["IDENTIFIER"], expr)
     else:
-        raise Exception("Invalid Set Statement (expression is not a subtype of assigned variable type).")
+        raise Exception("Line " + str(round(statement["LINE"])) + " Invalid Set Statement (expression is not a subtype of assigned variable type).")
 
 
 # Function to typecheck a function call.

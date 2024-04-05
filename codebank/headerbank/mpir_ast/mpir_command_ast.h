@@ -24,6 +24,7 @@ struct mpir_ast_type_assignment
 {
     wchar_t* identifier[128];                       /** ← Identifier associated with the type assignment.                   */
     wchar_t* type[128];                             /** ← Type associated with the type assignment.                         */
+    int line_index;
 };
 
 
@@ -38,6 +39,7 @@ struct mpir_ast_value_assignment
 {
     wchar_t* identifier[128];                       /** ← Identifier associated with the value assignment.                  */
     struct mpir_ast_expression* expression;         /** ← Expression assigned to the variable.                              */
+    int line_index;
 };
 
 
@@ -59,6 +61,7 @@ struct mpir_ast_on_statement
         string_literal                              /** ← Indicates the stored type is a string.                            */
     } stored_type;                                  /** ← Enum indicating the stored type.                                  */
     struct mpir_command_list* commands;             /** ← Pointer to a list of commands associated with the 'on' statement. */
+    int line_index;
 };
 
 
@@ -74,6 +77,7 @@ struct mpir_ast_trycast_statement
     struct mpir_ast_identifier* dominant_variable;  /** ← Dominant variable in the trycast statement.                     */
     struct mpir_ast_identifier* casted_variable;    /** ← Casted variable in the trycast statement.                       */
     struct mpir_ast_on_statement** actions;         /** ← Array of 'on' statements associated with the trycast statement. */
+    int line_index;
 };
 
 
@@ -88,6 +92,7 @@ struct mpir_ast_do_statement
 {
     struct mpir_ast_expression* expression;         /** ← Function call in the 'do' statement.                         */
     struct mpir_ast_on_statement** actions;          /** ← Array of 'on' statements associated with the 'do' statement. */
+    int line_index;
 };
 
 #endif

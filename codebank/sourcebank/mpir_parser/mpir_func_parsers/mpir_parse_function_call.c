@@ -56,6 +56,8 @@ struct mpir_ast_function_call* mpir_parse_function_call(mpir_parser* psr)
     printf("PARSED OPEN BRACKET!\n");
 
     struct mpir_ast_function_call* node = malloc(sizeof(struct mpir_ast_function_call));
+    node->line_index = psr->peek(psr)->line_index;
+
     node->identifier = identifier;
 
     /* Parse Arguments */

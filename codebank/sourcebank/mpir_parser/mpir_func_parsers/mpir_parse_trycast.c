@@ -23,7 +23,7 @@ struct mpir_ast_trycast_statement* parse_trycast(mpir_parser* psr, struct mpir_c
     struct mpir_ast_trycast_statement* node = malloc(sizeof (struct mpir_ast_trycast_statement));
 
     /* Parse & Discard `Keyword` Variable */
-    if(psr->peek(psr)->type == keyword_trycast) (void)psr->get(psr);
+    if(psr->peek(psr)->type == keyword_trycast) node->line_index = psr->get(psr)->line_index;
     else return NULL;
 
     printf("Parsed trycast keyword\n");

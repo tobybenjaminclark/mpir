@@ -61,6 +61,7 @@ struct mpir_ast_function_call
 {
     struct mpir_ast_function_identifier* identifier;      /** ← Function identifier for the call.         */
     struct mpir_ast_expression** arguments;               /** ← Array of arguments for the expression call. */
+    int line_index;
 };
 
 

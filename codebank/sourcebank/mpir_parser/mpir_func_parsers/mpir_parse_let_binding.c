@@ -23,7 +23,7 @@ struct mpir_ast_type_assignment* parse_let_binding(mpir_parser* psr, struct mpir
     struct mpir_ast_type_assignment* node = malloc(sizeof(struct mpir_ast_type_assignment));
 
     /* Parse `let` */
-    if(psr->peek(psr)->type == keyword_let) (void)psr->get(psr);
+    if(psr->peek(psr)->type == keyword_let) node->line_index = psr->get(psr)->line_index;
     else return NULL;
 
     /* Parse variable identifier */

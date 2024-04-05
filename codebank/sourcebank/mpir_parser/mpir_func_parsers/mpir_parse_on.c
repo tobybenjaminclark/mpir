@@ -24,13 +24,11 @@ struct mpir_ast_on_statement* parse_on_statement(mpir_parser* psr)
 
     printf("on :: parsed indentation!\n");
 
-    if(psr->peek(psr)->type == keyword_on) (void)psr->get(psr);
-    else return NULL;
-
-    printf("on :: parsed on!\n");
-
     /* Parse & discard `on` keyword */
     struct mpir_ast_on_statement* node = calloc(1, sizeof(struct mpir_ast_on_statement));
+    
+    if(psr->peek(psr)->type == keyword_on) node->line_index = psr->get(psr)->line_index;
+    else return NULL;
 
     /* Parse literals */
     switch(psr->peek(psr)->type)

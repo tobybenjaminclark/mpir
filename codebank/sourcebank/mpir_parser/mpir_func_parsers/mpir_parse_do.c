@@ -30,6 +30,7 @@ struct mpir_ast_do_statement* parse_do(mpir_parser* psr, struct mpir_command_lis
 
     /* Allocate Memory for Do Node */
     struct mpir_ast_do_statement *node = malloc(sizeof(struct mpir_ast_do_statement));
+    node->line_index = psr->peek(psr)->line_index;
 
     /* Try to parse expression */
     node->expression = mpir_parse_expression(psr, indentation, 0);
