@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     const char* outputFile = NULL;
     const char* configFile = NULL;
 
+    /*
     // Parse command-line arguments
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0){
@@ -60,6 +61,11 @@ int main(int argc, char** argv)
         printf("Usage: %s --i <input_file> --o <output_file>\n", argv[0]);
         return 1; // Exit with error
     }
+    */
+
+    inputFile = "test.mpir";
+    outputFile = "test-ast.mpir";
+    configFile = "config.config";
 
     printf("INPUT FILE  : %s \n", inputFile);
     printf("OUTPUT FILE : %s \n", outputFile);

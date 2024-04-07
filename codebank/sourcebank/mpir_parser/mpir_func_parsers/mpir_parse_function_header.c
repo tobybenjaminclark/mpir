@@ -43,6 +43,8 @@ struct mpir_ast_type** parse_inputs(mpir_parser* psr)
  */
 bool parse_function_declaration(mpir_parser* psr)
 {
+    char* token_names[] = {TOKEN_NAME_MAP};
+
     /* Create Funcdef AST node & Consume 'fundef' */
     struct mpir_ast_function_declaration* node = calloc(1, sizeof(struct mpir_ast_function_declaration));
     node->arguments = NULL;
@@ -65,7 +67,13 @@ bool parse_function_declaration(mpir_parser* psr)
     /* Parse return type */
     if((node->input_types = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL) return false;
     if(!(psr->tryget(psr, operator_arrow))) return false;
-    if((node->return_type = parse_returntype(psr)) == NULL) return false;
+    if(psr->peek(psr)->type == IDENTIFIER) node->return_type = parse_returntype(psr);
+    else
+    {
+        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected Identifier after ->, but got %s!\n", token_names[psr->peek(psr)->type]);
+        exit(1);
+    }
 
     /* Parse Newline */
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
