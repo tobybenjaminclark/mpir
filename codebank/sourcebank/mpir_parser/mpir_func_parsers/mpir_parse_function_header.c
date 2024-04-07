@@ -64,9 +64,29 @@ bool parse_function_declaration(mpir_parser* psr)
     else if(psr->peek(psr)->type == double_colon) (void)psr->get(psr);
     else return false;
 
-    /* Parse return type */
-    if((node->input_types = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL) return false;
-    if(!(psr->tryget(psr, operator_arrow))) return false;
+    /* Parse I/O Types */
+    if(psr->peek(psr)->type != IDENTIFIER)
+    {
+        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected Input Type Identifier, but got %s!\n", token_names[psr->peek(psr)->type]);
+        exit(1);
+    }
+    if((node->input_types = PARSE_MULTIPLE_STATEMENTS(struct mpir_type , get_type, psr)) == NULL)
+    {
+        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected Inputs after function-name, but got %s!\n", token_names[psr->peek(psr)->type]);
+        exit(1);
+    }
+
+    /* Parse Arrow */
+    if(!(psr->tryget(psr, operator_arrow)))
+    {
+        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected ->, but got %s!\n", token_names[psr->peek(psr)->type]);
+        exit(1);
+    }
+
+    /* Expect Return Type! */
     if(psr->peek(psr)->type == IDENTIFIER) node->return_type = parse_returntype(psr);
     else
     {
