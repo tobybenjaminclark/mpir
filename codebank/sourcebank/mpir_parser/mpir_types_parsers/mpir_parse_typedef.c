@@ -35,9 +35,11 @@ bool parse_type_declaration(mpir_parser* psr)
     }
 
     /* Parse Type Logic */
+    if(psr->peek(psr)->type == open_brace) (void)psr->get(psr);
     node->refinement = parse_type_logic(psr);
 
     printf("Going to try and docsection for type declaration!\n");
+    if(psr->peek(psr)->type == close_brace) (void)psr->get(psr);
     if(psr->peek(psr)->type == NEWLINE) (void)psr->get(psr);
 
     /* Parse Doc */

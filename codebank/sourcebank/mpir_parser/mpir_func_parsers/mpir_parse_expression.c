@@ -216,6 +216,13 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
             printf("Parsed List (type is %d)", root->type);
             return root;
         }
+        else if (psr->peek(psr)->type == close_brace)
+        {
+            printf("EXPR: Parsing Closed Square Brace\n");
+            // If a closing parenthesis is encountered, return the root of the current subexpression
+            (void)psr->get(psr);
+            return root;
+        }
         else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract || psr->peek(psr)->type == operator_gt ||
         psr->peek(psr)->type == operator_gteq || psr->peek(psr)->type == operator_lt || psr->peek(psr)->type == operator_lteq || psr->peek(psr)->type == operator_mod)
         {

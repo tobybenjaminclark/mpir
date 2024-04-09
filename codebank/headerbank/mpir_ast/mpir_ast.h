@@ -54,7 +54,7 @@ enum type_logic_operator
  */
 enum type_logic_type
 {
-    type_OPERATOR,      /** ← Operator type          */
+    type_OPERATOR,      /**xr ← Operator type          */
     type_IDENTIFIER,    /** ← Identifier type        */
     type_NUMERICAL,     /** ← Numerical literal type */
     type_STRING         /** ← String literal type    */
@@ -92,7 +92,7 @@ struct mpir_ast_type_declaration
     struct mpir_ast_identifier* identifier; /** ← Identifier of the type.               */
     struct mpir_ast_type** inputs;          /** ← Array of input types for the type.    */
     struct mpir_ast_type* base_type;        /** ← Base type of the type.                */
-    struct type_logic* refinement;          /** ← Pointer to the type refinement logic. */
+    struct mpir_ast_expression* refinement; /** ← Pointer to the type refinement logic. */
     struct mpir_ast_docsection* docsection; /** ← Pointer to the documentation section associated with the expression. */
 };
 #endif
