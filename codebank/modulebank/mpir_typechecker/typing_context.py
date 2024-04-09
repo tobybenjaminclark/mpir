@@ -27,6 +27,7 @@ _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n
 _context.__contains__ = lambda self, item: item in self.bindings
 _context.__add__ = lambda self, other: add_type_to_context(self, other[0], other[1])
 _context.__sub__ = lambda self, other: remove_type_from_context(self, other)
+_context.__iter__ = lambda self: iter(self.bindings.items())
 
 # Type Relationship Bindings for `τ1 < τ2` and `τ1 and τ2`
 _type.__lt__ = lambda self, other: is_subtype(self, other)  

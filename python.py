@@ -1,1 +1,12 @@
-# Line 5 Invalid Set Statement (expression is not a subtype of assigned variable type).
+# Generated using the MPIR Compiler.
+
+Hundred = type('Hundred', (), {})
+
+Ten = type('Ten', (), {})
+
+def CreateEven() -> Ten:
+	new_bal: Ten
+	new_bal = bal
+	return(bal)
+
+

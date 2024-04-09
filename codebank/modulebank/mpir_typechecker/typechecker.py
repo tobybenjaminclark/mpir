@@ -1,11 +1,12 @@
 import z3
 import argparse
 from typing_context import *
-from typing_context import _type, _context
+from typing_context import _type, _context, _function_type
 from core_calculus import *
 from mpir_module_python import build_python
 from typing import Literal, IO
 import json
+import traceback
 
 g_errors = []
 
@@ -37,7 +38,7 @@ def convert_operator_to_z3(operator: str, left, right):
         ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right, "%": lambda: left % right,
         
         # Negation, Conjunction & Disjunction
-        "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left),
+        "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left), "/": lambda: left / right, "*": lambda: left * right, "+": lambda: left + right, "-": lambda: left - right,
 
         # Predicates (Forall, Exists)
         "∀": lambda: z3.ForAll(left, right), "∃": lambda: z3.Exists(left, right),
@@ -48,10 +49,10 @@ def convert_operator_to_z3(operator: str, left, right):
 
 # Converts an expression to Z3 logic.
 def form_expression(type_logic: dict, symbol:chr = 'σ'):
-    match type_logic["DATATYPE"]:
-        case "OPERATOR":            return convert_operator_to_z3(type_logic["DATA"], form_expression(type_logic["LEFT"], symbol), form_expression(type_logic["RIGHT"], symbol))
-        case "IDENTIFIER":          return z3.Real(symbol)
-        case "NUMERICAL_LITERAL":   return z3.RealVal(type_logic["DATA"]) 
+    match type_logic["TYPE"]:
+        case "EXPRESSION_OPERATOR":            return convert_operator_to_z3(type_logic["IDENTIFIER"], form_expression(type_logic["LEFT"], symbol), form_expression(type_logic["RIGHT"], symbol))
+        case "EXPRESSION_IDENTIFIER":          return z3.Real(symbol)
+        case "EXPRESSION_NUMERICAL_LITERAL":   return z3.RealVal(type_logic["VALUE"])
         case _:                     return None
 
 
@@ -113,8 +114,65 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
 
 
 
+def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.ExprRef:
+    ast_type = ast["TYPE"]
+    if ast_type   == "EXPRESSION_IDENTIFIER":
+        iden = Real(ast["IDENTIFIER"])
+        return (lambda: iden)()
+    elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
+        return (lambda: RealVal(float(ast["VALUE"])))()
+    elif ast_type == "EXPRESSION_OPERATOR":
+        return convert_operator_to_z3(ast["VALUE"], substitute_expression(ast["LEFT"])(), substitute_expression(ast["RIGHT"])())
+    elif ast_type == "FUNCTION_CALL":
+        return type_ast_function_call(ast, Γ, Ψ).logic.constraint()
+    else:
+        print("Error!")
+
+
+
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
+    print(Γ)
+    expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
+    solver = z3.Solver()
+    sigma = Real('σ')
+    x = 1
+    try:
+        for iden, typ in Γ:
+            print(iden, typ)
+            if isinstance(typ.logic, _function_type): continue
+            iden_s = Real(iden)
+            try:
+                e2 = z3.And(substitute(typ.logic.constraint(), (sigma, iden_s)), z3.And(iden_s > -2147483648, iden_s < 2147483648))
+                subsolver = z3.Solver()
+                solver.add(e2)
+            except Exception as e:
+                print(traceback.format_exc())
+    except Exception as e:
+        print(traceback.format_exc())
+
+    temp55 = Real("temp")
+    typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
+    solver.add(temp55 == expr)
+    constr = substitute(typ.logic.constraint(), (sigma, temp55))
+    solver.add(z3.Not(constr))
+    print("solver: ", solver)
+    if solver.check() == z3.sat:
+        print("SAT")
+        # Access the value of temp from the model using solver.model()
+        print("Value of temp in SAT model:", solver.model()[temp55])
+        raise Exception()
+    else:
+        print("UNSAT")
+        if solver.reason_unknown() == "timeout":
+            print("Timeout")
+        else:
+            print("Unsatisfiable core:", solver.unsat_core())
+        
+
+
+    print(solver)
+
     if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])):
         debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
         return Γ, Ψ + (statement["IDENTIFIER"], expr)
@@ -323,15 +381,19 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
     # Binding Base Types and `return` function type.
     Ψ = context_create('Ψ')
-    Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
+    σ = Real('σ')
+    Γ = Γ + ("Integer", type_create_singular(lambda: z3.And(σ > -2147483648, σ < 2147483648))) 
     Γ = Γ + ("return", type_create_function([get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint], get_type_from_context(Γ, function["RETURN_TYPE"]).logic.constraint))
     
     for index, input in enumerate(function["INPUTS"]):
+        print(function["ARGUMENTS"][index], " :: ",input)
         Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
         Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
+    print(Γ)
 
     index = 0
     while index < len(function["BODY"]):
+        
         statement = function["BODY"][index]
         print("Validating Statement of type: " + statement["TYPE"])
 
@@ -377,13 +439,16 @@ def process_function_declarations(ast: dict[str:any], context: _context) -> _con
 # Function to type check an AST
 def typecheck_ast(ast: dict[str:any]):
     Γ = context_create('Γ')
-    Γ = Γ + ("Integer", type_create_singular(lambda: True)) 
-    Γ = Γ + ("Numerical", type_create_singular(lambda: True)) 
+    σ = z3.Real('σ')
+    Γ = Γ + ("Integer", type_create_singular(lambda: z3.And(σ > -2147483648, σ < 2147483648)))
+    Γ = Γ + ("Numerical", type_create_singular(lambda: z3.And(σ > -2147483648, σ < 2147483648)))
 
     Γ = process_type_declarations(ast, Γ)
+    print(Γ)
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
+
         print("Typechecking", function["IDENTIFIER"])
         try:
             typecheck_function(function, duplicate_context(Γ))

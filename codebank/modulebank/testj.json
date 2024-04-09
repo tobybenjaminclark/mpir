@@ -2,22 +2,22 @@
 	"CONTENTS" : [
 		{
 			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "createBalance",
-			"RETURN_TYPE" : "Balance",
-			"RETURN_TYPE_LIST" : 1.000000,
+			"IDENTIFIER" : "CreateEven",
+			"RETURN_TYPE" : "Ten",
+			"RETURN_TYPE_LIST" : 0.000000,
 			"BODY" : [
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
 					"IDENTIFIER" : "new_bal",
-					"ASSIGNED_TYPE" : "Balance",
+					"ASSIGNED_TYPE" : "Ten",
 					"LINE" : 4.000000
 				},
 				{
 					"TYPE" : "VALUE_ASSIGNMENT",
 					"IDENTIFIER" : "new_bal",
 					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : -1.000000
+						"TYPE" : "EXPRESSION_IDENTIFIER",
+						"IDENTIFIER" : "bal"
 					},
 					"LINE" : 5.000000
 				},
@@ -31,18 +31,21 @@
 							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "new_bal"
+								"IDENTIFIER" : "bal"
 							}
 						}
 					]
 				}
 			],
 			"DOCSECTION" : [
-				
+				{
+					"FLAG" : "doc",
+					"STRING" : "Checks if a Number is even."
+				}
 			],
 			"INPUTS" : [
 				{
-					"TYPE" : "Numerical",
+					"TYPE" : "Ten",
 					"LIST_INDENTATION" : 0.000000
 				}
 			],
@@ -52,28 +55,63 @@
 		},
 		{
 			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Balance",
+			"IDENTIFIER" : "Hundred",
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Stores financial balance greater than 0"
+					"STRING" : "Int Number"
 				}
 			],
 			"INPUTS" : [
 				"a"
 			],
-			"BASE_TYPE" : "Integer",
+			"BASE_TYPE" : "Numerical",
 			"BASE_TYPE_LIST" : 0.000000,
 			"LOGIC" : {
-				"DATATYPE" : "OPERATOR",
-				"DATA" : "≤",
+				"TYPE" : "EXPRESSION_OPERATOR",
+				"IDENTIFIER" : "<",
 				"LEFT" : {
-					"DATATYPE" : "NUMERICAL_LITERAL",
-					"DATA" : 0.000000
+					"TYPE" : "EXPRESSION_IDENTIFIER",
+					"IDENTIFIER" : "a"
 				},
 				"RIGHT" : {
-					"DATATYPE" : "IDENTIFIER",
-					"DATA" : "a"
+					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+					"VALUE" : 100.000000
+				}
+			}
+		},
+		{
+			"TYPE" : "TYPE_DECLARATION",
+			"IDENTIFIER" : "Ten",
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Int Number"
+				}
+			],
+			"INPUTS" : [
+				"a"
+			],
+			"BASE_TYPE" : "Numerical",
+			"BASE_TYPE_LIST" : 0.000000,
+			"LOGIC" : {
+				"TYPE" : "EXPRESSION_OPERATOR",
+				"IDENTIFIER" : "==",
+				"LEFT" : {
+					"TYPE" : "EXPRESSION_OPERATOR",
+					"IDENTIFIER" : "*",
+					"LEFT" : {
+						"TYPE" : "EXPRESSION_IDENTIFIER",
+						"IDENTIFIER" : "a"
+					},
+					"RIGHT" : {
+						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+						"VALUE" : 10.000000
+					}
+				},
+				"RIGHT" : {
+					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+					"VALUE" : 100.000000
 				}
 			}
 		}
