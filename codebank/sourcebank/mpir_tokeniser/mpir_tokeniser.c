@@ -378,7 +378,7 @@ int mpir_tokenise_negation(mpir_lexer* lexer)
 int mpir_tokenise_operators(mpir_lexer* lexer)
 {
     /* Guard Clause to reject if the next character is not a negation. */
-    if (mpir_wchar_in_list(lexer->peek(lexer), L"+/*-^∃∀")) NULL;
+    if (mpir_wchar_in_list(lexer->peek(lexer), L"+/*-^∃∀%")) NULL;
     else return 0;
 
     if(mpir_lexer_tryconsume(lexer, L'∃')) return mpir_tokenise_process_buffer(lexer, quantifier_existential);
@@ -389,6 +389,9 @@ int mpir_tokenise_operators(mpir_lexer* lexer)
         case(L'+'):
             (void) mpir_lexer_tryconsume(lexer, '+');
             return mpir_tokenise_process_buffer(lexer, operator_sum);
+        case(L'%'):
+            (void) mpir_lexer_tryconsume(lexer, '%');
+            return mpir_tokenise_process_buffer(lexer, operator_mod);
         case(L'-'):
             (void) mpir_lexer_tryconsume(lexer, '-');
             return mpir_tokenise_process_buffer(lexer, operator_subtract);

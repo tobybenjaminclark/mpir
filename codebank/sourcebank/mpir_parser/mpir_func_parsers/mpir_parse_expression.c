@@ -37,6 +37,7 @@ int mpir_get_op_presedence(mpir_token_type operator)
     switch (operator) {
         case operator_sum:
         case operator_subtract:
+        case operator_mod:
             return 1;
         case operator_multiply:
         case operator_divide:
@@ -216,7 +217,7 @@ struct mpir_ast_expression* mpir_parse_expression(mpir_parser* psr, mpir_token_t
             return root;
         }
         else if (psr->peek(psr)->type == operator_sum || psr->peek(psr)->type == operator_subtract || psr->peek(psr)->type == operator_gt ||
-        psr->peek(psr)->type == operator_gteq || psr->peek(psr)->type == operator_lt || psr->peek(psr)->type == operator_lteq )
+        psr->peek(psr)->type == operator_gteq || psr->peek(psr)->type == operator_lt || psr->peek(psr)->type == operator_lteq || psr->peek(psr)->type == operator_mod)
         {
             wprintf(L"EXPR: Parsing Right-Associative Operator (%ls)\n", psr->peek(psr)->lexeme);
             wchar_t op_lexeme[128];

@@ -34,7 +34,7 @@ def debug(*args, sep: str | None = " ", end: str | None = "\n", flush: Literal[F
 def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
-        ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right,
+        ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right, "%": lambda: left % right,
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left),
@@ -47,10 +47,10 @@ def convert_operator_to_z3(operator: str, left, right):
 
 
 # Converts an expression to Z3 logic.
-def form_expression(type_logic: dict):
+def form_expression(type_logic: dict, symbol:chr = 'σ'):
     match type_logic["DATATYPE"]:
-        case "OPERATOR":            return convert_operator_to_z3(type_logic["DATA"], form_expression(type_logic["LEFT"]), form_expression(type_logic["RIGHT"]))
-        case "IDENTIFIER":          return z3.Real('σ')
+        case "OPERATOR":            return convert_operator_to_z3(type_logic["DATA"], form_expression(type_logic["LEFT"], symbol), form_expression(type_logic["RIGHT"], symbol))
+        case "IDENTIFIER":          return z3.Real(symbol)
         case "NUMERICAL_LITERAL":   return z3.RealVal(type_logic["DATA"]) 
         case _:                     return None
 
@@ -99,7 +99,7 @@ def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
 # Function to process type declarations and add them to the typing context (Γ).
 def process_type_declarations(ast: dict[str:any], Γ: _context) -> dict[str:_type]:
     types = {node["IDENTIFIER"]: node["LOGIC"] for node in filter(lambda node: node["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])}
-    for k, v in types.items(): Γ = Γ + (k, type_create_singular(lambda val = v: form_expression(val)))
+    for k, v in types.items(): Γ = Γ + (k, type_create_singular(lambda val = v: form_expression(val, 'σ')))
     return Γ
 
 
@@ -299,7 +299,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
 def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _context):
 
     print(if_statement["EXPRESSION"])
-    expr = form_expression(if_statement["EXPRESSION"])
+    expr = form_expression(if_statement["EXPRESSION"], 'σ')
     
     index = 0
     while index < len(if_statement["MATCH_COMMANDS"]):
