@@ -131,12 +131,13 @@ def is_subtype_function(subtype: _type, basetype: _type, type_variable: z3.Real 
     return not (len(filter(lambda v: v == False or v == TypeError, inputs)) > 0)
 
 # Function to check if one list type definition is a subtype of another list type definition.
-def is_subtype_list(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
+def is_subtype_list(subtype: "_type", basetype: "_type", type_variable: z3.Real = Real('σ')) -> bool  |TypeError:
     if not is_subtype(subtype.logic.element_type, basetype.logic.element_type): return False
     implication_solver = z3.Solver()
     length_variable: z3.Real = Real('ρ')
     implication_solver.add(z3.ForAll(length_variable, z3.Implies(subtype.logic.length_constraint(), basetype.logic.length_constraint())))
     if implication_solver.check() != z3.sat: return False
+    implication_solver.reset()
     implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype.logic.list_constraint(), basetype.logic.list_constraint())))
     return implication_solver.check() == z3.sat
 

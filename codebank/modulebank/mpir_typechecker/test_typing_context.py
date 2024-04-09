@@ -101,6 +101,7 @@ def test_list_type_intersect():
     τl1 = type_create_list(τe, lambda: ρ > 5, lambda: True)
     τl2 = type_create_list(τe, lambda: ρ > 3, lambda: True)
     assert is_intersecting(τl1, τl2) == True
+    assert is_intersecting(τl2, τl1) == True
 
 # Function to test the intersect override `/` of 2 types
 def test_variable_type_intersect_override():
@@ -120,6 +121,14 @@ def test_variable_type_subtype():
     assert is_subtype(τ2, τ1) == True
     assert is_subtype(τ1, τ2) == False
 
+# Function to test the subtype relationship between 2 list types.
+def test_list_type_subtype():
+    σ, ρ = Real('σ'), Real('ρ')
+    τe = type_create_singular(lambda: z3.And(σ > 10, σ < 20))
+    τl1 = type_create_list(τe, lambda: ρ > 15, lambda: True)
+    τl2 = type_create_list(τe, lambda: ρ > 10, lambda: True)
+    assert is_subtype(τl1, τl2) == True
+    assert is_subtype(τl2, τl1) == False
 
 # Function to test the subtype relationship override `<` between 2 types
 def test_variable_type_subtype_override():
@@ -128,5 +137,5 @@ def test_variable_type_subtype_override():
     τ2 = type_create_singular(lambda: z3.And(σ > 10, σ < 15))
     assert (τ2 < τ1) == True
     assert (τ1 < τ2) == False
-    
-test_list_type_intersect()
+
+test_list_type_subtype()
