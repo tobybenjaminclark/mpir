@@ -56,7 +56,12 @@ bool parse_function_declaration(mpir_parser* psr)
 
     /* Parse expression identifier */
     if(psr->peek(psr)->type == IDENTIFIER) node->identifier = parse_identifier(psr);
-    else return false;
+    else
+    {
+        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected Function Identifier, but got %s!\n", token_names[psr->peek(psr)->type]);
+        exit(1);
+    }
     if(node->identifier == NULL) return false;
 
     /* Parse I/O shield operator `::` */
@@ -81,8 +86,7 @@ bool parse_function_declaration(mpir_parser* psr)
     /* Parse Arrow */
     if(!(psr->tryget(psr, operator_arrow)))
     {
-        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
-        fprintf(stderr, "       Expected ->, but got %s!\n", token_names[psr->peek(psr)->type]);
+        mpir_error( "Cannot parse function header on line %d. \n\t\t Expected ->, but got %s.", psr->peek(psr)->line_index, token_names[psr->peek(psr)->type]);
         exit(1);
     }
 
@@ -90,8 +94,8 @@ bool parse_function_declaration(mpir_parser* psr)
     if(psr->peek(psr)->type == IDENTIFIER) node->return_type = parse_returntype(psr);
     else
     {
-        fprintf(stderr, "Error: Cannot parse function header on line %d.\n", psr->peek(psr)->line_index);
-        fprintf(stderr, "       Expected Identifier after ->, but got %s!\n", token_names[psr->peek(psr)->type]);
+        fprintf(stderr, "Error: Cannot parse function header on line %d.", psr->peek(psr)->line_index);
+        fprintf(stderr, "       Expected Identifier after ->, but got %s!", token_names[psr->peek(psr)->type]);
         exit(1);
     }
 

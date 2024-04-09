@@ -4,15 +4,17 @@ from enum import Enum
 from z3 import *
 
 # Defining Named Tuples to represent singular types, function types and typing contexts.
-type_variants  = Enum('type_variants', ['_function', '_variable'])
+type_variants  = Enum('type_variants', ['_function', '_variable', '_list'])
 _singular_type = NamedTuple("_singular_type", constraint = z3.Bool)
 _function_type = NamedTuple("_function_type", input_constraints = list[z3.Bool], output_constraint = z3.Bool)
-_type          = NamedTuple("_type"         , type = type_variants, logic = _singular_type | _function_type)
+_list_type     = NamedTuple("_list_type"    , element_type = "_type", length_constraint = z3.Bool, list_constraint = z3.Bool)
+_type          = NamedTuple("_type"         , type = type_variants, logic = _singular_type | _function_type | _list_type)
 _context       = NamedTuple("_context"      , identifier = str, bindings = dict[str: _type])
 
 # Defining a function to show a command line representation of the current typing context.
 _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n".join([
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint()}" if isinstance(v.logic, _singular_type) else
+    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: ∀σ|{v.logic.element_constraint()}, P(|L|) = {v.logic.length_constraint}, θ = {v.logic.list_constraint}" if isinstance(v.logic, _list_type) else
     f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {', '.join(map(lambda x: str(x()), v.logic.input_constraints))} → {v.logic.output_constraint()}" for k, v in self.bindings.items()])
 
 # Override the `in`, `add` and `subtract` methods/operators
@@ -36,6 +38,10 @@ def type_create_singular(constraint: z3.Bool) -> _type:
 # Function to create a function type instance (τ1 x ... x τn → τ0)
 def type_create_function(input_constraints: list[z3.Bool], output_constraint: z3.Bool) -> _type:
     return _type(type_variants._function, _function_type(input_constraints, output_constraint))
+
+# Function to create a list type instance (τ0 x ... x τn) ^ P(n) ^ P(τ0 x ... x τn)
+def type_create_list(element_type: _type, length_constraint: z3.Bool, list_constraint: z3.Bool) -> _type:
+    return _type(type_variants._list, _list_type(element_type, length_constraint, list_constraint))
 
 # Creates a context (binding of identifiers to types)
 def context_create(identifier: str = 'Γ') -> _context:

@@ -19,27 +19,21 @@
  */
 void display_message(FILE* stream, const char* prefix, const char* format, va_list args)
 {
-    /* Declaring a lexeme to store the displayed message within. After this, the message is
-     * formatted within the lexeme, and checked to ensure no lexeme overflow.
-     */
     char buffer[4096];
-    if (sprintf(buffer, format, args) >= 0)
+    int result = vsprintf(buffer, format, args); // Using vsprintf instead of sprintf
+    if (result >= 0)
     {
-        /* Print the formatted message to the output stream with the specified prefix
-         * Check if fprintf was successful, if not, print an error message to stderr
-         */
         if (fprintf(stream, "%s%s\n", prefix, buffer) < 0)
         {
-            /* Display an error message indicating a lexeme overflow. */
             fprintf(stderr, MESSAGE_BUFFER_OVERFLOW);
         }
     }
     else
     {
-        /* Display an error message indicating a message formatting failure. */
         fprintf(stderr, MESSAGE_FORMATTING_FAILURE);
     }
 }
+
 
 /** @brief Prints an informational message to the standard output stream.
  *

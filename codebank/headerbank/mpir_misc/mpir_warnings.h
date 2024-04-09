@@ -12,16 +12,16 @@
 #include <stdlib.h>
 
 /** @brief Prefix for warning messages in MPIR_Compiler. */
-#define WARNING_PREFIX "MPIR_Compiler -> Warning :: "
+#define WARNING_PREFIX "Warn  :: "
 
 /** @brief Prefix for error messages in MPIR_Compiler. */
-#define ERROR_PREFIX "MPIR_Compiler -> Error   :: "
+#define ERROR_PREFIX "Error :: "
 
 /** @brief Prefix for fatal error messages in MPIR_Compiler. */
-#define FATAL_PREFIX "MPIR_Compiler -> Fatal   :: "
+#define FATAL_PREFIX "Fatal :: "
 
 /** @brief Prefix for informational messages in MPIR_Compiler. */
-#define INFO_PREFIX "MPIR_Compiler -> Info    :: "
+#define INFO_PREFIX "Info  :: "
 
 /** @brief Error message displayed when the message size exceeds the allocated lexeme size.
  *

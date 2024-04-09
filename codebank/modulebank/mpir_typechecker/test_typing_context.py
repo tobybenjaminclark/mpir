@@ -20,6 +20,15 @@ def test_type_function():
     assert τ.type == type_variants._function
 
 
+# Function to test a list type definition
+def test_list_type():
+    τe = type_create_singular(True)
+    τl = type_create_list(τe, True, True)
+    assert τl.logic.element_type == τe
+    assert τl.logic.length_constraint == True
+    assert τl.logic.list_constraint == True
+
+
 # Function to test adding to a Typing Context and fetching using container, `in`.
 def test_typing_context_container():
     Γ = context_create()
