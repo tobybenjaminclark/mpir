@@ -12,10 +12,16 @@ _type          = NamedTuple("_type"         , type = type_variants, logic = _sin
 _context       = NamedTuple("_context"      , identifier = str, bindings = dict[str: _type])
 
 # Defining a function to show a command line representation of the current typing context.
+
+_singular_type.__repr__ = lambda self: f"σ | {self.constraint()}"
+_function_type.__repr__ = lambda self: f"[{', '.join(str(c()) for c in self.input_constraints)}] -> {self.output_constraint()}"
+_list_type.__repr__ = lambda self: f"∀σ | {self.element_type.logic.__repr__()}, P(|L|) = {self.length_constraint()}, θ = {self.list_constraint()}"
+
 _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n".join([
-    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.constraint()}" if isinstance(v.logic, _singular_type) else
-    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: ∀σ|{v.logic.element_constraint()}, P(|L|) = {v.logic.length_constraint}, θ = {v.logic.list_constraint}" if isinstance(v.logic, _list_type) else
-    f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {', '.join(map(lambda x: str(x()), v.logic.input_constraints))} → {v.logic.output_constraint()}" for k, v in self.bindings.items()])
+        f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.__repr__()}" if isinstance(v.logic, _singular_type) else
+        f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.__repr__()}" if isinstance(v.logic, _list_type) else
+        f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.__repr__()}" for k, v in self.bindings.items()
+        ])
 
 # Override the `in`, `add` and `subtract` methods/operators
 _context.__contains__ = lambda self, item: item in self.bindings
@@ -40,8 +46,8 @@ def type_create_function(input_constraints: list[z3.Bool], output_constraint: z3
     return _type(type_variants._function, _function_type(input_constraints, output_constraint))
 
 # Function to create a list type instance (τ0 x ... x τn) ^ P(n) ^ P(τ0 x ... x τn)
-def type_create_list(element_type: _type, length_constraint: z3.Bool, list_constraint: z3.Bool) -> _type:
-    return _type(type_variants._list, _list_type(element_type, length_constraint, list_constraint))
+def type_create_list(element_constraint: z3.Bool, length_constraint: z3.Bool, list_constraint: z3.Bool) -> _type:
+    return _type(type_variants._list, _list_type(element_constraint, length_constraint, list_constraint))
 
 # Creates a context (binding of identifiers to types)
 def context_create(identifier: str = 'Γ') -> _context:
@@ -49,7 +55,7 @@ def context_create(identifier: str = 'Γ') -> _context:
 
 # Binds a type within a typing context to an identifier
 def add_type_to_context(context: _context, identifier: str, type_value: _type) -> _context:
-    if type_value.type in {type_variants._variable, type_variants._function}:
+    if type_value.type in {type_variants._variable, type_variants._function, type_variants._list}:
         new_bindings = {**context.bindings, identifier: type_value}
         return _context(context.identifier, new_bindings)
     else: return _context(context.identifier, context.bindings)

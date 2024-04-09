@@ -22,11 +22,17 @@ def test_type_function():
 
 # Function to test a list type definition
 def test_list_type():
-    τe = type_create_singular(True)
-    τl = type_create_list(τe, True, True)
+    τe = type_create_singular(lambda: True)
+    τl = type_create_list(τe, lambda: True, lambda: True)
     assert τl.logic.element_type == τe
-    assert τl.logic.length_constraint == True
-    assert τl.logic.list_constraint == True
+    assert τl.logic.length_constraint() == True
+    assert τl.logic.list_constraint() == True
+
+    Γ = context_create()
+    Γ = add_type_to_context(Γ, "τ1", τl)
+    Γ = add_type_to_context(Γ, "τ2", τe)
+    print(Γ.bindings)
+    print(Γ)
 
 
 # Function to test adding to a Typing Context and fetching using container, `in`.
@@ -122,3 +128,4 @@ def test_variable_type_subtype_override():
     assert (τ2 < τ1) == True
     assert (τ1 < τ2) == False
     
+test_list_type()
