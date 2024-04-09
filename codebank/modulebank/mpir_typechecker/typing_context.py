@@ -11,12 +11,12 @@ _list_type     = NamedTuple("_list_type"    , element_type = "_type", length_con
 _type          = NamedTuple("_type"         , type = type_variants, logic = _singular_type | _function_type | _list_type)
 _context       = NamedTuple("_context"      , identifier = str, bindings = dict[str: _type])
 
-# Defining a function to show a command line representation of the current typing context.
-
+# Define CLI Representation Fuctions forall of Function Type, List Type and Singular Type.
 _singular_type.__repr__ = lambda self: f"σ | {self.constraint()}"
 _function_type.__repr__ = lambda self: f"[{', '.join(str(c()) for c in self.input_constraints)}] -> {self.output_constraint()}"
 _list_type.__repr__ = lambda self: f"∀σ | {self.element_type.logic.__repr__()}, P(|L|) = {self.length_constraint()}, θ = {self.list_constraint()}"
 
+# Defining a function to show a command line representation of the current typing context.
 _context.__repr__ = lambda self: f"Typing Context '{self.identifier}' :\n" + "\n".join([
         f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.__repr__()}" if isinstance(v.logic, _singular_type) else
         f" · {k:<{max(len(k) for k in self.bindings.keys())}} :: {v.logic.__repr__()}" if isinstance(v.logic, _list_type) else
@@ -80,7 +80,7 @@ def duplicate_context(original_context: _context) -> _context:
 def is_intersecting_singular(subtype: _type, basetype: _type) -> bool | TypeError:
     if subtype.type != basetype.type or subtype.type != type_variants._variable: return TypeError
     type_solver = z3.Solver()
-    type_solver.add(And(subtype.logic.constraint, basetype.logic.constraint))
+    type_solver.add(And(subtype.logic.constraint(), basetype.logic.constraint()))
     return type_solver.check() == z3.sat   
 
 # Function to check if a function type intersects with another function type.
@@ -92,11 +92,25 @@ def is_intersecting_function(subtype: _type, basetype: _type) -> bool | TypeErro
     if len(filter(lambda v: v == True, input_mapping)) == 0 or output == False: return False
     else: return True
 
+# Function to check if one list type definition is a subtype of another list type definition.
+def is_intersecting_list(subtype: "_type", basetype: "_type", type_variable: z3.Real = Real('σ')) -> bool|TypeError:
+    if not is_intersecting(subtype.logic.element_type, basetype.logic.element_type): return False
+    implication_solver = z3.Solver()
+    implication_solver.add(z3.And(subtype.logic.length_constraint(), basetype.logic.length_constraint()))
+    if implication_solver.check() != z3.sat: return False
+    implication_solver.reset()
+    implication_solver.add(z3.And(subtype.logic.list_constraint(), basetype.logic.list_constraint()))
+    if implication_solver.check() != z3.sat: return False
+    return True
+
+
 # Function to check if a type intersects with another type.
 def is_intersecting(subtype: _type, basetype: _type) -> bool | TypeError:
     if subtype.type != basetype.type: return TypeError
     if subtype.type == type_variants._function: return is_intersecting_function(subtype, basetype)
     if subtype.type == type_variants._variable: return is_intersecting_singular(subtype, basetype)
+    if subtype.type == type_variants._list: return is_intersecting_list(subtype, basetype)
+
 
 
 
@@ -116,11 +130,22 @@ def is_subtype_function(subtype: _type, basetype: _type, type_variable: z3.Real 
     inputs = [is_subtype(basetype.logic.input_constriants[index], subtype.logic.input_constriants[index]) for index in range(0, len(subtype.logic.input_constraints))]
     return not (len(filter(lambda v: v == False or v == TypeError, inputs)) > 0)
 
+# Function to check if one list type definition is a subtype of another list type definition.
+def is_subtype_list(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> bool | TypeError:
+    if not is_subtype(subtype.logic.element_type, basetype.logic.element_type): return False
+    implication_solver = z3.Solver()
+    length_variable: z3.Real = Real('ρ')
+    implication_solver.add(z3.ForAll(length_variable, z3.Implies(subtype.logic.length_constraint(), basetype.logic.length_constraint())))
+    if implication_solver.check() != z3.sat: return False
+    implication_solver.add(z3.ForAll(type_variable, z3.Implies(subtype.logic.list_constraint(), basetype.logic.list_constraint())))
+    return implication_solver.check() == z3.sat
+
 # Check if one type definition is a subtype of another type definition.
 def is_subtype(subtype: _type, basetype: _type, type_variable: z3.Real = Real('σ')) -> True | False:  
     if subtype.type != basetype.type: return TypeError
     if subtype.type == type_variants._function: return is_subtype_function(subtype, basetype, type_variable)
     if subtype.type == type_variants._variable: return is_subtype_variable(subtype, basetype, type_variable)
+    if subtype.type == type_variants._list: return is_subtype_list(subtype, basetype, type_variable)
 
 
 

@@ -28,12 +28,6 @@ def test_list_type():
     assert τl.logic.length_constraint() == True
     assert τl.logic.list_constraint() == True
 
-    Γ = context_create()
-    Γ = add_type_to_context(Γ, "τ1", τl)
-    Γ = add_type_to_context(Γ, "τ2", τe)
-    print(Γ.bindings)
-    print(Γ)
-
 
 # Function to test adding to a Typing Context and fetching using container, `in`.
 def test_typing_context_container():
@@ -94,19 +88,26 @@ def test_typing_types():
 # Function to test the intersect of 2 types
 def test_variable_type_intersect():
     σ = Real('σ')
-    τ1 = type_create_singular(σ > 10)
-    τ2 = type_create_singular(σ > 15)
-    τ3 = type_create_singular(σ < 9)
+    τ1 = type_create_singular(lambda: σ > 10)
+    τ2 = type_create_singular(lambda: σ > 15)
+    τ3 = type_create_singular(lambda: σ < 9)
     assert is_intersecting(τ1, τ2) == True
     assert is_intersecting(τ1, τ3) == False
 
+# Function to test the intersection of 2 list types.
+def test_list_type_intersect():
+    σ, ρ = Real('σ'), Real('ρ')
+    τe = type_create_singular(lambda: z3.And(σ > 10, σ < 20))
+    τl1 = type_create_list(τe, lambda: ρ > 5, lambda: True)
+    τl2 = type_create_list(τe, lambda: ρ > 3, lambda: True)
+    assert is_intersecting(τl1, τl2) == True
 
 # Function to test the intersect override `/` of 2 types
 def test_variable_type_intersect_override():
     σ = Real('σ')
-    τ1 = type_create_singular(σ > 10)
-    τ2 = type_create_singular(σ > 15)
-    τ3 = type_create_singular(σ < 9)
+    τ1 = type_create_singular(lambda: σ > 10)
+    τ2 = type_create_singular(lambda: σ > 15)
+    τ3 = type_create_singular(lambda: σ < 9)
     assert (τ1 & τ2) == True
     assert (τ1 & τ3) == False
 
@@ -128,4 +129,4 @@ def test_variable_type_subtype_override():
     assert (τ2 < τ1) == True
     assert (τ1 < τ2) == False
     
-test_list_type()
+test_list_type_intersect()
