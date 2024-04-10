@@ -3,72 +3,31 @@
 		{
 			"TYPE" : "FUNCTION_DECLARATION",
 			"IDENTIFIER" : "CreateEven",
-			"RETURN_TYPE" : "Ten",
+			"RETURN_TYPE" : "Hundred",
 			"RETURN_TYPE_LIST" : 0.000000,
 			"BODY" : [
 				{
 					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "new_bal",
-					"ASSIGNED_TYPE" : "Ten",
+					"IDENTIFIER" : "returned_value",
+					"ASSIGNED_TYPE" : "Hundred",
 					"LINE" : 4.000000
 				},
 				{
 					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "new_bal",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_IDENTIFIER",
-						"IDENTIFIER" : "bal"
-					},
-					"LINE" : 5.000000
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "new_bal",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : "*",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "new_bal"
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "new_bal"
-						}
-					},
-					"LINE" : 6.000000
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "new_bal",
+					"IDENTIFIER" : "returned_value",
 					"EXPRESSION" : {
 						"TYPE" : "EXPRESSION_OPERATOR",
 						"IDENTIFIER" : "/",
 						"LEFT" : {
 							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "new_bal"
+							"IDENTIFIER" : "a"
 						},
 						"RIGHT" : {
 							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
 							"VALUE" : 2.000000
 						}
 					},
-					"LINE" : 7.000000
-				},
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"LINE" : 8.000000,
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "new_bal"
-							}
-						}
-					]
+					"LINE" : 5.000000
 				}
 			],
 			"DOCSECTION" : [
@@ -79,12 +38,12 @@
 			],
 			"INPUTS" : [
 				{
-					"TYPE" : "Hundred",
+					"TYPE" : "Thousand",
 					"LIST_INDENTATION" : 0.000000
 				}
 			],
 			"ARGUMENTS" : [
-				"bal"
+				"a"
 			]
 		},
 		{
@@ -110,13 +69,13 @@
 				},
 				"RIGHT" : {
 					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-					"VALUE" : 10.000000
+					"VALUE" : 100.000000
 				}
 			}
 		},
 		{
 			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Ten",
+			"IDENTIFIER" : "Thousand",
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
@@ -137,7 +96,7 @@
 				},
 				"RIGHT" : {
 					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-					"VALUE" : 100.000000
+					"VALUE" : 1000.000000
 				}
 			}
 		}

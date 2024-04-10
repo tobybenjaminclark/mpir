@@ -150,20 +150,23 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         print(traceback.format_exc())
         raise Exception()
 
-    iden5 = Real(statement["IDENTIFIER"])
+    temp22 = Real("temp22")
     typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
-    solver.add(iden5 == expr)
+    solver.add(temp22 == expr)
     
     e_typ = get_type_from_context(Ψ, statement["IDENTIFIER"])
     remove_type_from_context(Ψ, statement["IDENTIFIER"])
     Ψ = Ψ + (statement["IDENTIFIER"], type_create_singular(lambda: z3.And(sigma == expr, e_typ.logic.constraint())))
 
-    constr = substitute(typ.logic.constraint(), (sigma, iden5))
+    constr = substitute(typ.logic.constraint(), (sigma, temp22))
 
     solver.add(z3.Not(constr))
-
+    
+    print(solver)
     if solver.check() == z3.sat:
         print("SAT")
+        model = solver.model()
+        print(model)
         raise Exception()
     else:
         print("UNSAT")

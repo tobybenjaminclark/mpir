@@ -2,13 +2,10 @@
 
 Hundred = type('Hundred', (), {})
 
-Ten = type('Ten', (), {})
+Thousand = type('Thousand', (), {})
 
-def CreateEven() -> Ten:
-	new_bal: Ten
-	new_bal = bal
-	new_balI = new_bal * new_bal
-	new_balII = new_balI / 2.0
-	return(new_balII)
+def CreateEven() -> Hundred:
+	returned_value: Hundred
+	returned_value = a / 90.0
 
 
