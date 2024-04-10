@@ -415,9 +415,10 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             else:
                 # Convert to SSA
                 old_name = statement["IDENTIFIER"]
-                new_name = statement["IDENTIFIER"] + "_I"
+                new_name = statement["IDENTIFIER"] + "I"
                 while new_name in assigned_variables:
-                    new_name += "I"
+                    new_name = new_name + "I"
+                assigned_variables.append(new_name)
 
                 index2 = index + 1
                 print("Substituting all values of ", statement["IDENTIFIER"], " with ", new_name)
@@ -428,17 +429,16 @@ def typecheck_function(function: dict[str:any], Γ: _context):
                 except Exception as e:
                     print(e)
                 
-
-                print(Γ)
-                print(Ψ)
-                print(statement["IDENTIFIER"])
-                
                 gamma_t = get_type_from_context(Γ, old_name)
                 psi_t = get_type_from_context(Ψ, old_name)
                 Γ = Γ + (new_name, gamma_t)
                 Ψ = Ψ + (new_name, psi_t)
 
                 Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+
+                print(Γ)
+                print(Ψ)
+                print(statement["IDENTIFIER"])
 
             print(assigned_variables, "\n")
             

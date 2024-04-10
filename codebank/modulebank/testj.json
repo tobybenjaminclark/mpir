@@ -39,9 +39,26 @@
 					"LINE" : 6.000000
 				},
 				{
+					"TYPE" : "VALUE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : "/",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "new_bal"
+						},
+						"RIGHT" : {
+							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+							"VALUE" : 2.000000
+						}
+					},
+					"LINE" : 7.000000
+				},
+				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
-					"LINE" : 7.000000,
+					"LINE" : 8.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
