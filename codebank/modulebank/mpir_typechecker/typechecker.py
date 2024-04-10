@@ -122,7 +122,7 @@ def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.
     elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
         return (lambda: RealVal(float(ast["VALUE"])))()
     elif ast_type == "EXPRESSION_OPERATOR":
-        return convert_operator_to_z3(ast["VALUE"], substitute_expression(ast["LEFT"])(), substitute_expression(ast["RIGHT"])())
+        return convert_operator_to_z3(ast["IDENTIFIER"], substitute_expression(ast["LEFT"], Γ, Ψ), substitute_expression(ast["RIGHT"], Γ, Ψ))
     elif ast_type == "FUNCTION_CALL":
         return type_ast_function_call(ast, Γ, Ψ).logic.constraint()
     else:
@@ -132,20 +132,16 @@ def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.
 
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    print(Γ)
+    print("Typechecking Value Assignment of ", statement["IDENTIFIER"])
     expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     solver = z3.Solver()
     sigma = Real('σ')
     x = 1
     try:
         for iden, typ in Γ:
-            print(iden, typ)
             if isinstance(typ.logic, _function_type): continue
     
             iden_s = Real(iden)
-            print("Sigma: ", sigma)
-            print("Iden_S: ", iden_s)
-            print(typ.logic.constraint)
             expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
             e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
             subsolver = z3.Solver()
@@ -154,33 +150,26 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         print(traceback.format_exc())
         raise Exception()
 
-    temp55 = Real("temp")
+    iden5 = Real(statement["IDENTIFIER"])
     typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
-    solver.add(temp55 == expr)
-    constr = substitute(typ.logic.constraint(), (sigma, temp55))
+    solver.add(iden5 == expr)
+    
+    e_typ = get_type_from_context(Ψ, statement["IDENTIFIER"])
+    remove_type_from_context(Ψ, statement["IDENTIFIER"])
+    Ψ = Ψ + (statement["IDENTIFIER"], type_create_singular(lambda: z3.And(sigma == expr, e_typ.logic.constraint())))
+
+    constr = substitute(typ.logic.constraint(), (sigma, iden5))
+
     solver.add(z3.Not(constr))
-    print("solver: ", solver)
+
     if solver.check() == z3.sat:
         print("SAT")
-        # Access the value of temp from the model using solver.model()
-        print("Value of temp in SAT model:", solver.model()[temp55])
         raise Exception()
     else:
         print("UNSAT")
-        if solver.reason_unknown() == "timeout":
-            print("Timeout")
-        else:
-            print("Unsatisfiable core:", solver.unsat_core())
-        
 
-
-    print(solver)
-
-    if((expr := type_ast_expression(statement["EXPRESSION"], Γ, Ψ)) < get_type_from_context(Γ, statement["IDENTIFIER"])):
-        debug(f"Set ::", statement["IDENTIFIER"], "is valid.")
-        return Γ, Ψ + (statement["IDENTIFIER"], expr)
-    else:
-        raise Exception("Line " + str(round(statement["LINE"])) + " Invalid Set Statement (expression is not a subtype of assigned variable type).")
+    
+    return Γ, Ψ
 
 
 # Function to typecheck a function call.
@@ -422,8 +411,10 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             if statement["IDENTIFIER"] not in assigned_variables:
                 assigned_variables.append(statement["IDENTIFIER"])
                 Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+
             else:
                 # Convert to SSA
+                old_name = statement["IDENTIFIER"]
                 new_name = statement["IDENTIFIER"] + "_I"
                 while new_name in assigned_variables:
                     new_name += "I"
@@ -431,16 +422,24 @@ def typecheck_function(function: dict[str:any], Γ: _context):
                 index2 = index + 1
                 print("Substituting all values of ", statement["IDENTIFIER"], " with ", new_name)
                 try:
-                    function["BODY"] = ast_substitute(function["BODY"][index:], statement["IDENTIFIER"], new_name)
+                    ast_substitute(function["BODY"][index + 1:], statement["IDENTIFIER"], new_name)
+                    function["BODY"][index]["IDENTIFIER"] = new_name
+                    print(json.dumps(function["BODY"], indent = 4))
                 except Exception as e:
                     print(e)
+                
 
-                print(json.dumps(function["BODY"], indent = 2))
+                print(Γ)
+                print(Ψ)
+                print(statement["IDENTIFIER"])
+                
+                gamma_t = get_type_from_context(Γ, old_name)
+                psi_t = get_type_from_context(Ψ, old_name)
+                Γ = Γ + (new_name, gamma_t)
+                Ψ = Ψ + (new_name, psi_t)
 
                 Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
-                Γ = Γ + (new_name, get_type_from_context(Γ, statement["IDENTIFIER"]).logic.constraint())
-                Ψ = Ψ + (new_name, get_type_from_context(Ψ, statement["IDENTIFIER"]).logic.constraint())
-                
+
             print(assigned_variables, "\n")
             
 
@@ -496,11 +495,15 @@ def typecheck_ast(ast: dict[str:any]):
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
 
         print("Typechecking", function["IDENTIFIER"])
-        try:
-            typecheck_function(function, duplicate_context(Γ))
+        typecheck_function(function, duplicate_context(Γ))
+        
+        """
         except Exception as e:
-            g_errors.append(str(e))
+            print(traceback.format_exc())
+            raise Exception()
 
+            g_errors.append(str(e))
+        """
     
 
 
