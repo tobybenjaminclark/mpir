@@ -22,16 +22,33 @@
 					"LINE" : 5.000000
 				},
 				{
+					"TYPE" : "VALUE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : "*",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "new_bal"
+						},
+						"RIGHT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "new_bal"
+						}
+					},
+					"LINE" : 6.000000
+				},
+				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
-					"LINE" : 6.000000,
+					"LINE" : 7.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
 							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "bal"
+								"IDENTIFIER" : "new_bal"
 							}
 						}
 					]
@@ -45,7 +62,7 @@
 			],
 			"INPUTS" : [
 				{
-					"TYPE" : "Ten",
+					"TYPE" : "Hundred",
 					"LIST_INDENTATION" : 0.000000
 				}
 			],
@@ -76,7 +93,7 @@
 				},
 				"RIGHT" : {
 					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-					"VALUE" : 100.000000
+					"VALUE" : 10.000000
 				}
 			}
 		},
@@ -96,18 +113,10 @@
 			"BASE_TYPE_LIST" : 0.000000,
 			"LOGIC" : {
 				"TYPE" : "EXPRESSION_OPERATOR",
-				"IDENTIFIER" : "==",
+				"IDENTIFIER" : "<",
 				"LEFT" : {
-					"TYPE" : "EXPRESSION_OPERATOR",
-					"IDENTIFIER" : "*",
-					"LEFT" : {
-						"TYPE" : "EXPRESSION_IDENTIFIER",
-						"IDENTIFIER" : "a"
-					},
-					"RIGHT" : {
-						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : 10.000000
-					}
+					"TYPE" : "EXPRESSION_IDENTIFIER",
+					"IDENTIFIER" : "a"
 				},
 				"RIGHT" : {
 					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",

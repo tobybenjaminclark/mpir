@@ -141,15 +141,18 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         for iden, typ in Γ:
             print(iden, typ)
             if isinstance(typ.logic, _function_type): continue
+    
             iden_s = Real(iden)
-            try:
-                e2 = z3.And(substitute(typ.logic.constraint(), (sigma, iden_s)), z3.And(iden_s > -2147483648, iden_s < 2147483648))
-                subsolver = z3.Solver()
-                solver.add(e2)
-            except Exception as e:
-                print(traceback.format_exc())
+            print("Sigma: ", sigma)
+            print("Iden_S: ", iden_s)
+            print(typ.logic.constraint)
+            expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
+            e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
+            subsolver = z3.Solver()
+            solver.add(e2)
     except Exception as e:
         print(traceback.format_exc())
+        raise Exception()
 
     temp55 = Real("temp")
     typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
@@ -376,6 +379,19 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
         index = index + 1
     return Γ, Ψ 
 
+# Function to substitute variables in a Function Declaration
+def ast_substitute(d, old_str, new_str) -> list[any]:
+    if isinstance(d, dict):
+        for key, value in d.items():
+            d[key] = ast_substitute(value, old_str, new_str)
+        return d
+    elif isinstance(d, str):
+        return d.replace(old_str, new_str)
+    elif isinstance(d, list):
+        return [ast_substitute(item, old_str, new_str) for item in d]
+    else:
+        return d  # No replacement needed for non-string values
+
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
 
@@ -391,6 +407,8 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
     print(Γ)
 
+    assigned_variables = []
+
     index = 0
     while index < len(function["BODY"]):
         
@@ -398,7 +416,35 @@ def typecheck_function(function: dict[str:any], Γ: _context):
         print("Validating Statement of type: " + statement["TYPE"])
 
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
-        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT":
+            
+            # Append to assigned variables
+            if statement["IDENTIFIER"] not in assigned_variables:
+                assigned_variables.append(statement["IDENTIFIER"])
+                Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+            else:
+                # Convert to SSA
+                new_name = statement["IDENTIFIER"] + "_I"
+                while new_name in assigned_variables:
+                    new_name += "I"
+
+                index2 = index + 1
+                print("Substituting all values of ", statement["IDENTIFIER"], " with ", new_name)
+                try:
+                    function["BODY"] = ast_substitute(function["BODY"][index:], statement["IDENTIFIER"], new_name)
+                except Exception as e:
+                    print(e)
+
+                print(json.dumps(function["BODY"], indent = 2))
+
+                Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+                Γ = Γ + (new_name, get_type_from_context(Γ, statement["IDENTIFIER"]).logic.constraint())
+                Ψ = Ψ + (new_name, get_type_from_context(Ψ, statement["IDENTIFIER"]).logic.constraint())
+                
+            print(assigned_variables, "\n")
+            
+
+            
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
 
