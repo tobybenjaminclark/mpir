@@ -79,8 +79,8 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
 # Function to Type Check a Function Call as part of an expression.
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
     try:
-        typ = T_FuncCall([type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"]], get_type_from_context(context, ast["IDENTIFIER"]))
-        return typ
+        T_FuncCall(ast, context, propagation)
+        return type_create_singular(function.logic.output_constraint)
     except:
         print("Function Call Type Failure")
         print(type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"])
@@ -143,7 +143,6 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
             iden_s = Real(iden)
             expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
             e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
-            subsolver = z3.Solver()
             solver.add(e2)
     except Exception as e:
         print(traceback.format_exc())
@@ -155,13 +154,13 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     
     e_typ = get_type_from_context(Ψ, statement["IDENTIFIER"])
     remove_type_from_context(Ψ, statement["IDENTIFIER"])
+
     Ψ = Ψ + (statement["IDENTIFIER"], type_create_singular(lambda: z3.And(sigma == expr, e_typ.logic.constraint())))
 
-    constr = substitute(typ.logic.constraint(), (sigma, temp22))
+    constr = substitute(typ2.logic.constraint(), (sigma, temp22))
 
     solver.add(z3.Not(constr))
     
-    print(solver)
     if solver.check() == z3.sat:
         print("SAT")
         model = solver.model()
@@ -169,6 +168,9 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         raise Exception()
     else:
         print("UNSAT")
+        remove_type_from_context(Ψ, statement["IDENTIFIER"])
+        test = Real(statement["IDENTIFIER"])
+        Ψ = Ψ + (statement["IDENTIFIER"], type_create_singular(lambda: test == expr))
 
     
     return Γ, Ψ
@@ -177,12 +179,18 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     try:
-        T_FuncCall([type_ast_expression(arg["VALUE"], Γ, Ψ) for arg in statement["ARGUMENTS"]], get_type_from_context(Γ, statement["IDENTIFIER"]))
-        debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
-    except:
-        print("Function Call to", statement["IDENTIFIER"]," :: Parameter Type Failure")
+        solver = z3.Solver()
+
+        arguments = []
         for arg in statement["ARGUMENTS"]:
-            print("\t" + arg["VALUE"]["IDENTIFIER"] + " : " + str(type_ast_expression(arg["VALUE"], Γ, Ψ).logic.constraint()))
+            arguments.append(substitute_expression(arg["VALUE"], Γ, Ψ))
+
+        T_FuncCall(arguments, statement, Γ, Ψ)
+
+        debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
+    except Exception as e:
+        print(e)
+        raise Exception()
 
     return Γ, Ψ 
 
@@ -394,8 +402,9 @@ def typecheck_function(function: dict[str:any], Γ: _context):
     
     for index, input in enumerate(function["INPUTS"]):
         print(function["ARGUMENTS"][index], " :: ",input)
-        Γ = Γ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
-        Ψ = Ψ + (function["ARGUMENTS"][index], get_type_from_context(Γ, input["TYPE"]))
+        test = Real(function["ARGUMENTS"][index])
+        Γ = Γ + (function["ARGUMENTS"][index], type_create_singular(lambda: substitute(get_type_from_context(Γ, input["TYPE"]).logic.constraint(), (σ, test))))
+        Ψ = Ψ + (function["ARGUMENTS"][index], type_create_singular(lambda: substitute(get_type_from_context(Γ, input["TYPE"]).logic.constraint(), (σ, test))))
     print(Γ)
 
     assigned_variables = []

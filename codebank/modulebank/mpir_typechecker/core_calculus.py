@@ -1,6 +1,6 @@
 from z3 import *
 from typing_context import *
-from typing_context import _type, _context
+from typing_context import _type, _context, _function_type
 from functools import wraps
 from bound_check import *
 
@@ -86,11 +86,40 @@ def T_Comp(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 
 # [T-FuncCall] :: Validates a Function Call and provides a return type.
 @inject_variables(base_types)
-def T_FuncCall(inputs: list[_type], function: _type, σ: z3.Real = Real('σ')) -> z3.Bool:
-    if function.type != type_variants._function: raise Exception("[T-FuncCall] :: Function is not of base-type Function.")
-    input_validation = [inputs[index] < (type_create_singular(function.logic.input_constraints[index])) for index in range(0, len(inputs))]
+def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -> z3.Bool:
 
-    if False in input_validation:
-        raise Exception("Passed non-subtype arg. ", input_validation)
-    else:
-        return type_create_singular(function.logic.output_constraint)
+    print("AST :: ", ast, "\n\n")
+    print(ast)
+    
+    func = get_type_from_context(context, ast["IDENTIFIER"])
+    if len(func.logic.input_constraints) != len(arguments): raise TypeError("Invalid number of args!")
+
+    s = z3.Solver()
+    for index, arg in enumerate(arguments):
+        s.reset()
+        # Get propagational contextual info.
+        for iden, typ in propagation:
+            if isinstance(typ.logic, _function_type): continue
+            s.add(typ.logic.constraint())
+        
+        # Add the assertion
+        temp22 = Real('temp22')
+        s.add(temp22 == arg)
+        print(func.logic.input_constraints)
+        print(index)
+        constr = substitute(func.logic.input_constraints[index](), (σ, temp22))
+
+        s.add(z3.Not(constr))
+        
+        print("Solver:")
+        print(s)
+        if s.check() == z3.sat:
+            print("SAT")
+            model = s.model()
+            print(model)
+            raise Exception()
+        else:
+            print("UNSAT")
+            print("valid argument")
+
+    return type_create_singular(func.logic.output_constraint)

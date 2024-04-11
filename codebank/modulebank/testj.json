@@ -24,7 +24,7 @@
 						},
 						"RIGHT" : {
 							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 2.000000
+							"VALUE" : 11.000000
 						}
 					},
 					"LINE" : 5.000000
@@ -38,8 +38,16 @@
 							"TYPE" : "FUNCTION_ARGUMENT",
 							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "returned_value"
+								"TYPE" : "EXPRESSION_OPERATOR",
+								"IDENTIFIER" : "*",
+								"LEFT" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "returned_value"
+								},
+								"RIGHT" : {
+									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+									"VALUE" : 200.000000
+								}
 							}
 						}
 					]
