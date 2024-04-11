@@ -7,6 +7,8 @@ from mpir_module_python import build_python
 from typing import Literal, IO
 import json
 import traceback
+import string
+import random
 
 g_errors = []
 
@@ -79,11 +81,28 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
 # Function to Type Check a Function Call as part of an expression.
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
     try:
-        T_FuncCall(ast, context, propagation)
-        return type_create_singular(function.logic.output_constraint)
-    except:
+        arguments = []
+        for arg in ast["ARGUMENTS"]:
+            context, propagation, a = substitute_expression(arg["VALUE"], context, propagation)
+            arguments.append(a)
+        T_FuncCall(arguments, ast, context, propagation)
+        debug(f"Function Call to", ast["IDENTIFIER"], "is valid.")
+        
+        func_ref = get_type_from_context(context, ast["IDENTIFIER"])
+        letters = string.ascii_letters
+        a = ( ''.join(random.choice(letters) for i in range(10)) )
+        b = Real(a)
+
+        constr = substitute(func_ref.logic.output_constraint(), (σ, b))
+        propagation = propagation + (a, type_create_singular(lambda: constr))
+
+        return context, propagation, b
+
+    except Exception as e:
         print("Function Call Type Failure")
-        print(type_ast_expression(arg["VALUE"], context, propagation) for arg in ast["ARGUMENTS"])
+        print(e)
+        raise Exception()
+
     
 
 # Function to infer the type of an ast expression.
@@ -116,15 +135,22 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
 
 def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.ExprRef:
     ast_type = ast["TYPE"]
+    print("SUBSTITUTE")
+    print(ast)
+    print(ast_type)
+    print("\n")
+    
     if ast_type   == "EXPRESSION_IDENTIFIER":
         iden = Real(ast["IDENTIFIER"])
-        return (lambda: iden)()
+        return Γ, Ψ, (lambda: iden)()
     elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
-        return (lambda: RealVal(float(ast["VALUE"])))()
+        return Γ, Ψ, (lambda: RealVal(float(ast["VALUE"])))()
     elif ast_type == "EXPRESSION_OPERATOR":
-        return convert_operator_to_z3(ast["IDENTIFIER"], substitute_expression(ast["LEFT"], Γ, Ψ), substitute_expression(ast["RIGHT"], Γ, Ψ))
+        Γ, Ψ, left = substitute_expression(ast["LEFT"], Γ, Ψ)
+        Γ, Ψ, right = substitute_expression(ast["RIGHT"], Γ, Ψ)
+        return Γ, Ψ, convert_operator_to_z3(ast["IDENTIFIER"], left, right)
     elif ast_type == "FUNCTION_CALL":
-        return type_ast_function_call(ast, Γ, Ψ).logic.constraint()
+        return type_ast_function_call(ast, Γ, Ψ)
     else:
         print("Error!")
 
@@ -133,7 +159,7 @@ def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.
 # Function to typecheck a value assignment/set statement.
 def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     print("Typechecking Value Assignment of ", statement["IDENTIFIER"])
-    expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
+    Γ, Ψ, expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     solver = z3.Solver()
     sigma = Real('σ')
     try:
@@ -179,14 +205,11 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
     try:
-        solver = z3.Solver()
-
         arguments = []
         for arg in statement["ARGUMENTS"]:
-            arguments.append(substitute_expression(arg["VALUE"], Γ, Ψ))
-
+            Γ, Ψ, a = substitute_expression(arg["VALUE"], Γ, Ψ)
+            arguments.append(a)
         T_FuncCall(arguments, statement, Γ, Ψ)
-
         debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
     except Exception as e:
         print(e)
@@ -478,6 +501,11 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
 def process_function_declarations(ast: dict[str:any], context: _context) -> _context:
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
+        for type_identifier in function["INPUTS"]:
+            a = get_type_from_context(context, type_identifier["TYPE"])
+            if a == None:
+                print("Type doesn't exist :: ", type_identifier)
+
         context = context + (function["IDENTIFIER"], type_create_function([get_type_from_context(context, type_identifier["TYPE"]).logic.constraint for type_identifier in function["INPUTS"]], get_type_from_context(context, function["RETURN_TYPE"]).logic.constraint))
         for doc in function["DOCSECTION"]:
             flags: list[str] = []
