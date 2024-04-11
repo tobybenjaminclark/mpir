@@ -28,6 +28,21 @@
 						}
 					},
 					"LINE" : 5.000000
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 6.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "returned_value"
+							}
+						}
+					]
 				}
 			],
 			"DOCSECTION" : [

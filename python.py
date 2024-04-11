@@ -4,8 +4,8 @@ Hundred = type('Hundred', (), {})
 
 Thousand = type('Thousand', (), {})
 
-def CreateEven() -> Hundred:
+def CreateEven(a: Thousand) -> Hundred:
 	returned_value: Hundred
-	returned_value = a / 90.0
+	returned_value = a / 11.0
 
-
+print(CreateEven(500))

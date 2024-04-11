@@ -136,7 +136,6 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     solver = z3.Solver()
     sigma = Real('σ')
-    x = 1
     try:
         for iden, typ in Γ:
             if isinstance(typ.logic, _function_type): continue
@@ -498,15 +497,13 @@ def typecheck_ast(ast: dict[str:any]):
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
 
         print("Typechecking", function["IDENTIFIER"])
-        typecheck_function(function, duplicate_context(Γ))
-        
-        """
+        try:
+            typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
             print(traceback.format_exc())
             raise Exception()
 
             g_errors.append(str(e))
-        """
     
 
 
