@@ -84,6 +84,7 @@ def build_python(ast: dict[str, any], output_file_path: str):
         for node in filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"]):
             identifier = node["IDENTIFIER"]
             output_file.write(f"{identifier} = type('{identifier}', (), {{}})\n\n")
+        output_file.write("Numerical = type('Numerical', (float, ), {})\n\n")
 
         # build functions
         for node in filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):

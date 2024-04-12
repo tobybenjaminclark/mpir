@@ -8,13 +8,9 @@ def parse_json_file(filename: str) -> dict|None:
     except FileNotFoundError as e: print(f"File '{filename}' not found."); return None
     except json.JSONDecodeError as e: print(f"Error decoding AST in '{filename}': {e}"); return None
 
-
-
 # Function to convert a function call to pseudocode string.
 def convert_function_call(fcall: dict) -> str:
     return fcall["IDENTIFIER"] + "(" + ", ".join([convert_expression(arg["VALUE"]) for arg in fcall["ARGUMENTS"]]) + ")"
-
-
 
 # Function to convert an expression to pseudocode string.
 def convert_expression(expr: dict) -> str:
@@ -25,8 +21,6 @@ def convert_expression(expr: dict) -> str:
         case "EXPRESSION_OPERATOR":             return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
         case "EXPRESSION_STRING_LITERAL":       return expr["IDENTIFIER"]
         case "":                                pass
-
-
 
 # Converts AST examples into an enumerated TeX list.
 def build_examples(node, lines):
@@ -40,8 +34,6 @@ def build_examples(node, lines):
     lines.extend(["\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|" for line in filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"])])
     lines.append("\\end{enumerate}\n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "example", node["DOCSECTION"]))
-
-
 
 # Converts AST general docs to a bulletpoint list.
 def build_general(node, lines):
@@ -158,13 +150,18 @@ def build_type_declarations(ast, lines):
 
 
 # General Build TeX from ast FUNCTION
-def build_tex(ast):
-    # lines = ["\\usepackage{minted}", "\\usepackage{hyperref}"]
+def build_tex(ast, output_file):
+    print(ast)
+    print(f"TEX: Writing to {output_file}")
     lines = []
     build_function_declarations(ast, lines)
     build_type_declarations(ast, lines)
-    return lines
 
+    print(lines)
+    print(len(lines))
+    with open("test.tex", 'w') as output_file:
+        for l in lines:
+            output_file.write(l + "\n")  # Add a newline character at the end of each line
 
 def main():
     print("TeX Module Invoked!")

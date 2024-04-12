@@ -4,6 +4,7 @@ from typing_context import *
 from typing_context import _type, _context, _function_type
 from core_calculus import *
 from mpir_module_python import build_python
+from mpir_module_tex import build_tex
 from typing import Literal, IO
 import json
 import traceback
@@ -563,12 +564,23 @@ def main():
     print("Output file:", output_file)
 
     input_file = "codebank/modulebank/testj.json"
-    output_file = "python.py"
+    output_file = "python.tex"
+
     ast = parse_json_file(input_file)
     typecheck_ast(ast)
 
-    if len(g_errors) == 0: build_python(ast, output_file)
-    else:
+    print(f"Writing to {output_file} {len(g_errors)}")
+    if(output_file.endswith(".py")):
+        if len(g_errors) == 0: build_python(ast, output_file)
+        else:
+            # Open the file for writing
+            with open(output_file, 'w') as file:
+                # Write each element of the array to the file
+                for item in g_errors:
+                    file.write("# " + str(item) + '\n')
+            print("Array contents written to", output_file)
+    elif(output_file.endswith(".tex")):
+        if len(g_errors) == 0: build_tex(ast, output_file)
         # Open the file for writing
         with open(output_file, 'w') as file:
             # Write each element of the array to the file

@@ -94,7 +94,7 @@
 								},
 								"RIGHT" : {
 									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-									"VALUE" : 101.000000
+									"VALUE" : 99.000000
 								}
 							}
 						}

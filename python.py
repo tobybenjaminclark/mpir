@@ -6,6 +6,8 @@ One = type('One', (), {})
 
 Thousand = type('Thousand', (), {})
 
+Numerical = type('Numerical', (float, ), {})
+
 def CreateOne(one: Numerical) -> One:
 	return(1.0)
 
