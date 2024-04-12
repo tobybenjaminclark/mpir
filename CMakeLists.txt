@@ -103,7 +103,18 @@ foreach(SOURCE_FILE ${SOURCE_FILES})
             TARGET mpir POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy
             ${SOURCE_FILE}
-            ${CMAKE_CURRENT_BINARY_DIR}/modulebank/${FILE_NAME}
+            ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/${FILE_NAME}
+    )
+endforeach()
+
+file(GLOB SOURCE_FILES "codebank/modulebank/mpir_typechecker/*")
+foreach(SOURCE_FILE ${SOURCE_FILES})
+    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
+    add_custom_command(
+            TARGET mpir POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy
+            ${SOURCE_FILE}
+            ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/mpir_typechecker/${FILE_NAME}
     )
 endforeach()
 

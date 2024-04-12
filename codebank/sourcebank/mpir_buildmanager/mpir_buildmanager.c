@@ -21,11 +21,12 @@ int mpir_build(char* input_ast, char* output_file, char* config_file)
     int result;
     char command[100];
     if (strcmp(output_file, ".tex")) {
-        const char *pythonScript = "codebank/modulebank/mpir_module_tex.py";
+        const char *pythonScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
 
         // Build the command to run the Python script
-        printf("Invoking Command: python3 %s --i %s --o %s --c %s", pythonScript, input_ast, output_file, config_file);
-        snprintf(command, sizeof(command), "python3 %s %s --o %s --c %s", pythonScript, input_ast, output_file, config_file);
+        const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
+        printf("python3 %s --i %s --o %s --c %s", texScript, input_ast, output_file, config_file);
+        snprintf(command, sizeof(command), "python3 %s --i %s --o %s", texScript, input_ast, output_file);
 
         // Use the system expression to run the command
         result = system(command);
@@ -34,7 +35,7 @@ int mpir_build(char* input_ast, char* output_file, char* config_file)
         if (result == 0) {
             printf("Tex script executed successfully.\n");
         } else {
-            printf("Error executing Tex script.\n");
+            perror("Error executing Tex script");
         }
     }
     else if(strcmp(output_file, ".py"))

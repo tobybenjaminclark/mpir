@@ -2,16 +2,85 @@
 \section{\textsc{Function Declarations}}
 \clearpage
 
-\subsection{createBalance}
-\textbf{\\ Pseudocode for } \texttt{createBalance}
+\subsection{ten\_to\_hundred}
+Takes a One and makes a 100
+
+\textbf{\\ Pseudocode for } \texttt{ten_to_hundred}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-FUNCTION createBalance(bal: Numerical) -> Balance:
-	Balance new_bal;
-	new_bal = -1.0
-	return(new_bal)
+FUNCTION ten_to_hundred(a: One) -> Hundred:
+	return(a * 99.0)
+\end{minted}
+
+\textbf{\\ Example Usage Cases for } \texttt{ten_to_hundred}
+\clearpage
+
+\subsection{one}
+Makes a One
+
+\textbf{\\ Pseudocode for } \texttt{one}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+FUNCTION one(num: Numerical) -> One:
+	return(1.0)
+\end{minted}
+
+\textbf{\\ Example Usage Cases for } \texttt{one}
+
+\section{\textsc{Type Declarations}}
+\clearpage
+
+\subsection{One}
+Is one!
+
+\textbf{\\ Refinement Predicate for } \texttt{One}
+
+$$ a == 1.0 $$
+
+\textbf{\\ Set Notation of } \texttt{One}
+
+$$\sigma \in \{ 1 \}$$ \ \
+\textbf{\\ Example Satisfactory Assignments for } \texttt{One}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as One
+set var as 1
 \end{minted}
 
 
-\section{\textsc{Type Declarations}}
+\textbf{\\ Example Unsatisfactory Assignments for } \texttt{One}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as One
+set var as 2.0
+set var as 3.0
+set var as 4.0
+\end{minted}
 
-\subsection{Balance}
+
+\clearpage
+
+\subsection{Hundred}
+Less than or equal to 100
+
+\textbf{\\ Refinement Predicate for } \texttt{Hundred}
+
+$$ a < 100.0 $$
+
+\textbf{\\ Set Notation of } \texttt{Hundred}
+
+$$\sigma \in \{ -\infty ... 0, -1, -2, -3, -4 ... 99 \}$$ \ \
+\textbf{\\ Example Satisfactory Assignments for } \texttt{Hundred}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as Hundred
+set var as 0
+set var as -1
+set var as -2
+\end{minted}
+
+
+\textbf{\\ Example Unsatisfactory Assignments for } \texttt{Hundred}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as Hundred
+set var as 100.0
+set var as 101.0
+set var as 100.5
+\end{minted}
+
+

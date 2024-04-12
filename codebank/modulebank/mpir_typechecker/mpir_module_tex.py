@@ -4,15 +4,18 @@ import argparse
 import json
 import os
 
+
 # Function to parse a JSON file (ast, in this case.)
 def parse_json_file(filename: str) -> dict|None:
     try: return json.load(open(filename, 'r'))
     except FileNotFoundError as e: print(f"File '{filename}' not found."); return None
     except json.JSONDecodeError as e: print(f"Error decoding AST in '{filename}': {e}"); return None
 
+
 # Function to convert a function call to pseudocode string.
 def convert_function_call(fcall: dict) -> str:
     return fcall["IDENTIFIER"] + "(" + ", ".join([convert_expression(arg["VALUE"]) for arg in fcall["ARGUMENTS"]]) + ")"
+
 
 # Function to convert an expression to pseudocode string.
 def convert_expression(expr: dict) -> str:
@@ -24,10 +27,10 @@ def convert_expression(expr: dict) -> str:
         case "EXPRESSION_STRING_LITERAL":       return expr["IDENTIFIER"]
         case "":                                pass
 
+
 # Converts AST examples into an enumerated TeX list.
 def build_examples(node, lines):
     if len(list(filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"]))) == 0: return
-
     lines.append("\\textbf{ \\\\ Example Usage of \\texttt{" + node["IDENTIFIER"] + "}}")
     lines.append("\\begin{enumerate}")
     lines.append("\t\\setlength{\\itemsep}{0pt}")
@@ -36,6 +39,7 @@ def build_examples(node, lines):
     lines.extend(["\t\\item \\verb|" + node["IDENTIFIER"] + line["STRING"].replace("&", "\&") +"|" for line in filter(lambda l: l["FLAG"] == "example", node["DOCSECTION"])])
     lines.append("\\end{enumerate}\n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "example", node["DOCSECTION"]))
+
 
 # Converts AST general docs to a bulletpoint list.
 def build_general(node, lines):
@@ -65,6 +69,7 @@ def build_websites(node, lines):
         lines.append("\\href{" + doc["STRING"] + "}{" + identifier + "} \\hfill \\url{" + doc["STRING"] + "} \n")
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "web", node["DOCSECTION"]))
 
+
 def build_description(node, lines):
     if len(list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"]))) == 0: return
     for doc in list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"])):
@@ -76,6 +81,7 @@ def build_description(node, lines):
     for doc in list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" in l, node["DOCSECTION"])):
         lines.extend(["\t\t\\hline", "\t\t \\texttt{" + doc["IDENTIFIER"] + "} & " + doc["STRING"] + " \\\\"])
     lines.extend(["\t\t\\hline", "\t\\end{tabular}", "\\end{table}"])
+
 
 # Builds docsection
 def build_docsection(node):
@@ -109,18 +115,30 @@ def build_pseudocode_statement(statement):
 
 
 # Builds function declarationS text
-def build_function_declarations(ast, lines):
+def build_function_declarations(ast, lines, Γ):
     lines.append("\n\\section{\\textsc{Function Declarations}}")
     for node in filter(lambda x: x["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
-        lines.extend(build_function_declaration(node))
+        lines.extend(build_function_declaration(node, Γ))
+
+
+# Builds example usage
+def build_example_usage(node, Γ):
+    lines = ["\\textbf{\\\\ Example Usage Cases for } \\texttt{" + node["IDENTIFIER"] + "}"]
+    
+    # Find some satisfying values to call the function with!
+
+    return lines
+
 
 # Builds function declaration tex
-def build_function_declaration(node):
+def build_function_declaration(node, Γ):
     lines = ["\\clearpage"]
     lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
     lines.extend(build_docsection(node))
     lines.extend(build_pseudocode(node))
+    lines.extend(build_example_usage(node, Γ))
     return lines
+
 
 # Builds psuedocode Tex
 def build_pseudocode(node):
@@ -133,6 +151,7 @@ def build_pseudocode(node):
     pseudocode_lines.append("\\end{minted}\n")
     return pseudocode_lines
 
+
 # Builds function arguments
 def build_arguments(node):
     arguments = []
@@ -142,7 +161,8 @@ def build_arguments(node):
 
 
 # Build Constriant Stuff
-def build_min_max_middle(name, typ, lst: list[str] = []) -> list[str]:
+def build_min_max_middle(name, typ) -> list[str]:
+    lst = []
     if typ == None: return [""]
     lst.append(str(find_min_max([typ.logic.constraint()], Real('σ'))) + " \\ \\")
 
@@ -159,6 +179,7 @@ def build_min_max_middle(name, typ, lst: list[str] = []) -> list[str]:
     for node in find_non_satisfying_values([typ.logic.constraint()], Real('σ')):
         lst.append("set var as " + str(node))
     lst.append("\\end{minted}\n\n")
+
     return lst
 
 
@@ -167,28 +188,42 @@ def build_min_max_middle(name, typ, lst: list[str] = []) -> list[str]:
 def build_type_declarations(ast, lines, Γ):
     lines.append("\n\\section{\\textsc{Type Declarations}}")
     for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
+        lines.append("\\clearpage")
         lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
         lines.extend(build_docsection(node))
 
-        pseudocode_lines = ["\\textbf{\\\\ Refinement Predicate for } \\texttt{" + node["IDENTIFIER"] + "}"]
-        pseudocode_lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
-        pseudocode_lines.append(convert_expression(node['LOGIC']).replace("a", "a"))
-        pseudocode_lines.append("\\end{minted}\n")
-        lines.extend(pseudocode_lines)
+        lines.extend(["\\textbf{\\\\ Refinement Predicate for } \\texttt{" + node["IDENTIFIER"] + "}\n"])
+        lines.append("$$ " + convert_expression(node['LOGIC']).replace("a", "a") + " $$\n")
 
-        lines.extend(build_min_max_middle(node["IDENTIFIER"], get_type_from_context(Γ, node["IDENTIFIER"])))
+        lines.extend(["\\textbf{\\\\ Set Notation of } \\texttt{" + node["IDENTIFIER"] + "}\n"])
+        lines.extend(build_min_max_middle(node["IDENTIFIER"], get_type_from_context(Γ, node["IDENTIFIER"])))        
 
-
+# Substitute all values in an ast
+def ast_substitute(d, old_str, new_str) -> list[any]:
+    if isinstance(d, dict):
+        for key, value in d.items():
+            d[key] = ast_substitute(value, old_str, new_str)
+        return d
+    elif isinstance(d, str):
+        return d.replace(old_str, new_str)
+    elif isinstance(d, list):
+        return [ast_substitute(item, old_str, new_str) for item in d]
+    else:
+        return d  # No replacement needed for non-string values
+    
 # General Build TeX from ast FUNCTION
 def build_tex(ast, output_file, Γ):
     print(ast)
     print(f"TEX: Writing to {output_file}")
+
+    ast_substitute("_", " ")
+
     lines = []
-    build_function_declarations(ast, lines)
+    build_function_declarations(ast, lines, Γ)
     build_type_declarations(ast, lines, Γ)
 
     print(len(lines))
-    with open("test.tex", 'w') as output_file:
+    with open(output_file, 'w') as output_file:
         for l in lines:
             output_file.write(l + "\n")  # Add a newline character at the end of each line
 
@@ -216,9 +251,8 @@ def main():
     lines = build_tex(ast)
     # Open file for writing
     with open(output_file, 'w') as file:
-        # Write each line to the file
         for l in lines:
-            file.write(l + "\n")  # Add a newline character at the end of each line
+            file.write(l + "\n")
 
     print(" ")
     print(len(lines))

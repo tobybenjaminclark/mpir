@@ -107,6 +107,7 @@ def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -
         s.add(temp22 == arg)
         print(func.logic.input_constraints)
         print(index)
+        print(func.logic.input_constraints[index]())
         constr = substitute(func.logic.input_constraints[index](), (σ, temp22))
 
         s.add(z3.Not(constr))

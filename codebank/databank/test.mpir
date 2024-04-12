@@ -1,27 +1,24 @@
 
-using "anothertest.mpir"
-
-funcdef two :: Integer → TwoInt
-funcdef two x
-    return(2)
+funcdef ten_to_hundred :: One → Hundred
+funcdef ten_to_hundred a
+    return(a * 99)
 suchthat:
-    |    doc as "returns two"
+    |    doc as "Takes a One and makes a 100"
 end
 
-funcdef multiply_show :: SmallInt → Integer
-funcdef multiply_show x
-    let z as SmallInt
-    set z as 5
-    let x as SmallInt
-    set x as 5 + z + two(1)
-    return(z)
+funcdef one :: Numerical → One
+funcdef one num
+    return(1)
 suchthat:
-    |    doc x as "First Integer"
-    |    doc y as "Second Integer"
-    |    doc z as "Product of X & Y"
-    |    doc as "Function to show product of 2 integers"
+    |    doc as "Makes a One"
 end
 
-typedef SmallInt a :: Integer {0 < a ^ a < 100}
+typedef One a :: Integer {a == 1}
+suchthat:
+    |   doc as "Is one!"
+end
 
-typedef TwoInt a :: Integer {1 < a ^ a < 3}
+typedef Hundred a :: Integer {a < 100}
+suchthat:
+    |   doc as "Less than or equal to 100"
+end

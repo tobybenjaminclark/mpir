@@ -2,14 +2,60 @@
 	"CONTENTS" : [
 		{
 			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "CreateOne",
-			"RETURN_TYPE" : "One",
+			"IDENTIFIER" : "ten_to_hundred",
+			"RETURN_TYPE" : "Hundred",
 			"RETURN_TYPE_LIST" : 0.000000,
 			"BODY" : [
 				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
 					"LINE" : 4.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_OPERATOR",
+								"IDENTIFIER" : "*",
+								"LEFT" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "a"
+								},
+								"RIGHT" : {
+									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+									"VALUE" : 99.000000
+								}
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Takes a One and makes a 100"
+				}
+			],
+			"INPUTS" : [
+				{
+					"TYPE" : "One",
+					"LIST_INDENTATION" : 0.000000
+				}
+			],
+			"ARGUMENTS" : [
+				"a"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "one",
+			"RETURN_TYPE" : "One",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 11.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
@@ -25,7 +71,7 @@
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Returns One!"
+					"STRING" : "Makes a One"
 				}
 			],
 			"INPUTS" : [
@@ -35,114 +81,8 @@
 				}
 			],
 			"ARGUMENTS" : [
-				"one"
+				"num"
 			]
-		},
-		{
-			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "CreateEven",
-			"RETURN_TYPE" : "Hundred",
-			"RETURN_TYPE_LIST" : 0.000000,
-			"BODY" : [
-				{
-					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "returned_value",
-					"ASSIGNED_TYPE" : "Hundred",
-					"LINE" : 11.000000
-				},
-				{
-					"TYPE" : "VALUE_ASSIGNMENT",
-					"IDENTIFIER" : "returned_value",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : "/",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "a"
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 11.000000
-						}
-					},
-					"LINE" : 12.000000
-				},
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"LINE" : 13.000000,
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "EXPRESSION_OPERATOR",
-								"IDENTIFIER" : "*",
-								"LEFT" : {
-									"TYPE" : "FUNCTION_CALL",
-									"IDENTIFIER" : "CreateOne",
-									"ARGUMENTS" : [
-										{
-											"TYPE" : "FUNCTION_ARGUMENT",
-											"ARGUMENT_INDEX" : 0.000000,
-											"VALUE" : {
-												"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-												"VALUE" : 1.000000
-											}
-										}
-									]
-								},
-								"RIGHT" : {
-									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-									"VALUE" : 99.000000
-								}
-							}
-						}
-					]
-				}
-			],
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Checks if a Number is even."
-				}
-			],
-			"INPUTS" : [
-				{
-					"TYPE" : "Thousand",
-					"LIST_INDENTATION" : 0.000000
-				}
-			],
-			"ARGUMENTS" : [
-				"a"
-			]
-		},
-		{
-			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Hundred",
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Returns One!"
-				}
-			],
-			"INPUTS" : [
-				"a"
-			],
-			"BASE_TYPE" : "Numerical",
-			"BASE_TYPE_LIST" : 0.000000,
-			"LOGIC" : {
-				"TYPE" : "EXPRESSION_OPERATOR",
-				"IDENTIFIER" : "<",
-				"LEFT" : {
-					"TYPE" : "EXPRESSION_IDENTIFIER",
-					"IDENTIFIER" : "a"
-				},
-				"RIGHT" : {
-					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-					"VALUE" : 100.000000
-				}
-			}
 		},
 		{
 			"TYPE" : "TYPE_DECLARATION",
@@ -150,13 +90,13 @@
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "One"
+					"STRING" : "Is one!"
 				}
 			],
 			"INPUTS" : [
 				"a"
 			],
-			"BASE_TYPE" : "Numerical",
+			"BASE_TYPE" : "Integer",
 			"BASE_TYPE_LIST" : 0.000000,
 			"LOGIC" : {
 				"TYPE" : "EXPRESSION_OPERATOR",
@@ -173,17 +113,17 @@
 		},
 		{
 			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Thousand",
+			"IDENTIFIER" : "Hundred",
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Int Number"
+					"STRING" : "Less than or equal to 100"
 				}
 			],
 			"INPUTS" : [
 				"a"
 			],
-			"BASE_TYPE" : "Numerical",
+			"BASE_TYPE" : "Integer",
 			"BASE_TYPE_LIST" : 0.000000,
 			"LOGIC" : {
 				"TYPE" : "EXPRESSION_OPERATOR",
@@ -194,7 +134,7 @@
 				},
 				"RIGHT" : {
 					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-					"VALUE" : 1000.000000
+					"VALUE" : 100.000000
 				}
 			}
 		}

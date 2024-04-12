@@ -539,7 +539,7 @@ def typecheck_ast(ast: dict[str:any]):
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
             print(traceback.format_exc())
-            raise Exception()
+            raise Exception("Error typechecking function: " + function["IDENTIFIER"])
 
             g_errors.append(str(e))
     
@@ -552,8 +552,8 @@ def main():
 
     # Add support for version option
     parser.add_argument('-V', '--version', action='version', version='%(prog)s 1.0')
-    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='testj.json')
-    parser.add_argument('-o', '--output', dest='output_file', metavar='output_file', type=str, help='output file path', default='default_output.py')
+    parser.add_argument('-i', '--input', metavar='input_file', type=str, nargs='?', help='input file path', default='codebank/modulebank/testj.json')
+    parser.add_argument('-o', '--output', dest='output_file', metavar='output_file', type=str, help='output file path', default='output.tex')
     parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
     args = parser.parse_args()
 
@@ -562,12 +562,6 @@ def main():
     config_file = args.config
 
     # Your code to process input_file and output_file goes here
-    print("Input file:", input_file)
-    print("Output file:", output_file)
-
-    input_file = "codebank/modulebank/testj.json"
-    output_file = "test.tex"
-
     ast = parse_json_file(input_file)
     Γ = typecheck_ast(ast)
 

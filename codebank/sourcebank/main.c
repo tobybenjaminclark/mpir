@@ -64,7 +64,7 @@ int main(int argc, char** argv)
     */
 
     inputFile = "test.mpir";
-    outputFile = "test-ast.mpir";
+    outputFile = "testoutput.tex";
     configFile = "config.config";
 
     printf("INPUT FILE  : %s \n", inputFile);
