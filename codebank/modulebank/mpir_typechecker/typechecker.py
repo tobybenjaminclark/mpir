@@ -566,7 +566,7 @@ def main():
     print("Output file:", output_file)
 
     input_file = "codebank/modulebank/testj.json"
-    output_file = "python.tex"
+    output_file = "test.tex"
 
     ast = parse_json_file(input_file)
     Γ = typecheck_ast(ast)

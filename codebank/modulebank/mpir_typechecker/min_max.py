@@ -5,9 +5,34 @@ import copy
 
 # Set number of middle values to generate
 NUMBER_OF_MIDDLE_VALS = 5
+NUMBER_OF_SATISFYING_VALS = 5
 
 # Create a new base type for the _type_set_repr
 _type_set_repr = NamedTuple("_type_set_repr", constraints = list[z3.Bool], min = float, max = float, middle = list[float])
+
+# Gives non satisfying values of a constraint.
+def find_non_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[float]:
+    get_opt = lambda c=constr: (lambda opt, c=constr: opt if opt.add(c) else opt)(Solver())
+    values_of_σ, z3_values_of_σ, opt, y = [], [], get_opt(), Real('y')
+    opt.add(y != σ)
+    for i in range(NUMBER_OF_SATISFYING_VALS):
+        if opt.check() != sat: break
+        y_val = float(opt.model().evaluate(y).as_decimal(1).replace("?", ""))
+        z3_values_of_σ.append(RealVal(y_val))
+        values_of_σ.append(y_val)
+        opt.add(y != z3_values_of_σ[i])
+    return values_of_σ
+
+# Gives satisfying values of a constraint.
+def find_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[float]:
+    get_opt = lambda c=constr: (lambda opt, c=constr: opt if opt.add(c) else opt)(Optimize())
+    values_of_σ, z3_values_of_σ, opt = [], [], get_opt()
+    for i in range(NUMBER_OF_SATISFYING_VALS):
+        if opt.check() != sat: break
+        z3_values_of_σ.append(RealVal(current_val := opt.model().evaluate(σ).as_decimal(3)))
+        values_of_σ.append(current_val)
+        opt.add(σ != z3_values_of_σ[i])
+    return values_of_σ
 
 def find_min_max(constr: list[z3.Bool], σ: z3.ArithRef, middle: list[float] = []) -> _type_set_repr:
 
@@ -59,4 +84,10 @@ if __name__ == "__main__":
     x = Real('x')
     a = find_min_max([x > 5, x < 10], x)
     print("Type of x is " + str(a))
+    
+    a = find_satisfying_values([x > 5, x < 10], x)
+    print("Satisfying values of x include: ", a)
+
+    a = find_non_satisfying_values([x > 5, x < 10], x)
+    print("Non-Satisfying values of x include: ", a)
 

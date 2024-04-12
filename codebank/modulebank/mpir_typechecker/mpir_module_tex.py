@@ -141,6 +141,11 @@ def build_arguments(node):
     return ", ".join(arguments)
 
 
+# Build Constriant Stuff
+def build_min_max_middle(typ) -> str:
+    if typ == None: return ""
+    else: return str(find_min_max([typ.logic.constraint()], Real('σ')))
+
 # Build type declarations
 def build_type_declarations(ast, lines, Γ):
     lines.append("\n\\section{\\textsc{Type Declarations}}")
@@ -154,13 +159,8 @@ def build_type_declarations(ast, lines, Γ):
         pseudocode_lines.append("\\end{minted}\n")
         lines.extend(pseudocode_lines)
 
+        lines.append(build_min_max_middle(get_type_from_context(Γ, node["IDENTIFIER"])))
 
-        sig = Real('σ')
-        typ = get_type_from_context(Γ, node["IDENTIFIER"])
-        lis = []
-        lis.append(typ.logic.constraint())
-        a = find_min_max(lis, sig)
-        lines.append(str(a))
 
 
 
