@@ -575,9 +575,7 @@ def main():
     if(output_file.endswith(".py")):
         if len(g_errors) == 0: build_python(ast, output_file, Γ)
         else:
-            # Open the file for writing
             with open(output_file, 'w') as file:
-                # Write each element of the array to the file
                 for item in g_errors:
                     file.write("# " + str(item) + '\n')
             print("Array contents written to", output_file)

@@ -12,6 +12,17 @@ _type_set_repr = NamedTuple("_type_set_repr", constraints = list[z3.Bool], min =
 
 # Gives non satisfying values of a constraint.
 def find_non_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[float]:
+    """
+    Finds non-satisfying values of a constraint.
+    
+    Parameters:
+        constr (list[z3.Bool]): List of Z3 constraints.
+        σ (z3.ArithRef): Z3 arithmetic expression.
+    
+    Returns:
+        list[float]: List of non-satisfying values.
+    """
+
     get_opt = lambda c=constr: (lambda opt, c=constr: opt if opt.add(c) else opt)(Solver())
     values_of_σ, z3_values_of_σ, opt, y = [], [], get_opt(), Real('y')
     opt.add(y != σ)
@@ -25,6 +36,17 @@ def find_non_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[f
 
 # Gives satisfying values of a constraint.
 def find_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[float]:
+    """
+    Finds satisfying values of a constraint.
+    
+    Parameters:
+        constr (list[z3.Bool]): List of Z3 constraints.
+        σ (z3.ArithRef): Z3 arithmetic expression.
+    
+    Returns:
+        list[float]: List of satisfying values.
+    """
+    
     get_opt = lambda c=constr: (lambda opt, c=constr: opt if opt.add(c) else opt)(Optimize())
     values_of_σ, z3_values_of_σ, opt = [], [], get_opt()
     for i in range(NUMBER_OF_SATISFYING_VALS):
@@ -35,6 +57,17 @@ def find_satisfying_values(constr: list[z3.Bool], σ: z3.ArithRef) -> list[float
     return values_of_σ
 
 def find_min_max(constr: list[z3.Bool], σ: z3.ArithRef, middle: list[float] = []) -> _type_set_repr:
+    """
+    Finds the minimum and maximum satisfying values of a constraint, find multiple middle satisfying values.
+    
+    Parameters:
+        constr (list[z3.Bool]): List of Z3 constraints.
+        σ (z3.ArithRef): Z3 arithmetic expression.
+        middle (list[float], optional): List of middle values. Defaults to [].
+    
+    Returns:
+        _type_set_repr: NamedTuple containing constraints, min, max, and middle values.
+    """
 
     # Make a new _type_set_repr class.
     _type_set_repr_duplicate = copy.deepcopy(_type_set_repr)
