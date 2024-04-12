@@ -39,6 +39,8 @@ def convert_operator_to_z3(operator: str, left, right):
     operator_mapping = {
         # Comparators
         ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right, "%": lambda: left % right,
+ 
+        ">=": lambda: left >= right, "<=": lambda: left <= right, 
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left), "/": lambda: left / right, "*": lambda: left * right, "+": lambda: left + right, "-": lambda: left - right,
@@ -403,17 +405,17 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
     return Γ, Ψ 
 
 # Function to substitute variables in a Function Declaration
-    def ast_substitute(d, old_str, new_str) -> list[any]:
-        if isinstance(d, dict):
-            for key, value in d.items():
-                d[key] = ast_substitute(value, old_str, new_str)
-            return d
-        elif isinstance(d, str):
-            return d.replace(old_str, new_str)
-        elif isinstance(d, list):
-            return [ast_substitute(item, old_str, new_str) for item in d]
-        else:
-            return d  # No replacement needed for non-string values
+def ast_substitute(d, old_str, new_str) -> list[any]:
+    if isinstance(d, dict):
+        for key, value in d.items():
+            d[key] = ast_substitute(value, old_str, new_str)
+        return d
+    elif isinstance(d, str):
+        return d.replace(old_str, new_str)
+    elif isinstance(d, list):
+        return [ast_substitute(item, old_str, new_str) for item in d]
+    else:
+        return d  # No replacement needed for non-string values
 
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
