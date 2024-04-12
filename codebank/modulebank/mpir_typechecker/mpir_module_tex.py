@@ -1,3 +1,5 @@
+from typing_context import *
+from min_max import find_min_max
 import argparse
 import json
 import os
@@ -140,28 +142,45 @@ def build_arguments(node):
 
 
 # Build type declarations
-def build_type_declarations(ast, lines):
+def build_type_declarations(ast, lines, Γ):
     lines.append("\n\\section{\\textsc{Type Declarations}}")
     for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
         lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
-        docsec = build_docsection(node)
         lines.extend(build_docsection(node))
+
+        pseudocode_lines = ["\\textbf{\\\\ Refinement Predicate for } \\texttt{" + node["IDENTIFIER"] + "}"]
+        pseudocode_lines.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+        pseudocode_lines.append(convert_expression(node['LOGIC']).replace("a", "a"))
+        pseudocode_lines.append("\\end{minted}\n")
+        lines.extend(pseudocode_lines)
+
+
+        sig = Real('σ')
+        typ = get_type_from_context(Γ, node["IDENTIFIER"])
+        lis = []
+        lis.append(typ.logic.constraint())
+        a = find_min_max(lis, sig)
+        lines.append(str(a))
+
+
+
 
 
 
 # General Build TeX from ast FUNCTION
-def build_tex(ast, output_file):
+def build_tex(ast, output_file, Γ):
     print(ast)
     print(f"TEX: Writing to {output_file}")
     lines = []
     build_function_declarations(ast, lines)
-    build_type_declarations(ast, lines)
+    build_type_declarations(ast, lines, Γ)
 
     print(lines)
     print(len(lines))
     with open("test.tex", 'w') as output_file:
         for l in lines:
             output_file.write(l + "\n")  # Add a newline character at the end of each line
+
 
 def main():
     print("TeX Module Invoked!")

@@ -47,8 +47,8 @@ def find_min_max(constr: list[z3.Bool], σ: z3.ArithRef, middle: list[float] = [
         σ_max = "\infty" if float(opt.model().evaluate(σ).as_decimal(3)) > float(σ_max_num) else float(σ_max_num)
 
     # Create Type Set Representation
-    if len(middle) >= NUMBER_OF_MIDDLE_VALS: show_function = lambda self: "$$\\{" + f" {self.min} ... {', '.join(str(self.middle[i]) for i in range(len(self.middle)))} ... {self.max} " + "\\}$$"
-    else: show_function = lambda self: "$$\\{ " + (' | '.join(str(self.middle[i]) for i in range(len(self.middle)))) + " \\$$}"
+    if len(middle) >= NUMBER_OF_MIDDLE_VALS: show_function = lambda self: "$$\\sigma \\in \\{" + f" {self.min} ... {', '.join(str(self.middle[i]) for i in range(len(self.middle)))} ... {self.max} " + "\\}$$"
+    else: show_function = lambda self: "$$\\sigma \\in \\{ " + (' | '.join(str(self.middle[i]) for i in range(len(self.middle)))) + " \\}$$"
 
     # Form and return _type_set_repr object
     type_set = _type_set_repr_duplicate(constr, σ_min, σ_max, middle)

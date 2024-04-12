@@ -543,6 +543,8 @@ def typecheck_ast(ast: dict[str:any]):
 
             g_errors.append(str(e))
     
+    return Γ
+    
 
 
 def main():
@@ -567,11 +569,11 @@ def main():
     output_file = "python.tex"
 
     ast = parse_json_file(input_file)
-    typecheck_ast(ast)
+    Γ = typecheck_ast(ast)
 
     print(f"Writing to {output_file} {len(g_errors)}")
     if(output_file.endswith(".py")):
-        if len(g_errors) == 0: build_python(ast, output_file)
+        if len(g_errors) == 0: build_python(ast, output_file, Γ)
         else:
             # Open the file for writing
             with open(output_file, 'w') as file:
@@ -580,7 +582,7 @@ def main():
                     file.write("# " + str(item) + '\n')
             print("Array contents written to", output_file)
     elif(output_file.endswith(".tex")):
-        if len(g_errors) == 0: build_tex(ast, output_file)
+        if len(g_errors) == 0: build_tex(ast, output_file, Γ)
         # Open the file for writing
         with open(output_file, 'w') as file:
             # Write each element of the array to the file

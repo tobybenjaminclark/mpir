@@ -28,7 +28,31 @@ FUNCTION CreateEven(a: Thousand) -> Hundred:
 \section{\textsc{Type Declarations}}
 
 \subsection{Hundred}
+Returns One!
+
+\textbf{\\ Refinement Predicate for } \texttt{Hundred}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+a < 100.0
+\end{minted}
+
+$$\sigma \in \{ -\infty ... 0, -1, -2, -3, -4 ... 99 \}$$
 
 \subsection{One}
+One
+
+\textbf{\\ Refinement Predicate for } \texttt{One}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+a == 1.0
+\end{minted}
+
+$$\sigma \in \{ 1 \}$$
 
 \subsection{Thousand}
+Int Number
+
+\textbf{\\ Refinement Predicate for } \texttt{Thousand}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+a < 1000.0
+\end{minted}
+
+$$\sigma \in \{ -\infty ... 0, -1, -2, -3, -4 ... 999 \}$$
