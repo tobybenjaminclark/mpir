@@ -581,11 +581,11 @@ def main():
             print("Array contents written to", output_file)
     elif(output_file.endswith(".tex")):
         if len(g_errors) == 0: build_tex(ast, output_file, Γ)
-        # Open the file for writing
-        with open(output_file, 'w') as file:
-            # Write each element of the array to the file
-            for item in g_errors:
-                file.write("# " + str(item) + '\n')
+        else:# Open the file for writing
+            with open(output_file, 'w') as file:
+                # Write each element of the array to the file
+                for item in g_errors:
+                    file.write("# " + str(item) + '\n')
         print("Array contents written to", output_file)
 
 

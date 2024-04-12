@@ -1,5 +1,5 @@
 from typing_context import *
-from min_max import find_min_max
+from min_max import *
 import argparse
 import json
 import os
@@ -142,9 +142,26 @@ def build_arguments(node):
 
 
 # Build Constriant Stuff
-def build_min_max_middle(typ) -> str:
-    if typ == None: return ""
-    else: return str(find_min_max([typ.logic.constraint()], Real('σ')))
+def build_min_max_middle(name, typ, lst: list[str] = []) -> list[str]:
+    if typ == None: return [""]
+    lst.append(str(find_min_max([typ.logic.constraint()], Real('σ'))) + " \\ \\")
+
+    lst.extend(["\\textbf{\\\\ Example Satisfactory Assignments for } \\texttt{" + name + "}"])
+    lst.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+    lst.append(f"let var as {name}")
+    for node in find_satisfying_values([typ.logic.constraint()], Real('σ')):
+        lst.append("set var as " + str(node))
+    lst.append("\\end{minted}\n\n")
+    
+    lst.extend(["\\textbf{\\\\ Example Unsatisfactory Assignments for } \\texttt{" + name + "}"])
+    lst.append("\\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\\small]{text}")
+    lst.append(f"let var as {name}")
+    for node in find_non_satisfying_values([typ.logic.constraint()], Real('σ')):
+        lst.append("set var as " + str(node))
+    lst.append("\\end{minted}\n\n")
+    return lst
+
+
 
 # Build type declarations
 def build_type_declarations(ast, lines, Γ):
@@ -159,12 +176,7 @@ def build_type_declarations(ast, lines, Γ):
         pseudocode_lines.append("\\end{minted}\n")
         lines.extend(pseudocode_lines)
 
-        lines.append(build_min_max_middle(get_type_from_context(Γ, node["IDENTIFIER"])))
-
-
-
-
-
+        lines.extend(build_min_max_middle(node["IDENTIFIER"], get_type_from_context(Γ, node["IDENTIFIER"])))
 
 
 # General Build TeX from ast FUNCTION
@@ -175,7 +187,6 @@ def build_tex(ast, output_file, Γ):
     build_function_declarations(ast, lines)
     build_type_declarations(ast, lines, Γ)
 
-    print(lines)
     print(len(lines))
     with open("test.tex", 'w') as output_file:
         for l in lines:
