@@ -40,7 +40,7 @@ def convert_operator_to_z3(operator: str, left, right):
         # Comparators
         ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right, "%": lambda: left % right,
  
-        ">=": lambda: left >= right, "<=": lambda: left <= right, 
+        ">=": lambda: left >= right, "<=": lambda: left <= right,   
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left), "/": lambda: left / right, "*": lambda: left * right, "+": lambda: left + right, "-": lambda: left - right,

@@ -2,8 +2,9 @@ from typing_context import *
 from min_max import *
 import argparse
 import json
-import os
+import datetime
 
+now = datetime.datetime.now()
 
 # Function to parse a JSON file (ast, in this case.)
 def parse_json_file(filename: str) -> dict|None:
@@ -70,7 +71,7 @@ def build_websites(node, lines):
     node["DOCSECTION"] = list(filter(lambda l: l["FLAG"] != "web", node["DOCSECTION"]))
 
 
-def build_description(node, lines):
+def build_description(node, lines):             
     if len(list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"]))) == 0: return
     for doc in list(filter(lambda l: l["FLAG"] == "doc" and "IDENTIFIER" not in l, node["DOCSECTION"])):
         lines.append(doc["STRING"] + "\n")
@@ -134,7 +135,10 @@ def build_example_usage(node, Γ):
 def build_function_declaration(node, Γ):
     lines = []
     node["IDENTIFIER"] = node["IDENTIFIER"].replace("_", "\\_")
-    lines.append("\n\\subsection{" + node["IDENTIFIER"] + "}")
+
+    time_str = now.strftime("%m/%d/%Y, %H:%M") if "date" not in node["DOCSECTION"] else node["DOCSECTION"]["date"]
+    lines.append("\n\\subsection{" + node["IDENTIFIER"] + "}\n")
+    lines.append("\\textbf{Defined on line:} \\verb|" + str(node["BODY"][0]["LINE"]) + "| \\hfill \\textbf{Created:} \\verb|" + time_str + "| \n\n")
     lines.extend(build_docsection(node))
     lines.extend(build_pseudocode(node))
     lines.extend(build_example_usage(node, Γ))
@@ -190,7 +194,10 @@ def build_min_max_middle(name, typ) -> list[str]:
 def build_type_declarations(ast, lines, Γ):
     lines.append("\n\\section{\\textsc{Type Declarations}}")
     for node in list(filter(lambda x: x["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"])):
+
+        time_str = now.strftime("%m/%d/%Y, %H:%M") if "date" not in node["DOCSECTION"] else node["DOCSECTION"]["date"]
         lines.append("\n\\subsection{" + node["IDENTIFIER"].replace("_", "\\_") + "}")
+        lines.append("\\textbf{Base Type:} \\verb|" + str(node["BASE_TYPE"]) + "| \\hfill \\textbf{Created:} \\verb|" + time_str + "| \\\\")
         lines.extend(build_docsection(node))
 
         lines.extend(["\\textbf{\\\\ Refinement Predicate for } \\texttt{" + node["IDENTIFIER"] + "}\n"])
