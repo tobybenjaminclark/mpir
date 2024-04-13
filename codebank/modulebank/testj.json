@@ -96,7 +96,7 @@
 									"IDENTIFIER" : "return_val_test",
 									"EXPRESSION" : {
 										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 2.000000
+										"VALUE" : 1.000000
 									},
 									"LINE" : 16.000000
 								}
