@@ -40,7 +40,7 @@ def convert_operator_to_z3(operator: str, left, right):
         # Comparators
         ">": lambda: left > right, "≥": lambda: left >= right, "<": lambda: left < right, "≤": lambda: left <= right, "=": lambda: left == right, "==": lambda: left == right, "%": lambda: left % right,
  
-        ">=": lambda: left >= right, "<=": lambda: left <= right,   
+        ">=": lambda: left >= right, "<=": lambda: left <= right, "v": lambda: z3.Or(left, right),
         
         # Negation, Conjunction & Disjunction
         "∧": lambda:z3.And(left, right), "∨": lambda: z3.Or(left, right), "¬": lambda: z3.Not(left), "/": lambda: left / right, "*": lambda: left * right, "+": lambda: left + right, "-": lambda: left - right,
@@ -83,30 +83,23 @@ def type_ast_numerical_literal(ast, context, σ=z3.Real('σ')) -> _type:
 
 # Function to Type Check a Function Call as part of an expression.
 def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type:
-    try:
-        arguments = []
-        for arg in ast["ARGUMENTS"]:
-            context, propagation, a = substitute_expression(arg["VALUE"], context, propagation)
-            arguments.append(a)
-        T_FuncCall(arguments, ast, context, propagation)
-        debug(f"Function Call to", ast["IDENTIFIER"], "is valid.")
-        
-        func_ref = get_type_from_context(context, ast["IDENTIFIER"])
-        letters = string.ascii_letters
-        a = ( ''.join(random.choice(letters) for i in range(10)) )
-        b = Real(a)
-
-        constr = substitute(func_ref.logic.output_constraint(), (σ, b))
-        propagation = propagation + (a, type_create_singular(lambda: constr))
-
-        return context, propagation, b
-
-    except Exception as e:
-        print("Function Call Type Failure")
-        print(e)
-        raise Exception()
-
+    arguments = []
+    for arg in ast["ARGUMENTS"]:
+        context, propagation, a = substitute_expression(arg["VALUE"], context, propagation)
+        arguments.append(a)
+    T_FuncCall(arguments, ast, context, propagation)
+    debug(f"Function Call to", ast["IDENTIFIER"], "is valid.")
     
+    func_ref = get_type_from_context(context, ast["IDENTIFIER"])
+    letters = string.ascii_letters
+    a = ( ''.join(random.choice(letters) for i in range(10)) )
+    b = Real(a)
+
+    constr = substitute(func_ref.logic.output_constraint(), (σ, b))
+    propagation = propagation + (a, type_create_singular(lambda: constr))
+
+    return context, propagation, b
+
 
 # Function to infer the type of an ast expression.
 def type_ast_expression(ast, context, propagation, σ = z3.Real('σ')) -> _type:
@@ -165,18 +158,13 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     Γ, Ψ, expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     solver = z3.Solver()
     sigma = Real('σ')
-    try:
-        for iden, typ in Γ:
-            if isinstance(typ.logic, _function_type): continue
-    
-            iden_s = Real(iden)
-            expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
-            e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
-            solver.add(e2)
-    except Exception as e:
-        print(traceback.format_exc())
-        raise Exception()
+    for iden, typ in Γ:
+        if isinstance(typ.logic, _function_type): continue
 
+        iden_s = Real(iden)
+        expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
+        e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
+        solver.add(e2)
     temp22 = Real("temp22")
     typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
     solver.add(temp22 == expr)
@@ -207,16 +195,12 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
 
 # Function to typecheck a function call.
 def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context) -> tuple[_context, _context]:
-    try:
-        arguments = []
-        for arg in statement["ARGUMENTS"]:
-            Γ, Ψ, a = substitute_expression(arg["VALUE"], Γ, Ψ)
-            arguments.append(a)
-        T_FuncCall(arguments, statement, Γ, Ψ)
-        debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
-    except Exception as e:
-        print(e)
-        raise Exception()
+    arguments = []
+    for arg in statement["ARGUMENTS"]:
+        Γ, Ψ, a = substitute_expression(arg["VALUE"], Γ, Ψ)
+        arguments.append(a)
+    T_FuncCall(arguments, statement, Γ, Ψ)
+    debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
 
     return Γ, Ψ 
 
@@ -249,15 +233,15 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
-                "DATATYPE" : "OPERATOR",
-                "DATA" : "==",
+                "TYPE" : "EXPRESSION_OPERATOR",
+                "IDENTIFIER" : "==",
                 "LEFT" : {
-                    "DATATYPE" : "IDENTIFIER",
-                    "DATA" : identifier
+                    "TYPE" : "IDENTIFIER",
+                    "IDENTIFIER" : identifier
                 },
                 "RIGHT" : {
-                    "DATATYPE" : ("NUMERICAL_LITERAL"),
-                    "DATA" : on_statement["MATCH_VALUE"]
+                    "TYPE" : ("EXPRESSION_NUMERICAL_LITERAL"),
+                    "VALUE" : on_statement["MATCH_VALUE"]
                 }},
             "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
         }
@@ -319,6 +303,10 @@ def z3_to_python(expr, identifier):
 def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ: _context):
     dom, cast = trycast_statement["DOMINANT_IDENTIFIER"], trycast_statement["CASTED_IDENTIFIER"]
     dom_t, cast_t = get_type_from_context(Γ, dom), get_type_from_context(Γ, cast)
+
+    if(dom_t is None): raise Exception("Trycast: " + trycast_statement["DOMINANT_IDENTIFIER"] + " is not defined under Γ")
+    if(cast_t is None): raise Exception("Trycast: " + trycast_statement["CASTED_IDENTIFIER"] + " is not defined under Γ")
+
     debug(f"Trycast {(dom_t.logic.constraint())} into {(cast_t.logic.constraint())}")
     statements = []
     identifier = "anon2"
@@ -352,15 +340,15 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         if_statement = {
             "TYPE" : "IF_STATEMENT",
             "EXPRESSION" : {
-                "DATATYPE" : "OPERATOR",
-                "DATA" : "==",
+                "TYPE" : "EXPRESSION_OPERATOR",
+                "IDENTIFIER" : "==",
                 "LEFT" : {
-                    "DATATYPE" : "IDENTIFIER",
-                    "DATA" : identifier
+                    "TYPE" : "EXPRESSION_IDENTIFIER",
+                    "IDENTIFIER" : identifier
                 },
                 "RIGHT" : {
-                    "DATATYPE" : "NUMERICAL_LITERAL",
-                    "DATA" : on_statement["MATCH_VALUE"]
+                    "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+                    "VALUE" : on_statement["MATCH_VALUE"]
                 }},
             "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
         }
@@ -369,8 +357,10 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
 
         if on_statement["MATCH_VALUE"] == 1:
             print("TRYCAST :: Success Matching Found!")
+
             print("Assigning ", dom, " as type ", cast_t.logic.constraint(), " under psi")
             Ψi = Ψi + (dom, cast_t)
+
             typecheck_if_statement(if_statement, Γi, Ψi)
 
         if on_statement["MATCH_VALUE"] == 0:
@@ -459,12 +449,10 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
                 index2 = index + 1
                 print("Substituting all values of ", statement["IDENTIFIER"], " with ", new_name)
-                try:
-                    ast_substitute(function["BODY"][index + 1:], statement["IDENTIFIER"], new_name)
-                    function["BODY"][index]["IDENTIFIER"] = new_name
-                    print(json.dumps(function["BODY"], indent = 4))
-                except Exception as e:
-                    print(e)
+
+                ast_substitute(function["BODY"][index + 1:], statement["IDENTIFIER"], new_name)
+                function["BODY"][index]["IDENTIFIER"] = new_name
+                print(json.dumps(function["BODY"], indent = 4))
                 
                 gamma_t = get_type_from_context(Γ, old_name)
                 psi_t = get_type_from_context(Ψ, old_name)
@@ -537,6 +525,9 @@ def typecheck_ast(ast: dict[str:any]):
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
 
         print("Typechecking", function["IDENTIFIER"])
+        typecheck_function(function, duplicate_context(Γ))
+        continue
+
         try:
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:

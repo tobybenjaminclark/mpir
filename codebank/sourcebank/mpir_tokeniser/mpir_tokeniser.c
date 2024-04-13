@@ -465,13 +465,14 @@ int mpir_tokenise_brackets(mpir_lexer* lexer)
 int mpir_tokenise_connectives(mpir_lexer* lexer)
 {
     /* Guard Clause to reject if the next character is not a negation. */
-    if (mpir_wchar_in_list(lexer->peek(lexer), L"→↔^∨")) NULL;
+    if (mpir_wchar_in_list(lexer->peek(lexer), L"→↔^∨v")) NULL;
     else return 0;
 
     if (mpir_lexer_tryconsume(lexer, L'→')) return mpir_tokenise_process_buffer(lexer, operator_arrow);
     if (mpir_lexer_tryconsume(lexer, L'↔')) return mpir_tokenise_process_buffer(lexer, operator_bi_arrow);
     if (mpir_lexer_tryconsume(lexer, L'^')) return mpir_tokenise_process_buffer(lexer, operator_and);
     if (mpir_lexer_tryconsume(lexer, L'∨')) return mpir_tokenise_process_buffer(lexer, operator_or);
+    if (mpir_lexer_tryconsume(lexer, L'v')) return mpir_tokenise_process_buffer(lexer, operator_or);
 }
 
 

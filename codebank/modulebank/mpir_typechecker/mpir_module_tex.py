@@ -140,7 +140,7 @@ def build_function_declaration(node, Γ):
     lines.append("\n\\subsection{" + node["IDENTIFIER"] + "}\n")
     lines.append("\\textbf{Defined on line:} \\verb|" + str(node["BODY"][0]["LINE"]) + "| \\hfill \\textbf{Created:} \\verb|" + time_str + "| \n\n")
     lines.extend(build_docsection(node))
-    lines.extend(build_pseudocode(node))
+    lines.extend(build_pseudocode(node))    
     lines.extend(build_example_usage(node, Γ))
     lines.append("\\clearpage")
     return lines

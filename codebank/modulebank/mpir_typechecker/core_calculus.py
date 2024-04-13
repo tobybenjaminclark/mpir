@@ -88,8 +88,9 @@ def T_Comp(τ1: _type, τ2: _type, σ: z3.Real = Real('σ')) -> _type:
 @inject_variables(base_types)
 def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -> z3.Bool:
 
-    print("AST :: ", ast, "\n\n")
-    print(ast)
+    print("Testing Function Call to ", ast["IDENTIFIER"])
+    print(context)
+    print(propagation)
     
     func = get_type_from_context(context, ast["IDENTIFIER"])
     if len(func.logic.input_constraints) != len(arguments): raise TypeError("Invalid number of args!")
