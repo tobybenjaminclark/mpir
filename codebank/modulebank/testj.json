@@ -59,10 +59,16 @@
 					"LINE" : 11.000000
 				},
 				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "return_val_test",
+					"ASSIGNED_TYPE" : "Numerical",
+					"LINE" : 12.000000
+				},
+				{
 					"TYPE" : "TRYCAST_STATEMENT",
 					"DOMINANT_IDENTIFIER" : "num",
 					"CASTED_IDENTIFIER" : "return_val",
-					"LINE" : 13.000000,
+					"LINE" : 14.000000,
 					"ON_STATEMENTS" : [
 						{
 							"TYPE" : "ON_STATEMENT",
@@ -71,12 +77,12 @@
 							"MATCH_COMMANDS" : [
 								{
 									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "return_val",
+									"IDENTIFIER" : "return_val_test",
 									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_IDENTIFIER",
-										"IDENTIFIER" : "num"
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 0.000000
 									},
-									"LINE" : 14.000000
+									"LINE" : 15.000000
 								}
 							]
 						},
@@ -87,12 +93,12 @@
 							"MATCH_COMMANDS" : [
 								{
 									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "return_val",
+									"IDENTIFIER" : "return_val_test",
 									"EXPRESSION" : {
 										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 1.000000
+										"VALUE" : 2.000000
 									},
-									"LINE" : 15.000000
+									"LINE" : 16.000000
 								}
 							]
 						}
@@ -101,14 +107,14 @@
 				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
-					"LINE" : 17.000000,
+					"LINE" : 18.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",
 							"ARGUMENT_INDEX" : 0.000000,
 							"VALUE" : {
 								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "return_val"
+								"IDENTIFIER" : "return_val_test"
 							}
 						}
 					]
@@ -139,7 +145,7 @@
 				{
 					"TYPE" : "FUNCTION_CALL",
 					"IDENTIFIER" : "return",
-					"LINE" : 25.000000,
+					"LINE" : 26.000000,
 					"ARGUMENTS" : [
 						{
 							"TYPE" : "FUNCTION_ARGUMENT",

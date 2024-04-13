@@ -19,7 +19,7 @@
 
 \subsection{ten\_to\_hundred}
 
-\textbf{Defined on line:} \verb|4.0| \hfill \textbf{Created:} \verb|04/13/2024, 00:17| 
+\textbf{Defined on line:} \verb|4.0| \hfill \textbf{Created:} \verb|04/13/2024, 22:31| 
 
 
 Takes a One and makes a 100
@@ -33,9 +33,30 @@ FUNCTION ten_to_hundred(a: One) -> Hundred:
 \textbf{\\ Example Usage Cases for } \texttt{ten\_to\_hundred}
 \clearpage
 
+\subsection{make\_one}
+
+\textbf{Defined on line:} \verb|11.0| \hfill \textbf{Created:} \verb|04/13/2024, 22:31| 
+
+
+Tests if a value satisfies 1
+
+\textbf{\\ Pseudocode for } \texttt{make\_one}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+FUNCTION make_one(num: Numerical) -> One:
+	One return_val;
+	Numerical return_val_testI;
+	DOES num SATISFY return_val?
+	YES -> return_val_testI = 0.0
+	NO -> return_val_testI = 1.0
+	return(return_val_testI)
+\end{minted}
+
+\textbf{\\ Example Usage Cases for } \texttt{make\_one}
+\clearpage
+
 \subsection{one}
 
-\textbf{Defined on line:} \verb|11.0| \hfill \textbf{Created:} \verb|04/13/2024, 00:17| 
+\textbf{Defined on line:} \verb|26.0| \hfill \textbf{Created:} \verb|04/13/2024, 22:31| 
 
 
 Makes a One
@@ -52,19 +73,20 @@ FUNCTION one(num: Numerical) -> One:
 \section{\textsc{Type Declarations}}
 
 \subsection{One}
-\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/13/2024, 00:17| \\
+\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/13/2024, 22:31| \\
 Is one!
 
 \textbf{\\ Refinement Predicate for } \texttt{One}
 
-$$ a == 1.0 $$
+$$ a == 1.0 v a == 0.0 $$
 
 \textbf{\\ Set Notation of } \texttt{One}
 
-$$\sigma \in \{ 1 \}$$ \ \
+$$\sigma \in \{ 0 | 1 \}$$ \ \
 \textbf{\\ Example Satisfactory Assignments for } \texttt{One}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 let var as One
+set var as 0
 set var as 1
 \end{minted}
 
@@ -72,16 +94,16 @@ set var as 1
 \textbf{\\ Example Unsatisfactory Assignments for } \texttt{One}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 let var as One
+set var as -1.0
 set var as 2.0
 set var as 3.0
-set var as 4.0
 \end{minted}
 
 
 \clearpage
 
 \subsection{Hundred}
-\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/13/2024, 00:17| \\
+\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/13/2024, 22:31| \\
 Less than or equal to 100
 
 \textbf{\\ Refinement Predicate for } \texttt{Hundred}

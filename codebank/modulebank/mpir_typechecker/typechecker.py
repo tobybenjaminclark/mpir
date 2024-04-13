@@ -8,6 +8,7 @@ from mpir_module_tex import build_tex
 from typing import Literal, IO
 import json
 import traceback
+import copy
 import string
 import random
 
@@ -164,6 +165,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
         iden_s = Real(iden)
         expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
         solver.add(expr2)
+
     for iden, typ in Ψ:
         if isinstance(typ.logic, _function_type): continue
         print("Ψ: iden", typ.logic.constraint())
@@ -306,7 +308,7 @@ def z3_to_python(expr, identifier):
         }   
 
 
-def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ: _context):
+def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ: _context, ast, assigned_variables, index):
     dom, cast = trycast_statement["DOMINANT_IDENTIFIER"], trycast_statement["CASTED_IDENTIFIER"]
     dom_t, cast_t = get_type_from_context(Γ, dom), get_type_from_context(Γ, cast)
 
@@ -336,54 +338,109 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
     statements.append(assignment)
     statements.append(assignment2)
 
+    if len([o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]]) != 2: raise Exception("Not enough on statements in trycast.")
+    elif 0 not in [o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]] or 1 not in [o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]]: raise Exception("Trycast on statements missing 1/0 control-flow")
+
     for index, on_statement in enumerate(trycast_statement["ON_STATEMENTS"]):
 
-        if(on_statement["MATCH_VALUE"] not in [0, 1]):
-            print("Invalid Trycast")
-        else:
-            print("Valid trycast")
-
-        if_statement = {
-            "TYPE" : "IF_STATEMENT",
-            "EXPRESSION" : {
-                "TYPE" : "EXPRESSION_OPERATOR",
-                "IDENTIFIER" : "==",
-                "LEFT" : {
-                    "TYPE" : "EXPRESSION_IDENTIFIER",
-                    "IDENTIFIER" : identifier
-                },
-                "RIGHT" : {
-                    "TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-                    "VALUE" : on_statement["MATCH_VALUE"]
-                }},
-            "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
-        }
-        
-        Γi, Ψi = duplicate_context(Γ), duplicate_context(Ψ)
-
+        if(on_statement["MATCH_VALUE"] not in [0, 1]): print("Invalid Trycast")
+        else: print("Valid trycast")
+            
         if on_statement["MATCH_VALUE"] == 1:
-            print("TRYCAST :: Success Matching Found!")
+            cmd = on_statement["MATCH_COMMANDS"]
 
-            iden_s = Real(dom)
+            dom_success = dom + "_succ"
+            iden_s = Real(dom_success)
+            
+            print("Doing it for success case")
+            print(cmd)
+            cmd = ast_substitute(cmd, dom, dom_success)[0]
+            print(cmd)
+
             sigma = Real('σ')
-            expr2 = substitute(cast_t.logic.constraint(), (sigma, iden_s))
-            t = type_create_singular(lambda: expr2)
-            print("Assigning ", dom, " as type ", cast_t.logic.constraint(), " under psi")
-            Ψi = Ψi + (dom, t)
 
-            print(Ψi)
-            typecheck_if_statement(if_statement, Γi, Ψi)
+            cast_t_copy = copy.deepcopy(cast_t)
+            substitute(cast_t_copy.logic.constraint(), (sigma, iden_s))
+            t = type_create_singular(lambda: cast_t_copy.logic.constraint())
+            print("Assigning ", dom_success, " as type ", t.logic.constraint(), " under psi")
+            Γ = Γ + (dom_success, t)
+            Ψ = Ψ + (dom_success, t)
+            print(Ψ)
+            
+            if cmd["IDENTIFIER"] not in assigned_variables:
+                assigned_variables.append(cmd["IDENTIFIER"])
+                Γ, Ψ = typecheck_value_assignment(cmd, Γ, Ψ)
+            else:
+                old_name = cmd["IDENTIFIER"]
+                new_name = cmd["IDENTIFIER"] + "I"
+                while new_name in assigned_variables:
+                    new_name = new_name + "I"
+                assigned_variables.append(new_name)
 
-        if on_statement["MATCH_VALUE"] == 0:
-            print("TRYCAST :: Failure Matching Found!")
-        
-        statements.append(if_statement)
-    
-    return statements, Γ, Ψ
+                index2 = index + 1
+
+                ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
+                ast["BODY"][index]["IDENTIFIER"] = new_name
+                print(json.dumps(ast["BODY"], indent = 4))
+                
+                gamma_t = get_type_from_context(Γ, old_name)
+                psi_t = get_type_from_context(Ψ, old_name)
+                Γ = Γ + (new_name, gamma_t)
+                Ψ = Ψ + (new_name, psi_t)
+
+                Γ, Ψ = typecheck_value_assignment(cmd, Γ, Ψ)
+
+        elif on_statement["MATCH_VALUE"] == 0:
+            cmd = on_statement["MATCH_COMMANDS"]
+
+            dom_fail = dom + "_fail"
+            iden_s = Real(dom_fail)
+
+            print("Doing it for fail case")
+            print(cmd)
+            cmd = ast_substitute(cmd, dom, dom_fail)[0]
+            print(cmd)
+
+            sigma = Real('σ')
+
+            dom_t_copy = copy.deepcopy(dom_t)
+            substitute(dom_t_copy.logic.constraint(), (sigma, iden_s))
+            t = type_create_singular(lambda: dom_t_copy.logic.constraint())
+            print("Assigning", dom_fail, "as type", t.logic.constraint(), " under psi!")
+            Γ = Γ + (dom_fail, t)
+            Ψ = Ψ + (dom_fail, t)
+            print(Ψ)
+            
+            if cmd["IDENTIFIER"] not in assigned_variables:
+                assigned_variables.append(cmd["IDENTIFIER"])
+                Γ, Ψ = typecheck_value_assignment(cmd, Γ, Ψ)
+            else:
+                old_name = cmd["IDENTIFIER"]
+                new_name = cmd["IDENTIFIER"] + "I"
+                while new_name in assigned_variables:
+                    new_name = new_name + "I"
+                assigned_variables.append(new_name)
+
+                index2 = index + 1
+                print("Substituting all values of ", cmd["IDENTIFIER"], " with ", new_name)
+
+                ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
+                ast["BODY"][index]["IDENTIFIER"] = new_name
+                print(json.dumps(ast["BODY"], indent = 4))
+                
+                gamma_t = get_type_from_context(Γ, old_name)
+                psi_t = get_type_from_context(Ψ, old_name)
+                Γ = Γ + (new_name, gamma_t)
+                Ψ = Ψ + (new_name, psi_t)
+
+                Γ, Ψ = typecheck_value_assignment(cmd, Γ, Ψ)
+
+    print("returned propagational context of: \n", Ψ)
+    return Γ, Ψ
 
 
 
-def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _context):
+def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _context, ast, assigned_variables):
 
     print(if_statement["EXPRESSION"])
     expr = form_expression(if_statement["EXPRESSION"], 'σ')
@@ -396,7 +453,9 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
     while index < len(if_statement["MATCH_COMMANDS"]):
         statement = if_statement["MATCH_COMMANDS"][index]
         if statement["TYPE"] == "TYPE_ASSIGNMENT":  Γ, Ψ = typecheck_type_assignment(statement, Γ, Ψ)
-        if statement["TYPE"] == "VALUE_ASSIGNMENT": Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+        if statement["TYPE"] == "VALUE_ASSIGNMENT":
+                Γ, Ψ = typecheck_value_assignment(statement, Γ, Ψ)
+
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
         if statement["TYPE"] == "DO_STATEMENT":
             statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
@@ -485,7 +544,8 @@ def typecheck_function(function: dict[str:any], Γ: _context):
 
             
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
-        if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
+        if statement["TYPE"] == "IF_STATEMENT":
+            Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ, function, assigned_variables)
 
         if statement["TYPE"] == "DO_STATEMENT":
             statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
@@ -493,9 +553,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             index += len(statements) - 1
 
         if statement["TYPE"] == "TRYCAST_STATEMENT":
-            statements, Γ, Ψ = desugar_trycast_statement(statement, Γ, Ψ)
-            function["BODY"][index:index+1] = statements
-            index += len(statements) - 1
+            Γ, Ψ = desugar_trycast_statement(statement, Γ, Ψ, function, assigned_variables, index)
 
         index = index + 1
     return Ψ, Γ

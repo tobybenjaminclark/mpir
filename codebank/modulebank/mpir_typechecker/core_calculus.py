@@ -94,14 +94,19 @@ def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -
     
     func = get_type_from_context(context, ast["IDENTIFIER"])
     if len(func.logic.input_constraints) != len(arguments): raise TypeError("Invalid number of args!")
-
+    σ = Real('σ')
     s = z3.Solver()
     for index, arg in enumerate(arguments):
         s.reset()
         # Get propagational contextual info.
         for iden, typ in propagation:
+            iden_t = Real(iden)
             if isinstance(typ.logic, _function_type): continue
-            s.add(typ.logic.constraint())
+            s.add(substitute(typ.logic.constraint(), (σ, iden_t))) 
+        for iden, typ in context:
+            iden_t = Real(iden)
+            if isinstance(typ.logic, _function_type): continue
+            s.add(substitute(typ.logic.constraint(), (σ, iden_t)))          
         
         # Add the assertion
         temp22 = Real('temp22')
