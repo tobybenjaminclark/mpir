@@ -124,7 +124,8 @@ def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -
             print("SAT")
             model = s.model()
             print(model)
-            raise Exception()
+            a = model.evaluate(temp22).as_decimal(3)
+            raise Exception("Found invalid possible value of " + str(a))
         else:
             print("UNSAT")
             print("valid argument")

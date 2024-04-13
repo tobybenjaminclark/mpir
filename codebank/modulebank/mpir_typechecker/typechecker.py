@@ -596,18 +596,13 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
-
-        print("Typechecking", function["IDENTIFIER"])
-        typecheck_function(function, duplicate_context(Γ))
-        continue
-
         try:
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
+            print("ERROR:")
             print(traceback.format_exc())
-            raise Exception("Error typechecking function: " + function["IDENTIFIER"])
-
             g_errors.append(str(e))
+            
     
     return Γ
     
