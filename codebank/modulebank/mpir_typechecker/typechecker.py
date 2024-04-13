@@ -158,13 +158,19 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     Γ, Ψ, expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     solver = z3.Solver()
     sigma = Real('σ')
+
     for iden, typ in Γ:
         if isinstance(typ.logic, _function_type): continue
-
         iden_s = Real(iden)
         expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
-        e2 = z3.And(expr2, z3.And(iden_s > -2147483648, iden_s < 2147483648))
-        solver.add(e2)
+        solver.add(expr2)
+    for iden, typ in Ψ:
+        if isinstance(typ.logic, _function_type): continue
+        print("Ψ: iden", typ.logic.constraint())
+        iden_s = Real(iden)
+        expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
+        solver.add(expr2)
+
     temp22 = Real("temp22")
     typ2 = get_type_from_context(Γ, statement["IDENTIFIER"])
     solver.add(temp22 == expr)
@@ -177,7 +183,7 @@ def typecheck_value_assignment(statement: dict[str:any], Γ: _context, Ψ: _cont
     constr = substitute(typ2.logic.constraint(), (sigma, temp22))
 
     solver.add(z3.Not(constr))
-    
+    print(solver)
     if solver.check() == z3.sat:
         print("SAT")
         model = solver.model()
@@ -358,9 +364,14 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
         if on_statement["MATCH_VALUE"] == 1:
             print("TRYCAST :: Success Matching Found!")
 
+            iden_s = Real(dom)
+            sigma = Real('σ')
+            expr2 = substitute(cast_t.logic.constraint(), (sigma, iden_s))
+            t = type_create_singular(lambda: expr2)
             print("Assigning ", dom, " as type ", cast_t.logic.constraint(), " under psi")
-            Ψi = Ψi + (dom, cast_t)
+            Ψi = Ψi + (dom, t)
 
+            print(Ψi)
             typecheck_if_statement(if_statement, Γi, Ψi)
 
         if on_statement["MATCH_VALUE"] == 0:
@@ -377,6 +388,10 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
     print(if_statement["EXPRESSION"])
     expr = form_expression(if_statement["EXPRESSION"], 'σ')
     
+    print("IF STATEMENT CONTEXTS:")
+    print(Γ)
+    print(Ψ)
+
     index = 0
     while index < len(if_statement["MATCH_COMMANDS"]):
         statement = if_statement["MATCH_COMMANDS"][index]
