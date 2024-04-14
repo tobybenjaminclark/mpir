@@ -341,7 +341,12 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
     if len([o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]]) != 2: raise Exception("Not enough on statements in trycast.")
     elif 0 not in [o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]] or 1 not in [o["MATCH_VALUE"] for o in trycast_statement["ON_STATEMENTS"]]: raise Exception("Trycast on statements missing 1/0 control-flow")
 
-    for index, on_statement in enumerate(trycast_statement["ON_STATEMENTS"]):
+    if trycast_statement["ON_STATEMENTS"][0]["MATCH_COMMANDS"][0]["IDENTIFIER"] == trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"]:
+        same = True
+    else:
+        same = False
+
+    for on_statement in trycast_statement["ON_STATEMENTS"]:
 
         if(on_statement["MATCH_VALUE"] not in [0, 1]): print("Invalid Trycast")
         else: print("Valid trycast")
@@ -376,11 +381,10 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                 while new_name in assigned_variables:
                     new_name = new_name + "I"
                 assigned_variables.append(new_name)
-
-                index2 = index + 1
+                print("assigned variables: ", assigned_variables)
 
                 ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
-                ast["BODY"][index]["IDENTIFIER"] = new_name
+                cmd["IDENTIFIER"] = new_name
                 print(json.dumps(ast["BODY"], indent = 4))
                 
                 gamma_t = get_type_from_context(Γ, old_name)
@@ -420,12 +424,13 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                 while new_name in assigned_variables:
                     new_name = new_name + "I"
                 assigned_variables.append(new_name)
+                print("assigned variables: ", assigned_variables)
 
                 index2 = index + 1
                 print("Substituting all values of ", cmd["IDENTIFIER"], " with ", new_name)
 
                 ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
-                ast["BODY"][index]["IDENTIFIER"] = new_name
+                cmd["IDENTIFIER"] = new_name
                 print(json.dumps(ast["BODY"], indent = 4))
                 
                 gamma_t = get_type_from_context(Γ, old_name)
@@ -434,6 +439,43 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                 Ψ = Ψ + (new_name, psi_t)
 
                 Γ, Ψ = typecheck_value_assignment(cmd, Γ, Ψ)
+
+    
+    if same:
+        name_og = trycast_statement["ON_STATEMENTS"][0]["MATCH_COMMANDS"][0]["IDENTIFIER"]
+        new_name = name_og + "_combined"
+
+        print("Substituter")
+        print(ast["BODY"])
+        ast_substitute(ast["BODY"][index + 1:], name_og, new_name)
+        ast_substitute(ast["BODY"][index + 1:], trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"], new_name)
+        print(ast["BODY"])
+
+        Γ = Γ + (new_name, get_type_from_context(Γ, name_og))
+
+        typ1 = get_type_from_context(Ψ, trycast_statement["ON_STATEMENTS"][0]["MATCH_COMMANDS"][0]["IDENTIFIER"])
+        typ2 = get_type_from_context(Ψ, trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"])
+        typ1_copy = copy.deepcopy(typ1)
+        typ2_copy = copy.deepcopy(typ2)
+
+        new_id = Real(new_name)
+        typ1_σ = Real(trycast_statement["ON_STATEMENTS"][0]["MATCH_COMMANDS"][0]["IDENTIFIER"])
+        typ2_σ = Real(trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"])
+
+        a = z3.substitute(typ1_copy.logic.constraint(), (typ1_σ, new_id))
+        b = z3.substitute(typ2_copy.logic.constraint(), (typ2_σ, new_id))
+
+        print("SEE HERE:")
+        print(typ1_copy.logic.constraint())
+        print(typ2_copy.logic.constraint())
+
+        print(f"Substitute {typ1_σ} with {new_id}")
+        print(f"Substitute {typ2_σ} with {new_id}")
+        
+        Ψ = Ψ + (new_name, type_create_singular(lambda: z3.Or(a, b)))
+        print(Ψ)
+
+    print(json.dumps(ast["BODY"], indent = 4))
 
     print("returned propagational context of: \n", Ψ)
     return Γ, Ψ
@@ -475,7 +517,8 @@ def ast_substitute(d, old_str, new_str) -> list[any]:
             d[key] = ast_substitute(value, old_str, new_str)
         return d
     elif isinstance(d, str):
-        return d.replace(old_str, new_str)
+        if d == old_str: return new_str
+        else: return d
     elif isinstance(d, list):
         return [ast_substitute(item, old_str, new_str) for item in d]
     else:
@@ -596,13 +639,18 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
+
+        print("Typechecking", function["IDENTIFIER"])
+        typecheck_function(function, duplicate_context(Γ))
+        continue
+
         try:
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
-            print("ERROR:")
             print(traceback.format_exc())
+            raise Exception("Error typechecking function: " + function["IDENTIFIER"])
+
             g_errors.append(str(e))
-            
     
     return Γ
     
