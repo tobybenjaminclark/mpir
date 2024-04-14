@@ -1,0 +1,260 @@
+{
+	"CONTENTS" : [
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "test1million",
+			"RETURN_TYPE" : "Hundred",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 4.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_OPERATOR",
+								"IDENTIFIER" : "*",
+								"LEFT" : {
+									"TYPE" : "EXPRESSION_IDENTIFIER",
+									"IDENTIFIER" : "a"
+								},
+								"RIGHT" : {
+									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+									"VALUE" : 50.000000
+								}
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Takes a One and makes a 100"
+				}
+			],
+			"INPUTS" : [
+				{
+					"TYPE" : "One",
+					"LIST_INDENTATION" : 0.000000
+				}
+			],
+			"ARGUMENTS" : [
+				"a"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "make_one",
+			"RETURN_TYPE" : "One",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "return_val",
+					"ASSIGNED_TYPE" : "One",
+					"LINE" : 11.000000
+				},
+				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "return_val_test",
+					"ASSIGNED_TYPE" : "Numerical",
+					"LINE" : 12.000000
+				},
+				{
+					"TYPE" : "DO_STATEMENT",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : ">",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "num"
+						},
+						"RIGHT" : {
+							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+							"VALUE" : 5.000000
+						}
+					},
+					"LINE" : 14.000000,
+					"ON_STATEMENTS" : [
+						{
+							"LINE" : 15.000000,
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 1.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "return_val_test",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 1.000000
+									},
+									"LINE" : 15.000000
+								}
+							]
+						},
+						{
+							"LINE" : 16.000000,
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 0.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "return_val_test",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 0.000000
+									},
+									"LINE" : 16.000000
+								}
+							]
+						}
+					]
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 18.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "return_val_test"
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Tests if a value satisfies 1"
+				}
+			],
+			"INPUTS" : [
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
+				}
+			],
+			"ARGUMENTS" : [
+				"num"
+			]
+		},
+		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "one",
+			"RETURN_TYPE" : "One",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 26.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+								"VALUE" : 1.000000
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Makes a One"
+				}
+			],
+			"INPUTS" : [
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
+				}
+			],
+			"ARGUMENTS" : [
+				"num"
+			]
+		},
+		{
+			"TYPE" : "TYPE_DECLARATION",
+			"IDENTIFIER" : "One",
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Is one!"
+				}
+			],
+			"INPUTS" : [
+				"a"
+			],
+			"BASE_TYPE" : "Integer",
+			"BASE_TYPE_LIST" : 0.000000,
+			"LOGIC" : {
+				"TYPE" : "EXPRESSION_OPERATOR",
+				"IDENTIFIER" : "v",
+				"LEFT" : {
+					"TYPE" : "EXPRESSION_OPERATOR",
+					"IDENTIFIER" : "==",
+					"LEFT" : {
+						"TYPE" : "EXPRESSION_IDENTIFIER",
+						"IDENTIFIER" : "a"
+					},
+					"RIGHT" : {
+						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+						"VALUE" : 1.000000
+					}
+				},
+				"RIGHT" : {
+					"TYPE" : "EXPRESSION_OPERATOR",
+					"IDENTIFIER" : "==",
+					"LEFT" : {
+						"TYPE" : "EXPRESSION_IDENTIFIER",
+						"IDENTIFIER" : "a"
+					},
+					"RIGHT" : {
+						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+						"VALUE" : 0.000000
+					}
+				}
+			}
+		},
+		{
+			"TYPE" : "TYPE_DECLARATION",
+			"IDENTIFIER" : "Hundred",
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Less than or equal to 100"
+				}
+			],
+			"INPUTS" : [
+				"a"
+			],
+			"BASE_TYPE" : "Integer",
+			"BASE_TYPE_LIST" : 0.000000,
+			"LOGIC" : {
+				"TYPE" : "EXPRESSION_OPERATOR",
+				"IDENTIFIER" : "<",
+				"LEFT" : {
+					"TYPE" : "EXPRESSION_IDENTIFIER",
+					"IDENTIFIER" : "a"
+				},
+				"RIGHT" : {
+					"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+					"VALUE" : 100.000000
+				}
+			}
+		}
+	]
+}

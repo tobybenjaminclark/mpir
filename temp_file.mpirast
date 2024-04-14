@@ -65,12 +65,23 @@
 					"LINE" : 12.000000
 				},
 				{
-					"TYPE" : "TRYCAST_STATEMENT",
-					"DOMINANT_IDENTIFIER" : "num",
-					"CASTED_IDENTIFIER" : "return_val",
+					"TYPE" : "DO_STATEMENT",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : ">",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "num"
+						},
+						"RIGHT" : {
+							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+							"VALUE" : 5.000000
+						}
+					},
 					"LINE" : 14.000000,
 					"ON_STATEMENTS" : [
 						{
+							"LINE" : 15.000000,
 							"TYPE" : "ON_STATEMENT",
 							"MATCH_TYPE" : "NUMERICAL_LITERAL",
 							"MATCH_VALUE" : 1.000000,
@@ -87,6 +98,7 @@
 							]
 						},
 						{
+							"LINE" : 16.000000,
 							"TYPE" : "ON_STATEMENT",
 							"MATCH_TYPE" : "NUMERICAL_LITERAL",
 							"MATCH_VALUE" : 0.000000,
@@ -96,7 +108,7 @@
 									"IDENTIFIER" : "return_val_test",
 									"EXPRESSION" : {
 										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 2.000000
+										"VALUE" : 0.000000
 									},
 									"LINE" : 16.000000
 								}

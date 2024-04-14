@@ -90,17 +90,14 @@ def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type
         context, propagation, a = substitute_expression(arg["VALUE"], context, propagation)
         arguments.append(a)
     
-    try:
-        T_FuncCall(arguments, ast, context, propagation)
-    except Exception as e:
-        raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " +  cnvrt(e.args[0]["iden"]) + ". Possible invalidity of arg " + cnvrt(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
+    # Try and check the function call, make sure it's okay.
+    try: T_FuncCall(arguments, ast, context, propagation)
+    except Exception as e: raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " +  ssa_get_origin(e.args[0]["iden"]) + ". Possible invalidity of arg " + ssa_get_origin(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
 
-
-    debug(f"Function Call to", ast["IDENTIFIER"], "is valid.")
-    
+    # Encapsulate the function call as a new identifier
     func_ref = get_type_from_context(context, ast["IDENTIFIER"])
     letters = string.ascii_letters
-    a = ( ''.join(random.choice(letters) for i in range(10)) )
+    a = ( ''.join(random.choice(letters) for i in range(15)) )
     b = Real(a)
 
     constr = substitute(func_ref.logic.output_constraint(), (σ, b))
@@ -218,7 +215,7 @@ def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context
     try:
         T_FuncCall(arguments, statement, Γ, Ψ)
     except Exception as e:
-        raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " + cnvrt(e.args[0]["iden"]) + ". Possible invalidity of arg " + cnvrt(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
+        raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " + ssa_get_origin(e.args[0]["iden"]) + ". Possible invalidity of arg " + ssa_get_origin(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
     
     debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
 
@@ -226,48 +223,41 @@ def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context
 
 
  
-def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context):
-    statements = []
-    identifier = "anon"
+def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context, ast, assigned_variables, index):
+    solver = Solver()
+    sigma = Real('σ')
 
-    expr = type_ast_expression(statement["EXPRESSION"], Γ, Ψ)
-    print(expr.logic.constraint())
+    for iden, typ in Γ:
+        if isinstance(typ.logic, _function_type): continue
+        iden_s = Real(iden)
+        expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
+        solver.add(expr2)
 
+    for iden, typ in Ψ:
+        if isinstance(typ.logic, _function_type): continue
+        print("Ψ: iden", typ.logic.constraint())
+        iden_s = Real(iden)
+        expr2 = substitute(typ.logic.constraint(), (sigma, iden_s))
+        solver.add(expr2)
 
-    assignment = {
-        "TYPE" : "TYPE_ASSIGNMENT",
-        "IDENTIFIER" : identifier,
-        "ASSIGNED_TYPE" : "Numerical"
-    }
+    temp_identifier = ( ''.join(random.choice(string.ascii_letters) for i in range(15)) )
+    temp_id = Real(temp_identifier)
 
-    assignment2 = {
-        "TYPE" : "VALUE_ASSIGNMENT",
-        "IDENTIFIER" : identifier,
-        "EXPRESSION" : statement["EXPRESSION"]
-    }
+    Γ, Ψ, expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     
-    statements.append(assignment)
-    statements.append(assignment2)
+    if (is_bool(expr)):
+        print("Expression is boolean.")
+        solver.add(If(expr == True, temp_id == 1, temp_id == 0))
+    elif (is_real(expr)):
+        print("Expression is real.")
+        solver.add(temp_id == expr)
+   
 
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
-        if_statement = {
-            "TYPE" : "IF_STATEMENT",
-            "EXPRESSION" : {
-                "TYPE" : "EXPRESSION_OPERATOR",
-                "IDENTIFIER" : "==",
-                "LEFT" : {
-                    "TYPE" : "IDENTIFIER",
-                    "IDENTIFIER" : identifier
-                },
-                "RIGHT" : {
-                    "TYPE" : ("EXPRESSION_NUMERICAL_LITERAL"),
-                    "VALUE" : on_statement["MATCH_VALUE"]
-                }},
-            "MATCH_COMMANDS" : on_statement["MATCH_COMMANDS"]
-        }
-        statements.append(if_statement)
+        cmd = on_statement["MATCH_COMMANDS"]
+        print(cmd[0]["IDENTIFIER"])
         
-    return statements, Γ, Ψ
+    return Γ, Ψ
 
     
 
@@ -371,7 +361,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
             
             print("Doing it for success case")
             print(cmd)
-            cmd = ast_substitute(cmd, dom, dom_success)[0]
+            cmd = ssa_replace(cmd, dom, dom_success)[0]
             print(cmd)
 
             sigma = Real('σ')
@@ -395,7 +385,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                 assigned_variables.append(new_name)
                 print("assigned variables: ", assigned_variables)
 
-                ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
+                ssa_replace(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
                 cmd["IDENTIFIER"] = new_name
                 print(json.dumps(ast["BODY"], indent = 4))
                 
@@ -414,7 +404,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
 
             print("Doing it for fail case")
             print(cmd)
-            cmd = ast_substitute(cmd, dom, dom_fail)[0]
+            cmd = ssa_replace(cmd, dom, dom_fail)[0]
             print(cmd)
 
             sigma = Real('σ')
@@ -441,7 +431,7 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
                 index2 = index + 1
                 print("Substituting all values of ", cmd["IDENTIFIER"], " with ", new_name)
 
-                ast_substitute(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
+                ssa_replace(ast["BODY"][index + 1:], cmd["IDENTIFIER"], new_name)
                 cmd["IDENTIFIER"] = new_name
                 print(json.dumps(ast["BODY"], indent = 4))
                 
@@ -459,8 +449,8 @@ def desugar_trycast_statement(trycast_statement: dict[str:any], Γ: _context, Ψ
 
         print("Substituter")
         print(ast["BODY"])
-        ast_substitute(ast["BODY"][index + 1:], name_og, new_name)
-        ast_substitute(ast["BODY"][index + 1:], trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"], new_name)
+        ssa_replace(ast["BODY"][index + 1:], name_og, new_name)
+        ssa_replace(ast["BODY"][index + 1:], trycast_statement["ON_STATEMENTS"][1]["MATCH_COMMANDS"][0]["IDENTIFIER"], new_name)
         print(ast["BODY"])
 
         Γ = Γ + (new_name, get_type_from_context(Γ, name_og))
@@ -512,8 +502,7 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
 
         if statement["TYPE"] == "FUNCTION_CALL":    Γ, Ψ = typecheck_function_call(statement, Γ, Ψ)
         if statement["TYPE"] == "DO_STATEMENT":
-            statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
-            if_statement["MATCH_COMMANDS"][index:index + 1] = statements
+            desugar_do_statement(statement, Γ, Ψ)
             continue
         if statement["TYPE"] == "IF_STATEMENT":     Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ)
         if statement["TYPE"] == "TRYCAST_STATEMENT":
@@ -522,26 +511,19 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
         index = index + 1
     return Γ, Ψ 
 
-def cnvrt(cnvrt_str):
-    while cnvrt_str in ssa_mapping:
-        cnvrt_str = ssa_mapping[cnvrt_str]
-    return cnvrt_str
+# Function to replace origin of SSA.
+def ssa_get_origin(identifier):
+    while identifier in ssa_mapping: identifier = ssa_mapping[identifier]
+    return identifier
 
 # Function to substitute variables in a Function Declaration
-def ast_substitute(d, old_str, new_str) -> list[any]:
+def ssa_replace(node, old_str, new_str) -> list[any]:
     ssa_mapping[new_str] = old_str
-
-    if isinstance(d, dict):
-        for key, value in d.items():
-            d[key] = ast_substitute(value, old_str, new_str)
-        return d
-    elif isinstance(d, str):
-        if d == old_str: return new_str
-        else: return d
-    elif isinstance(d, list):
-        return [ast_substitute(item, old_str, new_str) for item in d]
-    else:
-        return d  # No replacement needed for non-string values
+    if isinstance(node, dict):
+        for key, value in node.items(): node[key] = ssa_replace(value, old_str, new_str)
+    elif isinstance(node, str):         node = new_str if node == old_str else node
+    elif isinstance(node, list):        node = [ssa_replace(item, old_str, new_str) for item in node]
+    return node
 
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
@@ -586,7 +568,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
                 index2 = index + 1
                 print("Substituting all values of ", statement["IDENTIFIER"], " with ", new_name)
 
-                ast_substitute(function["BODY"][index + 1:], statement["IDENTIFIER"], new_name)
+                ssa_replace(function["BODY"][index + 1:], statement["IDENTIFIER"], new_name)
                 function["BODY"][index]["IDENTIFIER"] = new_name
                 print(json.dumps(function["BODY"], indent = 4))
                 
@@ -610,10 +592,7 @@ def typecheck_function(function: dict[str:any], Γ: _context):
             Γ, Ψ = typecheck_if_statement(statement, Γ, Ψ, function, assigned_variables)
 
         if statement["TYPE"] == "DO_STATEMENT":
-            statements, Γ, Ψ = desugar_do_statement(statement, Γ, Ψ)
-            function["BODY"][index:index+1] = statements
-            index += len(statements) - 1
-
+            Γ, Ψ = desugar_do_statement(statement, Γ, Ψ, function, assigned_variables, index)
         if statement["TYPE"] == "TRYCAST_STATEMENT":
             Γ, Ψ = desugar_trycast_statement(statement, Γ, Ψ, function, assigned_variables, index)
 
@@ -658,6 +637,9 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
+        typecheck_function(function, duplicate_context(Γ))
+        continue
+
         try:
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:

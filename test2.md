@@ -11,7 +11,7 @@
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>let (11)</code> <code>'return_val (11)'</code> <code>as (11)</code> <code>'One (11)'</code> <code><b>\n</b></code><br>
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>let (12)</code> <code>'return_val_test (12)'</code> <code>as (12)</code> <code>'Numerical (12)'</code> <code><b>\n</b></code><br>
 <code><b>\n</b></code><br>
-<code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>trycast (14)</code> <code>'num (14)'</code> <code>into (14)</code> <code>'return_val (14)'</code> <code><b>\n</b></code><br>
+<code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>do (14)</code> <code>'num (14)'</code> <code>> (14)</code> <code>NUMERICAL_LITERAL (14)</code> <code><b>\n</b></code><br>
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>on (15)</code> <code>NUMERICAL_LITERAL (15)</code> <code>→ (15)</code> <code>set (15)</code> <code>'return_val_test (15)'</code> <code>as (15)</code> <code>NUMERICAL_LITERAL (15)</code> <code><b>\n</b></code><br>
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>on (16)</code> <code>NUMERICAL_LITERAL (16)</code> <code>→ (16)</code> <code>set (16)</code> <code>'return_val_test (16)'</code> <code>as (16)</code> <code>NUMERICAL_LITERAL (16)</code> <code><b>\n</b></code><br>
 <code><b>\n</b></code><br>
