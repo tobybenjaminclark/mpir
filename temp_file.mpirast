@@ -23,7 +23,7 @@
 								},
 								"RIGHT" : {
 									"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-									"VALUE" : 99.000000
+									"VALUE" : 102.000000
 								}
 							}
 						}
@@ -80,7 +80,7 @@
 									"IDENTIFIER" : "return_val_test",
 									"EXPRESSION" : {
 										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 2.000000
+										"VALUE" : 1.000000
 									},
 									"LINE" : 15.000000
 								}

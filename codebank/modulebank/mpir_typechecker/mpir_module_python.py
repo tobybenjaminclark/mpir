@@ -73,26 +73,32 @@ def show_statement(statement, output_file):
         
 
 def build_python(ast: dict[str, any], output_file_path: str):
-    if "CONTENTS" not in ast:
-        print("CONTENTS NOT IN AST!")
-        exit(1)
+    print("Building python to ", output_file_path)
+    try:
+        if "CONTENTS" not in ast:
+            print("CONTENTS NOT IN AST!")
+            exit(1)
 
-    with open(output_file_path, 'w') as output_file:
-        output_file.write("# Generated using the MPIR Compiler.\n\n")
+        with open(output_file_path, 'w') as output_file:
+            output_file.write("# Generated using the MPIR Compiler.\n\n")
 
-        # build types
-        for node in filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"]):
-            identifier = node["IDENTIFIER"]
-            output_file.write(f"{identifier} = type('{identifier}', (), {{}})\n\n")
-        output_file.write("Numerical = type('Numerical', (float, ), {})\n\n")
+            # build types
+            for node in filter(lambda v: v["TYPE"] == "TYPE_DECLARATION", ast["CONTENTS"]):
+                identifier = node["IDENTIFIER"]
+                output_file.write(f"{identifier} = type('{identifier}', (), {{}})\n\n")
+            output_file.write("Numerical = type('Numerical', (float, ), {})\n\n")
 
-        # build functions
-        for node in filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
-            output_file.write("def " + node["IDENTIFIER"] + "(")
-            for index, arg in enumerate(node["ARGUMENTS"]):
-                output_file.write(arg + ": " + node["INPUTS"][index]["TYPE"] + (", " if index < len(node["ARGUMENTS"]) - 1 else ""))
-            output_file.write(") -> " + node["RETURN_TYPE"] + ":\n")
-            for statement in node["BODY"]:
-                output_file.write("\t")
-                show_statement(statement, output_file)
-            output_file.write("\n\n")
+            # build functions
+            for node in filter(lambda v: v["TYPE"] == "FUNCTION_DECLARATION", ast["CONTENTS"]):
+                output_file.write("def " + node["IDENTIFIER"] + "(")
+                for index, arg in enumerate(node["ARGUMENTS"]):
+                    output_file.write(arg + ": " + node["INPUTS"][index]["TYPE"] + (", " if index < len(node["ARGUMENTS"]) - 1 else ""))
+                output_file.write(") -> " + node["RETURN_TYPE"] + ":\n")
+                for statement in node["BODY"]:
+                    output_file.write("\t")
+                    show_statement(statement, output_file)
+                output_file.write("\n\n")
+
+    except Exception as e:
+        with open(output_file_path, 'w') as output_file:
+            output_file.write("# " + str(e))

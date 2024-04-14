@@ -30,7 +30,7 @@ int main(int argc, char** argv)
     const char* outputFile = NULL;
     const char* configFile = NULL;
 
-    /*
+
     // Parse command-line arguments
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-h") == 0){
@@ -58,14 +58,11 @@ int main(int argc, char** argv)
 
     // Ensure both input and output files are provided
     if (inputFile == NULL || outputFile == NULL || configFile == NULL) {
-        printf("Usage: %s --i <input_file> --o <output_file>\n", argv[0]);
-        return 1; // Exit with error
+        printf("INVALID FILE!");
+        inputFile = "test.mpir";
+        outputFile = "output.tex";
+        configFile = "config.config";
     }
-    */
-
-    inputFile = "test.mpir";
-    outputFile = "testoutput.tex";
-    configFile = "config.config";
 
     printf("INPUT FILE  : %s \n", inputFile);
     printf("OUTPUT FILE : %s \n", outputFile);
@@ -75,10 +72,10 @@ int main(int argc, char** argv)
     a = mpir_tokenise(inputFile, "test2.md");
     mpir_parser* psr = upgrade_to_parser(a);
     mpir_parse(psr);
-    mpir_write_ast(psr, "temp.mpirast");
+    mpir_write_ast(psr, "temp_file.mpirast");
     mpir_parser_free(psr);
 
-    mpir_build("temp.mpirast", outputFile, configFile);
+    mpir_build("temp_file.mpirast", outputFile, configFile);
     return 0;
 }
 

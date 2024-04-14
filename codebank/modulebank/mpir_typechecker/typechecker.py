@@ -639,19 +639,12 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = process_function_declarations(ast, Γ)
 
     for function in [node for node in ast["CONTENTS"] if node["TYPE"] == "FUNCTION_DECLARATION"]:
-
-        print("Typechecking", function["IDENTIFIER"])
-        typecheck_function(function, duplicate_context(Γ))
-        continue
-
         try:
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
-            print(traceback.format_exc())
-            raise Exception("Error typechecking function: " + function["IDENTIFIER"])
-
+            print("Error in typechecking program.")
             g_errors.append(str(e))
-    
+            return Γ
     return Γ
     
 
@@ -666,6 +659,8 @@ def main():
     parser.add_argument('-c', '--config', metavar='config_file', type=str, help='config file path')
     args = parser.parse_args()
 
+    print("TYPECHECKING ", args.input)
+
     input_file = args.input
     output_file = args.output_file
     config_file = args.config
@@ -674,16 +669,24 @@ def main():
     ast = parse_json_file(input_file)
     Γ = typecheck_ast(ast)
 
-    print(f"Writing to {output_file} {len(g_errors)}")
+    print(f"Typechecker Writing to {output_file} {len(g_errors)}")
+
     if(output_file.endswith(".py")):
-        if len(g_errors) == 0: build_python(ast, output_file, Γ)
+        print("Building py file.")
+        if len(g_errors) == 0:
+            print("No errors, Building py file.")
+            build_python(ast, output_file)
+            print("Array contents written to", output_file)
         else:
+            print("Building errors file.")
             with open(output_file, 'w') as file:
                 for item in g_errors:
                     file.write("# " + str(item) + '\n')
             print("Array contents written to", output_file)
     elif(output_file.endswith(".tex")):
-        if len(g_errors) == 0: build_tex(ast, output_file, Γ)
+        if len(g_errors) == 0:
+            build_tex(ast, output_file, Γ)
+            print("Array contents written to", output_file)
         else:# Open the file for writing
             with open(output_file, 'w') as file:
                 # Write each element of the array to the file

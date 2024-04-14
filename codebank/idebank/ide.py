@@ -4,6 +4,7 @@ from PyQt5.QtGui import QIcon, QTextCharFormat, QFont, QSyntaxHighlighter, QText
 from PyQt5.QtCore import Qt, QRegExp, QSize
 import webbrowser
 import subprocess
+import time
 
 class MPIRHighlighter(QSyntaxHighlighter):
     def __init__(self, parent=None):
@@ -236,7 +237,7 @@ class MyApp(QMainWindow):
         if filename:
             with open(filename, 'w') as f:
                 self.filename = filename
-                f.write(self.left_textbox.toPlainText())
+                f.write(self.left_textbox.toPlainText().replace('\x00', ''))
 
     def save_output(self):
         filename, _ = QFileDialog.getSaveFileName(self, "Save Output", "", "All Files (*)")
@@ -285,8 +286,33 @@ class MyApp(QMainWindow):
             if stderr_line:
                 print(stderr_line.strip(), file=sys.stderr)
 
-        with open("python.py", 'r') as f:
-            self.right_textbox.setText(f.read())
+        time.sleep(0.2)
+        
+        try:
+            with open("output.py", 'r') as f:
+                self.right_textbox.setText(f.read())
+        except:
+            command = f"python3 codebank/modulebank/mpir_typechecker/typechecker.py --i temp_file.mpirast --o output.py --c config.json"
+            print(command)
+
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            while True:
+                stdout_line = process.stdout.readline()
+                stderr_line = process.stderr.readline()
+                
+                if not stdout_line and not stderr_line:
+                    break
+                
+                if stdout_line:
+                    print(stdout_line.strip())
+                if stderr_line:
+                    print("ERROR: ", stderr_line.strip())
+            
+            time.sleep(0.2)
+
+            with open("output.py", 'r') as f:
+                self.right_textbox.setText(f.read())
+
 
 
     def build_tex(self):

@@ -87,7 +87,7 @@ bool mpir_lexer_tryconsume(mpir_lexer* lexer, wchar_t expected_character)
     if (lexer->current_index >= BUFFER_SIZE - 1)
     {
         /* Handle lexeme overflow (if it happens). */
-        mpir_fatal("mpir_tokeniser: buffer overflow at index (%d).", lexer->current_index);
+        mpir_fatal("mpir_tokeniser: buffer overflow at line (%d).", lexer->line_number);
         return false;
     }
 
@@ -215,7 +215,7 @@ int mpir_tokenise_comment_and_division(mpir_lexer* lexer)
     else return mpir_tokenise_process_buffer(lexer, operator_divide);
 
     /* If it is a code comment, continue consuming characters until the end of the file or a new line character. */
-    while(lexer->peek(lexer) != L'\n' && lexer->peek(lexer) != WEOF)
+    while(lexer->peek(lexer) != L'\n' && lexer->peek(lexer) != WEOF && lexer->peek(lexer) != EOF)
     {
         if (mpir_lexer_consume(lexer)) continue; else return ERROR_UNEXPECTED_CHARACTER;
     }
@@ -254,7 +254,7 @@ int mpir_tokenise_string_literal(mpir_lexer* lexer)
     else return 0;
 
     /* Consume characters while the consumed character is not the string literal termination symbol */
-    while(lexer -> peek(lexer) != string_literal_terminator && lexer -> peek(lexer) != WEOF)
+    while(lexer -> peek(lexer) != string_literal_terminator && lexer -> peek(lexer) != WEOF && lexer->peek(lexer) != EOF && lexer->peek(lexer) != EOF)
     {
         if (mpir_lexer_consume(lexer)) continue; else return 0;
     }
@@ -690,7 +690,7 @@ mpir_lexer* mpir_tokenise(const char* file_path, char* output_path)
     if(lexer == NULL){return 0;}
 
     /* Tokenise until WEOF is met, then write the tokens to the file if it didn't fail. */
-    while (lexer->peek(lexer) != WEOF) if((lexification_fail = !mpir_tokenise_base_state(lexer))) break; else NULL;
+    while (lexer->peek(lexer) != WEOF && lexer->peek(lexer) != EOF && lexer->peek(lexer) != EOF) if((lexification_fail = !mpir_tokenise_base_state(lexer))) break; else NULL;
     if(!lexification_fail) (void)mpir_tokeniser_write(lexer, output_path);
 
     return lexer;

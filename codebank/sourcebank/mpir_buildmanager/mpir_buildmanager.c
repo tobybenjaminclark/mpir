@@ -24,7 +24,7 @@ int mpir_build(char* input_ast, char* output_file, char* config_file)
         const char *pythonScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
 
         // Build the command to run the Python script
-        const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
+        const char *texScript = "buildbank/codebank/modulebank/mpir_typechecker/typechecker.py";
         printf("python3 %s --i %s --o %s --c %s", texScript, input_ast, output_file, config_file);
         snprintf(command, sizeof(command), "python3 %s --i %s --o %s", texScript, input_ast, output_file);
 
@@ -40,7 +40,7 @@ int mpir_build(char* input_ast, char* output_file, char* config_file)
     }
     else if(strcmp(output_file, ".py"))
     {
-        const char *texScript = "codebank/modulebank/mpir_typechecker/typechecker.py";
+        const char *texScript = "buildbank/codebank/modulebank/mpir_typechecker/typechecker.py";
         snprintf(command, sizeof(command), "python3 %s --i %s --o %s --c %s", texScript, input_ast, output_file, config_file);
         result = system(command);
 
