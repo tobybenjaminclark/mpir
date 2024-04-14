@@ -12,6 +12,7 @@ import copy
 import string
 import random
 
+ssa_mapping = {}
 g_errors = []
 
 def parse_json_file(filename: str) -> dict|None:
@@ -88,7 +89,13 @@ def type_ast_function_call(ast, context, propagation, σ=z3.Real('σ')) -> _type
     for arg in ast["ARGUMENTS"]:
         context, propagation, a = substitute_expression(arg["VALUE"], context, propagation)
         arguments.append(a)
-    T_FuncCall(arguments, ast, context, propagation)
+    
+    try:
+        T_FuncCall(arguments, ast, context, propagation)
+    except Exception as e:
+        raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " +  cnvrt(e.args[0]["iden"]) + ". Possible invalidity of arg " + cnvrt(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
+
+
     debug(f"Function Call to", ast["IDENTIFIER"], "is valid.")
     
     func_ref = get_type_from_context(context, ast["IDENTIFIER"])
@@ -207,7 +214,12 @@ def typecheck_function_call(statement: dict[str:any], Γ: _context, Ψ: _context
     for arg in statement["ARGUMENTS"]:
         Γ, Ψ, a = substitute_expression(arg["VALUE"], Γ, Ψ)
         arguments.append(a)
-    T_FuncCall(arguments, statement, Γ, Ψ)
+    
+    try:
+        T_FuncCall(arguments, statement, Γ, Ψ)
+    except Exception as e:
+        raise Exception("Error on line: " + str(e.args[0]["line"]) + ", on call to " + cnvrt(e.args[0]["iden"]) + ". Possible invalidity of arg " + cnvrt(e.args[0]["arg"]) + " (" + e.args[0]["conflict"] + ")")
+    
     debug(f"Function Call to", statement["IDENTIFIER"], "is valid.")
 
     return Γ, Ψ 
@@ -510,8 +522,15 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
         index = index + 1
     return Γ, Ψ 
 
+def cnvrt(cnvrt_str):
+    while cnvrt_str in ssa_mapping:
+        cnvrt_str = ssa_mapping[cnvrt_str]
+    return cnvrt_str
+
 # Function to substitute variables in a Function Declaration
 def ast_substitute(d, old_str, new_str) -> list[any]:
+    ssa_mapping[new_str] = old_str
+
     if isinstance(d, dict):
         for key, value in d.items():
             d[key] = ast_substitute(value, old_str, new_str)

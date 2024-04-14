@@ -125,7 +125,7 @@ def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -
             model = s.model()
             print(model)
             a = model.evaluate(temp22).as_decimal(3)
-            raise Exception("Line " + str(int(ast["LINE"])) + " in call to '" + ast["IDENTIFIER"] + "'. Found possible invalidity of arg: " + str(arg) + " (" + str(a) + ")")
+            raise Exception({"line":int(ast["LINE"]), "iden": ast["IDENTIFIER"], "arg": str(arg), "conflict":str(a)})
         else:
             print("UNSAT")
             print("valid argument")

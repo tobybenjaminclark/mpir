@@ -7,7 +7,14 @@ import subprocess
 import time
 
 class MPIRHighlighter(QSyntaxHighlighter):
+    """
+    Handle the formatting and display of MPIR syntax highlighting in code blocks.
+    """
+
     def __init__(self, parent=None):
+        """
+        Initialise visual components of MPIR syntax highlighting.
+        """
         super(QSyntaxHighlighter, self).__init__(parent)
 
         keywordFormat = QTextCharFormat()
@@ -34,6 +41,9 @@ class MPIRHighlighter(QSyntaxHighlighter):
 
 
     def highlightBlock(self, text):
+        """
+        Handle display and formatting of MPIR syntax highlighted blocks.
+        """
         for pattern, format in self.highlightingRules:
             expression = QRegExp(pattern)
             index = expression.indexIn(text)
@@ -61,12 +71,18 @@ class MPIRHighlighter(QSyntaxHighlighter):
 
 
 class WikiPage(QWidget):
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Initialise and display the IDE's Wiki Page. Handle loading and unloading the content of the Wiki Page.
+        """
         super().__init__()
 
         self.initUI()
 
-    def initUI(self):
+    def initUI(self) -> None:
+        """
+        Initialise the contents of the Wiki Page. 
+        """
         layout = QVBoxLayout()
         topbar_layout = QHBoxLayout()
 
@@ -100,30 +116,42 @@ class WikiPage(QWidget):
 
         self.setLayout(layout)
 
-    def load_wiki_page(self):
-        # Load the HTML content from the file
+    def load_wiki_page(self) -> None:
+        """
+        Load the HTML content of the Wiki Page from a file.
+        """
+
         with open('codebank/idebank/wiki_page.html', 'r') as f:
             html_content = f.read()
         self.text_browser.setHtml(html_content)
 
-    def switch_to_main_page(self):
-        self.parent().switch_to_main_page()  # Call the parent's method to switch pages
+    def switch_to_main_page(self)-> None:
+        """
+        Switch from the Wiki Page to the Main Page.
+        """
+        self.parent().switch_to_main_page()
 
 
 class MyApp(QMainWindow):
-    def __init__(self):
+    def __init__(self)-> None:
+        """
+        Initialise the PyQT5 window.
+        """
         super().__init__()
 
         self.initUI()
 
-    def initUI(self):
+    def initUI(self)-> None:
+        """
+        Initialise and display the contents of the UI.
+        """
+
         # Create central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
         self.filename = None
         self.config_file = None
-
 
         # Create the QTextEdit widget
         self.left_textbox = QTextEdit()
@@ -232,39 +260,60 @@ class MyApp(QMainWindow):
         self.button7.clicked.connect(self.load_config)
         self.button3.clicked.connect(self.load_text)
 
-    def save_text(self):
+    def save_text(self)-> None:
+        """
+        Save the contents of the left textbox to a file, with the extention .mpir.
+        """
         filename, _ = QFileDialog.getSaveFileName(self, "Save File", "", "MPIR files (*.mpir)")
         if filename:
             with open(filename, 'w') as f:
                 self.filename = filename
                 f.write(self.left_textbox.toPlainText().replace('\x00', ''))
 
-    def save_output(self):
+    def save_output(self)-> None:
+        """
+        Save the contents of the right textbox to a file.
+        """
         filename, _ = QFileDialog.getSaveFileName(self, "Save Output", "", "All Files (*)")
         if filename:
             with open(filename, 'w') as f:
                 f.write(self.right_textbox.toPlainText())
 
-    def load_text(self):
+    def load_text(self)-> None:
+        """
+        Prompt the user to select a file to open. Load the file contents into the left textbox.
+        """
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "MPIR files (*.mpir)")
         if filename:
             with open(filename, 'r') as f:
                 self.filename = filename
                 self.left_textbox.setText(f.read())
 
-    def load_config(self):
+    def load_config(self)-> None:
+        """
+        Prompt the user to select a file to open. Load the file contents into the right textbox.
+        """
         filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "Config files (*.config)")
         if filename:
             with open(filename, 'r') as f:
                 self.config_file = filename
 
-    def switch_to_main_page(self):
+    def switch_to_main_page(self)-> None:
+        """
+        Switch from alternate pages to the main page.
+        """
         self.stacked_widget.setCurrentIndex(0)  # Index 0 is the main page
 
-    def switch_to_wiki_page(self):
+    def switch_to_wiki_page(self)-> None:
+        """
+        Switch from alternate pages to the wiki page.
+        """
         self.stacked_widget.setCurrentIndex(1)  # Index 1 is the wiki page
 
-    def build_python(self):
+    def build_python(self)-> None:
+        """
+        Build contents of a MPIR file to Python. Display the contents in the right textbox.
+        """
         if self.filename is None:
             QMessageBox. critical(self, "Please Save File", "File has not been saved, to transpile please save.")
             return
@@ -319,7 +368,10 @@ class MyApp(QMainWindow):
 
 
 
-    def build_tex(self):
+    def build_tex(self)-> None:
+        """
+        Build a MPIR file to LaTeX. Display the result in the right textbox.
+        """
         if self.filename is None:
             QMessageBox. critical(self, "Please Save File", "File has not been saved, to transpile please save.")
             return
@@ -348,10 +400,10 @@ class MyApp(QMainWindow):
         with open("output.tex", 'r') as f:
             self.right_textbox.setText(f.read())
 
-    def build_pseudocode(self):
+    def build_pseudocode(self)-> None:
         self.right_textbox.setPlainText("pseudocode")
 
-    def build_tests(self):
+    def build_tests(self)-> None:
         self.right_textbox.setPlainText("tests")
 
 if __name__ == '__main__':
