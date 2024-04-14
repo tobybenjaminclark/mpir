@@ -125,7 +125,7 @@ def T_FuncCall(arguments, ast, context, propagation, σ: z3.Real = Real('σ')) -
             model = s.model()
             print(model)
             a = model.evaluate(temp22).as_decimal(3)
-            raise Exception("Line " + str(ast["LINE"]) + "Function Call to " + ast["IDENTIFIER"] + ", argument " + str(index) + " - Found invalid possible value of " + str(a) + "\n\n" + str(propagation))
+            raise Exception("Line " + str(int(ast["LINE"])) + "Function Call to " + ast["IDENTIFIER"] + ", argument " + str(index) + " - Found invalid possible value of " + str(arg) + "(" + str(a) + ")")
         else:
             print("UNSAT")
             print("valid argument")
