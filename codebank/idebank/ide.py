@@ -265,7 +265,11 @@ class MyApp(QMainWindow):
         self.stacked_widget.setCurrentIndex(1)  # Index 1 is the wiki page
 
     def build_python(self):
-        if self.filename is None: return
+        if self.filename is None:
+            QMessageBox. critical(self, "Please Save File", "File has not been saved, to transpile please save.")
+            return
+        with open(self.filename, 'w') as f:
+                f.write(self.left_textbox.toPlainText().replace('\x00', ''))
 
         command = f"./buildbank/mpir --i {self.filename} --o output.py --c config.json"
         print(command)
@@ -316,7 +320,11 @@ class MyApp(QMainWindow):
 
 
     def build_tex(self):
-        if self.filename is None: return
+        if self.filename is None:
+            QMessageBox. critical(self, "Please Save File", "File has not been saved, to transpile please save.")
+            return
+        with open(self.filename, 'w') as f:
+                f.write(self.left_textbox.toPlainText().replace('\x00', ''))
 
         command = f"./buildbank/mpir --i {self.filename} --o output.tex --c config.json"
         print(command)
