@@ -1,6 +1,6 @@
 <blockquote><code><b>\n</b></code><br>
-<code>funcdef (2)</code> <code>'ten_to_hundred (2)'</code> <code>:: (2)</code> <code>'One (2)'</code> <code>→ (2)</code> <code>'Hundred (2)'</code> <code><b>\n</b></code><br>
-<code>funcdef (3)</code> <code>'ten_to_hundred (3)'</code> <code>'a (3)'</code> <code><b>\n</b></code><br>
+<code>funcdef (2)</code> <code>'test1million (2)'</code> <code>:: (2)</code> <code>'One (2)'</code> <code>→ (2)</code> <code>'Hundred (2)'</code> <code><b>\n</b></code><br>
+<code>funcdef (3)</code> <code>'test1million (3)'</code> <code>'a (3)'</code> <code><b>\n</b></code><br>
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>'return (4)'</code> <code>( (4)</code> <code>'a (4)'</code> <code>* (4)</code> <code>NUMERICAL_LITERAL (4)</code> <code>) (4)</code> <code><b>\n</b></code><br>
 <code>suchthat (5)</code> <code>: (5)</code> <code><b>\n</b></code><br>
 <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>| (6)</code> <code><u>&nbsp;&nbsp;&nbsp;&nbsp;</u></code><code>'doc (6)'</code> <code>as (6)</code> <code>STRING_LITERAL (6)</code> <code><b>\n</b></code><br>

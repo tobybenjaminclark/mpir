@@ -6,8 +6,8 @@ Hundred = type('Hundred', (), {})
 
 Numerical = type('Numerical', (float, ), {})
 
-def ten_to_hundred(a: One) -> Hundred:
-	return(a * 99.0)
+def test1million(a: One) -> Hundred:
+	return(a * 50.0)
 
 
 def make_one(num: Numerical) -> One:

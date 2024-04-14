@@ -96,27 +96,27 @@ set(SOURCE_FILES
 
 add_executable(mpir ${SOURCE_FILES})
 
-file(GLOB SOURCE_FILES "codebank/modulebank/*")
-foreach(SOURCE_FILE ${SOURCE_FILES})
-    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
-    add_custom_command(
-            TARGET mpir POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${SOURCE_FILE}
-            ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/${FILE_NAME}
-    )
-endforeach()
-
-file(GLOB SOURCE_FILES "codebank/modulebank/mpir_typechecker/*")
-foreach(SOURCE_FILE ${SOURCE_FILES})
-    get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
-    add_custom_command(
-            TARGET mpir POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${SOURCE_FILE}
-            ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/mpir_typechecker/${FILE_NAME}
-    )
-endforeach()
+# file(GLOB SOURCE_FILES "codebank/modulebank/*")
+# foreach(SOURCE_FILE ${SOURCE_FILES})
+#     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
+#     add_custom_command(
+#             TARGET mpir POST_BUILD
+#             COMMAND ${CMAKE_COMMAND} -E copy
+#             ${SOURCE_FILE}
+#             ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/${FILE_NAME}
+#     )
+# endforeach()
+#
+# file(GLOB SOURCE_FILES "codebank/modulebank/mpir_typechecker/*")
+# foreach(SOURCE_FILE ${SOURCE_FILES})
+#     get_filename_component(FILE_NAME ${SOURCE_FILE} NAME)
+#     add_custom_command(
+#             TARGET mpir POST_BUILD
+#             COMMAND ${CMAKE_COMMAND} -E copy
+#             ${SOURCE_FILE}
+#             ${CMAKE_CURRENT_BINARY_DIR}/codebank/modulebank/mpir_typechecker/${FILE_NAME}
+#     )
+# endforeach()
 
 enable_testing()
 add_executable(mpir_test codebank/testbank/test_example.c
