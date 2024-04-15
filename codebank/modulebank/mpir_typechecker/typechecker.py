@@ -245,18 +245,55 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context, a
 
     Γ, Ψ, expr = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
     
+
     if (is_bool(expr)):
         print("Expression is boolean.")
         solver.add(If(expr == True, temp_id == 1, temp_id == 0))
+        Ψ = Ψ + (temp_identifier, type_create_singular(lambda: If(expr == True, temp_id == 1, temp_id == 0)))
     elif (is_real(expr)):
         print("Expression is real.")
         solver.add(temp_id == expr)
+        Ψ = Ψ + (temp_identifier, type_create_singular(lambda: temp_id == expr))
    
-
+    # Now we have expression as a type, we can match it against literals.
+    vars = []
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
         cmd = on_statement["MATCH_COMMANDS"]
-        print(cmd[0]["IDENTIFIER"])
+        iden = cmd[0]["IDENTIFIER"]
+        new_name = (cmd[0]["IDENTIFIER"]) + "I"
+        while new_name in assigned_variables:
+            new_name = new_name + "I"
+        cmd[0]["IDENTIFIER"] = new_name
+        ssa_mapping[new_name] = iden
+        print(f"Doon :: {iden} -> {new_name}")
+        assigned_variables.append(new_name)
+        print("Appended")
         
+    print("SEC 1 done")
+    for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
+        cmd = on_statement["MATCH_COMMANDS"]
+        print("if ", expr, " == ",on_statement["MATCH_VALUE"])
+        print(cmd[0]["IDENTIFIER"], " = ", cmd[0]["EXPRESSION"])
+
+        expr_i = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
+        iden_og = get_type_from_context(Ψ, cmd[0]["IDENTIFIER"])
+        if iden_og == None:
+            raise Exception("Variable undeclared!")
+        
+        iden = copy.deepcopy(iden_og)
+        val = RealVal(float(on_statement["MATCH_VALUE"]))
+        r = Real(cmd[0]["IDENTIFIER"])
+
+        Ψ = Ψ - cmd[0]["IDENTIFIER"]
+        substitute(iden.logic.constraint(), (sigma, ))
+        typ = type_create_singular(lambda: If(temp_id == val, r == expr_i, ))
+
+        print("dooN!")
+        print(iden.logic.constraint())
+        print(typ.logic.constraint())
+        Ψ = Ψ + (cmd[0]["IDENTIFIER"], typ)
+
+    print("SEC 2 done returned")
     return Γ, Ψ
 
     

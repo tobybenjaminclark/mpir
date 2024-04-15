@@ -30,7 +30,7 @@ def test_find_satisfying_values():
     constr = [ToInt(σ) % 2 == 0]
     values = find_satisfying_values(constr, σ)
     for v in values:
-        assert float(v) % 2 == 0
+        assert float(v) % 2 == 0    
 
 # Testing find_min_max which finds the minimum and maximum satisfying values of a constraint.
 def test_find_min_max():
