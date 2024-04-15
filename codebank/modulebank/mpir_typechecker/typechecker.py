@@ -15,6 +15,21 @@ import random
 ssa_mapping = {}
 g_errors = []
 
+# Function to replace origin of SSA.
+def ssa_get_origin(identifier):
+    while identifier in ssa_mapping: identifier = ssa_mapping[identifier]
+    return identifier
+
+# Function to substitute variables in a Function Declaration
+def ssa_replace(node, old_str, new_str) -> list[any]:
+    ssa_mapping[new_str] = old_str
+    if isinstance(node, dict):
+        for key, value in node.items(): node[key] = ssa_replace(value, old_str, new_str)
+    elif isinstance(node, str):         node = new_str if node == old_str else node
+    elif isinstance(node, list):        node = [ssa_replace(item, old_str, new_str) for item in node]
+    return node
+
+
 def parse_json_file(filename: str) -> dict|None:
     try:
         file = open(filename, 'r')
@@ -256,7 +271,7 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context, a
         Ψ = Ψ + (temp_identifier, type_create_singular(lambda: temp_id == expr))
    
     # Now we have expression as a type, we can match it against literals.
-    vars = []
+    vars = {}
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
         cmd = on_statement["MATCH_COMMANDS"]
         iden = cmd[0]["IDENTIFIER"]
@@ -267,31 +282,65 @@ def desugar_do_statement(statement: dict[str:any], Γ: _context, Ψ: _context, a
         ssa_mapping[new_name] = iden
         print(f"Doon :: {iden} -> {new_name}")
         assigned_variables.append(new_name)
+        
+        iden_og = get_type_from_context(Γ, iden)
+        if iden_og == None:
+            raise Exception("Variable undeclared! " + iden)
+        iden_typ = copy.deepcopy(iden_og)
+        Γ = Γ + (new_name, iden_typ)
+        
+        # So we know what ones to map back.
+        if iden not in vars:
+            vars[iden] = [(float(on_statement["MATCH_VALUE"]), new_name)]
+        else:
+            vars[iden].append((float(on_statement["MATCH_VALUE"]), new_name))
+
         print("Appended")
         
     print("SEC 1 done")
+    print(Ψ)
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
         cmd = on_statement["MATCH_COMMANDS"]
-        print("if ", expr, " == ",on_statement["MATCH_VALUE"])
-        print(cmd[0]["IDENTIFIER"], " = ", cmd[0]["EXPRESSION"])
+        print(cmd[0])
+        print("if ", temp_id, " == ", on_statement["MATCH_VALUE"], "then")
+        print("\t", cmd[0]["IDENTIFIER"], " = ", cmd[0]["EXPRESSION"])
 
-        expr_i = substitute_expression(statement["EXPRESSION"], Γ, Ψ)
-        iden_og = get_type_from_context(Ψ, cmd[0]["IDENTIFIER"])
-        if iden_og == None:
-            raise Exception("Variable undeclared!")
-        
-        iden = copy.deepcopy(iden_og)
-        val = RealVal(float(on_statement["MATCH_VALUE"]))
-        r = Real(cmd[0]["IDENTIFIER"])
+        print("BEFORE: ,", Ψ)
+        Γ, Ψ = typecheck_value_assignment(cmd[0], Γ, Ψ)
+        print("AFTER: ,", Ψ)
 
-        Ψ = Ψ - cmd[0]["IDENTIFIER"]
-        substitute(iden.logic.constraint(), (sigma, ))
-        typ = type_create_singular(lambda: If(temp_id == val, r == expr_i, ))
+    # Now, convergae values under Psi function
+    print("PSI converging")
+    for k, v in vars.items():
+        og_typ = get_type_from_context(Γ, k)
+        new_name = k + "I"
+        while new_name in assigned_variables:
+            new_name = new_name + "I"
+        ssa_replace(ast["BODY"][index + 1:], k, new_name)
+        kval = Real('σ')
 
-        print("dooN!")
-        print(iden.logic.constraint())
-        print(typ.logic.constraint())
-        Ψ = Ψ + (cmd[0]["IDENTIFIER"], typ)
+        def gen_if (_id, _kval, vals):
+            print("Gen if called on: ", vals)
+            if len(vals) == 0: return lambda: z3.BoolVal(True)
+
+            v = vals.pop(0)
+            matchval = RealVal(v[0])
+            iden = Real(v[1])
+            try:
+                e = gen_if(_id, _kval, vals)()
+                return lambda: If(_id == matchval, _kval == iden, e)
+            except:
+                print(_id)
+                print(matchval)
+                print(_kval)
+                print(iden)
+
+        print(v)
+        prop_typ = type_create_singular(gen_if(temp_id, kval, v))
+        print("Prop typ: ", prop_typ.logic.constraint())
+        Γ = Γ + (new_name, og_typ)
+        Ψ = Ψ + (new_name, prop_typ)
+
 
     print("SEC 2 done returned")
     return Γ, Ψ
@@ -547,20 +596,6 @@ def typecheck_if_statement(if_statement: dict[str:any], Γ: _context, Ψ: _conte
             continue
         index = index + 1
     return Γ, Ψ 
-
-# Function to replace origin of SSA.
-def ssa_get_origin(identifier):
-    while identifier in ssa_mapping: identifier = ssa_mapping[identifier]
-    return identifier
-
-# Function to substitute variables in a Function Declaration
-def ssa_replace(node, old_str, new_str) -> list[any]:
-    ssa_mapping[new_str] = old_str
-    if isinstance(node, dict):
-        for key, value in node.items(): node[key] = ssa_replace(value, old_str, new_str)
-    elif isinstance(node, str):         node = new_str if node == old_str else node
-    elif isinstance(node, list):        node = [ssa_replace(item, old_str, new_str) for item in node]
-    return node
 
 # Function to type check a Function Declaration.
 def typecheck_function(function: dict[str:any], Γ: _context):
