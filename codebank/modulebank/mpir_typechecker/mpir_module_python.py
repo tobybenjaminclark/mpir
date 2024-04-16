@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 from z3 import *
-
+from typing_context import *
 
 def parse_json_file(filename: str) -> dict|None:
     try:
@@ -55,15 +55,38 @@ def convert_expression(expr: dict) -> str:
 
 
 def convert_do_statement(statement) -> str:
-
     lines = ""
-    for on_statement in statement["ON_STATEMENTS"]:
+    for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
         lines = lines + ("if (" + convert_expression(statement["EXPRESSION"]) + ") ==  " + str(on_statement["MATCH_VALUE"]) + ": ")
         lines = lines + str(on_statement["MATCH_COMMANDS"][0]["IDENTIFIER"]) + " = " + convert_expression(on_statement["MATCH_COMMANDS"][0]["EXPRESSION"]) + "\n\t"
+        if index != len(statement["ON_STATEMENTS"]) - 1: lines += "el"
+            
     return lines
 
 
-def show_statement(statement, output_file):
+def z3_to_string(expr):
+    if is_and(expr):
+        return "(" + z3_to_string(expr.children()[0]) + " and " + z3_to_string(expr.children()[1]) + ")"
+    elif is_or(expr):
+        return "(" + z3_to_string(expr.children()[0]) + " or " + z3_to_string(expr.children()[1]) + ")"
+    elif is_not(expr):
+        return "not " + z3_to_string(expr.children()[0])
+    else:
+        return str(expr)
+    
+def convert_trycast_statement(statement, context) -> str:
+    set_option('smtlib2_compliant', True)
+    set_option('pretty_print', True)
+
+    lines = ""
+    c_typ = get_type_from_context(context, statement["CASTED_IDENTIFIER"])
+    cond = (str(z3_to_string(c_typ.logic.constraint()))).replace("σ", statement["DOMINANT_IDENTIFIER"])
+    for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
+        lines += "if(" + cond + ") == " + ("True" if on_statement["MATCH_VALUE"] == 1 else "False") + ": " + convert_expression(on_statement["MATCH_COMMANDS"][0]["EXPRESSION"]) + "\n\t"
+        if index != len(statement["ON_STATEMENTS"]) - 1: lines += "el"
+    return lines
+
+def show_statement(statement, output_file, context):
     if statement["TYPE"] == "TYPE_ASSIGNMENT":
         output_file.write(statement["IDENTIFIER"] + ": " + statement["ASSIGNED_TYPE"] + "\n")
     elif statement["TYPE"] == "VALUE_ASSIGNMENT":
@@ -71,18 +94,13 @@ def show_statement(statement, output_file):
     elif statement["TYPE"] == "FUNCTION_CALL":
         output_file.write(convert_function_call(statement) + "\n")
     elif statement["TYPE"] == "TRYCAST_STATEMENT":
-        output_file.write("TRYCAST!\n")
+        output_file.write(convert_trycast_statement(statement, context) + "\n")
     elif statement["TYPE"] == "DO_STATEMENT":
         output_file.write(convert_do_statement(statement) + "\n")
-    elif statement["TYPE"] == "IF_STATEMENT":
-        output_file.write("if (" + convert_expression(statement["EXPRESSION"]) + "):\n")
-        for statement2 in statement["MATCH_COMMANDS"]:
-            output_file.write("\t\t")
-            show_statement(statement2, output_file)
 
         
 
-def build_python(ast: dict[str, any], output_file_path: str):
+def build_python(ast: dict[str, any], output_file_path: str, context):
     print("Building python to ", output_file_path)
     try:
         if "CONTENTS" not in ast:
@@ -106,7 +124,7 @@ def build_python(ast: dict[str, any], output_file_path: str):
                 output_file.write(") -> " + node["RETURN_TYPE"] + ":\n")
                 for statement in node["BODY"]:
                     output_file.write("\t")
-                    show_statement(statement, output_file)
+                    show_statement(statement, output_file, context)
                 output_file.write("\n\n")
 
     except Exception as e:

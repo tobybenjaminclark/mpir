@@ -747,7 +747,7 @@ def main():
         print("Building py file.")
         if len(g_errors) == 0:
             print("No errors, Building py file.")
-            build_python(ast, output_file)
+            build_python(ast, output_file, Γ)
             print("Array contents written to", output_file)
         else:
             print("Building errors file.")
