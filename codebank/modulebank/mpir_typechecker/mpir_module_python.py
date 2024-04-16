@@ -53,6 +53,16 @@ def convert_expression(expr: dict) -> str:
     if(expr["TYPE"] == ""):
         pass
 
+
+def convert_do_statement(statement) -> str:
+
+    lines = ""
+    for on_statement in statement["ON_STATEMENTS"]:
+        lines = lines + ("if (" + convert_expression(statement["EXPRESSION"]) + ") ==  " + str(on_statement["MATCH_VALUE"]) + ": ")
+        lines = lines + str(on_statement["MATCH_COMMANDS"][0]["IDENTIFIER"]) + " = " + convert_expression(on_statement["MATCH_COMMANDS"][0]["EXPRESSION"]) + "\n\t"
+    return lines
+
+
 def show_statement(statement, output_file):
     if statement["TYPE"] == "TYPE_ASSIGNMENT":
         output_file.write(statement["IDENTIFIER"] + ": " + statement["ASSIGNED_TYPE"] + "\n")
@@ -63,7 +73,7 @@ def show_statement(statement, output_file):
     elif statement["TYPE"] == "TRYCAST_STATEMENT":
         output_file.write("TRYCAST!\n")
     elif statement["TYPE"] == "DO_STATEMENT":
-        output_file.write("DO STATEMENT!\n")
+        output_file.write(convert_do_statement(statement) + "\n")
     elif statement["TYPE"] == "IF_STATEMENT":
         output_file.write("if (" + convert_expression(statement["EXPRESSION"]) + "):\n")
         for statement2 in statement["MATCH_COMMANDS"]:

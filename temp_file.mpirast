@@ -1,6 +1,102 @@
 {
 	"CONTENTS" : [
 		{
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "IsPositive",
+			"RETURN_TYPE" : "Bool",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "ret_val",
+					"ASSIGNED_TYPE" : "Numerical",
+					"LINE" : 4.000000
+				},
+				{
+					"TYPE" : "DO_STATEMENT",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_OPERATOR",
+						"IDENTIFIER" : ">=",
+						"LEFT" : {
+							"TYPE" : "EXPRESSION_IDENTIFIER",
+							"IDENTIFIER" : "num"
+						},
+						"RIGHT" : {
+							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+							"VALUE" : 0.000000
+						}
+					},
+					"LINE" : 5.000000,
+					"ON_STATEMENTS" : [
+						{
+							"LINE" : 6.000000,
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 1.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "ret_val",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 1.000000
+									},
+									"LINE" : 6.000000
+								}
+							]
+						},
+						{
+							"LINE" : 7.000000,
+							"TYPE" : "ON_STATEMENT",
+							"MATCH_TYPE" : "NUMERICAL_LITERAL",
+							"MATCH_VALUE" : 0.000000,
+							"MATCH_COMMANDS" : [
+								{
+									"TYPE" : "VALUE_ASSIGNMENT",
+									"IDENTIFIER" : "ret_val",
+									"EXPRESSION" : {
+										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+										"VALUE" : 2.000000
+									},
+									"LINE" : 7.000000
+								}
+							]
+						}
+					]
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 8.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "ret_val"
+							}
+						}
+					]
+				}
+			],
+			"DOCSECTION" : [
+				{
+					"FLAG" : "doc",
+					"STRING" : "Tests if a value satisfies 1"
+				}
+			],
+			"INPUTS" : [
+				{
+					"TYPE" : "NumericalPos",
+					"LIST_INDENTATION" : 0.000000
+				}
+			],
+			"ARGUMENTS" : [
+				"num"
+			]
+		},
+		{
 			"TYPE" : "TYPE_DECLARATION",
 			"IDENTIFIER" : "NumericalPos",
 			"DOCSECTION" : [
@@ -69,102 +165,6 @@
 					}
 				}
 			}
-		},
-		{
-			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "IsPositive",
-			"RETURN_TYPE" : "Bool",
-			"RETURN_TYPE_LIST" : 0.000000,
-			"BODY" : [
-				{
-					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "ret_val",
-					"ASSIGNED_TYPE" : "Numerical",
-					"LINE" : 15.000000
-				},
-				{
-					"TYPE" : "DO_STATEMENT",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : ">=",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "num"
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 1.000000
-						}
-					},
-					"LINE" : 16.000000,
-					"ON_STATEMENTS" : [
-						{
-							"LINE" : 17.000000,
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 1.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "ret_val",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 1.000000
-									},
-									"LINE" : 17.000000
-								}
-							]
-						},
-						{
-							"LINE" : 18.000000,
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 0.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "ret_val",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 0.000000
-									},
-									"LINE" : 18.000000
-								}
-							]
-						}
-					]
-				},
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"LINE" : 19.000000,
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "ret_val"
-							}
-						}
-					]
-				}
-			],
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Tests if a value satisfies 1"
-				}
-			],
-			"INPUTS" : [
-				{
-					"TYPE" : "NumericalPos",
-					"LIST_INDENTATION" : 0.000000
-				}
-			],
-			"ARGUMENTS" : [
-				"num"
-			]
 		}
 	]
 }

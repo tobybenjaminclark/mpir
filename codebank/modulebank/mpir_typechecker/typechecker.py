@@ -145,7 +145,7 @@ def typecheck_type_assignment(statement: dict[str:any], Γ: _context, Ψ: _conte
     if(statement["IDENTIFIER"] in Γ): raise Exception("Type Assignment (identifier already has a type!)")
     if((assigned_type := get_type_from_context(Γ, statement["ASSIGNED_TYPE"])) == None): raise Exception("Type",statement["ASSIGNED_TYPE"],"not in context:",Γ)
     debug(f"Let ::", statement["IDENTIFIER"], "is valid.")
-    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), add_type_to_context(Ψ, statement["IDENTIFIER"], assigned_type)
+    return add_type_to_context(Γ, statement["IDENTIFIER"], assigned_type), Ψ
 
 
 
@@ -158,6 +158,7 @@ def substitute_expression(ast: dict[str:any], Γ: _context, Ψ: _context) -> z3.
     
     if ast_type   == "EXPRESSION_IDENTIFIER":
         iden = Real(ast["IDENTIFIER"])
+        if get_type_from_context(Ψ, ast["IDENTIFIER"]) == None: raise Exception("Undeclared variable: " + ast["IDENTIFIER"])
         return Γ, Ψ, (lambda: iden)()
     elif ast_type ==  "EXPRESSION_NUMERICAL_LITERAL":
         return Γ, Ψ, (lambda: RealVal(float(ast["VALUE"])))()
