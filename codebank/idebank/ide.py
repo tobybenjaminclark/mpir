@@ -175,7 +175,6 @@ class MyApp(QMainWindow):
         self.button5 = QPushButton()
         self.button6 = QPushButton()
         self.button7 = QPushButton()
-        self.button8 = QPushButton()
 
         # Set icons and adjust their size
         icon_size = QSize(40, 40)  # Adjust the size as needed
@@ -193,8 +192,6 @@ class MyApp(QMainWindow):
         self.button6.setIconSize(icon_size)
         self.button7.setIcon(QIcon(QPixmap('codebank/idebank/config.png').scaled(icon_size.width(), icon_size.height())))
         self.button7.setIconSize(icon_size)
-        self.button8.setIcon(QIcon(QPixmap('codebank/idebank/icon1.png').scaled(icon_size.width(), icon_size.height())))
-        self.button8.setIconSize(icon_size)
         
         # Set fixed size for buttons to make them square
         button_size = 64  # Adjust the size as needed
@@ -205,7 +202,6 @@ class MyApp(QMainWindow):
         self.button5.setFixedSize(button_size, button_size)
         self.button6.setFixedSize(button_size, button_size)
         self.button7.setFixedSize(button_size, button_size)
-        self.button8.setFixedSize(button_size, button_size)
 
         # Add buttons to top bar
         left_buttons_layout = QHBoxLayout()
@@ -218,7 +214,6 @@ class MyApp(QMainWindow):
         right_buttons_layout.addWidget(self.button5)
         right_buttons_layout.addWidget(self.button6)
         right_buttons_layout.addWidget(self.button7)
-        right_buttons_layout.addWidget(self.button8)
 
         # Set up layout
         topbar_layout = QHBoxLayout()
@@ -315,7 +310,7 @@ class MyApp(QMainWindow):
         Build contents of a MPIR file to Python. Display the contents in the right textbox.
         """
         if self.filename is None:
-            QMessageBox. critical(self, "Please Save File", "File has not been saved, to transpile please save.")
+            QMessageBox.critical(self, "Please Save File", "File has not been saved, to transpile please save.")
             return
         with open(self.filename, 'w') as f:
                 f.write(self.left_textbox.toPlainText().replace('\x00', ''))

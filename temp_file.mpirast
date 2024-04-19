@@ -1,108 +1,12 @@
 {
 	"CONTENTS" : [
 		{
-			"TYPE" : "FUNCTION_DECLARATION",
-			"IDENTIFIER" : "IsPositive",
-			"RETURN_TYPE" : "Bool",
-			"RETURN_TYPE_LIST" : 0.000000,
-			"BODY" : [
-				{
-					"TYPE" : "TYPE_ASSIGNMENT",
-					"IDENTIFIER" : "ret_val",
-					"ASSIGNED_TYPE" : "Numerical",
-					"LINE" : 4.000000
-				},
-				{
-					"TYPE" : "DO_STATEMENT",
-					"EXPRESSION" : {
-						"TYPE" : "EXPRESSION_OPERATOR",
-						"IDENTIFIER" : ">=",
-						"LEFT" : {
-							"TYPE" : "EXPRESSION_IDENTIFIER",
-							"IDENTIFIER" : "num"
-						},
-						"RIGHT" : {
-							"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-							"VALUE" : 0.000000
-						}
-					},
-					"LINE" : 5.000000,
-					"ON_STATEMENTS" : [
-						{
-							"LINE" : 6.000000,
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 1.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "ret_val",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 1.000000
-									},
-									"LINE" : 6.000000
-								}
-							]
-						},
-						{
-							"LINE" : 7.000000,
-							"TYPE" : "ON_STATEMENT",
-							"MATCH_TYPE" : "NUMERICAL_LITERAL",
-							"MATCH_VALUE" : 0.000000,
-							"MATCH_COMMANDS" : [
-								{
-									"TYPE" : "VALUE_ASSIGNMENT",
-									"IDENTIFIER" : "ret_val",
-									"EXPRESSION" : {
-										"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-										"VALUE" : 0.000000
-									},
-									"LINE" : 7.000000
-								}
-							]
-						}
-					]
-				},
-				{
-					"TYPE" : "FUNCTION_CALL",
-					"IDENTIFIER" : "return",
-					"LINE" : 8.000000,
-					"ARGUMENTS" : [
-						{
-							"TYPE" : "FUNCTION_ARGUMENT",
-							"ARGUMENT_INDEX" : 0.000000,
-							"VALUE" : {
-								"TYPE" : "EXPRESSION_IDENTIFIER",
-								"IDENTIFIER" : "ret_val"
-							}
-						}
-					]
-				}
-			],
-			"DOCSECTION" : [
-				{
-					"FLAG" : "doc",
-					"STRING" : "Tests if a value satisfies 1"
-				}
-			],
-			"INPUTS" : [
-				{
-					"TYPE" : "NumericalPos",
-					"LIST_INDENTATION" : 0.000000
-				}
-			],
-			"ARGUMENTS" : [
-				"num"
-			]
-		},
-		{
 			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "NumericalPos",
+			"IDENTIFIER" : "Balance",
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Numerical, Positive Number"
+					"STRING" : "Stores financial balance greater than 0"
 				}
 			],
 			"INPUTS" : [
@@ -124,47 +28,57 @@
 			}
 		},
 		{
-			"TYPE" : "TYPE_DECLARATION",
-			"IDENTIFIER" : "Bool",
+			"TYPE" : "FUNCTION_DECLARATION",
+			"IDENTIFIER" : "createBalance",
+			"RETURN_TYPE" : "Balance",
+			"RETURN_TYPE_LIST" : 0.000000,
+			"BODY" : [
+				{
+					"TYPE" : "TYPE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"ASSIGNED_TYPE" : "Balance",
+					"LINE" : 9.000000
+				},
+				{
+					"TYPE" : "VALUE_ASSIGNMENT",
+					"IDENTIFIER" : "new_bal",
+					"EXPRESSION" : {
+						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
+						"VALUE" : 5.000000
+					},
+					"LINE" : 10.000000
+				},
+				{
+					"TYPE" : "FUNCTION_CALL",
+					"IDENTIFIER" : "return",
+					"LINE" : 11.000000,
+					"ARGUMENTS" : [
+						{
+							"TYPE" : "FUNCTION_ARGUMENT",
+							"ARGUMENT_INDEX" : 0.000000,
+							"VALUE" : {
+								"TYPE" : "EXPRESSION_IDENTIFIER",
+								"IDENTIFIER" : "new_bal"
+							}
+						}
+					]
+				}
+			],
 			"DOCSECTION" : [
 				{
 					"FLAG" : "doc",
-					"STRING" : "Boolean (either 0 or 1)"
+					"STRING" : "Function to create a balance!"
 				}
 			],
 			"INPUTS" : [
-				"a"
-			],
-			"BASE_TYPE" : "Integer",
-			"BASE_TYPE_LIST" : 0.000000,
-			"LOGIC" : {
-				"TYPE" : "EXPRESSION_OPERATOR",
-				"IDENTIFIER" : "v",
-				"LEFT" : {
-					"TYPE" : "EXPRESSION_OPERATOR",
-					"IDENTIFIER" : "==",
-					"LEFT" : {
-						"TYPE" : "EXPRESSION_IDENTIFIER",
-						"IDENTIFIER" : "a"
-					},
-					"RIGHT" : {
-						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : 1.000000
-					}
-				},
-				"RIGHT" : {
-					"TYPE" : "EXPRESSION_OPERATOR",
-					"IDENTIFIER" : "==",
-					"LEFT" : {
-						"TYPE" : "EXPRESSION_IDENTIFIER",
-						"IDENTIFIER" : "a"
-					},
-					"RIGHT" : {
-						"TYPE" : "EXPRESSION_NUMERICAL_LITERAL",
-						"VALUE" : 0.000000
-					}
+				{
+					"TYPE" : "Numerical",
+					"LIST_INDENTATION" : 0.000000
 				}
-			}
+			],
+			"ARGUMENTS" : [
+				"bal"
+			]
 		}
 	]
 }

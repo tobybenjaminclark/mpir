@@ -17,115 +17,83 @@
 
 \section{\textsc{Function Declarations}}
 
-\subsection{test1million}
+\subsection{MakeTen}
 
-\textbf{Defined on line:} \verb|4.0| \hfill \textbf{Created:} \verb|04/15/2024, 12:11| 
+\textbf{Defined on line:} \verb|14.0| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| 
 
 
-Takes a One and makes a 100
+Function to create a balance!
 
-\textbf{\\ Pseudocode for } \texttt{test1million}
+\textbf{\\ Pseudocode for } \texttt{MakeTen}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-FUNCTION test1million(a: One) -> Hundred:
-	return(a * 50.0)
+FUNCTION MakeTen(num: Hundred) -> Ten:
+	Numerical retval;
+	retval = num / 10.0
+	return(retval)
 \end{minted}
 
-\textbf{\\ Example Usage Cases for } \texttt{test1million}
-\clearpage
-
-\subsection{make\_one}
-
-\textbf{Defined on line:} \verb|11.0| \hfill \textbf{Created:} \verb|04/15/2024, 12:11| 
-
-
-Tests if a value satisfies 1
-
-\textbf{\\ Pseudocode for } \texttt{make\_one}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-FUNCTION make_one(num: Numerical) -> One:
-	One return_val;
-	Numerical return_val_test;
-	DO STATEMENT!
-	return(return_val_testIII)
-\end{minted}
-
-\textbf{\\ Example Usage Cases for } \texttt{make\_one}
-\clearpage
-
-\subsection{one}
-
-\textbf{Defined on line:} \verb|26.0| \hfill \textbf{Created:} \verb|04/15/2024, 12:11| 
-
-
-Makes a One
-
-\textbf{\\ Pseudocode for } \texttt{one}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-FUNCTION one(num: Numerical) -> One:
-	return(1.0)
-\end{minted}
-
-\textbf{\\ Example Usage Cases for } \texttt{one}
+\textbf{\\ Example Usage Cases for } \texttt{MakeTen}
 \clearpage
 
 \section{\textsc{Type Declarations}}
 
-\subsection{One}
-\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/15/2024, 12:11| \\
-Is one!
-
-\textbf{\\ Refinement Predicate for } \texttt{One}
-
-$$ a == 1.0 v a == 0.0 $$
-
-\textbf{\\ Set Notation of } \texttt{One}
-
-$$\sigma \in \{ 0 | 1 \}$$ \ \
-\textbf{\\ Example Satisfactory Assignments for } \texttt{One}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as One
-set var as 0
-set var as 1
-\end{minted}
-
-
-\textbf{\\ Example Unsatisfactory Assignments for } \texttt{One}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as One
-set var as -1.0
-set var as 2.0
-set var as 3.0
-\end{minted}
-
-
-\clearpage
-
 \subsection{Hundred}
-\textbf{Base Type:} \verb|Integer| \hfill \textbf{Created:} \verb|04/15/2024, 12:11| \\
-Less than or equal to 100
+\textbf{Base Type:} \verb|Numerical| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| \\
+Stores financial balance greater than 0
 
 \textbf{\\ Refinement Predicate for } \texttt{Hundred}
 
-$$ a < 100.0 $$
+$$ 100.0 >= a ^ a >= 0.0 $$
 
 \textbf{\\ Set Notation of } \texttt{Hundred}
 
-$$\sigma \in \{ -\infty ... 0, -1, -2, -3, -4 ... 99 \}$$ \ \
+$$\sigma \in \{ 0 ... 0, 1, 0.5, 0.25, 0.125 ... 100 \}$$ \ \
 \textbf{\\ Example Satisfactory Assignments for } \texttt{Hundred}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 let var as Hundred
 set var as 0
-set var as -1
-set var as -2
+set var as 1
+set var as 0.5
 \end{minted}
 
 
 \textbf{\\ Example Unsatisfactory Assignments for } \texttt{Hundred}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
 let var as Hundred
-set var as 100.0
-set var as 101.0
-set var as 100.5
+set var as -1.0
+set var as -2.0
+set var as -3.0
+\end{minted}
+
+
+\clearpage
+
+\subsection{Ten}
+\textbf{Base Type:} \verb|Numerical| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| \\
+Stores financial balance greater than 0
+
+\textbf{\\ Refinement Predicate for } \texttt{Ten}
+
+$$ 10.0 >= a ^ a >= 0.0 $$
+
+\textbf{\\ Set Notation of } \texttt{Ten}
+
+$$\sigma \in \{ 0 ... 0, 1, 0.5, 0.25, 0.125 ... 10 \}$$ \ \
+\textbf{\\ Example Satisfactory Assignments for } \texttt{Ten}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as Ten
+set var as 0
+set var as 1
+set var as 0.5
+\end{minted}
+
+
+\textbf{\\ Example Unsatisfactory Assignments for } \texttt{Ten}
+\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
+let var as Ten
+set var as -1.0
+set var as -2.0
+set var as -3.0
 \end{minted}
 
 

@@ -21,8 +21,7 @@ def convert_expression(expr: dict) -> str:
             return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
         case "EXPRESSION_STRING_LITERAL":
             return expr["IDENTIFIER"]
-        case "FUNCTION_CALL":
-            return "func"
+        case "FUNCTION_CALL": return convert_function_call()
     if(expr["TYPE"] == ""):
         pass
 

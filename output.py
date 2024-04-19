@@ -1,18 +1,13 @@
 # Generated using the MPIR Compiler.
 
-# Type Declaration of NumericalPos :: σ | 0 <= σ (Statically Verified) 
-NumericalPos = type('NumericalPos', (), {})
-
-# Type Declaration of Bool :: σ | (1 == σ or 0 == σ) (Statically Verified) 
-Bool = type('Bool', (), {})
+# Type Declaration of Balance :: σ | 0 <= σ (Statically Verified) 
+Balance = type('Balance', (), {})
 
 Numerical = type('Numerical', (float, ), {})
 
-def IsPositive(num: NumericalPos) -> Bool:
-	ret_val: Numerical
-	if (num >= 0.0) ==  1.0: ret_valI = 1.0
-	elif (num >= 0.0) ==  0.0: ret_valII = 0.0
-	
-	return(ret_valIII)
+def createBalance(bal: Numerical) -> Balance:
+	new_bal: Balance
+	new_bal = 5.0
+	return(new_bal)
 
 
