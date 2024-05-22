@@ -6,9 +6,9 @@
 \usepackage{array}
 \usepackage{tocloft}
 \usepackage[margin=1in, top=1.4in, headsep=33pt, bottom=1.4in]{geometry}
-\title{test.mpir}
-\author{author.m}
-\date{date}
+\title{Documentation}
+\author{Toby Benjamin Clark}
+\date{2024-05-16}
 \begin{document}
 \maketitle
 \clearpage
@@ -17,83 +17,96 @@
 
 \section{\textsc{Function Declarations}}
 
-\subsection{MakeTen}
+\subsection{OneCons}
 
-\textbf{Defined on line:} \verb|14.0| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| 
+\textbf{Defined on line:} \verb|11.0| \hfill \textbf{Created:} \verb|05/16/2024, 14:02| 
 
 
-Function to create a balance!
+Returns the input if positive, else 1
 
-\textbf{\\ Pseudocode for } \texttt{MakeTen}
+\textbf{ \\ Documented Variables in OneCons}
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|l|l|}
+		\hline
+		Identifier & Description 2 \\
+		\hline
+		 \texttt{num} & Input number (Numerical) \\
+		\hline
+		 \texttt{retval} & Value to be returned \\
+		\hline
+	\end{tabular}
+\end{table}
+
+ \textbf{ \\ Useful Links \& Resources}
+
+\href{https://www.bbc.co.uk/bitesize/articles/zbpbbqt#z73ddp3}{Education} \hfill \url{https://www.bbc.co.uk/bitesize/articles/zbpbbqt#z73ddp3} 
+
+\href{https://en.wikipedia.org/wiki/Positive_real_numbers}{Wikipedia} \hfill \url{https://en.wikipedia.org/wiki/Positive_real_numbers} 
+
+\textbf{ \\ Example Usage of \texttt{OneCons}}
+\begin{enumerate}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item \verb|OneCons(1) -> True|
+	\item \verb|OneCons(-1) -> False|
+\end{enumerate}
+
+\textbf{ \\ Function Information}
+\begin{itemize}
+	\setlength{\itemsep}{0pt}
+	\setlength{\parskip}{0pt}
+	\setlength{\parsep}{0pt}
+	\item \textbf{num} \\ Input number (Numerical)
+	\item \textbf{retval} \\ Value to be returned
+\end{itemize}
+
+\textbf{\\ Pseudocode for } \texttt{OneCons}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-FUNCTION MakeTen(num: Hundred) -> Ten:
-	Numerical retval;
-	retval = num / 10.0
+FUNCTION OneCons(num: Numerical) -> One:
+	One retval;
+	DOES num SATISFY One?
+	YES -> retval = num
+	NO -> retval = 1.0
 	return(retval)
 \end{minted}
 
-\textbf{\\ Example Usage Cases for } \texttt{MakeTen}
+\textbf{\\ Example Usage Cases for } \texttt{OneCons}
 \clearpage
 
 \section{\textsc{Type Declarations}}
 
-\subsection{Hundred}
-\textbf{Base Type:} \verb|Numerical| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| \\
-Stores financial balance greater than 0
+\subsection{One}
+\textbf{Base Type:} \verb|Numerical| \hfill \textbf{Created:} \verb|05/16/2024, 14:02| \\
+Is one!
 
-\textbf{\\ Refinement Predicate for } \texttt{Hundred}
 
-$$ 100.0 >= a ^ a >= 0.0 $$
+ \textbf{ \\ Useful Links \& Resources}
 
-\textbf{\\ Set Notation of } \texttt{Hundred}
+\href{https://www.bbc.co.uk/programmes/b007tcw7}{OneShow} \hfill \url{https://www.bbc.co.uk/programmes/b007tcw7} 
 
-$$\sigma \in \{ 0 ... 0, 1, 0.5, 0.25, 0.125 ... 100 \}$$ \ \
-\textbf{\\ Example Satisfactory Assignments for } \texttt{Hundred}
+\textbf{\\ Refinement Predicate for } \texttt{One}
+
+$$ a\ ==\ 1.0\ v\ a\ ==\ 0.0 $$
+
+\textbf{\\ Set Notation of } \texttt{One}
+
+$$\sigma \in \{ 0 | 1 \}$$ \ \
+\textbf{\\ Example Satisfactory Assignments for } \texttt{One}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as Hundred
+let var as One
 set var as 0
 set var as 1
-set var as 0.5
 \end{minted}
 
 
-\textbf{\\ Example Unsatisfactory Assignments for } \texttt{Hundred}
+\textbf{\\ Example Unsatisfactory Assignments for } \texttt{One}
 \begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as Hundred
+let var as One
 set var as -1.0
-set var as -2.0
-set var as -3.0
-\end{minted}
-
-
-\clearpage
-
-\subsection{Ten}
-\textbf{Base Type:} \verb|Numerical| \hfill \textbf{Created:} \verb|04/17/2024, 13:35| \\
-Stores financial balance greater than 0
-
-\textbf{\\ Refinement Predicate for } \texttt{Ten}
-
-$$ 10.0 >= a ^ a >= 0.0 $$
-
-\textbf{\\ Set Notation of } \texttt{Ten}
-
-$$\sigma \in \{ 0 ... 0, 1, 0.5, 0.25, 0.125 ... 10 \}$$ \ \
-\textbf{\\ Example Satisfactory Assignments for } \texttt{Ten}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as Ten
-set var as 0
-set var as 1
-set var as 0.5
-\end{minted}
-
-
-\textbf{\\ Example Unsatisfactory Assignments for } \texttt{Ten}
-\begin{minted}[mathescape, linenos, numbersep=5pt, framesep=2mm, frame=lines, fontsize=\small]{text}
-let var as Ten
-set var as -1.0
-set var as -2.0
-set var as -3.0
+set var as 2.0
+set var as 3.0
 \end{minted}
 
 

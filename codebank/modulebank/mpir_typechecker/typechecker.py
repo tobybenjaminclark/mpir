@@ -650,7 +650,7 @@ def typecheck_ast(ast: dict[str:any]):
     Γ = context_create('Γ')
     σ = z3.Real('σ')
     Γ = Γ + ("Integer", type_create_singular(lambda: z3.And(σ > -2147483648, σ < 2147483648)))
-    Γ = Γ + ("Numerical", type_create_singular(lambda: z3.And(σ > -2147483648, σ < 2147483648)))
+    Γ = Γ + ("Numerical", type_create_singular(lambda: z3.Bool(True)))
 
     Γ = process_type_declarations(ast, Γ)
     Γ = process_function_declarations(ast, Γ)
@@ -660,7 +660,6 @@ def typecheck_ast(ast: dict[str:any]):
             typecheck_function(function, duplicate_context(Γ))
         except Exception as e:
             g_errors.append(str(e))
-            return Γ
         
     ast = ssa_revert(ast)
     return Γ

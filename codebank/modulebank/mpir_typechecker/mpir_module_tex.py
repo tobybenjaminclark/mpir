@@ -24,7 +24,7 @@ def convert_expression(expr: dict) -> str:
         case "FUNCTION_CALL":                   return convert_function_call(expr)
         case "EXPRESSION_IDENTIFIER":           return expr["IDENTIFIER"]
         case "EXPRESSION_NUMERICAL_LITERAL":    return str(expr["VALUE"])
-        case "EXPRESSION_OPERATOR":             return convert_expression(expr["LEFT"]) + " " + expr["IDENTIFIER"] + " " + convert_expression(expr["RIGHT"])
+        case "EXPRESSION_OPERATOR":             return convert_expression(expr["LEFT"]) + "\ " + expr["IDENTIFIER"] + "\ " + convert_expression(expr["RIGHT"])
         case "EXPRESSION_STRING_LITERAL":       return expr["IDENTIFIER"]
         case "":                                pass
 
@@ -104,6 +104,14 @@ def convert_trycast_statement(statement):
     return lines
 
 
+def convert_do_statement(statement):
+    lines = []
+    lines.append("DO {TEMP := " + convert_expression(statement['EXPRESSION']) + "}")
+    for on in statement["ON_STATEMENTS"]:
+        lines.append("IF TEMP IS " + str(on["MATCH_VALUE"]) + ", THEN SET " + str(on["MATCH_COMMANDS"][0]["IDENTIFIER"]) + " AS " + convert_expression(on["MATCH_COMMANDS"][0]["EXPRESSION"]))
+    return lines
+
+
 # Builds pseudocode statement
 def build_pseudocode_statement(statement):
     match statement["TYPE"]:
@@ -111,7 +119,7 @@ def build_pseudocode_statement(statement):
         case "VALUE_ASSIGNMENT":    return [f"{statement['IDENTIFIER']} = {convert_expression(statement['EXPRESSION'])}"]
         case "FUNCTION_CALL":       return [convert_function_call(statement)]
         case "TRYCAST_STATEMENT":   return convert_trycast_statement(statement)
-        case "DO_STATEMENT":        return ["DO STATEMENT!"]
+        case "DO_STATEMENT":        return convert_do_statement(statement)
         case "IF_STATEMENT":        return [f"if ({convert_expression(statement['EXPRESSION'])}):"]
 
 
@@ -225,9 +233,10 @@ def build_tex(ast, output_file, Γ):
     print(ast)
     print(f"TEX: Writing to {output_file}")
 
-    title = "\\title{test.mpir}"
-    author = "\\author{author.m}"
-    date = "\\date{date}"
+    date = str(datetime.datetime.today()).split()[0]
+    title = "\\title{Documentation}"
+    author = "\\author{Toby Benjamin Clark}"
+    date = "\\date{" + date + "}"
 
     lines = ["\\documentclass{article}", "\\usepackage{graphicx}", "\\usepackage{minted}", "\\usepackage{hyperref}", "\\usepackage{url}", "\\usepackage{array}",
              "\\usepackage{tocloft}", "\\usepackage[margin=1in, top=1.4in, headsep=33pt, bottom=1.4in]{geometry}", title, author, date, "\\begin{document}", "\\maketitle",

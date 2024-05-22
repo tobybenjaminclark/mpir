@@ -57,7 +57,7 @@ def convert_trycast_statement(statement: dict, context: _context, lines:str = ""
     c_typ = get_type_from_context(context, statement["CASTED_IDENTIFIER"])
     cond = (str(z3_to_string(c_typ.logic.constraint()))).replace("σ", statement["DOMINANT_IDENTIFIER"])
     for index, on_statement in enumerate(statement["ON_STATEMENTS"]):
-        lines += "if(" + cond + ") == " + ("True" if on_statement["MATCH_VALUE"] == 1 else "False") + ": " + convert_expression(on_statement["MATCH_COMMANDS"][0]["EXPRESSION"]) + "\n\t"
+        lines += "if(" + cond + ") == " + ("True" if on_statement["MATCH_VALUE"] == 1 else "False") + ": " + on_statement["MATCH_COMMANDS"][0]["IDENTIFIER"] + " = " + convert_expression(on_statement["MATCH_COMMANDS"][0]["EXPRESSION"]) + "\n\t"
         if index != len(statement["ON_STATEMENTS"]) - 1: lines += "el"
     return lines
 
