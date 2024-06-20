@@ -1,8 +1,0 @@
-
-structure Token =
-{
-    int token_name;
-    string lexeme;
-    int line_index;
-    int column_index;
-}

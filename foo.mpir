@@ -1,0 +1,16 @@
+
+typedef NumericalPos a :: Numerical {a >= 0}
+suchthat:
+    |    doc as "Numerical, Positive Number"
+end
+
+funcdef IsPositive :: Numerical → NumericalPos
+funcdef IsPositive num
+    let ret_val as Numerical
+    trycast num into NumericalPos
+    on 1 -> set ret_val as num
+    on 0 -> set ret_val as 1
+    return(ret_val)
+suchthat:
+    |   doc as "Returns the input if positive, else 1"
+end
