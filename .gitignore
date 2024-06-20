@@ -22,6 +22,9 @@
 .vscode
 .vscode/*
 
+./target/*
+./target
+
 ./.idea
 ./.idea/*
 
