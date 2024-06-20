@@ -13,8 +13,13 @@ fn main() {
 }
 
 fn calculator4() {
-    let expr = calculator1::ExprParser::new()
-        .parse("22 * 44 + 66 + f(1     , 2 + 5    ) + (if (a) then (b) else if ab then cd else e2)")
+    let expr = calculator1::BlockParser::new()
+        .parse(
+            "{
+            a := 5;
+            5 + 10
+            }"
+        )
         .unwrap();
     println!("{:?}", expr);
 }

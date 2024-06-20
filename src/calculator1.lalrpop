@@ -1,9 +1,22 @@
 use std::str::FromStr;
-use crate::ast::{Expr, Opcode};
+use crate::ast::{Expr, Opcode, Statement, Block};
 
 grammar;
 
+pub Block: Box<Block> = {
+    "{" <stmts: Semicolon<Statement>> "}" => {
+        Box::new(Block::Statements(stmts))
+    }
+}
 
+pub Statement: Box<Statement> = {
+    Assignment,
+     <e: Expr> => Box::new(Statement::Expr(*e)),
+}
+
+pub Assignment: Box<Statement> = {
+    <i: Identifier> ":=" <e: Expr> => Box::new(Statement::Assignment(i, e))
+}
 
 /// Expressions
 pub Expr: Box<Expr> = {
@@ -14,7 +27,7 @@ pub Expr: Box<Expr> = {
 
 // If Else Logic
 pub IfExpr: Box<Expr> = {
-    "if" <e1:Expr> "then" <e2:Expr> "else" <e3:Expr> => Box::new(Expr::Conditional(e1, e2, e3)),
+    "?" <e1:Expr> "->" <e2:Expr> ":" <e3:Expr> => Box::new(Expr::Conditional(e1, e2, e3)),
 }
 
 
@@ -104,5 +117,5 @@ Semicolon<T>: Vec<T> = {
 
 /// Identifier
 Identifier: Box<Expr> = {
-    r"[a-zA-Z_][a-zA-Z0-9_]*" => Box::new(Expr::Identifier(String::from(<>))),
+    r"[a-zA-Z_][a-zA-Z0-9_`]*" => Box::new(Expr::Identifier(String::from(<>))),
 };
