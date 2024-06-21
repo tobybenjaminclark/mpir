@@ -1,12 +1,15 @@
 use std::str::FromStr;
-use crate::ast::{Expr, Opcode, Statement, Block, TypedArgument};
+use crate::ast::{Expr, Opcode, Statement, Block, TypedArgument, Program};
 
 grammar;
 
+pub Program: Box<Program> = {
+    <a: Semicolon<Block>> => Box::new(Program::Program(a))
+}
 
 pub Block: Box<Block> = {
-    <id:Identifier> "(" <args: Comma<TypedArgument>> ")" "->" "{" <stmts: Semicolon<Statement>> "}" => {
-        Box::new(Block::FunctionDefinition(id, args, stmts))
+    <id:Identifier> "(" <args: Comma<TypedArgument>> ")" "->" <id2:Identifier> "{" <stmts: Semicolon<Statement>> "}" => {
+        Box::new(Block::FunctionDefinition(id, args, id2, stmts))
     }
 }
 
@@ -88,10 +91,8 @@ Term: Box<Expr> = {
 
 /// Numbers
 Num: i32 = {
-    r"[0-9]+" => i32::from_str(<>).unwrap()
+    r"-?[0-9]+" => i32::from_str(<>).unwrap()
 };
-
-
 
 /// Function Calls
 FunctionCall: Box<Expr> = {

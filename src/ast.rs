@@ -1,8 +1,13 @@
 use std::fmt::{Debug};
 
 #[derive(Debug)]
+pub enum Program {
+    Program(Vec<Box<Block>>),
+}
+
+#[derive(Debug)]
 pub enum Block {
-    FunctionDefinition(Box<Expr>, Vec<Box<TypedArgument>>, Vec<Box<Statement>>),
+    FunctionDefinition(Box<Expr>, Vec<Box<TypedArgument>>, Box<Expr>, Vec<Box<Statement>>),
 }
 
 #[derive(Debug)]
