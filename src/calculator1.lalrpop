@@ -1,22 +1,35 @@
 use std::str::FromStr;
-use crate::ast::{Expr, Opcode, Statement, Block};
+use crate::ast::{Expr, Opcode, Statement, Block, TypedArgument};
 
 grammar;
 
+
 pub Block: Box<Block> = {
-    "{" <stmts: Semicolon<Statement>> "}" => {
-        Box::new(Block::Statements(stmts))
+    <id:Identifier> "(" <args: Comma<TypedArgument>> ")" "->" "{" <stmts: Semicolon<Statement>> "}" => {
+        Box::new(Block::FunctionDefinition(id, args, stmts))
     }
+}
+
+pub TypedArgument: Box<TypedArgument> = {
+    <id: Identifier> ":" <e: Expr> => Box::new(TypedArgument::TypedArgument(id, e))
 }
 
 pub Statement: Box<Statement> = {
     Assignment,
+    TypeAssignment,
      <e: Expr> => Box::new(Statement::Expr(*e)),
 }
+
 
 pub Assignment: Box<Statement> = {
     <i: Identifier> ":=" <e: Expr> => Box::new(Statement::Assignment(i, e))
 }
+
+pub TypeAssignment: Box<Statement> = {
+    <i: Identifier> ":" <e: Expr> => Box::new(Statement::TypeAssignment(i, e))
+}
+
+
 
 /// Expressions
 pub Expr: Box<Expr> = {
@@ -27,7 +40,7 @@ pub Expr: Box<Expr> = {
 
 // If Else Logic
 pub IfExpr: Box<Expr> = {
-    "?" <e1:Expr> "->" <e2:Expr> ":" <e3:Expr> => Box::new(Expr::Conditional(e1, e2, e3)),
+    "if" <e1:Expr> "then" <e2:Expr> "else" <e3:Expr> => Box::new(Expr::Conditional(e1, e2, e3)),
 }
 
 

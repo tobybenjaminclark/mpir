@@ -1,5 +1,4 @@
 
-
 use lalrpop_util::lalrpop_mod;
 
 // Import the ast module
@@ -15,9 +14,10 @@ fn main() {
 fn calculator4() {
     let expr = calculator1::BlockParser::new()
         .parse(
-            "{
-            a := 5;
-            5 + 10
+            "f (a:b) -> {
+            a: int;
+            a := f(a);
+            5 + 10;
             }"
         )
         .unwrap();

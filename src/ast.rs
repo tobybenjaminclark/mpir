@@ -2,12 +2,18 @@ use std::fmt::{Debug};
 
 #[derive(Debug)]
 pub enum Block {
-    Statements(Vec<Box<Statement>>)
+    FunctionDefinition(Box<Expr>, Vec<Box<TypedArgument>>, Vec<Box<Statement>>),
+}
+
+#[derive(Debug)]
+pub enum TypedArgument {
+    TypedArgument(Box<Expr>, Box<Expr>)
 }
 
 #[derive(Debug)]
 pub enum Statement {
     Assignment(Box<Expr>, Box<Expr>),
+    TypeAssignment(Box<Expr>, Box<Expr>),
     Expr(Expr),
 }
 
